@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { useQuery } from "@tanstack/react-query";
-import useProduct from "../Hooks/UseProduct";
+import UseProduct from "../Hooks/UseProduct";
 
 const useStyles = makeStyles({
   photo: {
@@ -62,7 +62,7 @@ const fetchImages = async (item) => {
 
 const DynamicImage = () => {
   const classes = useStyles();
-  const { data, isLoading } = useProduct();
+  const { data, isLoading } = UseProduct();
   
   const allSuite = data?.allSuitPart || [];
 

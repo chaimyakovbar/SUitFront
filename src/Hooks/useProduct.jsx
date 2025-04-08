@@ -13,7 +13,7 @@ const UseProduct = () => {
   const { data: user, isLoading, error } = useAuth();  // עכשיו משתמשים ב-hook של profile
 
   const { data, isLoading: productLoading, error: productError, refetch } = useQuery({
-    queryKey: ["useProduct", user],  // משתמשים במידע שהבאנו על היוזר
+    queryKey: ["UseProduct", user],  // משתמשים במידע שהבאנו על היוזר
     queryFn: () => getProduct(user),
     enabled: !!user, // רק אם יש יוזר, הבקשה תתבצע
   });

@@ -3,7 +3,7 @@ import HaveUser from "../components/HaveUser";
 import { userAtom } from "../../Utils";
 import { useAtom } from "jotai";
 import GetAllSuitFromData from "../components/GetAllSuitFromData";
-import TakeSizesOld from "../TakeSizesOld";
+import OnlySizes from "../components/OnlySizes";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -18,7 +18,7 @@ const Shopping = () => {
         <Button>מעבר לדף הבית </Button>
       </Link>
       <div>
-        <TakeSizesOld />
+        <OnlySizes />
       </div>
       <div>
         <GetAllSuitFromData />

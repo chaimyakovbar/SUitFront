@@ -4,7 +4,6 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Tooltip } from "@mui/material";
 import TakeSizes2 from "../components/TakeSize2";
 import TakeSizes3 from "../components/TakeSize3";
-import TakeSizesOld from "../TakeSizesOld";
 import { useAtomValue } from "jotai";
 import { userAtom } from "../../Utils";
 

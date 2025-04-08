@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../Utils";
-import { bodyPoints } from "./consts/KindOfColors";
+import { userAtom } from "../../Utils";
+import { bodyPoints } from "../consts/KindOfColors";
 import {
   Box,
   TextField,
@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import useProduct from "./Hooks/UseProduct";
+import useProduct from "../Hooks/UseProduct";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TakeSizesOld = () => {
+const OnlySizes = () => {
   const { data, isLoading } = useProduct();
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
@@ -181,4 +181,4 @@ const TakeSizesOld = () => {
   );
 };
 
-export default TakeSizesOld;
+export default OnlySizes;

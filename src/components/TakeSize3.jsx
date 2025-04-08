@@ -23,7 +23,7 @@ import { userAtom } from "../../Utils";
 import { useAtom } from "jotai";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import useProduct from "../Hooks/UseProduct.jsx";
+import useProduct from "../Hooks/useProduct";
 import axios from "axios";
 
 // Create a mapping from button ID to bodyPoint category

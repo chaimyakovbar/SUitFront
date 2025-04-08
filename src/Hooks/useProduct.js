@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import useAuth  from "./useAuth";  // תוודא שאתה משתמש ב-hook שהכנת ל-fetch פרטי המשתמש
+import useAuth from "./useAuth";  // תוודא שאתה משתמש ב-hook שהכנת ל-fetch פרטי המשתמש
 
 const getProduct = async (user) => {
   const { data } = await axios.get(`http://localhost:3020/product?email=${user.email}`);
@@ -9,11 +9,11 @@ const getProduct = async (user) => {
 
 const arr = [];
 
-const UseProduct = () => {
+const useProduct = () => {
   const { data: user, isLoading, error } = useAuth();  // עכשיו משתמשים ב-hook של profile
 
   const { data, isLoading: productLoading, error: productError, refetch } = useQuery({
-    queryKey: ["UseProduct", user],  // משתמשים במידע שהבאנו על היוזר
+    queryKey: ["useProduct", user],  // משתמשים במידע שהבאנו על היוזר
     queryFn: () => getProduct(user),
     enabled: !!user, // רק אם יש יוזר, הבקשה תתבצע
   });
@@ -25,4 +25,4 @@ const UseProduct = () => {
   return { data: data || arr, isLoading: false, error: null, refetch };
 };
 
-export default UseProduct;
+export default useProduct;

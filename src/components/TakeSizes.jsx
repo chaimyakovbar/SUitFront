@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import UseProduct from "../Hooks/UseProduct";
+import useProduct from "../Hooks/UseProduct.jsx";
 import tai from "../assets/sizes/humen/tai.png";
 import suit from "../assets/sizes/humen/suit.png";
 import head from "../assets/sizes/humen/head.png";
@@ -40,7 +40,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const TakeSizes = () => {
-  const { data, isLoading } = UseProduct();
+  const { data, isLoading } = useProduct();
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
   const [sizes, setSizes] = useState({});

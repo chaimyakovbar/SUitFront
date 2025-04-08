@@ -23,7 +23,7 @@ import { userAtom } from "../../Utils";
 import { useAtom } from "jotai";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import UseProduct from "../Hooks/UseProduct";
+import useProduct from "../Hooks/UseProduct.jsx";
 import axios from "axios";
 
 // Create a mapping from button ID to bodyPoint category
@@ -63,7 +63,7 @@ const Doll = (props) => {
 
 const DollDisplay = () => {
   const [user] = useAtom(userAtom);
-  const { data, isLoading } = UseProduct();
+  const { data, isLoading } = useProduct();
   
   // All state declarations
   const [sizes, setSizes] = useState(() => isLoading ? {} : data?.sizes || {});

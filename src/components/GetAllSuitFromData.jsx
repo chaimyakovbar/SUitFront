@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { useQuery } from "@tanstack/react-query";
-import useProduct from "../Hooks/UseProduct.jsx";
+import useProduct from "../Hooks/useProduct";
 
 const useStyles = makeStyles({
   photo: {

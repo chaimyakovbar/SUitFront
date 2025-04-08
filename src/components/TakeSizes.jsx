@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import useProduct from "../Hooks/UseProduct.jsx";
+import useProduct from "../Hooks/useProduct";
 import tai from "../assets/sizes/humen/tai.png";
 import suit from "../assets/sizes/humen/suit.png";
 import head from "../assets/sizes/humen/head.png";

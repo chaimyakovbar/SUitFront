@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
-import UseProduct from '../Hooks/UseProduct'
+import useProduct from '../Hooks/UseProduct.jsx'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const OnlySizes = () => {
-  const { data, isLoading } = UseProduct();
+  const { data, isLoading } = useProduct();
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
   const [sizes, setSizes] = useState({});

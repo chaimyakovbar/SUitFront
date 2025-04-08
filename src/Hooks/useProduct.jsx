@@ -9,11 +9,11 @@ const getProduct = async (user) => {
 
 const arr = [];
 
-const useProduct = () => {
+const UseProduct = () => {
   const { data: user, isLoading, error } = useAuth();  // עכשיו משתמשים ב-hook של profile
 
   const { data, isLoading: productLoading, error: productError, refetch } = useQuery({
-    queryKey: ["UseProduct", user],  // משתמשים במידע שהבאנו על היוזר
+    queryKey: ["useProduct", user],  // משתמשים במידע שהבאנו על היוזר
     queryFn: () => getProduct(user),
     enabled: !!user, // רק אם יש יוזר, הבקשה תתבצע
   });
@@ -25,4 +25,4 @@ const useProduct = () => {
   return { data: data || arr, isLoading: false, error: null, refetch };
 };
 
-export default useProduct;
+export default UseProduct;

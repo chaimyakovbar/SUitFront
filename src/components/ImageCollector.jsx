@@ -1,16 +1,29 @@
-import { useEffect, useMemo, useRef } from "react"
-import {currentKindAtom,currentColorAtom,selectedCollarAtom,selectedLapelTypeAtom,selectedPacketTypeAtom,selectedInsideTypeAtom,selectedButtonAtom,selectedPoshetAtom,selectedHolesButtonAtom,selectedHolesButtonUpAtom,allSuitPartAtom,} from "../../Utils"
+import { useEffect, useMemo, useRef, useState } from "react"
+import {
+  currentKindAtom,
+  currentColorAtom,
+  selectedCollarAtom,
+  selectedLapelTypeAtom,
+  selectedPacketTypeAtom,
+  selectedInsideTypeAtom,
+  selectedButtonAtom,
+  selectedPoshetAtom,
+  selectedHolesButtonAtom,
+  selectedHolesButtonUpAtom,
+  allSuitPartAtom,
+} from "../../Utils"
 import { useAtomValue, useAtom } from "jotai"
 import { useMediaQuery } from "@mui/material"
 
 const ImageFilterComponent = () => {
   const DEFAULT_KIND = "kind1"
-  const DEFAULT_LAPEL = "standard"
+  const DEFAULT_LAPEL = "Standard"
   const DEFAULT_PACKET_TYPE = "packet1"
   const DEFAULT_LAPEL_KIND = "collarTight"
   const DEFAULT_COLOR = { colorName: "blackGrey" }
 
   const previousConfigRef = useRef(null)
+  const [loading, setLoading] = useState(true)
 
   const currColor = useAtomValue(currentColorAtom)
   const selectedKind = useAtomValue(currentKindAtom)
@@ -41,6 +54,16 @@ const ImageFilterComponent = () => {
   )
 
   const bottomPart = kind === "kind3" || kind === "kind4" ? "bottomKind3" : "bottom"
+
+  // Show loader whenever configuration changes
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 200) // Show loader for 800ms
+
+    return () => clearTimeout(timer)
+  }, [suitConfig])
 
   useEffect(() => {
     if (!color) return
@@ -107,6 +130,39 @@ const ImageFilterComponent = () => {
         height: isMobile ? "350px" : "500px",
       }}
     >
+      {/* Simple Loader */}
+      {loading && (
+        <div style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          // backgroundColor: "rgba(255, 255, 255, 0.8)",
+          zIndex: 1000,
+        }}>
+          <div style={{
+            width: "50px",
+            height: "50px",
+            border: "5px solid #f3f3f3",
+            borderTop: "5px solid #3498db",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+          }}></div>
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+          <p style={{ marginTop: "10px", color: 'white' }}>Loading suit... </p>
+        </div>
+      )}
+
       {/* Base parts */}
       <img 
         src={`/assets/ragach/colar/${color}.png`}

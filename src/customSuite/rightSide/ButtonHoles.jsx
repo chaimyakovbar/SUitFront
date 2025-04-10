@@ -7,8 +7,8 @@ import {
   selectedHolesButtonUpAtom,
 } from "../../../Utils";
 import { imagesHoles } from "../../consts/KindOfColors";
-import holes from "../../assets/kinds/AllSuit.png";
-import JustUp from "../../assets/kinds/JustUp.png";
+import holes from "/assets/kinds/AllSuit.png";
+import JustUp from "/assets/kinds/JustUp.png";
 
 const useStyles = makeStyles({
   container: {

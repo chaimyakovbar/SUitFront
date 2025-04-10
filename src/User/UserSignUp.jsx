@@ -39,7 +39,7 @@ const UserSignUp = ({setDialogType}) => {
   
   const handleCreatUser = async (values, { resetForm }) => {
     try {
-      await axios.post("http://localhost:3020/user/register", values);
+      await axios.post("https://suitback.onrender.com/user/register", values);
       
       enqueueSnackbar("נרשמת בהצלחה!", { variant: "success" });
       setOpen(false);

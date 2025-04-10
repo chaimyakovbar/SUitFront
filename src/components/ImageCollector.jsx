@@ -1,279 +1,103 @@
-import { useState, useEffect, useMemo, useRef } from "react";
-import {
-  currentKindAtom,
-  currentColorAtom,
-  selectedCollarAtom,
-  selectedLapelTypeAtom,
-  selectedPacketTypeAtom,
-  selectedInsideTypeAtom,
-  selectedButtonAtom,
-  selectedPoshetAtom,
-  selectedHolesButtonAtom,
-  selectedHolesButtonUpAtom,
-  allSuitPartAtom,
-} from "../../Utils";
-import { useAtomValue, useAtom } from "jotai";
-import { useSnackbar } from "notistack";
-import { Box, useMediaQuery } from "@mui/material";
-
-const BASE_PARTS = ["insideUp", "insideBottom", "sleeves", "colar"];
+import { useEffect, useMemo, useRef } from "react"
+import {currentKindAtom,currentColorAtom,selectedCollarAtom,selectedLapelTypeAtom,selectedPacketTypeAtom,selectedInsideTypeAtom,selectedButtonAtom,selectedPoshetAtom,selectedHolesButtonAtom,selectedHolesButtonUpAtom,allSuitPartAtom,} from "../../Utils"
+import { useAtomValue, useAtom } from "jotai"
+import { useMediaQuery } from "@mui/material"
 
 const ImageFilterComponent = () => {
-  const DEFAULT_KIND = "kind1";
-  const DEFAULT_LAPEL = "standard";
-  const DEFAULT_PACKET_TYPE = "packet1";
-  const DEFAULT_LAPEL_KIND = "collarTight";
-  const DEFAULT_COLOR = { colorName: "blackGrey" };
+  const DEFAULT_KIND = "kind1"
+  const DEFAULT_LAPEL = "standard"
+  const DEFAULT_PACKET_TYPE = "packet1"
+  const DEFAULT_LAPEL_KIND = "collarTight"
+  const DEFAULT_COLOR = { colorName: "blackGrey" }
 
-  const [imagePaths, setImagePaths] = useState({});
-  const [loadingParts, setLoadingParts] = useState({});
-  const previousConfigRef = useRef(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const previousConfigRef = useRef(null)
 
-  const currColor = useAtomValue(currentColorAtom);
-  const selectedKind = useAtomValue(currentKindAtom);
-  const selectedCollar = useAtomValue(selectedCollarAtom);
-  const selectedLapelType = useAtomValue(selectedLapelTypeAtom);
-  const selectedPacketType = useAtomValue(selectedPacketTypeAtom);
-  const selectedInsideType = useAtomValue(selectedInsideTypeAtom);
-  const selectedHolesButton = useAtomValue(selectedHolesButtonAtom);
-  const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom);
-  const selectedButton = useAtomValue(selectedButtonAtom);
-  const selectedPoshet = useAtomValue(selectedPoshetAtom);
-  const [_, setAllSuitPart] = useAtom(allSuitPartAtom);
+  const currColor = useAtomValue(currentColorAtom)
+  const selectedKind = useAtomValue(currentKindAtom)
+  const [_, setAllSuitPart] = useAtom(allSuitPartAtom)
+  const selectedCollar = useAtomValue(selectedCollarAtom)
+  const selectedButton = useAtomValue(selectedButtonAtom)
+  const selectedPoshet = useAtomValue(selectedPoshetAtom)
+  const selectedLapelType = useAtomValue(selectedLapelTypeAtom)
+  const selectedPacketType = useAtomValue(selectedPacketTypeAtom)
+  const selectedInsideType = useAtomValue(selectedInsideTypeAtom)
+  const selectedHolesButton = useAtomValue(selectedHolesButtonAtom)
+  const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom)
 
-  const kind = selectedKind || DEFAULT_KIND;
-  const lapelType = selectedLapelType || DEFAULT_LAPEL;
-  const lapelKind = selectedCollar || DEFAULT_LAPEL_KIND;
-  const packetType = selectedPacketType || DEFAULT_PACKET_TYPE;
-  const color = currColor?.colorName || DEFAULT_COLOR.colorName;
-  const insideColor = selectedInsideType || color;
-  const holeButtonColor = selectedHolesButton;
-  const holeButtonUpColor = selectedHolesButtonUp;
-  const buttonColor = selectedButton;
-  const poshetColor = selectedPoshet;
+  const kind = selectedKind || DEFAULT_KIND
+  const lapelType = selectedLapelType || DEFAULT_LAPEL
+  const lapelKind = selectedCollar || DEFAULT_LAPEL_KIND
+  const packetType = selectedPacketType || DEFAULT_PACKET_TYPE
+  const color = currColor?.colorName || DEFAULT_COLOR.colorName
+  const insideColor = selectedInsideType || color
+  const holeButtonColor = selectedHolesButton
+  const holeButtonUpColor = selectedHolesButtonUp
+  const buttonColor = selectedButton
+  const poshetColor = selectedPoshet
 
   const suitConfig = useMemo(
-    () => ({
-      kind,
-      lapelType,
-      lapelKind,
-      packetType,
-      color,
-      insideColor,
-      holeButtonColor: selectedHolesButton,
-      holeButtonUpColor: selectedHolesButtonUp,
-      buttonColor: selectedButton,
-      poshetColor: selectedPoshet,
-    }),
-    [
-      kind,
-      lapelType,
-      lapelKind,
-      packetType,
-      color,
-      insideColor,
-      selectedHolesButton,
-      selectedHolesButtonUp,
-      selectedButton,
-      selectedPoshet,
-    ]
-  );
+    () => ({ kind, lapelType, lapelKind, packetType, color, insideColor, holeButtonColor, holeButtonUpColor, buttonColor, poshetColor}),
+    [ kind, lapelType, lapelKind, packetType, color, insideColor, holeButtonColor, holeButtonUpColor, buttonColor, poshetColor,]
+  )
 
-  const partsToLoad = useMemo(() => {
-    const bottomPart =
-      kind === "kind3" || kind === "kind4" ? "bottomKind3" : "bottom";
-    return [...BASE_PARTS, bottomPart, "packetUp", "packetBottom"];
-  }, [kind]);
+  const bottomPart = kind === "kind3" || kind === "kind4" ? "bottomKind3" : "bottom"
 
   useEffect(() => {
+    if (!color) return
+
     console.log("Current Values:", {
       color,
       kind,
       lapelType,
       lapelKind,
       packetType,
-    });
+    })
 
-    if (!color) return;
-
-    setImagePaths({});
-    setLoadingParts({});
-
+    const partsToInclude = ["colar", "sleeves", "insideUp", "insideBottom", "packetUp", bottomPart, "packetBottom"]
+    
     const newSuit = {
       ...suitConfig,
-      parts: partsToLoad.reduce((acc, part) => ({ ...acc, [part]: true }), {}),
-    };
+      parts: partsToInclude.reduce((acc, part) => ({ ...acc, [part]: true }), {}),
+    }
 
-    // Check if config has actually changed before adding to allSuitPart
-    const configString = JSON.stringify(newSuit);
+    const configString = JSON.stringify(newSuit)
     if (previousConfigRef.current !== configString) {
-      previousConfigRef.current = configString;
+      previousConfigRef.current = configString
 
-      // Use a function that doesn't depend on previous state but replaces appropriately
       setAllSuitPart((current) => {
-        // Check if this exact config already exists
         const existingIndex = current.findIndex(
-          (suit) =>
-            JSON.stringify({ ...suit, parts: { ...suit.parts } }) ===
-            configString
-        );
+          (suit) => JSON.stringify({ ...suit, parts: { ...suit.parts } }) === configString
+        )
 
         if (existingIndex >= 0) {
-          // enqueueSnackbar("יש לך חליפה כזאת כבר ");
-          return current;
+          return current
         }
 
-        // Add only if it doesn't exist
-        return [...current, newSuit];
-      });
-    }
-
-    const bottomPart =
-      kind === "kind3" || kind === "kind4" ? "bottomKind3" : "bottom";
-    const allParts = [...BASE_PARTS, bottomPart, "packetUp", "packetBottom"];
-
-    allParts.forEach((part) => {
-      setLoadingParts((prev) => ({ ...prev, [part]: true }));
-
-      import(`../assets/ragach/${part}/${color}.png`)
-        .then((image) => {
-          setImagePaths((prev) => ({
-            ...prev,
-            [part]: image.default,
-          }));
-        })
-        .catch(() => {
-          console.warn(`⚠️ Missing image for ${part}: ${color}`);
-        })
-        .finally(() => {
-          setLoadingParts((prev) => ({ ...prev, [part]: false }));
-        });
-    });
-
-    const packetBottomPath = `../assets/ragach/packetBottom/${packetType}/${color}.png`;
-    import(/* @vite-ignore */ packetBottomPath)
-      .then((image) => {
-        setImagePaths((prev) => ({
-          ...prev,
-          packetBottom: image.default,
-        }));
+        return [...current, newSuit]
       })
-      .catch(() => {
-        console.warn(
-          `⚠️ Missing image for packetBottom: ${packetType}/${color}`
-        );
-      })
-      .finally(() => {
-        setLoadingParts((prev) => ({ ...prev, packetBottom: false }));
-      });
-
-    const imagePath = `../assets/ragach/${lapelKind}/${lapelType}/${kind}/${color}.png`;
-    import(/* @vite-ignore */ imagePath)
-      .then((image) => {
-        setImagePaths((prev) => ({
-          ...prev,
-          lapelCollar: image.default,
-        }));
-      })
-      .catch(() => {
-        console.warn(
-          `⚠️ Missing lapel/collar image: ${lapelKind}/${lapelType}/${kind}/${color}`
-        );
-      })
-      .finally(() => {
-        setLoadingParts((prev) => ({ ...prev, lapelCollar: false }));
-      });
-
-    // Loading inside color image
-    const insideUpPath = `../assets/ragach/insideUp/${insideColor}.png`;
-    import(/* @vite-ignore */ insideUpPath)
-      .then((image) => {
-        setImagePaths((prev) => ({
-          ...prev,
-          insideUp: image.default,
-        }));
-      })
-      .catch(() => {
-        console.warn(`⚠️ Missing image for insideUp: ${insideColor}`);
-      });
-
-    // Only load additional parts if the user has selected the relevant options
-    if (holeButtonColor) {
-      const holeButtonPath = `../assets/adds/holesButton/${kind}/${holeButtonColor}.png`;
-      import(/* @vite-ignore */ holeButtonPath)
-        .then((image) => {
-          setImagePaths((prev) => ({
-            ...prev,
-            holeButton: image.default,
-          }));
-        })
-        .catch(() => {
-          console.warn(`⚠️ Missing image for holeButton: ${holeButtonColor}`);
-        });
     }
-    if (holeButtonUpColor) {
-      const holeButtonUpPath = `../assets/adds/holesButtonUp/${holeButtonUpColor}.png`;
-      import(/* @vite-ignore */ holeButtonUpPath)
-        .then((image) => {
-          setImagePaths((prev) => ({
-            ...prev,
-            holeButtonUp: image.default,
-          }));
-        })
-        .catch(() => {
-          console.warn(
-            `⚠️ Missing image for holeButtonUp: ${holeButtonUpColor}`
-          );
-        });
-    }
+  }, [suitConfig, setAllSuitPart, color, kind, lapelType, lapelKind, packetType, bottomPart])
 
-    if (buttonColor) {
-      const buttonColorPath = `../assets/ragach/button/${kind}/${buttonColor}.png`;
-      import(/* @vite-ignore */ buttonColorPath)
-        .then((image) => {
-          setImagePaths((prev) => ({
-            ...prev,
-            buttonColor: image.default,
-          }));
-        })
-        .catch(() => {
-          console.warn(`⚠️ Missing image for buttonColor: ${buttonColor}`);
-        });
-    }
+  const isMobile = useMediaQuery("(max-width:600px)")
 
-    if (poshetColor) {
-      const poshetColorPath = `../assets/adds/poshet/${poshetColor}.png`;
-      import(/* @vite-ignore */ poshetColorPath)
-        .then((image) => {
-          setImagePaths((prev) => ({
-            ...prev,
-            poshetColor: image.default,
-          }));
-        })
-        .catch(() => {
-          console.warn(`⚠️ Missing image for poshetColor: ${poshetColor}`);
-        });
-    }
-  }, [
-    color,
-    selectedKind,
-    lapelType,
-    lapelKind,
-    packetType,
-    kind,
-    insideColor,
-    holeButtonColor,
-    buttonColor,
-    poshetColor,
-    holeButtonUpColor,
-    setAllSuitPart,
-    suitConfig,
-    partsToLoad,
-    enqueueSnackbar,
-  ]);
+  const imageStyle = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  }
 
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const overlayStyle = {
+    ...imageStyle,
+    zIndex: 100,
+  }
+
+  const handleImageError = (imageName) => {
+    console.warn(`⚠️ Failed to load image: ${imageName}`)
+  }
+
   return (
     <div
       style={{
@@ -283,33 +107,102 @@ const ImageFilterComponent = () => {
         height: isMobile ? "350px" : "500px",
       }}
     >
-      {Object.entries(imagePaths).map(([part, src]) => (
-        <img
-          key={part}
-          src={src}
-          alt={`${color} ${part}`}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            opacity: loadingParts[part] ? 0.5 : 1,
-            zIndex: [
-              "packetBottom",
-              "packetUp",
-              "buttonColor",
-              "holeButton",
-              "poshetColor",
-            ].includes(part)
-              ? 100
-              : 1,
-          }}
+      {/* Base parts */}
+      <img 
+        src={`/assets/ragach/colar/${color}.png`}
+        alt={`Collar - ${color}`}
+        style={imageStyle}
+        onError={() => handleImageError('collar')}
+      />
+      
+      <img 
+        src={`/assets/ragach/sleeves/${color}.png`}
+        alt={`Sleeves - ${color}`}
+        style={imageStyle}
+        onError={() => handleImageError('sleeves')}
+      />
+      
+      <img 
+        src={`/assets/ragach/insideUp/${insideColor}.png`}
+        alt={`Inside Up - ${insideColor}`}
+        style={imageStyle}
+        onError={() => handleImageError('insideUp')}
+      />
+      
+      <img 
+        src={`/assets/ragach/insideBottom/${color}.png`}
+        alt={`Inside Bottom - ${insideColor}`}
+        style={imageStyle}
+        onError={() => handleImageError('insideBottom')}
+      />
+      
+      <img 
+        src={`/assets/ragach/${bottomPart}/${color}.png`}
+        alt={`Bottom - ${color}`}
+        style={imageStyle}
+        onError={() => handleImageError('bottom')}
+      />
+      
+      {/* Fixed Lapel/Collar path */}
+      <img 
+        src={`/assets/ragach/${lapelKind}/${lapelType}/${kind}/${color}.png`}
+        alt={`Lapel Collar - ${color}`}
+        style={imageStyle}
+        onError={() => handleImageError(`lapelCollar: ${lapelKind}/${lapelType}/${kind}/${color}`)}
+      />
+      
+      {/* Packet Bottom with specific type */}
+      <img 
+        src={`/assets/ragach/packetBottom/${packetType}/${color}.png`}
+        alt={`Packet Bottom - ${color}`}
+        style={overlayStyle}
+        onError={() => handleImageError(`packetBottom: ${packetType}/${color}`)}
+      />
+      
+      {poshetColor && (
+        <img 
+          src={`/assets/adds/poshet/${poshetColor}.png`}
+          alt={`Poshet - ${poshetColor}`}
+          style={overlayStyle}
+          onError={() => handleImageError(`poshet: ${poshetColor}`)}
         />
-      ))}
-    </div>
-  );
-};
+      )}
 
-export default ImageFilterComponent;
+      <img 
+        src={`/assets/ragach/packetUp/${color}.png`}
+        alt={`Packet Up - ${color}`}
+        style={imageStyle}
+        onError={() => handleImageError('packetUp')}
+      />
+      
+      {buttonColor && (
+        <img 
+          src={`/assets/ragach/button/${kind}/${buttonColor}.png`}
+          alt={`Button - ${buttonColor}`}
+          style={overlayStyle}
+          onError={() => handleImageError(`button: ${kind}/${buttonColor}`)}
+        />
+      )}
+      
+      {holeButtonColor && (
+        <img 
+          src={`/assets/adds/holesButton/${kind}/${holeButtonColor}.png`}
+          alt={`Hole Button - ${holeButtonColor}`}
+          style={overlayStyle}
+          onError={() => handleImageError(`holeButton: ${kind}/${holeButtonColor}`)}
+        />
+      )}
+      
+      {holeButtonUpColor && (
+        <img 
+          src={`/assets/adds/holesButtonUp/${holeButtonUpColor}.png`}
+          alt={`Hole Button Up - ${holeButtonUpColor}`}
+          style={overlayStyle}
+          onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
+        />
+      )}
+    </div>
+  )
+}
+
+export default ImageFilterComponent

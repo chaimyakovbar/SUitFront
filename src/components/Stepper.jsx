@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
@@ -53,8 +53,8 @@ const StyledStepper = () => {
   const [activeStep, setActiveStep] = useAtom(currentIndexAtom);
   const [completed, setCompleted] = React.useState({});
   const [currentKind] = useAtom(currentKindAtom);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [dialogContent, setDialogContent] = React.useState("");
+  // const [openDialog, setOpenDialog] = React.useState(false);
+  // const [dialogContent, setDialogContent] = React.useState("");
   const [open, setOpen] = useAtom(openUserDialog);
   const [dialogType, setDialogType] = useState(null);
 
@@ -65,10 +65,10 @@ const StyledStepper = () => {
       ? !!currentKind
       : counterArray[activeStep]?.[steps[activeStep].validate];
 
-  useEffect(() => {
-    setDialogContent(steps[activeStep].explanation);
-    setOpenDialog(true);
-  }, [activeStep]);
+  // useEffect(() => {
+  //   setDialogContent(steps[activeStep].explanation);
+  //   setOpenDialog(true);
+  // }, [activeStep]);
 
   const handleNext = () => {
     if (!isStepValid) return;
@@ -83,7 +83,7 @@ const StyledStepper = () => {
   const handleSubmitSuit = async () => {
     if (user) {
       try {
-        await axios.post("http://localhost:3020/product/suits", {
+        await axios.post("https://suitback.onrender.com/product/suits", {
           email: user.email,
           allSuitPart,
         });
@@ -271,11 +271,11 @@ const StyledStepper = () => {
         </div>
       </Dialog>
 
-      <ExplainDialog
+      {/* <ExplainDialog
         open={openDialog}
         handleClose={() => setOpenDialog(false)}
         content={dialogContent}
-      />
+      /> */}
     </Box>
   );
 };

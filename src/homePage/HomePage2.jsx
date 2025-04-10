@@ -3,7 +3,6 @@ import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
 import Drawer from "./Drawer2";
 import OpenDrawer from "./OpenDrawer";
-import backgroundImage from "../assets/photoBackGround3.jpg";
 import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
 
@@ -60,7 +59,7 @@ const HomePage2 = () => {
   return (
     <div>
       <div className={classes.topDiv}>
-        <img className={classes.img} src={backgroundImage} alt="Background" />
+        <img className={classes.img} src="/assets/photoBackGround3.jpg" alt="Background" />
 
         <div className={classes.divLink}>
           <Link

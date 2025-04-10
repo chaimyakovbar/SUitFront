@@ -139,7 +139,7 @@ const TakeSizes = () => {
         ? { ...data.sizes, ...sizes } 
         : sizes;
         
-      await axios.post("http://localhost:3020/product", {
+      await axios.post("https://suitback.onrender.com/product", {
         email: user.email,
         sizes: combinedSizes,
       });

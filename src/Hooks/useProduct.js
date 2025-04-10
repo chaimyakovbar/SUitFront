@@ -3,7 +3,7 @@ import axios from "axios";
 import useAuth from "./useAuth";  // תוודא שאתה משתמש ב-hook שהכנת ל-fetch פרטי המשתמש
 
 const getProduct = async (user) => {
-  const { data } = await axios.get(`http://localhost:3020/product?email=${user.email}`);
+  const { data } = await axios.get(`https://suitback.onrender.com/product?email=${user.email}`);
   return data;
 };
 

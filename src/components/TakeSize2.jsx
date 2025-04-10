@@ -66,7 +66,7 @@ const TakeSizes2 = () => {
     }
 
     try {
-      await axios.post("http://localhost:3020/product", {
+      await axios.post("https://suitback.onrender.com/product", {
         email: user.email,
         sizes: sizes,
       });

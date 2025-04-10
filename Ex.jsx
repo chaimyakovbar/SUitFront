@@ -207,7 +207,7 @@ const ImageFilterComponent = () => {
 
   return (
     <div>
-      <div style={{ position: "relative", width: "500px", height: "500px" }}>
+      <div style={{ position: "relative", width: "800px", height: "500px" }}>
         {Object.entries(imagePaths).map(([part, src]) => (
           <img
             key={part}

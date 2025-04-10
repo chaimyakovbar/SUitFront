@@ -5,9 +5,6 @@ import { makeStyles } from "@mui/styles";
 import Slider from "react-slick";
 import { Box } from "@mui/material";
 import { collections } from "../consts/KindOfColors";
-import backgroundImage from "../assets/photoBackGround4.webp";
-import backgroundImage2 from "../assets/photoBackGround5.webp";
-import backgroundImage3 from "../assets/photoBackGround6.webp";
 
 const useStyles = makeStyles({
   collectionCard: {
@@ -150,9 +147,9 @@ const AllCollection = ({ targetSectionRef }) => {
               </div>
             ))}
           </Slider>
-          <img className={classes.img} src={backgroundImage} alt="Background" />
-          <img className={classes.img} src={backgroundImage2} alt="Background" />
-          <img className={classes.img} src={backgroundImage3} alt="Background" />
+          <img className={classes.img} src="/assets/photoBackGround4.webp" alt="Background" />
+          <img className={classes.img} src="/assets/photoBackGround5.webp" alt="Background" />
+          <img className={classes.img} src="/assets/photoBackGround6.webp" alt="Background" />
         </Box>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../../Utils";
+import { userAtom } from "../Utils";
 import HaveUser from "../components/HaveUser";
 import {
     userSizes,
@@ -22,14 +22,10 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"
   import { useSnackbar } from "notistack";
+import { postProduct } from "../api/suit";
 
 // const drawerWidth = 240;
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const TakeSizes2 = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -66,9 +62,9 @@ const TakeSizes2 = () => {
     }
 
     try {
-      await axios.post("https://suitback.onrender.com/product", {
+      await postProduct({
         email: user.email,
-        sizes: sizes,
+        sizes,
       });
       enqueueSnackbar("המידות נשמרו בהצלחה!");
     } catch (error) {
@@ -86,13 +82,6 @@ const TakeSizes2 = () => {
         anchor="left"
         open={open}
       >
-        <button
-          onClick={() => navigate("/")}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#5E3C1B")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#8B5E3C")}
-        >
-          ← Return to Main Page
-        </button>
         <button
           onClick={() => navigate("/Shopping")}
           onMouseOver={(e) => (e.target.style.backgroundColor = "#5E3C1B")}
@@ -186,7 +175,6 @@ const TakeSizes2 = () => {
       {dialogType && (
         <Dialog
           open={dialogType !== null}
-          TransitionComponent={Transition}
           keepMounted
           onClose={handleClose}
         >

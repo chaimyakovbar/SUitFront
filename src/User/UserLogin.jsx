@@ -5,22 +5,19 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { useAtom, useSetAtom} from "jotai";
+import { useAtom } from "jotai";
 import { TextField } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useSnackbar } from "notistack";
-import { openUserDialog, userAtom } from "../../Utils"
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { openUserDialog, userAtom } from "../Utils";
+import { loginUser } from "../api/user";
 
 const UserLogin = ({ setDialogType }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useAtom(openUserDialog);
-  const setUser = useSetAtom(userAtom);
+  const [, setUser] = useAtom(userAtom);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const validationSchema = Yup.object({
     email: Yup.string().email("אימייל לא תקין").required("חובה למלא אימייל"),
@@ -33,30 +30,28 @@ const UserLogin = ({ setDialogType }) => {
   };
 
   const handleLogin = async (values, { resetForm }) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
-      const response = await axios.post("https://suitback.onrender.com/user/login",values, { withCredentials: true })
-      
-      if (response.data.success) {
-        setUser(response.data.user)
-        enqueueSnackbar("התחברת בהצלחה!", { variant: "success" });
-        setDialogType(null);
-        setOpen(false);
-        resetForm();
-      } else {
-        enqueueSnackbar(response.data.message, { variant: "error" });
-      }
+      const userData = await loginUser(values);
+      setUser(userData.user);
+      enqueueSnackbar("התחברת בהצלחה!", { variant: "success" });
+      setDialogType(null);
+      setOpen(false);
+      resetForm();
     } catch (error) {
-      enqueueSnackbar(error.response?.data?.message || "שגיאה בהתחברות", {
-        variant: "error",
-      });
+      const errorMessage = error.response?.data?.message || "שגיאה בהתחברות";
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <>
       <Dialog
         open={open}
-        TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
       >
@@ -65,7 +60,12 @@ const UserLogin = ({ setDialogType }) => {
           validationSchema={validationSchema}
           onSubmit={handleLogin}
         >
-          {({ handleSubmit, touched, errors }) => (
+          {({
+            handleSubmit,
+            touched,
+            errors,
+            isSubmitting: formikSubmitting,
+          }) => (
             <Form onSubmit={handleSubmit}>
               <DialogTitle>התחברות</DialogTitle>
               <DialogContent>
@@ -75,6 +75,7 @@ const UserLogin = ({ setDialogType }) => {
                   name="email"
                   type="email"
                   fullWidth
+                  margin="normal"
                   error={touched.email && Boolean(errors.email)}
                   helperText={touched.email && errors.email}
                 />
@@ -84,13 +85,21 @@ const UserLogin = ({ setDialogType }) => {
                   name="password"
                   type="password"
                   fullWidth
+                  margin="normal"
                   error={touched.password && Boolean(errors.password)}
                   helperText={touched.password && errors.password}
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose}>ביטול</Button>
-                <Button type="submit">התחבר</Button>
+                <Button onClick={handleClose} disabled={isSubmitting}>
+                  ביטול
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || formikSubmitting}
+                >
+                  {isSubmitting ? "מתחבר..." : "התחבר"}
+                </Button>
               </DialogActions>
             </Form>
           )}
@@ -101,5 +110,3 @@ const UserLogin = ({ setDialogType }) => {
 };
 
 export default UserLogin;
-
-

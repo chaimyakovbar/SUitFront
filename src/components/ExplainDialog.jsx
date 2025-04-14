@@ -1,15 +1,10 @@
 import React from "react";
 import { Dialog, Slide, Box, Typography, Button } from "@mui/material";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 const ExplainDialog = ({ open, handleClose, content }) => {
   return (
     <Dialog
       open={open}
-      TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
       PaperProps={{
@@ -24,9 +19,9 @@ const ExplainDialog = ({ open, handleClose, content }) => {
       }}
     >
       <Box>
-        <Typography variant="h6" fontWeight="bold" gutterBottom>
+        {/* <Typography variant="h6" fontWeight="bold" gutterBottom>
           הסבר על השלב
-        </Typography>
+        </Typography> */}
         <Typography sx={{ mb: 2 }}>{content}</Typography>
         <Button
           variant="contained"

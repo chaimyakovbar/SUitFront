@@ -5,26 +5,26 @@ import { Tooltip } from "@mui/material";
 import TakeSizes2 from "../components/TakeSize2";
 import TakeSizes3 from "../components/TakeSize3";
 import { useAtomValue } from "jotai";
-import { userAtom } from "../../Utils";
+import { userAtom } from "../Utils";
 
 const IndexSizes = () => {
   const [optionOne, setOptionOne] = useState(false);
   const user = useAtomValue(userAtom)
 
   return (
-    <div style={{ backgroundColor: "#f0f2f5", }}>
+    <div style={{ backgroundColor: "#f0f2f5"}}>
             {user && (
         <Tooltip title="לצורה אחרת של מידות לחץ ">
           <div
+          style={{ position: 'absolute', right: 0, top: '30%', zIndex:1000 }}
             onClick={() => setOptionOne((prev) => !prev)}
-            style={{ marginTop: "25%" }}
           >
             <ArrowForwardIcon style={{ fontSize: "70px" }} />
           </div>
         </Tooltip>
-      )}
+    )} 
       {!optionOne && (
-        <div style={{ width: "90%" }}>
+        <div >
           <TakeSizes />
         </div>
       )}

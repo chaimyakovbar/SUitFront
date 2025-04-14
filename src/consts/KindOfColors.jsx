@@ -98,7 +98,7 @@ export const  bodyPoints = [
     category: userSizes[1],
   },
   {
-    id: "waist",
+    id: "bat",
     label: "טוסיק",
     x: 60,
     y: 65,

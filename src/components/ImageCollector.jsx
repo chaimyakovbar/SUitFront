@@ -11,7 +11,7 @@ import {
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
   allSuitPartAtom,
-} from "../../Utils"
+} from "../Utils"
 import { useAtomValue, useAtom } from "jotai"
 import { useMediaQuery } from "@mui/material"
 

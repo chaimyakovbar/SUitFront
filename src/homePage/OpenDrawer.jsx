@@ -7,6 +7,7 @@ const OpenDrawer = ({ scrollToTargetSection }) => {
 
   const menuItems = [
     { text: "indexSizes", link: "/indexSizes" },
+    { text: "HOME", link: "/" },
     { text: "ALL COLLECTION", link: "/#targetSection", action: scrollToTargetSection },
     { text: "ABOUT US", link: "/about" },
     { text: "CONTACT", link: "/contact" },
@@ -22,7 +23,7 @@ const OpenDrawer = ({ scrollToTargetSection }) => {
         padding: "20px",
       }}
     >
-      {/* תפריט צד שמאל */}
+
       <List style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding style={{ width: "auto" }}>

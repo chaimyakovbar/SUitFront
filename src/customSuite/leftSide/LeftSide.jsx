@@ -2,7 +2,7 @@ import React from "react";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import { useAtom } from "jotai";
-import { currentIndexAtom } from "../../../Utils";
+import { currentIndexAtom } from "../../Utils";
 import { useMediaQuery } from "@mui/material";
 
 const LeftSide = () => {

@@ -26,30 +26,30 @@ const loadImage = async (key, path) => {
 
 const fetchImages = async (item) => {
   const imagePaths = [
-    { key: "insideUp", path: `../assets/ragach/insideUp/${item.insideColor}.png` },
-    { key: "button", path: `../assets/ragach/button/${item.kind}/${item.color}.png` },
-    { key: "lapelCollar", path: `../assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png` },
-    { key: "colar", path: `../assets/ragach/colar/${item.color}.png` },
-    { key: "sleeves", path: `../assets/ragach/sleeves/${item.color}.png` },
-    { key: "insideBottom", path: `../assets/ragach/insideBottom/${item.color}.png` },
-    { key: "packetBottom", path: `../assets/ragach/packetBottom/${item.packetType}/${item.color}.png` },
-    { key: "packetUp", path: `../assets/ragach/packetUp/${item.color}.png` },
+    { key: "insideUp", path: `/assets/ragach/insideUp/${item.insideColor}.png` },
+    { key: "button", path: `/assets/ragach/button/${item.kind}/${item.color}.png` },
+    { key: "lapelCollar", path: `/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png` },
+    { key: "colar", path: `/assets/ragach/colar/${item.color}.png` },
+    { key: "sleeves", path: `/assets/ragach/sleeves/${item.color}.png` },
+    { key: "insideBottom", path: `/assets/ragach/insideBottom/${item.color}.png` },
+    { key: "packetBottom", path: `/assets/ragach/packetBottom/${item.packetType}/${item.color}.png` },
+    { key: "packetUp", path: `/assets/ragach/packetUp/${item.color}.png` },
   ];
 
   if (item.parts.bottom) {
-    imagePaths.push({ key: "bottom", path: `../assets/ragach/bottom/${item.color}.png` });
+    imagePaths.push({ key: "bottom", path: `/assets/ragach/bottom/${item.color}.png` });
   }
   if (item.parts.bottomKind3) {
-    imagePaths.push({ key: "bottomKind3", path: `../assets/ragach/bottomKind3/${item.color}.png` });
+    imagePaths.push({ key: "bottomKind3", path: `/assets/ragach/bottomKind3/${item.color}.png` });
   }
   if (item.parts.holeButtonColor) {
-    imagePaths.push({ key: "holeButton", path: `../assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png` });
+    imagePaths.push({ key: "holeButton", path: `/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png` });
   }
   if (item.parts.holeButtonUpColor) {
-    imagePaths.push({ key: "holeButtonUp", path: `../assets/adds/holesButtonUp/${item.holeButtonUpColor}.png` });
+    imagePaths.push({ key: "holeButtonUp", path: `/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png` });
   }
   if (item.poshetColor) {
-    imagePaths.push({ key: "poshetColor", path: `../assets/adds/poshet/${item.poshetColor}.png` });
+    imagePaths.push({ key: "poshetColor", path: `/assets/adds/poshet/${item.poshetColor}.png` });
   }
 
   const images = await Promise.all(imagePaths.map(({ key, path }) => loadImage(key, path)));

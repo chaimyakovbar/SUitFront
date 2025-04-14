@@ -3,7 +3,7 @@ import { imagesInsideUp } from "../../consts/KindOfColors";
 import { Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
-import { selectedInsideTypeAtom } from "../../../Utils";
+import { selectedInsideTypeAtom } from "../../Utils";
 
 const useStyles = makeStyles({
     container: {
@@ -29,12 +29,13 @@ const useStyles = makeStyles({
   
 
 
-const ButtonInside = () => {
+const ButtonInside = ({handleCloseDrawer}) => {
   const classes = useStyles();
   const [, setSelectedInsideType] = useAtom(selectedInsideTypeAtom);
 
   const handleClick = (name) => {
-    setSelectedInsideType(name);
+    setSelectedInsideType(name)
+    handleCloseDrawer(false)
   };
 
   return (

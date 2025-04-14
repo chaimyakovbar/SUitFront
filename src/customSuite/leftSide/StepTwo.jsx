@@ -8,7 +8,7 @@ import {
   selectedCollarAtom,
   selectedLapelTypeAtom,
   selectedPacketTypeAtom,
-} from "../../../Utils"
+} from "../../Utils"
 
 import wide from "/assets/kinds/wide.png"
 import slim from "/assets/kinds/slim.png"

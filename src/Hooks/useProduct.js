@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import useAuth from "./useAuth";  // תוודא שאתה משתמש ב-hook שהכנת ל-fetch פרטי המשתמש
+import { userAtom } from '../Utils'
+import { useAtom } from "jotai";
 
 const getProduct = async (user) => {
   const { data } = await axios.get(`https://suitback.onrender.com/product?email=${user.email}`);
@@ -10,7 +11,7 @@ const getProduct = async (user) => {
 const arr = [];
 
 const useProduct = () => {
-  const { data: user, isLoading, error } = useAuth();  // עכשיו משתמשים ב-hook של profile
+  const [user] = useAtom(userAtom)
 
   const { data, isLoading: productLoading, error: productError, refetch } = useQuery({
     queryKey: ["useProduct", user],  // משתמשים במידע שהבאנו על היוזר
@@ -18,9 +19,9 @@ const useProduct = () => {
     enabled: !!user, // רק אם יש יוזר, הבקשה תתבצע
   });
 
-  if (isLoading || productLoading) return { data: arr, isLoading: true, error: null };
+  if (productLoading) return { data: arr, isLoading: true, error: null };
 
-  if (error || productError) return { data: arr, isLoading: false, error };
+  if (productError) return { data: arr, isLoading: false };
 
   return { data: data || arr, isLoading: false, error: null, refetch };
 };

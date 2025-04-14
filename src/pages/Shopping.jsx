@@ -1,6 +1,6 @@
 import React from "react";
 import HaveUser from "../components/HaveUser";
-import { userAtom } from "../../Utils";
+import { userAtom } from "../Utils";
 import { useAtom } from "jotai";
 import GetAllSuitFromData from "../components/GetAllSuitFromData";
 import OnlySizes from "../components/OnlySizes";

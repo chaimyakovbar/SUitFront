@@ -6,7 +6,7 @@ import Drawer from "./Drawer2";
 import OpenDrawer from "./OpenDrawer";
 import { useMediaQuery } from "react-responsive";
 import { useSetAtom } from "jotai";
-import { openUserDialog } from "../../Utils";
+import { openUserDialog } from "../Utils";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";

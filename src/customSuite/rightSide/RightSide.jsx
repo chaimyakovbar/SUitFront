@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { Box, Button, useMediaQuery, Drawer } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useAtom } from "jotai";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { currentIndexAtom } from "../../../Utils";
+import React, { useState } from "react"
+import { Box, Button, useMediaQuery, Drawer } from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import { useAtom } from "jotai"
+import VerifiedIcon from "@mui/icons-material/Verified"
+import { currentIndexAtom } from "../../Utils"
 
-import inside from "/assets/kinds/insid.svg";
-import poshet from "/assets/kinds/poshet.svg";
-import button from "/assets/kinds/button.svg";
-import holes from "/assets/kinds/AllSuit2.png";
+import inside from "/assets/kinds/insid.svg"
+import poshet from "/assets/kinds/poshet.svg"
+import button from "/assets/kinds/button.svg"
+import holes from "/assets/kinds/AllSuit2.png"
 
-import ButtonInside from "./ButtonInside";
-import ButtonHoles from "./ButtonHoles";
-import ButtonPoshet from "./ButtonPoshet";
-import ButtonButton from "./ButtonButton";
+import ButtonInside from "./ButtonInside"
+import ButtonHoles from "./ButtonHoles"
+import ButtonPoshet from "./ButtonPoshet"
+import ButtonButton from "./ButtonButton"
 
 const useStyles = makeStyles({
   container: (prop) => ({
@@ -65,48 +65,47 @@ const useStyles = makeStyles({
     flex: 1,
     padding: "20px",
   },
-});
+})
 
 const RightSide = () => {
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const classes = useStyles({ isMobile });
-  const [currentIndex] = useAtom(currentIndexAtom);
-  const [drawerContent, setDrawerContent] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const isMobile = useMediaQuery("(max-width:600px)")
+  const classes = useStyles({ isMobile })
+  const [currentIndex] = useAtom(currentIndexAtom)
+  const [drawerContent, setDrawerContent] = useState(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
-  if (currentIndex !== 2) return null;
+  if (currentIndex !== 2) return null
 
   const handleClick = (category) => {
-    setSelectedCategory(category);
+    setSelectedCategory(category)
 
-    // Set the content based on the selected category
-    let content;
+    let content
     switch (category) {
       case "imagesInsideUp":
-        content = <ButtonInside />;
-        break;
+        content = <ButtonInside handleCloseDrawer={handleCloseDrawer}/>
+        break
       case "imagesHoles":
-        content = <ButtonHoles />;
-        break;
+        content = <ButtonHoles handleCloseDrawer={handleCloseDrawer}/>
+        break
       case "imagesPoshet":
-        content = <ButtonPoshet />;
-        break;
+        content = <ButtonPoshet handleCloseDrawer={handleCloseDrawer}/>
+        break
       case "imageButton":
-        content = <ButtonButton />;
-        break;
+        content = <ButtonButton handleCloseDrawer={handleCloseDrawer}/>
+        break
       default:
-        content = null;
-        break;
+        content = null
+        break
     }
 
-    setDrawerContent(content);
-    setDrawerOpen(true);
-  };
+    setDrawerContent(content)
+    setDrawerOpen(true)
+  }
 
   const handleCloseDrawer = () => {
-    setDrawerOpen(false);
-  };
+    setDrawerOpen(false)
+  }
 
   return (
     <Box
@@ -184,7 +183,7 @@ const RightSide = () => {
         </Box>
       </Drawer>
     </Box>
-  );
-};
+  )
+}
 
-export default RightSide;
+export default RightSide

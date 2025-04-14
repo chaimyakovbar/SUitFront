@@ -17,14 +17,17 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Drawer,
 } from "@mui/material";
 import { bodyPoints, buttons } from "../consts/KindOfColors";
-import { userAtom } from "../../Utils";
+import { userAtom } from "../Utils";
 import { useAtom } from "jotai";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import useProduct from "../Hooks/useProduct";
-import axios from "axios";
+import { postProduct } from "../api/suit";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 // Create a mapping from button ID to bodyPoint category
 const createButtonCategoryMap = () => {
@@ -64,22 +67,24 @@ const Doll = (props) => {
 const DollDisplay = () => {
   const [user] = useAtom(userAtom);
   const { data, isLoading } = useProduct();
-  
-  // All state declarations
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [sizes, setSizes] = useState(() => isLoading ? {} : data?.sizes || {});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(null);
   const [dialogContent, setDialogContent] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const [activePoints, setActivePoints] = useState([]);
+  const [activePoints, setActivePoints] = useState([])
+    const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
 
-  // Compute completedPoints based on current sizes and data
+  const toggleSideDrawer = () => {
+    setSideDrawerOpen(!sideDrawerOpen);
+  };
   const completedPoints = React.useMemo(() => {
-    // Combine local sizes and server data sizes
+
     const allSizes = { ...(data?.sizes || {}), ...sizes };
     
-    // Create a list of completed point IDs
     return buttons.filter(button => {
       const category = buttonCategoryMap[button.id];
       const value = allSizes[category];
@@ -87,12 +92,11 @@ const DollDisplay = () => {
     }).map(button => button.id);
   }, [sizes, data?.sizes]);
 
-  // Update sizes when data loads (only once)
   React.useEffect(() => {
     if (!isLoading && data?.sizes && Object.keys(sizes).length === 0) {
       setSizes(data.sizes);
     }
-  }, [isLoading, data]);
+  }, [isLoading, data, sizes]);
 
   const handleSizeChange = (category, value) => {
     setSizes(prev => ({
@@ -104,10 +108,8 @@ const DollDisplay = () => {
   const handleButtonClick = (button) => {
     setSelectedButton(button);
     
-    // Get the category for this button
     const category = buttonCategoryMap[button.id];
     
-    // Set the input value to the current size if it exists
     const existingSize = sizes[category] || (data?.sizes ? data.sizes[category] : "");
     setInputValue(existingSize || "");
     
@@ -133,22 +135,43 @@ const DollDisplay = () => {
     e.preventDefault();
 
     if (Object.keys(sizes).length === 0) {
-      alert("אנא מלא את כל המידות הנדרשות");
+      enqueueSnackbar("אנא מלא את כל המידות הנדרשות");
       return;
     }
 
     try {
       const combinedSizes = data?.sizes ? { ...data.sizes, ...sizes } : sizes;
-
-      await axios.post("https://suitback.onrender.com/product", {
+      setDialogOpen(false);
+      setSelectedButton(null);
+       await postProduct({
         email: user.email,
         sizes: combinedSizes,
-      });
-      alert("המידות נשמרו בהצלחה!");
+      })
+      enqueueSnackbar("המידה נשמרה בהצלחה ")
     } catch (error) {
       console.error("שגיאה בשליחת הנתונים:", error);
-      alert("שגיאה בשמירת המידות.");
+      enqueueSnackbar("בעיה בשמירת המידה");
     }
+  }
+
+  const getEffectiveValue = (category) => {
+    // First check local state (prioritize local changes)
+    if (sizes[category] !== undefined && sizes[category] !== "") {
+      return sizes[category];
+    }
+
+    // Then fall back to database value if available
+    if (
+      data &&
+      data.sizes &&
+      data.sizes[category] !== undefined &&
+      data.sizes[category] !== ""
+    ) {
+      return data.sizes[category];
+    }
+
+    // Return empty string as default
+    return "";
   };
 
   // Handle point click to temporarily highlight a specific point
@@ -162,22 +185,27 @@ const DollDisplay = () => {
 
   return (
     <div>
-      <Box sx={{ position: "absolute", bottom: 16, right: 16 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 4, width: 200 }}
-          onClick={handleSubmit}
-        >
-          שמירת המידות
-        </Button>
+      <Box sx={{ position: "absolute", right: 10, top: '100px' }}>
+        <Box sx={{ p: 2, display: "flex", justifyContent: "space-between" }}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate("/Shopping")}
+              sx={{ borderRadius: 2 }}
+            >
+              לך לקניות
+            </Button>
+            <Button variant="contained" color="primary" onClick={toggleSideDrawer}>
+              הצג את כל המידות
+            </Button>
+          </Box>
         <Typography variant="body2">
           {completedPoints.length}/{bodyPoints.length} מידות הושלמו
         </Typography>
+  
       </Box>
 
       <div style={{ position: "relative" }}>
-        <div style={{ marginTop: "100px", width: "100%", height: "150vh" }}>
+        <div style={{ marginTop: "70px", width: "100%", height: "150vh" }}>
           <Canvas shadows>
             <PerspectiveCamera makeDefault position={[10, 20, 20]} />
             <ambientLight intensity={0.5} />
@@ -275,8 +303,8 @@ const DollDisplay = () => {
           <DialogActions
             sx={{ backgroundColor: "#F5F5F7", padding: "10px 24px" }}
           >
-            <Button onClick={handleClose} color="primary" variant="outlined">
-              סגור
+            <Button onClick={handleSubmit} color="primary" variant="outlined">
+ שמור
             </Button>
           </DialogActions>
         </Dialog>
@@ -292,6 +320,63 @@ const DollDisplay = () => {
           </DialogActions>
         </Dialog>
       </div>
+
+           <Drawer anchor="right" open={sideDrawerOpen} onClose={toggleSideDrawer}>
+              <Box sx={{ width: 300, p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3 }}>
+                  כל המידות
+                </Typography>
+      
+                {bodyPoints.map((point) => {
+                  const effectiveValue = getEffectiveValue(point.category);
+                  const isCompleted =
+                    effectiveValue &&
+                    effectiveValue.toString().trim() !== "" &&
+                    Number(effectiveValue) > 0;
+      
+                  return (
+                    <Box
+                      key={point.id}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2,
+                        p: 1,
+                        borderRadius: 1,
+                        bgcolor: isCompleted
+                          ? "rgba(76, 175, 80, 0.1)"
+                          : "rgba(255, 235, 235, 0.5)",
+                      }}
+                    >
+                      <Typography>{point.label}</Typography>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <TextField
+                          type="number"
+                          size="small"
+                          value={effectiveValue}
+                          onChange={(e) =>
+                            handleSizeChange(point.category, e.target.value)
+                          }
+                          sx={{ width: 80 }}
+                        />
+                        <Typography variant="body2" sx={{ ml: 1 }}>
+                          ס״מ
+                        </Typography>
+                      </Box>
+                    </Box>
+                  );
+                })}
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                  onClick={handleSubmit}
+                >
+                  שמור את כל המידות
+                </Button>
+              </Box>
+            </Drawer>
     </div>
   );
 };

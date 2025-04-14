@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { suitsColors } from "../../consts/KindOfColors";
 import { useAtom } from "jotai";
-import { counterAtom, currentColorAtom } from "../../../Utils";
+import { counterAtom, currentColorAtom } from "../../Utils";
 import { useMediaQuery } from "@mui/material";
 
 const StepOne = () => {

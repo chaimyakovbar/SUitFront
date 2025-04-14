@@ -33,7 +33,3 @@ export const openUserDialog = atom(false)
 export const allSuitPartAtom = atom([])
 
 export const userAtom = atom(null)
-
-
-
-

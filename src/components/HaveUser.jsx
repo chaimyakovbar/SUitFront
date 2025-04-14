@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { openUserDialog } from "../../Utils";
+import { openUserDialog } from "../Utils";
 import { useAtom } from "jotai";
 import UserLogin from "../User/UserLogin";
 import UserSignUp from "../User/UserSignUp";
@@ -13,10 +13,6 @@ import {
   Paper,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-
-const Transition = React.forwardRef((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const HaveUser = () => {
   const [dialogType, setDialogType] = useState(null);
@@ -46,11 +42,11 @@ const HaveUser = () => {
       <Link to="/">
         <Button
           sx={{
-            position: "absolute",  // מיקום קבוע
-            top: 20,               // מרחק מהחלק העליון
-            left: 20,   
-            color: 'black',           // מרחק מהחלק השמאלי
-            textAlign: "center",   // יישור טקסט
+            position: "absolute", // מיקום קבוע
+            top: 20, // מרחק מהחלק העליון
+            left: 20,
+            color: "black", // מרחק מהחלק השמאלי
+            textAlign: "center", // יישור טקסט
             backgroundColor: "#fff",
             boxShadow: "0px 4px 10px rgba(0,0,0,0.1)", // תוספת צל כדי להבדיל מהתוכן
           }}
@@ -58,7 +54,7 @@ const HaveUser = () => {
           מעבר לדף הבית
         </Button>
       </Link>
-      
+
       <Paper
         elevation={6}
         sx={{
@@ -94,7 +90,6 @@ const HaveUser = () => {
 
       <Dialog
         open={open}
-        TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
       >

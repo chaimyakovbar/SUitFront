@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
-import { selectedButtonAtom } from "../../../Utils"; // Import the Jotai atom
+import { selectedButtonAtom } from "../../Utils"; // Import the Jotai atom
 import { imageButton } from "../../consts/KindOfColors"; // Import the button images array
 
 const useStyles = makeStyles({
@@ -42,12 +42,13 @@ const useStyles = makeStyles({
   },
 });
 
-const ButtonButton = () => {
+const ButtonButton = ({handleCloseDrawer}) => {
   const classes = useStyles();
   const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom); // Using Jotai atom
 
   const handleClick = (name) => {
-    setSelectedButton(name); // Update the selected button in the atom
+    setSelectedButton(name)
+    handleCloseDrawer(false)
   };
 
   return (

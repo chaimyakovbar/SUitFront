@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../../Utils";
+import { userAtom } from "../Utils";
 import { bodyPoints } from "../consts/KindOfColors";
 import {
   Box,
@@ -10,17 +10,11 @@ import {
   Slide,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import axios from "axios"
-import useProduct from '../Hooks/useProduct'
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import useProduct from "../Hooks/useProduct";
+import { postProduct } from "../api/suit";
 
 const OnlySizes = () => {
   const { data, isLoading } = useProduct();
-  const navigate = useNavigate();
   const [user] = useAtom(userAtom);
   const [sizes, setSizes] = useState({});
   const [open, setOpen] = useState(false);
@@ -62,10 +56,11 @@ const OnlySizes = () => {
       const combinedSizes =
         data && data.sizes ? { ...data.sizes, ...sizes } : sizes;
 
-      await axios.post("https://suitback.onrender.com/product", {
+      await postProduct({
         email: user.email,
         sizes: combinedSizes,
       });
+
       alert("המידות נשמרו בהצלחה!");
     } catch (error) {
       console.error("שגיאה בשליחת הנתונים:", error);
@@ -93,17 +88,7 @@ const OnlySizes = () => {
         overflow: "hidden",
       }}
     >
-      <Box sx={{ p: 2, display: "flex", justifyContent: "space-between" }}>
-        <Button
-          variant="outlined"
-          onClick={() => navigate("/")}
-          sx={{ borderRadius: 2 }}
-        >
-          ← חזרה לדף הראשי
-        </Button>
-      </Box>
-
-      <Button
+     <Button
         variant="contained"
         fullWidth
         sx={{ mt: 2, width: "200px" }}
@@ -115,7 +100,6 @@ const OnlySizes = () => {
       {/* דיאלוג לתהליך אישור */}
       <Dialog
         open={open}
-        TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
       >

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
 
@@ -17,13 +16,14 @@ import {
   allSuitPartAtom,
   userAtom,
   openUserDialog,
-} from "../../Utils";
+} from "../Utils";
 import ExplainDialog from "./ExplainDialog";
 import { useSnackbar } from "notistack";
 import HaveUser from "./HaveUser";
 import { useNavigate } from "react-router-dom";
 import UserLogin from "../User/UserLogin";
 import UserSignUp from "../User/UserSignUp";
+import { postSuitProduct } from "../api/suit";
 
 const steps = [
   {
@@ -83,12 +83,12 @@ const StyledStepper = () => {
   const handleSubmitSuit = async () => {
     if (user) {
       try {
-        await axios.post("https://suitback.onrender.com/product/suits", {
+        await postSuitProduct({
           email: user.email,
           allSuitPart,
         });
+        navigate("/indexSizes")
         enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
-        navigate("/indexSizes");
       } catch (error) {
         console.error("שגיאה בשליחת הנתונים:", error);
         enqueueSnackbar("שגיאה בשמירת המידות.", { variant: "error" });
@@ -222,7 +222,7 @@ const StyledStepper = () => {
       </Paper>
 
       <Dialog
-        style={{ borderRadius: 4 }}
+        style={{ borderRadius: 8 }}
         open={open}
         onClose={() => setOpen(false)}
       >
@@ -230,9 +230,9 @@ const StyledStepper = () => {
           style={{
             padding: 4,
             maxWidth: 500,
-            width: "400px",
+            width: "358px",
             height: "120px",
-            borderRadius: 4,
+            borderRadius: '10%',
             textAlign: "center",
             marginTop: "20px",
             backgroundColor: "#ffffff",

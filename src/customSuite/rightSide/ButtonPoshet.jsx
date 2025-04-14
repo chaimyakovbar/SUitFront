@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
-import { selectedPoshetAtom } from "../../../Utils";
+import { selectedPoshetAtom } from "../../Utils";
 import { imagesPoshet } from "../../consts/KindOfColors";
 
 const useStyles = makeStyles({
@@ -37,12 +37,13 @@ const useStyles = makeStyles({
   },
 });
 
-const ButtonPoshet = () => {
+const ButtonPoshet = ({handleCloseDrawer}) => {
   const classes = useStyles();
   const [selectedPoshet, setSelectedPoshet] = useAtom(selectedPoshetAtom)
 
   const handleClick = (color) => {
     setSelectedPoshet(color)
+    handleCloseDrawer(false)
   };
 
   return (

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -17,40 +16,9 @@ const Contact = () => {
     alert("Message Sent Successfully!"); // כאן תוכל להוסיף לוגיקה לשליחת הנתונים לשרת
     setFormData({ name: "", email: "", message: "" });
   };
-  const navigate = useNavigate();
 
   return (
     <div style={{backgroundColor: "#FAF3E0"}}>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-start",
-          marginBottom: "20px",
-        }}
-      >
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            backgroundColor: "#8B5E3C",
-            color: "#FFF",
-            marginLeft: "20px",
-            marginTop: "30px",
-            padding: "10px 20px",
-            fontSize: "18px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: "bold",
-            transition: "0.3s",
-            boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
-          }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#5E3C1B")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#8B5E3C")}
-        >
-          ← Return to Main Page
-        </button>
-      </div>
       <div
         style={{
           maxWidth: "600px",

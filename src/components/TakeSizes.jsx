@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../../Utils";
+import { userAtom } from "../Utils";
 import HaveUser from "../components/HaveUser";
 import {
   userSizes,
@@ -20,9 +20,9 @@ import {
   Typography,
   IconButton,
   Drawer,
+  useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import useProduct from "../Hooks/useProduct";
 import tai from "../assets/sizes/humen/tai.png";
 import suit from "../assets/sizes/humen/suit.png";
@@ -32,12 +32,9 @@ import shirt from "../assets/sizes/humen/shirt.png";
 import shoose from "../assets/sizes/humen/shoose.png";
 import sleevs from "../assets/sizes/humen/sleevs.png";
 import bottomSuit from "../assets/sizes/humen/bottomSuit.png";
+import { postProduct } from "../api/suit";
 
 const arrayOfImg = [shirt, tai, bottomSuit, sleevs, suit];
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const TakeSizes = () => {
   const { data, isLoading } = useProduct();
@@ -52,9 +49,9 @@ const TakeSizes = () => {
 
   useEffect(() => {
     if (!isLoading && data && data.sizes) {
-      setSizes(prevSizes => ({
+      setSizes((prevSizes) => ({
         ...prevSizes,
-        ...data.sizes
+        ...data.sizes,
       }));
     }
   }, [isLoading, data]);
@@ -62,29 +59,37 @@ const TakeSizes = () => {
   useEffect(() => {
     if (!bodyPoints) return;
 
-    const completed = bodyPoints.filter(point => {
-      if (sizes[point.category] && sizes[point.category].toString().trim() !== "" && 
-          Number(sizes[point.category]) > 0) {
-        return true;
-      }
-      
-      if (data && data.sizes && 
-          data.sizes[point.category] && 
-          data.sizes[point.category].toString().trim() !== "" && 
-          Number(data.sizes[point.category]) > 0) {
-        return true;
-      }
-      
-      return false;
-    }).map(point => point.id);
+    const completed = bodyPoints
+      .filter((point) => {
+        if (
+          sizes[point.category] &&
+          sizes[point.category].toString().trim() !== "" &&
+          Number(sizes[point.category]) > 0
+        ) {
+          return true;
+        }
+
+        if (
+          data &&
+          data.sizes &&
+          data.sizes[point.category] &&
+          data.sizes[point.category].toString().trim() !== "" &&
+          Number(data.sizes[point.category]) > 0
+        ) {
+          return true;
+        }
+
+        return false;
+      })
+      .map((point) => point.id);
 
     setCompletedPoints(completed);
   }, [sizes, data]);
 
-  if (!user) return <HaveUser />;
+  // if (!user) return <HaveUser />;
 
   const handleSizeChange = (category, value) => {
-    setSizes(prev => ({ ...prev, [category]: value }));
+    setSizes((prev) => ({ ...prev, [category]: value }));
   };
 
   const handlePointClick = (point) => {
@@ -115,12 +120,17 @@ const TakeSizes = () => {
     if (sizes[category] !== undefined && sizes[category] !== "") {
       return sizes[category];
     }
-    
+
     // Then fall back to database value if available
-    if (data && data.sizes && data.sizes[category] !== undefined && data.sizes[category] !== "") {
+    if (
+      data &&
+      data.sizes &&
+      data.sizes[category] !== undefined &&
+      data.sizes[category] !== ""
+    ) {
       return data.sizes[category];
     }
-    
+
     // Return empty string as default
     return "";
   };
@@ -135,11 +145,10 @@ const TakeSizes = () => {
 
     try {
       // Combine existing database values with local changes for the save
-      const combinedSizes = data && data.sizes 
-        ? { ...data.sizes, ...sizes } 
-        : sizes;
-        
-      await axios.post("https://suitback.onrender.com/product", {
+      const combinedSizes =
+        data && data.sizes ? { ...data.sizes, ...sizes } : sizes;
+
+      await postProduct({
         email: user.email,
         sizes: combinedSizes,
       });
@@ -157,18 +166,19 @@ const TakeSizes = () => {
 
   const getPointStatus = (pointId) => {
     // Find the corresponding body point
-    const point = bodyPoints.find(p => p.id === pointId);
+    const point = bodyPoints.find((p) => p.id === pointId);
     if (!point) return "pending";
-    
+
     // Check if the measurement is completed
     const value = getEffectiveValue(point.category);
-    return (value && value.toString().trim() !== "" && Number(value) > 0) 
-      ? "completed" 
+    return value && value.toString().trim() !== "" && Number(value) > 0
+      ? "completed"
       : "pending";
   };
 
+  const isMobile = useMediaQuery("(max-width:600px)")
+  
   if (isLoading) return <p>טוען נתונים...</p>;
-
   return (
     <Box
       sx={{
@@ -181,21 +191,11 @@ const TakeSizes = () => {
       <Box sx={{ p: 2, display: "flex", justifyContent: "space-between" }}>
         <Button
           variant="outlined"
-          onClick={() => navigate("/")}
-          sx={{ borderRadius: 2 }}
-        >
-          ← חזרה לדף הראשי
-        </Button>
-        <Button
-          variant="outlined"
           onClick={() => navigate("/Shopping")}
           sx={{ borderRadius: 2 }}
         >
-       לך לקניות
+          לך לקניות
         </Button>
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          מדידת מידות התפירה שלך
-        </Typography>
         <Button variant="contained" color="primary" onClick={toggleSideDrawer}>
           הצג את כל המידות
         </Button>
@@ -226,7 +226,7 @@ const TakeSizes = () => {
               position: "relative",
               width: "350px",
               height: "550px",
-              left: "20%",
+              left: isMobile ? '13%' : '20%',
             }}
           >
             <img
@@ -325,7 +325,6 @@ const TakeSizes = () => {
       {selectedPoint && (
         <Dialog
           open={true}
-          TransitionComponent={Transition}
           keepMounted
           onClose={handleClosePoint}
           maxWidth="sm"
@@ -422,11 +421,9 @@ const TakeSizes = () => {
         </Dialog>
       )}
 
-      {/* Help content dialog */}
       {dialogType && (
         <Dialog
           open={dialogType !== null}
-          TransitionComponent={Transition}
           keepMounted
           onClose={handleClose}
         >
@@ -451,10 +448,11 @@ const TakeSizes = () => {
 
           {bodyPoints.map((point) => {
             const effectiveValue = getEffectiveValue(point.category);
-            const isCompleted = effectiveValue && 
-                               effectiveValue.toString().trim() !== "" && 
-                               Number(effectiveValue) > 0;
-            
+            const isCompleted =
+              effectiveValue &&
+              effectiveValue.toString().trim() !== "" &&
+              Number(effectiveValue) > 0;
+
             return (
               <Box
                 key={point.id}
@@ -476,7 +474,9 @@ const TakeSizes = () => {
                     type="number"
                     size="small"
                     value={effectiveValue}
-                    onChange={(e) => handleSizeChange(point.category, e.target.value)}
+                    onChange={(e) =>
+                      handleSizeChange(point.category, e.target.value)
+                    }
                     sx={{ width: 80 }}
                   />
                   <Typography variant="body2" sx={{ ml: 1 }}>

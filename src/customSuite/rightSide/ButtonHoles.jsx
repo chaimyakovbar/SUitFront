@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import {
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
-} from "../../../Utils";
+} from "../../Utils";
 import { imagesHoles } from "../../consts/KindOfColors";
 import holes from "/assets/kinds/AllSuit.png";
 import JustUp from "/assets/kinds/JustUp.png";
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ButtonHoles = () => {
+const ButtonHoles = ({handleCloseDrawer}) => {
   const classes = useStyles();
   const [, setSelectedHolesButton] = useAtom(selectedHolesButtonAtom);
   const [, setSelectedHolesButtonUp] = useAtom(selectedHolesButtonUpAtom);
@@ -47,32 +47,18 @@ const ButtonHoles = () => {
   const handleClick = (color) => {
     setSelectedHolesButton(color);
     setSelectedHolesButtonUp(color);
+    handleCloseDrawer(false)
   };
-
+  
   const handleClick2 = (color) => {
     setSelectedHolesButton(null);
     setSelectedHolesButtonUp(color);
+    handleCloseDrawer(false)
   };
 
   return (
     <div className={classes.container}>
       <div style={{ display: "flex" }}>
-        <div>
-          <img
-            style={{ width: "90px", height: "140px" }}
-            src={JustUp}
-            alt={JustUp}
-          />
-
-          <Button
-            style={{ backgroundColor: showAllSuit ? "grey" : "blue" }}
-            onClick={() => setShowAllSuit(false)}
-            variant="contained"
-            color="primary"
-          >
-            Just Up
-          </Button>
-        </div>
         <div>
           <img
             style={{ width: "90px", height: "140px" }}
@@ -89,42 +75,62 @@ const ButtonHoles = () => {
             All Suit
           </Button>
         </div>
+        <div>
+          <img
+            style={{ width: "90px", height: "140px" }}
+            src={JustUp}
+            alt={JustUp}
+          />
+
+          <Button
+            style={{ backgroundColor: showAllSuit ? "grey" : "blue" }}
+            onClick={() => setShowAllSuit(false)}
+            variant="contained"
+            color="primary"
+          >
+            Just Up
+          </Button>
+        </div>
       </div>
 
       {showAllSuit ? (
-        <div>
+        <div style={{display: 'ruby'}}>
           {imagesHoles.map((item) => (
-            <Button
+            <button
               onClick={() => handleClick(item.name)}
               key={item.name}
               className={classes.button}
               style={{
                 backgroundColor: item.color,
                 margin: "15px",
-                height: "70px",
+                height: "65px",
+                width: '10px',
                 border: "1px solid black",
+                borderRadius: '50%'
               }}
             >
               <p className={classes.buttonText}>{item.name}</p>
-            </Button>
+            </button>
           ))}
         </div>
       ) : (
-        <div>
+        <div style={{display: 'ruby'}}>
           {imagesHoles.map((item) => (
-            <Button
+            <button
               onClick={() => handleClick2(item.name)}
               key={item.name}
               className={classes.button}
               style={{
                 backgroundColor: item.color,
                 margin: "15px",
-                height: "70px",
+                height: "65px",
+                width: '10px',
                 border: "1px solid black",
+                borderRadius: '50%'
               }}
             >
               <p className={classes.buttonText}>{item.name}</p>
-            </Button>
+            </button>
           ))}
         </div>
       )}

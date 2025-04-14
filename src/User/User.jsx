@@ -2,13 +2,8 @@ import React, { useState } from "react";
 import { Button, Dialog, Slide, Typography, Stack, Box } from "@mui/material";
 import UserSignUp from "./UserSignUp";
 import UserLogin from "./UserLogin";
-import { openUserDialog, userAtom } from "../../Utils";
+import { openUserDialog, userAtom } from "../Utils";
 import { useAtom } from "jotai";
-import { Link } from "react-router-dom";
-
-const Transition = React.forwardRef((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const User = () => {
   const [user] = useAtom(userAtom);
@@ -29,7 +24,6 @@ const User = () => {
       <Dialog
         open={open}
         onClose={handleClose}
-        TransitionComponent={Transition}
         keepMounted
         PaperProps={{
           sx: {

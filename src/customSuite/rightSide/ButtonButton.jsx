@@ -40,15 +40,30 @@ const useStyles = makeStyles({
     margin: "5px 0 0",
     fontSize: "14px",
   },
+  noColorButton: {
+    marginTop: "20px",
+    padding: "10px",
+    border: "2px solid #999",
+    borderRadius: "8px",
+    backgroundColor: "#f0f0f0",
+    "&:hover": {
+      backgroundColor: "#e0e0e0",
+    },
+  },
 });
 
-const ButtonButton = ({handleCloseDrawer}) => {
+const ButtonButton = ({ handleCloseDrawer }) => {
   const classes = useStyles();
   const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom); // Using Jotai atom
 
   const handleClick = (name) => {
-    setSelectedButton(name)
-    handleCloseDrawer(false)
+    setSelectedButton(name);
+    handleCloseDrawer(false);
+  };
+
+  const handleNoColor = () => {
+    setSelectedButton(null);
+    handleCloseDrawer(false);
   };
 
   return (
@@ -57,12 +72,26 @@ const ButtonButton = ({handleCloseDrawer}) => {
         <Button
           onClick={() => handleClick(item.name)} // Select the clicked button
           key={item.name}
-          className={`${classes.button} ${selectedButton === item.name ? classes.activeButton : classes.inactiveButton}`} 
+          className={`${classes.button} ${
+            selectedButton === item.name
+              ? classes.activeButton
+              : classes.inactiveButton
+          }`}
         >
           <img src={item.img} alt={item.name} className={classes.buttonImage} />
           <p className={classes.buttonText}>{item.name}</p>
         </Button>
       ))}
+      <Button
+        onClick={handleNoColor}
+        className={`${classes.noColorButton} ${
+          selectedButton === null
+            ? classes.activeButton
+            : classes.inactiveButton
+        }`}
+      >
+        ללא צבע
+      </Button>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import doll1 from "../assets/suits/dollSuitGrey.webp";
 import { makeStyles } from "@mui/styles";
 import Slider from "react-slick";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { collections } from "../consts/KindOfColors";
 
 const useStyles = makeStyles({
@@ -92,24 +92,26 @@ const useStyles = makeStyles({
   },
 });
 
-const settings = {
-  slidesToShow: 5,
-  infinite: true,
-  autoplay: true,
-  autoplaySpeed: 20,
-  cssEase: "linear",
-  speed: 6000,
-  swipe: true,
-  touchMove: true,
-  draggable: true,
-  pauseOnHover: true,
-};
-
 const AllCollection = ({ targetSectionRef }) => {
   const classes = useStyles();
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [hoveredImage, setHoveredImage] = useState(null)
 
-  const [hoveredImage, setHoveredImage] = useState(null);
+    const isMobile = useMediaQuery("(max-width:600px)")
+
+  const settings = {
+    slidesToShow: isMobile ? 1 : 5,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 20,
+    cssEase: "linear",
+    speed: 6000,
+    swipe: true,
+    touchMove: true,
+    draggable: true,
+    pauseOnHover: true,
+  }
+
 
   return (
     <div ref={targetSectionRef} style={{ backgroundColor: "#FAF3E0" }}>

@@ -5,9 +5,9 @@ import { WhatsApp, Mail, Chat } from "@mui/icons-material";
 const styles = {
   floatingButtonContainer: {
     position: "fixed",
-    bottom: "180px", // נמוך יותר במסך
+    bottom: "100px", // נמוך יותר במסך
     right: "20px", // בצד שמאל
-    zIndex: 2000,
+    zIndex: 100,
   },
   fabButton: {
     backgroundColor: "#25D366",

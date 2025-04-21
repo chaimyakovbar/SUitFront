@@ -32,4 +32,6 @@ export const openUserDialog = atom(false)
 
 export const allSuitPartAtom = atom([])
 
+export const priceAllSuit = atom(0)
+
 export const userAtom = atom(null)

@@ -67,7 +67,7 @@ const useStyles = makeStyles({
   },
 })
 
-const RightSide = () => {
+const   RightSide = () => {
   const isMobile = useMediaQuery("(max-width:600px)")
   const classes = useStyles({ isMobile })
   const [currentIndex] = useAtom(currentIndexAtom)

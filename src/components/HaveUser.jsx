@@ -36,24 +36,9 @@ const HaveUser = () => {
         justifyContent: "center",
         alignItems: "center",
         px: 2,
-        position: "relative", // הוספתי כדי שנוכל למקם את הכפתור לפי פוזיציה
+        position: "relative",
       }}
     >
-      <Link to="/">
-        <Button
-          sx={{
-            position: "absolute", // מיקום קבוע
-            top: 20, // מרחק מהחלק העליון
-            left: 20,
-            color: "black", // מרחק מהחלק השמאלי
-            textAlign: "center", // יישור טקסט
-            backgroundColor: "#fff",
-            boxShadow: "0px 4px 10px rgba(0,0,0,0.1)", // תוספת צל כדי להבדיל מהתוכן
-          }}
-        >
-          מעבר לדף הבית
-        </Button>
-      </Link>
 
       <Paper
         elevation={6}
@@ -88,14 +73,14 @@ const HaveUser = () => {
         </Stack>
       </Paper>
 
-      <Dialog
-        open={open}
-        keepMounted
-        onClose={handleClose}
-      >
+      <Dialog open={open} keepMounted onClose={handleClose}>
         <Box p={3}>
-          {dialogType === "login" && <UserLogin setDialogType={null} />}
-          {dialogType === "signup" && <UserSignUp setDialogType={null} />}
+          {dialogType === "login" && (
+            <UserLogin setDialogType={setDialogType} />
+          )}
+          {dialogType === "signup" && (
+            <UserSignUp setDialogType={setDialogType} />
+          )}
         </Box>
       </Dialog>
     </Box>

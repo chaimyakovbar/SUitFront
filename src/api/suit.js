@@ -16,14 +16,23 @@ export const postProduct = async ({ email, sizes }) => {
 };
 
 export const postSuitProduct = async ({ email, allSuitPart }) => {
-    return axiosInstance.post("/product/suits", {
+    const response = await axiosInstance.post("/product/suits", {
         email,
         allSuitPart,
     });
+    return response.data; // This will include the suits with their IDs
 };
 
 export const getAllProducts = async () => {
     return axiosInstance.get("/product");
+};
+
+export const deleteSuit = async (suitId) => {
+    return axiosInstance.delete(`/product/suits/${suitId}`, {
+        params: {
+            email: localStorage.getItem('email')
+        }
+    });
 };
 
 

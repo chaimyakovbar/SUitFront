@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useSnackbar } from "notistack";
-import { registerUser } from "../api/user";
+import { registerUser, loginUser } from "../api/user";
 
 const UserSignUp = ({ setDialogType }) => {
   const SchemaYupForUser = Yup.object({
@@ -38,14 +38,24 @@ const UserSignUp = ({ setDialogType }) => {
 
   const handleCreatUser = async (values, { resetForm }) => {
     try {
-      const userData = await registerUser(values);
-      setUser(userData.user);
-      enqueueSnackbar("נרשמת בהצלחה!", { variant: "success" });
+      // First register the user
+      await registerUser(values);
+
+      // Then automatically log them in
+      const loginData = await loginUser({
+        email: values.email,
+        password: values.password,
+      });
+
+      setUser(loginData.user);
+      enqueueSnackbar("נרשמת והתחברת בהצלחה!", { variant: "success" });
       setOpen(false);
-      setDialogType(null);
+      setDialogType(null)
       resetForm();
     } catch (error) {
-      enqueueSnackbar("כבר יש שימוש במייל זה", { variant: "error", error});
+      enqueueSnackbar(error.message || "כבר יש שימוש במייל זה", {
+        variant: "error",
+      });
     }
   };
 

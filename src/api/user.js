@@ -56,6 +56,9 @@ export const registerUser = async (values) => {
     const response = await axiosInstance.post("/user/register", values);
     return response.data;
   } catch (error) {
+    if (error.response?.status === 400) {
+      throw new Error(error.response.data.message || "כבר יש שימוש במייל זה");
+    }
     console.error("Error registering user:", error);
     throw error;
   }

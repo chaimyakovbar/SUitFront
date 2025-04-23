@@ -1,6 +1,4 @@
 import { atom } from "jotai"
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 
 export const counterAtom = atom([
   { step1Validated: false },
@@ -37,7 +35,3 @@ export const allSuitPartAtom = atom([])
 export const priceAllSuitAtom = atom(0)
 
 export const userAtom = atom(null)
-
-export function cn(...inputs) {
-  return twMerge(clsx(inputs));
-}

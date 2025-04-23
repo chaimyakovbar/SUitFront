@@ -160,7 +160,7 @@ const StyledStepper = () => {
           setAllSuitPart(currentSuits);
           await postSuitProduct({
             email: user.email,
-            allSuitPart: currentSuits,
+            allSuitPart: newSuit,
           });
 
           // Reset all stepper states

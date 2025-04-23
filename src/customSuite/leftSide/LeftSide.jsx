@@ -12,9 +12,11 @@ const LeftSide = () => {
   return (
     <div
       style={{
-        width: isMobile ? "100px" : "30%",
+        position: 'absolute',
+        zIndex: 1000,
+        width: isMobile ? "190px" : "30%",
         backgroundColor: "#F5F5F7",
-        height: isMobile ? "50vh" : "80vh",
+        height: isMobile ? "42vh" : "80vh",
         overflowY: "auto",
         padding: isMobile ? "0px" : "30px",
         boxSizing: "border-box",

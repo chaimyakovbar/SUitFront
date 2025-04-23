@@ -32,14 +32,16 @@ const useStyles = makeStyles({
     color: "#333",
     borderRadius: "8px",
     position: "relative",
+    transition: "transform 0.3s ease",
   },
   buttonText: {
-    margin: "5px 0 0",
+    margin: "0 0 0 0",
     fontSize: "14px",
+    display: 'flex',
+    justifyContent: 'center'
   },
   selectedButton: {
-    border: "3px solid red",
-    boxShadow: "0 0 10px rgba(63, 181, 65, 0.5)",
+    boxShadow: '0px 0px 10px 5px rgb(255 0 0)',
     transform: "scale(1.1)",
   },
   resetButton: {
@@ -68,6 +70,7 @@ const useStyles = makeStyles({
     fontSize: "12px",
   },
 });
+
 
 const ButtonHoles = ({ handleCloseDrawer }) => {
   const classes = useStyles();
@@ -146,6 +149,7 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
       {showAllSuit ? (
         <div style={{ display: "ruby" }}>
           {imagesHoles.map((item) => (
+            <div>
             <button
               onClick={() => handleClick(item.name)}
               key={item.name}
@@ -157,20 +161,22 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
                 margin: "15px",
                 height: "65px",
                 width: "10px",
-                border: "1px solid black",
+                border: "none",
                 borderRadius: "50%",
               }}
             >
               {selectedHolesButton === item.name && (
                 <div className={classes.selectionIndicator}>✓</div>
               )}
-              <p className={classes.buttonText}>{item.name}</p>
             </button>
+          <p className={classes.buttonText}>{item.name}</p>
+          </div>
           ))}
         </div>
       ) : (
         <div style={{ display: "ruby" }}>
           {imagesHoles.map((item) => (
+            <div>
             <button
               onClick={() => handleClick2(item.name)}
               key={item.name}
@@ -184,15 +190,16 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
                 margin: "15px",
                 height: "65px",
                 width: "10px",
-                border: "1px solid black",
+                border: "none",
                 borderRadius: "50%",
               }}
             >
               {selectedHolesButtonUp === item.name && (
                 <div className={classes.selectionIndicator}>✓</div>
               )}
-              <p className={classes.buttonText}>{item.name}</p>
             </button>
+               <p className={classes.buttonText}>{item.name}</p>
+               </div>
           ))}
         </div>
       )}

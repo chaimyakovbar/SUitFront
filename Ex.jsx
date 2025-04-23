@@ -1,329 +1,236 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  currentKindAtom,
-  currentColorAtom,
-  selectedCollarAtom,
-  selectedLapelTypeAtom,
-  selectedPacketTypeAtom,
-  selectedInsideTypeAtom,
-  selectedButtonAtom,
-  selectedPoshetAtom,
-  selectedHolesButtonAtom,
-  selectedHolesButtonUpAtom,
-  // allSuitPartAtom,
-} from "../Utils";
-import { useAtomValue } from "jotai";
-import { useMediaQuery } from "@mui/material";
-import { suitPricing } from "../config/suitPricing";
+import React, { useState } from "react";
+import { Box, Button, useMediaQuery, Drawer } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useAtom } from "jotai";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import { currentIndexAtom } from "../../Utils";
 
-const ImageFilterComponent = () => {
-  // const previousConfigRef = useRef(null);
-  const [loading, setLoading] = useState(true);
+import inside from "/assets/kinds/insid.svg";
+import poshet from "/assets/kinds/poshet.svg";
+import button from "/assets/kinds/button.svg";
+import holes from "/assets/kinds/AllSuit2.png";
 
-  const currColor = useAtomValue(currentColorAtom);
-  const selectedKind = useAtomValue(currentKindAtom);
-  // const [ , setAllSuitPart] = useAtom(allSuitPartAtom);
-  const selectedCollar = useAtomValue(selectedCollarAtom);
-  const selectedButton = useAtomValue(selectedButtonAtom);
-  const selectedPoshet = useAtomValue(selectedPoshetAtom);
-  const selectedLapelType = useAtomValue(selectedLapelTypeAtom);
-  const selectedPacketType = useAtomValue(selectedPacketTypeAtom);
-  const selectedInsideType = useAtomValue(selectedInsideTypeAtom);
-  const selectedHolesButton = useAtomValue(selectedHolesButtonAtom);
-  const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom);
+import ButtonInside from "./ButtonInside";
+import ButtonHoles from "./ButtonHoles";
+import ButtonPoshet from "./ButtonPoshet";
+import ButtonButton from "./ButtonButton";
 
-  const insideColor = selectedInsideType || currColor;
-  const holeButtonColor = selectedHolesButton;
-  const holeButtonUpColor = selectedHolesButtonUp;
-  const buttonColor = selectedButton;
-  const poshetColor = selectedPoshet;
-
-
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 200)
-
-    return () => clearTimeout(timer);
-  }, [selectedKind, currColor, currColor, currColor, currColor, bottomPart, currColor, selectedLapelType, selectedCollar, selectedPacketType, calculateTotalPrice, buttonColor, insideColor, poshetColor, holeButtonColor, holeButtonUpColor,]);
-
-  const bottomPart =
-  selectedKind === "kind3" || selectedKind === "kind4" ? "bottomKind3" : "bottom";
-
-  const isMobile = useMediaQuery("(max-width:600px)");
-
-  const imageStyle = {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    objectFit: "contain",
-  };
-
-  const overlayStyle = {
-    ...imageStyle,
+const useStyles = makeStyles({
+  container: (prop) => ({
+    display: "flex",
+    flexDirection: "column",
+    gap: prop.isMobile ? "12px" : "24px",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: prop.isMobile ? "100%" : "100%",
+    backgroundColor: "#F5F5F7",
+    height: prop.isMobile ? "50vh" : "80vh",
+    overflowY: "auto",
+    boxSizing: "border-box",
+    padding: prop.isMobile ? "16px" : "30px",
     zIndex: 100,
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    marginRight: "20px",
+  }),
+  buttonImg: (prop) => ({
+    height: prop.isMobile ? "60px" : "100px",
+    width: "auto",
+    cursor: "pointer",
+    transition: "all 0.3s ease-in-out",
+    objectFit: "contain",
+  }),
+  selectedButton: {
+    position: "relative",
+    borderRadius: "12px",
+    padding: "16px",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    transition: "all 0.3s ease-in-out",
+    width: (prop) => (prop.isMobile ? "80px" : "120px"),
+    height: (prop) => (prop.isMobile ? "80px" : "120px"),
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    "&:hover": {
+      backgroundColor: "#f0f0f0",
+      transform: "scale(1.05)",
+      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
+    },
+  },
+  verifiedIcon: (prop) => ({
+    position: "absolute",
+    top: "8px",
+    right: "8px",
+    color: "#FF5722",
+    fontSize: prop.isMobile ? "20px" : "24px",
+    zIndex: 1,
+  }),
+  text: (prop) => ({
+    fontSize: prop.isMobile ? "16px" : "24px",
+    fontWeight: "bold",
+    marginBottom: prop.isMobile ? "12px" : "16px",
+    textAlign: "center",
+    color: "#333",
+    textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+  }),
+  drawerPaper: (prop) => ({
+    width: prop.isMobile ? "80%" : "350px",
+    maxWidth: "350px",
+    borderRadius: "12px 0 0 12px",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+  }),
+  drawerContent: {
+    padding: "24px",
+    height: "100%",
+    overflowY: "auto",
+  },
+  closeButton: {
+    position: "absolute",
+    top: "16px",
+    left: "16px",
+    backgroundColor: "#FF5722",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#E65100",
+    },
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "8px",
+  },
+});
+
+const RightSide = () => {
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const classes = useStyles({ isMobile });
+  const [currentIndex] = useAtom(currentIndexAtom);
+  const [drawerContent, setDrawerContent] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  if (currentIndex !== 2) return null;
+
+  const handleClick = (category) => {
+    setSelectedCategory(category);
+
+    let content;
+    switch (category) {
+      case "imagesInsideUp":
+        content = <ButtonInside handleCloseDrawer={handleCloseDrawer} />;
+        break;
+      case "imagesHoles":
+        content = <ButtonHoles handleCloseDrawer={handleCloseDrawer} />;
+        break;
+      case "imagesPoshet":
+        content = <ButtonPoshet handleCloseDrawer={handleCloseDrawer} />;
+        break;
+      case "imageButton":
+        content = <ButtonButton handleCloseDrawer={handleCloseDrawer} />;
+        break;
+      default:
+        content = null;
+        break;
+    }
+
+    setDrawerContent(content);
+    setDrawerOpen(true);
   };
 
-  const handleImageError = (imageName) => {
-    console.warn(`⚠️ Failed to load image: ${imageName}`);
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
   };
-
-  // Calculate total price
-  const calculateTotalPrice = useMemo(() => {
-    let total = suitPricing.basePrices[selectedKind] || 0;
-    console.log("Base price:", total);
-
-    // Add lapel type cost
-    const lapelCost = suitPricing.additionalCosts.lapelTypes[selectedLapelType] || 0;
-    total += lapelCost;
-    console.log("Lapel cost:", lapelCost);
-
-    // Add collar type cost
-    const collarCost = suitPricing.additionalCosts.collarTypes[selectedCollar] || 0;
-    total += collarCost;
-    console.log("Collar cost:", collarCost);
-
-    // Add packet type cost
-    const packetCost = suitPricing.additionalCosts.packetTypes[selectedPacketType] || 0;
-    total += packetCost;
-    console.log("Packet cost:", packetCost);
-
-    // Add special features costs
-    if (poshetColor) {
-      total += suitPricing.additionalCosts.features.poshet;
-      console.log("Poshet cost:", suitPricing.additionalCosts.features.poshet);
-    }
-    if (holeButtonColor) {
-      total += suitPricing.additionalCosts.features.holesButton;
-      console.log(
-        "Hole button cost:",
-        suitPricing.additionalCosts.features.holesButton
-      );
-    }
-    if (holeButtonUpColor) {
-      total += suitPricing.additionalCosts.features.holesButtonUp;
-      console.log(
-        "Hole button up cost:",
-        suitPricing.additionalCosts.features.holesButtonUp
-      );
-    }
-
-    // Add color costs based on their specific categories
-    if (currColor) {
-      // Main suit color
-      if (suitPricing.additionalCosts.MainSuitColors[currColor] !== undefined) {
-        const mainColorCost = suitPricing.additionalCosts.MainSuitColors[currColor];
-        total += mainColorCost;
-        console.log(`Main suit color cost for ${currColor}:`, mainColorCost);
-      }
-    }
-
-    if (insideColor) {
-      // Inside color
-      if (suitPricing.additionalCosts.InsideColors[insideColor] !== undefined) {
-        const insideColorCost =
-          suitPricing.additionalCosts.InsideColors[insideColor];
-        total += insideColorCost;
-        console.log(`Inside color cost for ${insideColor}:`, insideColorCost);
-      }
-    }
-
-    // Handle button color
-    if (selectedButton) {
-      const buttonColorCost =
-        suitPricing.additionalCosts.ButtonColors[selectedButton];
-      if (buttonColorCost !== undefined) {
-        total += buttonColorCost;
-        console.log(
-          `Button color cost for ${selectedButton}:`,
-          buttonColorCost
-        );
-      }
-    }
-
-    // console.log("Final total:", total);
-    return total;
-  }, [
-    selectedKind,
-    selectedLapelType,
-    selectedCollar,
-    selectedPacketType,
-    currColor,
-    insideColor,
-    selectedButton,
-    poshetColor,
-    holeButtonColor,
-    holeButtonUpColor,
-  ]);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        right: 0,
-        width: isMobile ? "250px" : "500px",
-        height: isMobile ? "350px" : "500px",
-      }}
+    <Box
+      display={isMobile ? "block" : "flex"}
+      flexDirection={isMobile ? "column" : "row"}
     >
-      <div
-        style={{
-          position: "absolute",
-          right: 10,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
-          color: "white",
-          padding: "8px 16px",
-          borderRadius: "4px",
-          zIndex: 1001,
-          fontSize: isMobile ? "14px" : "18px",
-          fontWeight: "bold",
-        }}
-      >
-        ${calculateTotalPrice}
+      <div className={classes.container}>
+        <div className={classes.buttonContainer}>
+          <h2 className={classes.text}>סטייל פנימי</h2>
+          <Button
+            onClick={() => handleClick("imagesInsideUp")}
+            className={classes.selectedButton}
+          >
+            <img src={inside} className={classes.buttonImg} alt="inside" />
+            {selectedCategory === "imagesInsideUp" && (
+              <VerifiedIcon className={classes.verifiedIcon} />
+            )}
+          </Button>
+        </div>
+
+        <div className={classes.buttonContainer}>
+          <h2 className={classes.text}>בד כיס</h2>
+          <Button
+            onClick={() => handleClick("imagesPoshet")}
+            className={classes.selectedButton}
+          >
+            <img src={poshet} className={classes.buttonImg} alt="poshet" />
+            {selectedCategory === "imagesPoshet" && (
+              <VerifiedIcon className={classes.verifiedIcon} />
+            )}
+          </Button>
+        </div>
+
+        <div className={classes.buttonContainer}>
+          <h2 className={classes.text}>סטייל כפתור</h2>
+          <Button
+            onClick={() => handleClick("imageButton")}
+            className={classes.selectedButton}
+          >
+            <img src={button} className={classes.buttonImg} alt="button" />
+            {selectedCategory === "imageButton" && (
+              <VerifiedIcon className={classes.verifiedIcon} />
+            )}
+          </Button>
+        </div>
+
+        <div className={classes.buttonContainer}>
+          <h2 className={classes.text}>חורי כפתור</h2>
+          <Button
+            onClick={() => handleClick("imagesHoles")}
+            className={classes.selectedButton}
+          >
+            <img
+              src={holes}
+              className={classes.buttonImg}
+              style={{ height: "115px" }}
+              alt="holes"
+            />
+            {selectedCategory === "imagesHoles" && (
+              <VerifiedIcon className={classes.verifiedIcon} />
+            )}
+          </Button>
+        </div>
       </div>
 
-      {/* Simple Loader */}
-      {loading && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            // backgroundColor: "rgba(255, 255, 255, 0.8)",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              border: "5px solid #f3f3f3",
-              borderTop: "5px solid #3498db",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-            }}
-          ></div>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
-          <p style={{ marginTop: "10px", color: "white" }}>Loading suit... </p>
-        </div>
-      )}
-
-      {/* Base parts */}
-      <img
-        src={`/assets/ragach/colar/${currColor}.png`}
-        alt={`Collar - ${currColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("collar")}
-      />
-
-      <img
-        src={`/assets/ragach/sleeves/${currColor}.png`}
-        alt={`Sleeves - ${currColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("sleeves")}
-      />
-
-      <img
-        src={`/assets/ragach/insideUp/${insideColor}.png`}
-        alt={`Inside Up - ${insideColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("insideUp")}
-      />
-
-      <img
-        src={`/assets/ragach/insideBottom/${currColor}.png`}
-        alt={`Inside Bottom - ${insideColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("insideBottom")}
-      />
-
-      <img
-        src={`/assets/ragach/${bottomPart}/${currColor}.png`}
-        alt={`Bottom - ${currColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("bottom")}
-      />
-
-      {/* Fixed Lapel/Collar path */}
-      <img
-        src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
-        alt={`Lapel Collar - ${currColor}`}
-        style={imageStyle}
-        onError={() =>
-          handleImageError(
-            `lapelCollar: ${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}`
-          )
-        }
-      />
-
-      {/* Packet Bottom with specific type */}
-      <img
-        src={`/assets/ragach/packetBottom/${selectedPacketType}/${currColor}.png`}
-        alt={`Packet Bottom - ${currColor}`}
-        style={overlayStyle}
-        onError={() => handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)}
-      />
-
-      {poshetColor && (
-        <img
-          src={`/assets/adds/poshet/${poshetColor}.png`}
-          alt={`Poshet - ${poshetColor}`}
-          style={overlayStyle}
-          onError={() => handleImageError(`poshet: ${poshetColor}`)}
-        />
-      )}
-
-      <img
-        src={`/assets/ragach/packetUp/${currColor}.png`}
-        alt={`Packet Up - ${currColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("packetUp")}
-      />
-
-      {buttonColor !== null && (
-        <img
-          src={`/assets/ragach/button/${selectedKind}/${buttonColor}.png`}
-          alt={`Button - ${buttonColor}`}
-          style={overlayStyle}
-          onError={() => handleImageError(`button: ${selectedKind}/${buttonColor}`)}
-        />
-      )}
-
-      {holeButtonColor && (
-        <img
-          src={`/assets/adds/holesButton/${selectedKind}/${holeButtonColor}.png`}
-          alt={`Hole Button - ${holeButtonColor}`}
-          style={overlayStyle}
-          onError={() =>
-            handleImageError(`holeButton: ${selectedKind}/${holeButtonColor}`)
-          }
-        />
-      )}
-
-      {holeButtonUpColor && (
-        <img
-          src={`/assets/adds/holesButtonUp/${holeButtonUpColor}.png`}
-          alt={`Hole Button Up - ${holeButtonUpColor}`}
-          style={overlayStyle}
-          onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
-        />
-      )}
-    </div>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={handleCloseDrawer}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        variant="temporary"
+        elevation={4}
+        BackdropProps={{ invisible: true }}
+      >
+        <Box className={classes.drawerContent}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDrawer}
+            className={classes.closeButton}
+          >
+            סגור
+          </Button>
+          {drawerContent}
+        </Box>
+      </Drawer>
+    </Box>
   );
 };
 
-export default ImageFilterComponent;
+export default RightSide;

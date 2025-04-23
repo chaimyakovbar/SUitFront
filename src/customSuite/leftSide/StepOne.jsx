@@ -21,12 +21,13 @@ const StepOne = () => {
   return (
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-          gap: isMobile ? "12px" : "24px",
-          justifyItems: "center",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: isMobile ? "8px" : "24px",
+          justifyContent: "center",
+          alignItems: "center",
           marginTop: "20px",
-          // padding: isMobile ? "0 10px" : "0",
+          
         }}
       >
         {suitsColors.map((color) => (
@@ -38,8 +39,8 @@ const StepOne = () => {
                 backgroundImage: `url(${color.color})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                width: isMobile ? "50px" : "100px",
-                height: isMobile ? "50px" : "100px",
+                width: isMobile ? "40px" : "100px",
+                height: isMobile ? "40px" : "100px",
                 borderRadius: "50%",
                 boxShadow:
                   selectedColor?.colorId === color.colorId

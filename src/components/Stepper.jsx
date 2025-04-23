@@ -8,7 +8,7 @@ import { useAtom, useAtomValue } from "jotai";
 import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
-import { Paper, Stack, useMediaQuery } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import {
   counterAtom,
   currentIndexAtom,
@@ -56,12 +56,12 @@ const steps = [
 const StyledStepper = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const isMobile = useMediaQuery("(max-width:600px)");
+  // const isMobile = useMediaQuery("(max-width:600px)");
   // const allSuitPart = useAtomValue(allSuitPartAtom);
   const user = useAtomValue(userAtom);
   const [counterArray] = useAtom(counterAtom);
   const [activeStep, setActiveStep] = useAtom(currentIndexAtom);
-  const [completed, setCompleted] = React.useState({});
+  // const [completed, setCompleted] = React.useState({});
   const [currentKind] = useAtom(currentKindAtom);
   const [allSuitPart, setAllSuitPart] = useAtom(allSuitPartAtom);
   const [open, setOpen] = useAtom(openUserDialog);
@@ -110,13 +110,14 @@ const StyledStepper = () => {
 
   const handleNext = () => {
     if (!isStepValid) return;
-    setCompleted((prev) => ({ ...prev, [activeStep]: true }));
+    // setCompleted((prev) => ({ ...prev, [activeStep]: true }));
     if (!isLastStep) setActiveStep((prev) => prev + 1);
   };
 
   const handleBack = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
-  };
+  }
+
   const bottomPart =
     selectedKind === "kind3" || selectedKind === "kind4"
       ? "bottomKind3"
@@ -175,7 +176,7 @@ const StyledStepper = () => {
           setSelectedKind("kind1");
           setSelectedCollar("collarTight");
           setActiveStep(0);
-          setCompleted({});
+          // setCompleted({});
           previousConfigRef.current = null;
 
           navigate("/indexSizes");
@@ -293,7 +294,7 @@ const StyledStepper = () => {
           </Button>
         )}
       </Box>
-
+{/* 
       <Paper
         elevation={6}
         sx={{
@@ -317,7 +318,7 @@ const StyledStepper = () => {
             </Step>
           ))}
         </Stepper>
-      </Paper>
+      </Paper> */}
 
       <Dialog
         style={{ borderRadius: 8 }}

@@ -11,29 +11,33 @@ const useStyles = makeStyles({
     right: 10,
     top: 100,
     width: "330px",
-    backgroundColor: "#F5F5F7",
     display: "flex",
     flexDirection: "column",
     gap: "10px",
   },
+  buttonGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: "15px",
+  },
   button: {
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "0",
-    background: "#f0f0f0",
-    color: "#333",
-    borderRadius: "50%",
+    padding: 0,
     position: "relative",
-    height: "75px",
-    width: "75px",
-    border: "1px solid black",
+    height: "100px",
+    width: "100px",
+    // borderRadius: "50%",
+    border: "2px solid transparent",
+    // backgroundColor: "#f0f0f0",
     overflow: "hidden",
-  },
-  buttonText: {
-    margin: "5px 0 0",
-    fontSize: "14px",
+    cursor: "pointer",
+    transition: "all 0.2s ease-in-out",
+    "&:hover": {
+      boxShadow: "0 0 8px rgba(0, 0, 0, 0.2)",
+    },
   },
   selectedButton: {
     border: "3px solid red",
@@ -47,19 +51,26 @@ const useStyles = makeStyles({
     width: "20px",
     height: "20px",
     backgroundColor: "red",
-    borderRadius: "50%",
+    // borderRadius: "50%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: "white",
     fontSize: "12px",
+    fontWeight: "bold",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "50%",
   },
   resetButton: {
     marginTop: "20px",
     padding: "10px",
     border: "2px solid #ff0000",
     borderRadius: "8px",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fff",
     color: "#ff0000",
     "&:hover": {
       backgroundColor: "#ffe0e0",
@@ -83,23 +94,23 @@ const ButtonPoshet = ({ handleCloseDrawer }) => {
 
   return (
     <div className={classes.container}>
-      <div style={{ display: "ruby" }}>
+      <div className={classes.buttonGrid}>
         {imagesPoshet.map((item) => (
           <button
-            onClick={() => handleClick(item.name)}
             key={item.name}
+            onClick={() => handleClick(item.name)}
             className={`${classes.button} ${
               item.color === selectedPoshet ? classes.selectedButton : ""
             }`}
-            style={{
-              margin: "15px",
-              backgroundColor: item.color,
-            }}
           >
             {item.color === selectedPoshet && (
               <div className={classes.selectionIndicator}>✓</div>
             )}
-            <p className={classes.buttonText}>{item.name}</p>
+            <img
+              src={item.img}
+              alt={item.name}
+              className={classes.image}
+            />
           </button>
         ))}
       </div>

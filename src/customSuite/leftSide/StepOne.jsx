@@ -12,7 +12,7 @@ const StepOne = () => {
 
   const handleClick = (color) => {
     setSelectedColor(color);
-    setCurrentColor(color);
+    setCurrentColor(color.colorName);
     const updatedCounter = [...counterArray];
     updatedCounter[0] = { step1Validated: true };
     setCounterArray(updatedCounter);

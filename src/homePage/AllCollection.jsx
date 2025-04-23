@@ -94,10 +94,10 @@ const useStyles = makeStyles({
 
 const AllCollection = ({ targetSectionRef }) => {
   const classes = useStyles();
-  const navigate = useNavigate()
-  const [hoveredImage, setHoveredImage] = useState(null)
+  const navigate = useNavigate();
+  const [hoveredImage, setHoveredImage] = useState(null);
 
-    const isMobile = useMediaQuery("(max-width:600px)")
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const settings = {
     slidesToShow: isMobile ? 1 : 5,
@@ -110,8 +110,8 @@ const AllCollection = ({ targetSectionRef }) => {
     touchMove: true,
     draggable: true,
     pauseOnHover: true,
-  }
-
+    arrows: false,
+  };
 
   return (
     <div ref={targetSectionRef} style={{ backgroundColor: "#FAF3E0" }}>
@@ -149,9 +149,21 @@ const AllCollection = ({ targetSectionRef }) => {
               </div>
             ))}
           </Slider>
-          <img className={classes.img} src="/assets/photoBackGround4.webp" alt="Background" />
-          <img className={classes.img} src="/assets/photoBackGround5.webp" alt="Background" />
-          <img className={classes.img} src="/assets/photoBackGround6.webp" alt="Background" />
+          {/* <img
+            className={classes.img}
+            src="/assets/photoBackGround4.webp"
+            alt="Background"
+          />
+          <img
+            className={classes.img}
+            src="/assets/photoBackGround5.webp"
+            alt="Background"
+          />
+          <img
+            className={classes.img}
+            src="/assets/photoBackGround6.webp"
+            alt="Background"
+          /> */}
         </Box>
       </div>
     </div>

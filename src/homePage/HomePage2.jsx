@@ -5,6 +5,7 @@ import Drawer from "./Drawer2";
 import OpenDrawer from "./OpenDrawer";
 import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
+import Pictuers from "../pages/Pictuers";
 
 const useStyles = makeStyles({
   topDiv: {
@@ -76,6 +77,8 @@ const HomePage2 = () => {
       <MostPoPular />
 
       <AllCollection targetSectionRef={targetSectionRef} />
+
+      {/* <Pictuers /> */}
     </div>
   );
 };

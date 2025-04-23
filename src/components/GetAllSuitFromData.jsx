@@ -138,28 +138,28 @@ const getImagePaths = (item) => {
   ];
 
   // Add conditional parts
-  if (item.parts?.bottom) {
+  if (item?.bottomPart === 'bottom') {
     imagePaths.push({
       key: "bottom",
       path: `/assets/ragach/bottom/${item.color}.png`,
     });
   }
 
-  if (item.parts?.bottomKind3) {
+  if (item?.bottomPart === 'bottomKind3') {
     imagePaths.push({
       key: "bottomKind3",
       path: `/assets/ragach/bottomKind3/${item.color}.png`,
     });
   }
 
-  if (item.parts?.holeButtonColor) {
+  if (item?.holeButtonColor) {
     imagePaths.push({
       key: "holeButton",
       path: `/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
     });
   }
 
-  if (item.parts?.holeButtonUpColor) {
+  if (item?.holeButtonUpColor) {
     imagePaths.push({
       key: "holeButtonUp",
       path: `/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
@@ -206,7 +206,6 @@ const getZIndex = (key) => {
     holeButton: 7,
     holeButtonUp: 6,
     poshetColor: 5,
-    // Add more specific z-indexes as needed
     default: 1,
   };
 

@@ -9,45 +9,65 @@ const useStyles = makeStyles({
   container: {
     position: "absolute",
     right: 10,
+    top: 100,
+    width: "330px",
+    backgroundColor: "#F5F5F7",
     display: "flex",
     flexDirection: "column",
     gap: "10px",
-    alignItems: "center",
   },
   button: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "10px",
-    minWidth: "80px",
-    borderRadius: "8px",
-    transition: "0.3s",
-  },
-  activeButton: {
-    border: "2px solid #3f51b5", // Blue border for the selected button
-    backgroundColor: "#e0e0e0",
-  },
-  inactiveButton: {
-    backgroundColor: "#f0f0f0",
-  },
-  buttonImage: {
-    width: "50px",
-    height: "50px",
-    objectFit: "cover",
-    borderRadius: "4px",
+    justifyContent: "center",
+    padding: "0",
+    background: "#f0f0f0",
+    color: "#333",
+    borderRadius: "50%",
+    position: "relative",
+    height: "75px",
+    width: "75px",
+    border: "1px solid black",
+    overflow: "hidden",
+    "& img": {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+    },
   },
   buttonText: {
     margin: "5px 0 0",
     fontSize: "14px",
   },
-  noColorButton: {
+  selectedButton: {
+    border: "3px solid #ff0000",
+    boxShadow: "0 0 10px rgba(255, 0, 0, 0.5)",
+    transform: "scale(1.1)",
+  },
+  selectionIndicator: {
+    position: "absolute",
+    top: "-5px",
+    right: "-5px",
+    width: "20px",
+    height: "20px",
+    backgroundColor: "red",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontSize: "12px",
+  },
+  resetButton: {
     marginTop: "20px",
     padding: "10px",
-    border: "2px solid #999",
+    border: "2px solid #ff0000",
     borderRadius: "8px",
     backgroundColor: "#f0f0f0",
+    color: "#ff0000",
     "&:hover": {
-      backgroundColor: "#e0e0e0",
+      backgroundColor: "#ffe0e0",
     },
   },
 });
@@ -61,36 +81,34 @@ const ButtonButton = ({ handleCloseDrawer }) => {
     handleCloseDrawer(false);
   };
 
-  const handleNoColor = () => {
+  const handleReset = () => {
     setSelectedButton(null);
     handleCloseDrawer(false);
   };
 
   return (
     <div className={classes.container}>
-      {imageButton.map((item) => (
-        <Button
-          onClick={() => handleClick(item.name)} // Select the clicked button
-          key={item.name}
-          className={`${classes.button} ${
-            selectedButton === item.name
-              ? classes.activeButton
-              : classes.inactiveButton
-          }`}
-        >
-          <img src={item.img} alt={item.name} className={classes.buttonImage} />
-          <p className={classes.buttonText}>{item.name}</p>
-        </Button>
-      ))}
-      <Button
-        onClick={handleNoColor}
-        className={`${classes.noColorButton} ${
-          selectedButton === null
-            ? classes.activeButton
-            : classes.inactiveButton
-        }`}
-      >
-        ללא צבע
+      <div style={{ display: "ruby" }}>
+        {imageButton.map((item) => (
+          <button
+            onClick={() => handleClick(item.name)}
+            key={item.name}
+            className={`${classes.button} ${
+              selectedButton === item.name ? classes.selectedButton : ""
+            }`}
+            style={{
+              margin: "15px",
+            }}
+          >
+            {selectedButton === item.name && (
+              <div className={classes.selectionIndicator}>✓</div>
+            )}
+            <img src={item.img} alt={item.name} />
+          </button>
+        ))}
+      </div>
+      <Button className={classes.resetButton} onClick={handleReset}>
+        Reset to Default
       </Button>
     </div>
   );

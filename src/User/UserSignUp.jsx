@@ -28,7 +28,8 @@ const UserSignUp = ({ setDialogType }) => {
 
   const [open, setOpen] = useAtom(openUserDialog);
   const [, setUser] = useAtom(userAtom);
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
+   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleClose = (resetForm) => {
     setOpen(false);
@@ -37,6 +38,8 @@ const UserSignUp = ({ setDialogType }) => {
   };
 
   const handleCreatUser = async (values, { resetForm }) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       // First register the user
       await registerUser(values);
@@ -56,6 +59,8 @@ const UserSignUp = ({ setDialogType }) => {
       enqueueSnackbar(error.message || "כבר יש שימוש במייל זה", {
         variant: "error",
       });
+    }finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,7 +84,7 @@ const UserSignUp = ({ setDialogType }) => {
           validationSchema={SchemaYupForUser}
           onSubmit={handleCreatUser}
         >
-          {({ handleSubmit, resetForm, touched, errors }) => (
+          {({ handleSubmit, resetForm, touched, errors, isSubmitting: formikSubmitting, }) => (
             <Form onSubmit={handleSubmit}>
               <DialogTitle>הירשם</DialogTitle>
               <DialogContent>
@@ -139,7 +144,12 @@ const UserSignUp = ({ setDialogType }) => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleClose(resetForm)}>ביטול</Button>
-                <Button type="submit">הירשם</Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || formikSubmitting}
+                >
+                  {isSubmitting ? "נרשם..." : "הירשם"}
+                </Button>
               </DialogActions>
             </Form>
           )}

@@ -1,164 +1,146 @@
-import React, { useState } from "react"
-import { Box, Button, useMediaQuery, Drawer } from "@mui/material"
-import { makeStyles } from "@mui/styles"
-import { useAtom } from "jotai"
-import VerifiedIcon from "@mui/icons-material/Verified"
-import { currentIndexAtom } from "../../Utils"
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  useMediaQuery,
+  Drawer,
+  Typography,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useAtom } from "jotai";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import { currentIndexAtom } from "../../Utils";
 
-import inside from "/assets/kinds/insid.svg"
-import poshet from "/assets/kinds/poshet.svg"
-import button from "/assets/kinds/button.svg"
-import holes from "/assets/kinds/AllSuit2.png"
+import inside from "/assets/kinds/insid.svg";
+import poshet from "/assets/kinds/poshet.svg";
+import button from "/assets/kinds/button.svg";
+import holes from "/assets/kinds/AllSuit2.png";
 
-import ButtonInside from "./ButtonInside"
-import ButtonHoles from "./ButtonHoles"
-import ButtonPoshet from "./ButtonPoshet"
-import ButtonButton from "./ButtonButton"
+import ButtonInside from "./ButtonInside";
+import ButtonHoles from "./ButtonHoles";
+import ButtonPoshet from "./ButtonPoshet";
+import ButtonButton from "./ButtonButton";
 
 const useStyles = makeStyles({
-  container: (prop) => ({
-    display: "flex",
-    flexDirection: "column",
-    gap: prop.isMobile ? "8px" : "12px",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    width: prop.isMobile ? "100%" : "30%",
+  wrapper: (prop) => ({
+    width: prop.isMobile ? "100px" : "30%",
     backgroundColor: "#F5F5F7",
     height: prop.isMobile ? "50vh" : "80vh",
     overflowY: "auto",
+    padding: prop.isMobile ? "0px" : "30px",
     boxSizing: "border-box",
-    padding: prop.isMobile ? "8px" : "20px",
-    zIndex: 100,
+    marginRight: "20px",
+    borderRadius: "12px",
   }),
-  buttonImg: (prop) => ({
-    height: prop.isMobile ? "40px" : "80px",
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "8px",
+    marginBottom: "24px",
+  },
+  categoryButton: (prop) => ({
+    height: prop.isMobile ? "60px" : "100px",
     width: "auto",
     cursor: "pointer",
-    transition: "filter 0.3s ease-in-out",
-  }),
-  selectedButton: {
-    position: "relative",
-    borderRadius: "12px",
+    objectFit: "contain",
+    transition: "transform 0.3s ease",
     "&:hover": {
-      backgroundColor: "#e0e0e0",
       transform: "scale(1.05)",
     },
-  },
+  }),
+  selectedButtonWrapper: (prop) => ({
+    position: "relative",
+    borderRadius: "12px",
+    padding: "16px",
+    backgroundColor: "#fff",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    width: prop.isMobile ? "80px" : "120px",
+    height: prop.isMobile ? "80px" : "120px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }),
   verifiedIcon: (prop) => ({
     position: "absolute",
-    top: "4px",
-    right: "4px",
+    top: "8px",
+    right: "8px",
     color: "#FF5722",
-    fontSize: prop.isMobile ? "16px" : "20px",
+    fontSize: prop.isMobile ? "20px" : "24px",
   }),
-  text: (prop) => ({
-    fontSize: prop.isMobile ? "14px" : "20px",
+  categoryText: (prop) => ({
+    fontSize: prop.isMobile ? "16px" : "20px",
     fontWeight: "bold",
-    marginBottom: prop.isMobile ? "4px" : "8px",
+    color: "#333",
+    marginBottom: "10px",
     textAlign: "center",
   }),
   drawerPaper: (prop) => ({
-    width: prop.isMobile ? "50%" : "350px",
-    maxWidth: "350px",
+    width: prop.isMobile ? "80%" : "350px",
+    borderRadius: "12px 0 0 12px",
   }),
-  leftComponent: {
-    flex: 1,
-    padding: "20px",
+  drawerContent: {
+    padding: "24px",
   },
-})
+  closeButton: {
+    backgroundColor: "#FF5722",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#E65100",
+    },
+    marginBottom: "16px",
+  },
+});
 
-const   RightSide = () => {
-  const isMobile = useMediaQuery("(max-width:600px)")
-  const classes = useStyles({ isMobile })
-  const [currentIndex] = useAtom(currentIndexAtom)
-  const [drawerContent, setDrawerContent] = useState(null)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState(null)
+const RightSide = () => {
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const classes = useStyles({ isMobile });
+  const [currentIndex] = useAtom(currentIndexAtom);
+  const [drawerContent, setDrawerContent] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  if (currentIndex !== 2) return null
+  if (currentIndex !== 2) return null;
 
   const handleClick = (category) => {
-    setSelectedCategory(category)
+    setSelectedCategory(category);
 
-    let content
-    switch (category) {
-      case "imagesInsideUp":
-        content = <ButtonInside handleCloseDrawer={handleCloseDrawer}/>
-        break
-      case "imagesHoles":
-        content = <ButtonHoles handleCloseDrawer={handleCloseDrawer}/>
-        break
-      case "imagesPoshet":
-        content = <ButtonPoshet handleCloseDrawer={handleCloseDrawer}/>
-        break
-      case "imageButton":
-        content = <ButtonButton handleCloseDrawer={handleCloseDrawer}/>
-        break
-      default:
-        content = null
-        break
-    }
+    const components = {
+      imagesInsideUp: <ButtonInside handleCloseDrawer={handleCloseDrawer} />,
+      imagesHoles: <ButtonHoles handleCloseDrawer={handleCloseDrawer} />,
+      imagesPoshet: <ButtonPoshet handleCloseDrawer={handleCloseDrawer} />,
+      imageButton: <ButtonButton handleCloseDrawer={handleCloseDrawer} />,
+    };
 
-    setDrawerContent(content)
-    setDrawerOpen(true)
-  }
+    setDrawerContent(components[category] || null);
+    setDrawerOpen(true);
+  };
 
   const handleCloseDrawer = () => {
-    setDrawerOpen(false)
-  }
+    setDrawerOpen(false);
+  };
+
+  const categories = [
+    { key: "imagesInsideUp", label: "סטייל פנימי", image: inside },
+    { key: "imagesPoshet", label: "בד כיס", image: poshet },
+    { key: "imageButton", label: "סטייל כפתור", image: button },
+    { key: "imagesHoles", label: "חורי כפתור", image: holes },
+  ];
 
   return (
-    <Box
-      display={isMobile ? "block" : "flex"}
-      flexDirection={isMobile ? "column" : "row"}
-    >
-      <div className={classes.container}>
-        <h2 className={classes.text}>סטייל פנימי</h2>
-        <Button
-          onClick={() => handleClick("imagesInsideUp")}
-          className={classes.selectedButton}
-        >
-          <img src={inside} className={classes.buttonImg} alt="inside" />
-          {selectedCategory === "imagesInsideUp" && (
-            <VerifiedIcon className={classes.verifiedIcon} />
-          )}
-        </Button>
+    <div className={classes.wrapper}>
+      {categories.map(({ key, label, image }) => (
+        <div className={classes.buttonContainer} key={key}>
+          <Typography className={classes.categoryText}>{label}</Typography>
+          <Button onClick={() => handleClick(key)} className={classes.selectedButtonWrapper}>
+            <img src={image} className={classes.categoryButton} alt={key} />
+            {selectedCategory === key && (
+              <VerifiedIcon className={classes.verifiedIcon} />
+            )}
+          </Button>
+        </div>
+      ))}
 
-        <h2 className={classes.text}>בד כיס</h2>
-        <Button
-          onClick={() => handleClick("imagesPoshet")}
-          className={classes.selectedButton}
-        >
-          <img src={poshet} className={classes.buttonImg} alt="poshet" />
-          {selectedCategory === "imagesPoshet" && (
-            <VerifiedIcon className={classes.verifiedIcon} />
-          )}
-        </Button>
-
-        <h2 className={classes.text}>סטייל כפתור</h2>
-        <Button
-          onClick={() => handleClick("imageButton")}
-          className={classes.selectedButton}
-        >
-          <img src={button} className={classes.buttonImg} alt="button" />
-          {selectedCategory === "imageButton" && (
-            <VerifiedIcon className={classes.verifiedIcon} />
-          )}
-        </Button>
-
-        <h2 className={classes.text}>חורי כפתור</h2>
-        <Button
-          onClick={() => handleClick("imagesHoles")}
-          className={classes.selectedButton}
-        >
-          <img src={holes} className={classes.buttonImg} alt="holes" />
-          {selectedCategory === "imagesHoles" && (
-            <VerifiedIcon className={classes.verifiedIcon} />
-          )}
-        </Button>
-      </div>
-
-      {/* Right Drawer with limited width */}
       <Drawer
         anchor="right"
         open={drawerOpen}
@@ -166,24 +148,21 @@ const   RightSide = () => {
         classes={{
           paper: classes.drawerPaper,
         }}
-        variant="temporary"
-        elevation={4}
         BackdropProps={{ invisible: true }}
       >
-        <Box sx={{ p: 3, height: "100%", overflowY: "auto" }}>
+        <Box className={classes.drawerContent}>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="contained"
             onClick={handleCloseDrawer}
-            sx={{ mb: 2 }}
+            className={classes.closeButton}
           >
             סגור
           </Button>
           {drawerContent}
         </Box>
       </Drawer>
-    </Box>
-  )
-}
+    </div>
+  );
+};
 
-export default RightSide
+export default RightSide;

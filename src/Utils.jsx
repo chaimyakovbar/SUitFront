@@ -1,4 +1,6 @@
-import { atom } from "jotai";
+import { atom } from "jotai"
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export const counterAtom = atom([
   { step1Validated: false },
@@ -8,15 +10,15 @@ export const counterAtom = atom([
 
 export const currentIndexAtom = atom(0);
 
-export const currentColorAtom = atom(null);
+export const currentColorAtom = atom('blackGrey');
 
-export const currentKindAtom = atom(null);
+export const currentKindAtom = atom('kind1');
 
-export const selectedCollarAtom = atom(null);
+export const selectedCollarAtom = atom('collarTight');
 
-export const selectedLapelTypeAtom = atom(null);
+export const selectedLapelTypeAtom = atom('Standard');
 
-export const selectedPacketTypeAtom = atom(null);
+export const selectedPacketTypeAtom = atom('packet1');
 
 export const selectedInsideTypeAtom = atom(null)
 
@@ -32,6 +34,10 @@ export const openUserDialog = atom(false)
 
 export const allSuitPartAtom = atom([])
 
-export const priceAllSuit = atom(0)
+export const priceAllSuitAtom = atom(0)
 
 export const userAtom = atom(null)
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}

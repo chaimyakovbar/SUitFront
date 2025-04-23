@@ -14,7 +14,8 @@ const useStyles = makeStyles({
   container: {
     position: "absolute",
     right: 10,
-    width: "350px",
+    top: 100,
+    width: "330px",
     backgroundColor: "#F5F5F7",
     display: "flex",
     flexDirection: "column",
@@ -30,47 +31,92 @@ const useStyles = makeStyles({
     background: "#f0f0f0",
     color: "#333",
     borderRadius: "8px",
+    position: "relative",
   },
   buttonText: {
     margin: "5px 0 0",
     fontSize: "14px",
   },
+  selectedButton: {
+    border: "3px solid red",
+    boxShadow: "0 0 10px rgba(63, 181, 65, 0.5)",
+    transform: "scale(1.1)",
+  },
+  resetButton: {
+    marginTop: "20px",
+    padding: "10px",
+    border: "2px solid #ff0000",
+    borderRadius: "8px",
+    backgroundColor: "#f0f0f0",
+    color: "#ff0000",
+    "&:hover": {
+      backgroundColor: "#ffe0e0",
+    },
+  },
+  selectionIndicator: {
+    position: "absolute",
+    top: "-5px",
+    right: "-5px",
+    width: "20px",
+    height: "20px",
+    backgroundColor: "red",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontSize: "12px",
+  },
 });
 
-const ButtonHoles = ({handleCloseDrawer}) => {
+const ButtonHoles = ({ handleCloseDrawer }) => {
   const classes = useStyles();
-  const [, setSelectedHolesButton] = useAtom(selectedHolesButtonAtom);
-  const [, setSelectedHolesButtonUp] = useAtom(selectedHolesButtonUpAtom);
+  const [selectedHolesButton, setSelectedHolesButton] = useAtom(
+    selectedHolesButtonAtom
+  );
+  const [selectedHolesButtonUp, setSelectedHolesButtonUp] = useAtom(
+    selectedHolesButtonUpAtom
+  );
 
-  const [showAllSuit, setShowAllSuit] = useState(false);
+  const [showAllSuit, setShowAllSuit] = useState(true);
 
   const handleClick = (color) => {
     setSelectedHolesButton(color);
     setSelectedHolesButtonUp(color);
-    handleCloseDrawer(false)
+    handleCloseDrawer(false);
   };
-  
+
   const handleClick2 = (color) => {
     setSelectedHolesButton(null);
     setSelectedHolesButtonUp(color);
-    handleCloseDrawer(false)
+    handleCloseDrawer(false);
+  };
+
+  const handleReset = () => {
+    setSelectedHolesButton(null);
+    setSelectedHolesButtonUp(null);
+    handleCloseDrawer(false);
   };
 
   return (
     <div className={classes.container}>
       <div style={{ display: "flex" }}>
-        <div>
+        <div style={{ marginLeft: "50px" }}>
           <img
-            style={{ width: "90px", height: "140px" }}
+            style={{ width: "90px", height: "140px"}}
             src={holes}
             alt={holes}
           />
 
           <Button
-            style={{ backgroundColor: showAllSuit ? "blue" : "grey" }}
+            style={{
+              backgroundColor: showAllSuit ? "#1976d2" : "#e0e0e0",
+              color: showAllSuit ? "white" : "black",
+              margin: "5px",
+              minWidth: "50px",
+            }}
             onClick={() => setShowAllSuit(true)}
             variant="contained"
-            color="primary"
           >
             All Suit
           </Button>
@@ -83,10 +129,14 @@ const ButtonHoles = ({handleCloseDrawer}) => {
           />
 
           <Button
-            style={{ backgroundColor: showAllSuit ? "grey" : "blue" }}
+            style={{
+              backgroundColor: showAllSuit ? "#e0e0e0" : "#1976d2",
+              color: showAllSuit ? "black" : "white",
+              margin: "5px",
+              minWidth: "50px",
+            }}
             onClick={() => setShowAllSuit(false)}
             variant="contained"
-            color="primary"
           >
             Just Up
           </Button>
@@ -94,46 +144,61 @@ const ButtonHoles = ({handleCloseDrawer}) => {
       </div>
 
       {showAllSuit ? (
-        <div style={{display: 'ruby'}}>
+        <div style={{ display: "ruby" }}>
           {imagesHoles.map((item) => (
             <button
               onClick={() => handleClick(item.name)}
               key={item.name}
-              className={classes.button}
+              className={`${classes.button} ${
+                selectedHolesButton === item.name ? classes.selectedButton : ""
+              }`}
               style={{
                 backgroundColor: item.color,
                 margin: "15px",
                 height: "65px",
-                width: '10px',
+                width: "10px",
                 border: "1px solid black",
-                borderRadius: '50%'
+                borderRadius: "50%",
               }}
             >
+              {selectedHolesButton === item.name && (
+                <div className={classes.selectionIndicator}>✓</div>
+              )}
               <p className={classes.buttonText}>{item.name}</p>
             </button>
           ))}
         </div>
       ) : (
-        <div style={{display: 'ruby'}}>
+        <div style={{ display: "ruby" }}>
           {imagesHoles.map((item) => (
             <button
               onClick={() => handleClick2(item.name)}
               key={item.name}
-              className={classes.button}
+              className={`${classes.button} ${
+                selectedHolesButtonUp === item.name
+                  ? classes.selectedButton
+                  : ""
+              }`}
               style={{
                 backgroundColor: item.color,
                 margin: "15px",
                 height: "65px",
-                width: '10px',
+                width: "10px",
                 border: "1px solid black",
-                borderRadius: '50%'
+                borderRadius: "50%",
               }}
             >
+              {selectedHolesButtonUp === item.name && (
+                <div className={classes.selectionIndicator}>✓</div>
+              )}
               <p className={classes.buttonText}>{item.name}</p>
             </button>
           ))}
         </div>
       )}
+      <Button className={classes.resetButton} onClick={handleReset}>
+        Reset to Default
+      </Button>
     </div>
   );
 };

@@ -8,7 +8,7 @@ import { useMediaQuery } from "@mui/material";
 const LeftSide = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [currentIndex] = useAtom(currentIndexAtom);
-  if (currentIndex === 2) return null
+  if (currentIndex === 2) return null;
   return (
     <div
       style={{

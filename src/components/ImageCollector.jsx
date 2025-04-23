@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   currentKindAtom,
   currentColorAtom,
@@ -10,25 +10,19 @@ import {
   selectedPoshetAtom,
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
-  allSuitPartAtom,
+  priceAllSuitAtom,
 } from "../Utils";
 import { useAtomValue, useAtom } from "jotai";
 import { useMediaQuery } from "@mui/material";
 import { suitPricing } from "../config/suitPricing";
 
 const ImageFilterComponent = () => {
-  const DEFAULT_KIND = "kind1";
-  const DEFAULT_LAPEL = "Standard";
-  const DEFAULT_PACKET_TYPE = "packet1";
-  const DEFAULT_LAPEL_KIND = "collarTight";
-  const DEFAULT_COLOR = { colorName: "blackGrey" };
+  // const previousConfigRef = useRef(null);
+  const [loading, setLoading] = useState(true)
 
-  const previousConfigRef = useRef(null);
-  const [loading, setLoading] = useState(true);
-
-  const currColor = useAtomValue(currentColorAtom);
-  const selectedKind = useAtomValue(currentKindAtom);
-  const [_, setAllSuitPart] = useAtom(allSuitPartAtom);
+  const currColor = useAtomValue(currentColorAtom)
+  const selectedKind = useAtomValue(currentKindAtom)
+  const [_, setPriceAllSuit] = useAtom(priceAllSuitAtom);
   const selectedCollar = useAtomValue(selectedCollarAtom);
   const selectedButton = useAtomValue(selectedButtonAtom);
   const selectedPoshet = useAtomValue(selectedPoshetAtom);
@@ -38,118 +32,25 @@ const ImageFilterComponent = () => {
   const selectedHolesButton = useAtomValue(selectedHolesButtonAtom);
   const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom);
 
-  const kind = selectedKind || DEFAULT_KIND;
-  const lapelType = selectedLapelType || DEFAULT_LAPEL;
-  const lapelKind = selectedCollar || DEFAULT_LAPEL_KIND;
-  const packetType = selectedPacketType || DEFAULT_PACKET_TYPE;
-  const color = currColor?.colorName || DEFAULT_COLOR.colorName;
-  const insideColor = selectedInsideType || color;
+  const insideColor = selectedInsideType || currColor;
   const holeButtonColor = selectedHolesButton;
   const holeButtonUpColor = selectedHolesButtonUp;
   const buttonColor = selectedButton;
   const poshetColor = selectedPoshet;
 
-  const suitConfig = useMemo(
-    () => ({
-      kind,
-      lapelType,
-      lapelKind,
-      packetType,
-      color,
-      insideColor,
-      holeButtonColor,
-      holeButtonUpColor,
-      buttonColor,
-      poshetColor,
-    }),
-    [
-      kind,
-      lapelType,
-      lapelKind,
-      packetType,
-      color,
-      insideColor,
-      holeButtonColor,
-      holeButtonUpColor,
-      buttonColor,
-      poshetColor,
-    ]
-  );
-
   const bottomPart =
-    kind === "kind3" || kind === "kind4" ? "bottomKind3" : "bottom";
+    selectedKind === "kind3" || selectedKind === "kind4"
+      ? "bottomKind3"
+      : "bottom";
 
-  // Show loader whenever configuration changes
   useEffect(() => {
     setLoading(true);
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 200); // Show loader for 800ms
+    }, 200);
 
     return () => clearTimeout(timer);
-  }, [suitConfig]);
-
-  useEffect(() => {
-    if (!color) return;
-
-    console.log("Current Values:", {
-      color,
-      kind,
-      lapelType,
-      lapelKind,
-      packetType,
-      buttonColor,
-    });
-
-    const partsToInclude = [
-      "colar",
-      "sleeves",
-      "insideUp",
-      "insideBottom",
-      "packetUp",
-      bottomPart,
-      "packetBottom",
-    ];
-
-    const newSuit = {
-      ...suitConfig,
-      buttonColor: buttonColor || null,
-      totalPrice: calculateTotalPrice,
-      parts: partsToInclude.reduce(
-        (acc, part) => ({ ...acc, [part]: true }),
-        {}
-      ),
-    };
-
-    const configString = JSON.stringify(newSuit);
-    if (previousConfigRef.current !== configString) {
-      previousConfigRef.current = configString;
-
-      setAllSuitPart((current) => {
-        const existingIndex = current.findIndex(
-          (suit) =>
-            JSON.stringify({ ...suit, parts: { ...suit.parts } }) ===
-            configString
-        );
-
-        if (existingIndex >= 0) {
-          return current;
-        }
-
-        return [...current, newSuit];
-      });
-    }
-  }, [
-    suitConfig,
-    setAllSuitPart,
-    color,
-    kind,
-    lapelType,
-    lapelKind,
-    packetType,
-    bottomPart,
-    buttonColor,
-  ]);
+  }, [selectedKind]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -173,21 +74,24 @@ const ImageFilterComponent = () => {
 
   // Calculate total price
   const calculateTotalPrice = useMemo(() => {
-    let total = suitPricing.basePrices[kind] || 0;
+    let total = suitPricing.basePrices[selectedKind] || 0;
     console.log("Base price:", total);
 
     // Add lapel type cost
-    const lapelCost = suitPricing.additionalCosts.lapelTypes[lapelType] || 0;
+    const lapelCost =
+      suitPricing.additionalCosts.lapelTypes[selectedLapelType] || 0;
     total += lapelCost;
     console.log("Lapel cost:", lapelCost);
 
     // Add collar type cost
-    const collarCost = suitPricing.additionalCosts.collarTypes[lapelKind] || 0;
+    const collarCost =
+      suitPricing.additionalCosts.collarTypes[selectedCollar] || 0;
     total += collarCost;
     console.log("Collar cost:", collarCost);
 
     // Add packet type cost
-    const packetCost = suitPricing.additionalCosts.packetTypes[packetType] || 0;
+    const packetCost =
+      suitPricing.additionalCosts.packetTypes[selectedPacketType] || 0;
     total += packetCost;
     console.log("Packet cost:", packetCost);
 
@@ -212,12 +116,13 @@ const ImageFilterComponent = () => {
     }
 
     // Add color costs based on their specific categories
-    if (color) {
+    if (currColor) {
       // Main suit color
-      if (suitPricing.additionalCosts.MainSuitColors[color] !== undefined) {
-        const mainColorCost = suitPricing.additionalCosts.MainSuitColors[color];
+      if (suitPricing.additionalCosts.MainSuitColors[currColor] !== undefined) {
+        const mainColorCost =
+          suitPricing.additionalCosts.MainSuitColors[currColor];
         total += mainColorCost;
-        console.log(`Main suit color cost for ${color}:`, mainColorCost);
+        console.log(`Main suit color cost for ${currColor}:`, mainColorCost);
       }
     }
 
@@ -244,20 +149,24 @@ const ImageFilterComponent = () => {
       }
     }
 
-    console.log("Final total:", total);
+    // console.log("Final total:", total);
     return total;
   }, [
-    kind,
-    lapelType,
-    lapelKind,
-    packetType,
-    color,
+    selectedKind,
+    selectedLapelType,
+    selectedCollar,
+    selectedPacketType,
+    currColor,
     insideColor,
     selectedButton,
     poshetColor,
     holeButtonColor,
     holeButtonUpColor,
   ]);
+
+  useEffect(() => {
+    setPriceAllSuit(calculateTotalPrice);
+  }, [calculateTotalPrice, setPriceAllSuit]);
 
   return (
     <div
@@ -324,15 +233,15 @@ const ImageFilterComponent = () => {
 
       {/* Base parts */}
       <img
-        src={`/assets/ragach/colar/${color}.png`}
-        alt={`Collar - ${color}`}
+        src={`/assets/ragach/colar/${currColor}.png`}
+        alt={`Collar - ${currColor}`}
         style={imageStyle}
         onError={() => handleImageError("collar")}
       />
 
       <img
-        src={`/assets/ragach/sleeves/${color}.png`}
-        alt={`Sleeves - ${color}`}
+        src={`/assets/ragach/sleeves/${currColor}.png`}
+        alt={`Sleeves - ${currColor}`}
         style={imageStyle}
         onError={() => handleImageError("sleeves")}
       />
@@ -345,37 +254,41 @@ const ImageFilterComponent = () => {
       />
 
       <img
-        src={`/assets/ragach/insideBottom/${color}.png`}
+        src={`/assets/ragach/insideBottom/${currColor}.png`}
         alt={`Inside Bottom - ${insideColor}`}
         style={imageStyle}
         onError={() => handleImageError("insideBottom")}
       />
 
       <img
-        src={`/assets/ragach/${bottomPart}/${color}.png`}
-        alt={`Bottom - ${color}`}
+        src={`/assets/ragach/${bottomPart}/${currColor}.png`}
+        alt={`Bottom - ${currColor}`}
         style={imageStyle}
         onError={() => handleImageError("bottom")}
       />
 
       {/* Fixed Lapel/Collar path */}
       <img
-        src={`/assets/ragach/${lapelKind}/${lapelType}/${kind}/${color}.png`}
-        alt={`Lapel Collar - ${color}`}
+        src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
+        alt={`Lapel Collar - ${currColor}`}
         style={imageStyle}
         onError={() =>
           handleImageError(
-            `lapelCollar: ${lapelKind}/${lapelType}/${kind}/${color}`
+            `lapelCollar: ${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}`
           )
         }
       />
 
       {/* Packet Bottom with specific type */}
       <img
-        src={`/assets/ragach/packetBottom/${packetType}/${color}.png`}
-        alt={`Packet Bottom - ${color}`}
+        src={`/assets/ragach/packetBottom/${selectedPacketType}/${currColor}.png`}
+        alt={`Packet Bottom - ${currColor}`}
         style={overlayStyle}
-        onError={() => handleImageError(`packetBottom: ${packetType}/${color}`)}
+        onError={() =>
+          handleImageError(
+            `packetBottom: ${selectedPacketType}/${currColor}`
+          )
+        }
       />
 
       {poshetColor && (
@@ -388,28 +301,30 @@ const ImageFilterComponent = () => {
       )}
 
       <img
-        src={`/assets/ragach/packetUp/${color}.png`}
-        alt={`Packet Up - ${color}`}
+        src={`/assets/ragach/packetUp/${currColor}.png`}
+        alt={`Packet Up - ${currColor}`}
         style={imageStyle}
         onError={() => handleImageError("packetUp")}
       />
 
       {buttonColor !== null && (
         <img
-          src={`/assets/ragach/button/${kind}/${buttonColor}.png`}
+          src={`/assets/ragach/button/${selectedKind}/${buttonColor}.png`}
           alt={`Button - ${buttonColor}`}
           style={overlayStyle}
-          onError={() => handleImageError(`button: ${kind}/${buttonColor}`)}
+          onError={() =>
+            handleImageError(`button: ${selectedKind}/${buttonColor}`)
+          }
         />
       )}
 
       {holeButtonColor && (
         <img
-          src={`/assets/adds/holesButton/${kind}/${holeButtonColor}.png`}
+          src={`/assets/adds/holesButton/${selectedKind}/${holeButtonColor}.png`}
           alt={`Hole Button - ${holeButtonColor}`}
           style={overlayStyle}
           onError={() =>
-            handleImageError(`holeButton: ${kind}/${holeButtonColor}`)
+            handleImageError(`holeButton: ${selectedKind}/${holeButtonColor}`)
           }
         />
       )}
@@ -422,12 +337,6 @@ const ImageFilterComponent = () => {
           onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
         />
       )}
-
-      {/* Options Modal */}
-      {/* <SuitOptionsModal
-        open={showOptionsModal}
-        onClose={() => setShowOptionsModal(false)}
-      /> */}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
 
@@ -16,16 +16,6 @@ import {
   allSuitPartAtom,
   userAtom,
   openUserDialog,
-  currentColorAtom,
-  selectedCollarAtom,
-  selectedLapelTypeAtom,
-  selectedPacketTypeAtom,
-  selectedInsideTypeAtom,
-  selectedButtonAtom,
-  selectedPoshetAtom,
-  selectedHolesButtonAtom,
-  selectedHolesButtonUpAtom,
-  priceAllSuitAtom,
 } from "../Utils";
 import ExplainDialog from "./ExplainDialog";
 import { useSnackbar } from "notistack";
@@ -57,46 +47,18 @@ const StyledStepper = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useMediaQuery("(max-width:600px)");
-  // const allSuitPart = useAtomValue(allSuitPartAtom);
+  const allSuitPart = useAtomValue(allSuitPartAtom);
   const user = useAtomValue(userAtom);
   const [counterArray] = useAtom(counterAtom);
   const [activeStep, setActiveStep] = useAtom(currentIndexAtom);
   const [completed, setCompleted] = React.useState({});
   const [currentKind] = useAtom(currentKindAtom);
-  const [allSuitPart, setAllSuitPart] = useAtom(allSuitPartAtom);
+  // const [openDialog, setOpenDialog] = React.useState(false);
+  // const [dialogContent, setDialogContent] = React.useState("");
   const [open, setOpen] = useAtom(openUserDialog);
   const [dialogType, setDialogType] = useState(null);
-  const previousConfigRef = useRef(null);
 
-  const [currColor, setCurrColor] = useAtom(currentColorAtom);
-  const priceAllSuit = useAtomValue(priceAllSuitAtom);
-  const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);
-  const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
-  const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom);
-  const [selectedPoshet, setSelectedPoshet] = useAtom(selectedPoshetAtom);
-  const [selectedLapelType, setSelectedLapelType] = useAtom(
-    selectedLapelTypeAtom
-  );
-  const [selectedPacketType, setSelectedPacketType] = useAtom(
-    selectedPacketTypeAtom
-  );
-  const [selectedInsideType, setSelectedInsideType] = useAtom(
-    selectedInsideTypeAtom
-  );
-  const [selectedHolesButton, setSelectedHolesButton] = useAtom(
-    selectedHolesButtonAtom
-  );
-  const [selectedHolesButtonUp, setSelectedHolesButtonUp] = useAtom(
-    selectedHolesButtonUpAtom
-  );
-
-  const insideColor = selectedInsideType || currColor;
-  const holeButtonColor = selectedHolesButton;
-  const holeButtonUpColor = selectedHolesButtonUp;
-  const buttonColor = selectedButton;
-  const poshetColor = selectedPoshet;
-
-  let totalSteps = steps.length;
+  const totalSteps = steps.length;
   const isLastStep = activeStep === totalSteps - 1;
   const isStepValid =
     activeStep === 1
@@ -117,78 +79,22 @@ const StyledStepper = () => {
   const handleBack = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
   };
-  const bottomPart =
-    selectedKind === "kind3" || selectedKind === "kind4"
-      ? "bottomKind3"
-      : "bottom";
 
   const handleSubmitSuit = async () => {
-    const newSuit = {
-      kind: selectedKind || null,
-      colar: currColor,
-      sleeves: currColor,
-      insideUp: currColor,
-      packetUp: currColor,
-      bottomPart: bottomPart,
-      color: currColor || null,
-      lapelType: selectedLapelType || null,
-      lapelKind: selectedCollar || null,
-      packetType: selectedPacketType || null,
-      totalPrice: priceAllSuit,
-      buttonColor: buttonColor || null,
-      insideColor: insideColor || currColor || null,
-      poshetColor: poshetColor || null,
-      holeButtonColor: holeButtonColor || null,
-      holeButtonUpColor: holeButtonUpColor || null,
-    };
-
-    try {
-      if (user) {
-        // Create a deep copy of the current suits
-        const currentSuits = [...allSuitPart];
-
-        // Check if this exact suit configuration already exists
-        const isDuplicate = currentSuits.some((suit) => {
-          return JSON.stringify(suit) === JSON.stringify(newSuit);
+    if (user) {
+      try {
+        await postSuitProduct({
+          email: user.email,
+          allSuitPart,
         });
-
-        if (!isDuplicate) {
-          // Add the new suit to the array
-          currentSuits.push(newSuit);
-
-          // Update state and save to backend
-          setAllSuitPart(currentSuits);
-          await postSuitProduct({
-            email: user.email,
-            allSuitPart: currentSuits,
-          });
-
-          // Reset all stepper states
-          setSelectedButton(null);
-          setSelectedPoshet(null);
-          setSelectedLapelType("Standard");
-          setSelectedPacketType("packet1");
-          setSelectedInsideType(null);
-          setSelectedHolesButton(null);
-          setSelectedHolesButtonUp(null);
-          setCurrColor("blackGrey");
-          setSelectedKind("kind1");
-          setSelectedCollar("collarTight");
-          setActiveStep(0);
-          setCompleted({});
-          previousConfigRef.current = null;
-
-          navigate("/indexSizes");
-          enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
-        } else {
-          enqueueSnackbar("חליפה זהה כבר קיימת!", { variant: "warning" });
-        }
-      } else {
-        setOpen(true);
+        navigate("/indexSizes")
+        enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
+      } catch (error) {
+        console.error("שגיאה בשליחת הנתונים:", error);
+        enqueueSnackbar("שגיאה בשמירת המידות.", { variant: "error" });
       }
-    } catch (error) {
-      console.error("שגיאה בשליחת הנתונים:", error);
-      enqueueSnackbar("שגיאה בשמירת המידות.", { variant: "error" });
+    } else {
+      setOpen(true);
     }
   };
 
@@ -299,16 +205,12 @@ const StyledStepper = () => {
         sx={{
           padding: 3,
           maxWidth: 800,
-          width: isMobile ? "87%" : "100%",
+         width: isMobile ? "87%" :"100%",
           borderRadius: 4,
           backgroundColor: "#ffffff",
         }}
       >
-        <Stepper
-          nonLinear
-          activeStep={activeStep}
-          sx={{ width: isMobile ? "100%" : "100%" }}
-        >
+        <Stepper nonLinear activeStep={activeStep} sx={{ width: isMobile ? "100%" :"100%"}}>
           {steps.map((step, index) => (
             <Step key={step.label} completed={completed[index]}>
               <StepButton color="inherit" onClick={() => setActiveStep(index)}>
@@ -330,7 +232,7 @@ const StyledStepper = () => {
             maxWidth: 500,
             width: "358px",
             height: "120px",
-            borderRadius: "10%",
+            borderRadius: '10%',
             textAlign: "center",
             marginTop: "20px",
             backgroundColor: "#ffffff",
@@ -339,9 +241,8 @@ const StyledStepper = () => {
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             אנא התחבר או הירשם
           </Typography>
-          <div style={{ fontSize: "10px" }}>
-            החלק הבא זה מדידות וכדי שלא יאבדו המידות וכל המאמץ ילכו לפח אנא ירשם
-            כדי שנמור לך על המידה
+          <div style={{fontSize: '10px'}}>
+           החלק הבא זה מדידות וכדי שלא יאבדו המידות וכל המאמץ ילכו לפח אנא ירשם כדי שנמור לך על המידה
           </div>
 
           <Stack direction="row" spacing={2} justifyContent="center" mt={3}>

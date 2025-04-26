@@ -5,7 +5,7 @@ import PolicySupport from "./pages/PolicySupport";
 // import AllCollection from "./pages/AllCollection"
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import IndexCustomSuit from "./customSuite/IndexCustomSuit";
+import CustomSuit from "./pages/CustomSuit";
 // import ImageFilterComponent from './components/ImageCollector'
 import IndexSizes from "./sizes/IndexSizes";
 import HomePage2 from "./homePage/HomePage2";
@@ -14,6 +14,7 @@ import AccessibilityMenu from "./pages/AccessibilityMenu";
 import Whatchap from "./pages/Whatchap";
 import Payed from "./pages/Payed";
 import NavBar from "./homePage/NavBar";
+import Stepper2 from "./components/Stepper";
 
 const App = () => {
   return (
@@ -24,7 +25,7 @@ const App = () => {
         <AccessibilityMenu />
         <Routes>
           <Route path="/" element={<HomePage2 />} />
-          <Route path="/customSuit" element={<IndexCustomSuit />} />
+          <Route path="/customSuit" element={<CustomSuit />} />
           <Route path="/Shopping" element={<Shopping />} />
           <Route path="/PolicySupport" element={<PolicySupport />} />
           <Route path="/indexSizes" element={<IndexSizes />} />

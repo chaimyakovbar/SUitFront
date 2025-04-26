@@ -1,81 +1,85 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Box, Typography, Grid } from "@mui/material";
+import { motion } from "framer-motion";
 import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
 import { selectedPoshetAtom } from "../../Utils";
 import { imagesPoshet } from "../../consts/KindOfColors";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const useStyles = makeStyles({
   container: {
-    position: "absolute",
-    right: 10,
-    top: 100,
-    width: "330px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
+    width: "100%",
   },
-  buttonGrid: {
+  fabricGrid: {
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "center",
     gap: "15px",
-  },
-  button: {
-    display: "flex",
-    alignItems: "center",
     justifyContent: "center",
+  },
+  fabricItem: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "15px",
+  },
+  fabricButton: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "4px",
     padding: 0,
     position: "relative",
-    height: "100px",
-    width: "100px",
-    // borderRadius: "50%",
-    border: "2px solid transparent",
-    // backgroundColor: "#f0f0f0",
     overflow: "hidden",
-    cursor: "pointer",
-    transition: "all 0.2s ease-in-out",
+    border: "1px solid rgba(192, 211, 202, 0.2)",
+    transition: "all 0.3s ease",
     "&:hover": {
-      boxShadow: "0 0 8px rgba(0, 0, 0, 0.2)",
-    },
+      transform: "scale(1.05)",
+      boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
+    }
   },
-  selectedButton: {
-    border: "3px solid red",
-    boxShadow: "0 0 10px rgba(63, 181, 65, 0.5)",
-    transform: "scale(1.1)",
+  selectedFabric: {
+    border: "1px solid rgba(192, 211, 202, 0.5)",
+    boxShadow: "0 5px 15px rgba(192, 211, 202, 0.2)",
   },
-  selectionIndicator: {
-    position: "absolute",
-    top: "-5px",
-    right: "-5px",
-    width: "20px",
-    height: "20px",
-    backgroundColor: "red",
-    // borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "white",
-    fontSize: "12px",
-    fontWeight: "bold",
-  },
-  image: {
+  fabricImage: {
     width: "100%",
     height: "100%",
     objectFit: "cover",
+  },
+  fabricName: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.8rem !important",
+    fontWeight: "300 !important",
+    color: "#e0e0e0 !important",
+    marginTop: "8px !important",
+    textAlign: "center",
+  },
+  checkIcon: {
+    position: "absolute",
+    top: "-8px",
+    right: "-8px",
+    color: "#C0D3CA",
+    backgroundColor: "#0a0a0a",
     borderRadius: "50%",
+    padding: "2px",
+    fontSize: "20px",
   },
   resetButton: {
-    marginTop: "20px",
-    padding: "10px",
-    border: "2px solid #ff0000",
-    borderRadius: "8px",
-    backgroundColor: "#fff",
-    color: "#ff0000",
+    backgroundColor: "transparent !important",
+    color: "#C0D3CA !important",
+    border: "1px solid #C0D3CA !important",
+    padding: "8px 16px !important",
+    borderRadius: "0 !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.8rem !important",
+    letterSpacing: "0.1em !important",
+    marginTop: "20px !important",
+    transition: "all 0.3s ease !important",
     "&:hover": {
-      backgroundColor: "#ffe0e0",
+      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+      transform: "translateY(-2px) !important",
     },
-  },
+  }
 });
 
 const ButtonPoshet = ({ handleCloseDrawer }) => {
@@ -93,31 +97,45 @@ const ButtonPoshet = ({ handleCloseDrawer }) => {
   };
 
   return (
-    <div className={classes.container}>
-      <div className={classes.buttonGrid}>
-        {imagesPoshet.map((item) => (
-          <button
-            key={item.name}
-            onClick={() => handleClick(item.name)}
-            className={`${classes.button} ${
-              item.color === selectedPoshet ? classes.selectedButton : ""
-            }`}
-          >
-            {item.color === selectedPoshet && (
-              <div className={classes.selectionIndicator}>✓</div>
-            )}
-            <img
-              src={item.img}
-              alt={item.name}
-              className={classes.image}
-            />
-          </button>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={classes.container}
+    >
+      <Grid container spacing={2} className={classes.fabricGrid}>
+        {imagesPoshet.map((item, index) => (
+          <Grid item key={item.name} xs={6} sm={4}>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className={classes.fabricItem}
+            >
+              <Box
+                className={`${classes.fabricButton} ${item.color === selectedPoshet ? classes.selectedFabric : ""}`}
+                onClick={() => handleClick(item.color)}
+                position="relative"
+              >
+                <img src={item.img} alt={item.name} className={classes.fabricImage} />
+                {item.color === selectedPoshet && (
+                  <CheckCircleIcon className={classes.checkIcon} />
+                )}
+              </Box>
+              <Typography className={classes.fabricName}>
+                {item.name}
+              </Typography>
+            </motion.div>
+          </Grid>
         ))}
-      </div>
-      <Button className={classes.resetButton} onClick={handleReset}>
-        Reset to Default
-      </Button>
-    </div>
+      </Grid>
+      
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <Button className={classes.resetButton} onClick={handleReset}>
+          Reset Selection
+        </Button>
+      </Box>
+    </motion.div>
   );
 };
 

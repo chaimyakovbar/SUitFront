@@ -1,14 +1,21 @@
-import React, { useState, useRef } from "react";
-import Box from "@mui/material/Box";
-import Step from "@mui/material/Step";
-
-import Button from "@mui/material/Button";
-import Stepper from "@mui/material/Stepper";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
+import { 
+  Box, 
+  Step, 
+  Button, 
+  Stepper, 
+  StepButton, 
+  Typography, 
+  Dialog, 
+  Paper, 
+  Stack,
+  Container,
+  IconButton,
+  CircularProgress
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { useAtom, useAtomValue } from "jotai";
-import StepButton from "@mui/material/StepButton";
-import Typography from "@mui/material/Typography";
-import Dialog from "@mui/material/Dialog";
-import { Paper, Stack } from "@mui/material";
 import {
   counterAtom,
   currentIndexAtom,
@@ -34,349 +41,622 @@ import { useNavigate } from "react-router-dom";
 import UserLogin from "../User/UserLogin";
 import UserSignUp from "../User/UserSignUp";
 import { postSuitProduct } from "../api/suit";
+import CloseIcon from '@mui/icons-material/Close';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const steps = [
   {
-    label: "בחירת הצבע",
+    label: "Color Selection",
     validate: "step1Validated",
-    explanation: "כאן באפשרותיך לבחור את צבע החליפה שברצונך לייצר ",
+    explanation: "Choose the color of your custom suit from our premium fabric selection.",
   },
   {
-    label: "עיצוב החליפה",
+    label: "Style Design",
     validate: "step2Validated",
-    explanation: "בחר סוג חליפה ועיצוב שנראה לך חובה לבחור ״סוג חליפה״",
+    explanation: "Select your preferred suit style and customize design elements.",
   },
   {
-    label: "טאץ אישי",
+    label: "Measurements",
     validate: "step3Validated",
-    explanation: "בחר את הטאץ המיוחד שלך ",
+    explanation: "Provide your measurements for a perfect fit tailored to your body.",
   },
 ];
 
+const useStyles = makeStyles({
+  root: {
+    backgroundColor: "#0a0a0a",
+    color: "#fff",
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    position: "relative",
+    padding: "0",
+  },
+  container: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+  },
+  stepper: {
+    backgroundColor: "transparent !important",
+    padding: "15px 0 !important",
+    flexShrink: 0, // Prevent stepper from shrinking
+  },
+  contentArea: {
+    flex: 1,
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+  },
+  suitPartContainer: {
+    flex: 1,
+    overflow: "auto",
+    padding: "0 5px",
+    marginBottom: "10px",
+    // Custom scrollbar styling
+    "&::-webkit-scrollbar": {
+      width: "6px",
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      borderRadius: "3px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(192, 211, 202, 0.3)",
+      borderRadius: "3px",
+      "&:hover": {
+        backgroundColor: "rgba(192, 211, 202, 0.5)",
+      }
+    },
+  },
+  controls: {
+    paddingTop: "10px",
+    borderTop: "1px solid rgba(192, 211, 202, 0.1)",
+    flexShrink: 0, // Prevent controls from shrinking
+  },
+  step: {
+    "& .MuiStepLabel-label": {
+      color: "#a0a0a0 !important",
+      fontFamily: "'Montserrat', sans-serif !important",
+      fontSize: "0.85rem !important",
+      letterSpacing: "0.1em !important",
+      "&.Mui-active": {
+        color: "#C0D3CA !important",
+      },
+      "&.Mui-completed": {
+        color: "#C0D3CA !important",
+      },
+    },
+  },
+  stepIcon: {
+    color: "#C0D3CA !important",
+  },
+  stepConnector: {
+    "& .MuiStepConnector-line": {
+      borderColor: "rgba(192, 211, 202, 0.3) !important",
+    },
+  },
+  button: {
+    backgroundColor: "transparent !important",
+    color: "#C0D3CA !important",
+    border: "1px solid #C0D3CA !important",
+    padding: "8px 20px !important",
+    borderRadius: "0 !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.85rem !important",
+    letterSpacing: "0.1em !important",
+    transition: "all 0.3s ease !important",
+    "&:hover": {
+      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+      transform: "translateY(-2px) !important",
+    },
+    "&.Mui-disabled": {
+      color: "#505050 !important",
+      borderColor: "#505050 !important",
+    },
+  },
+  buttonPrimary: {
+    backgroundColor: "#C0D3CA !important",
+    color: "#0a0a0a !important",
+    border: "1px solid #C0D3CA !important",
+    padding: "8px 20px !important",
+    borderRadius: "0 !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.85rem !important",
+    letterSpacing: "0.1em !important",
+    transition: "all 0.3s ease !important",
+    "&:hover": {
+      backgroundColor: "#a9c0b3 !important",
+      transform: "translateY(-2px) !important",
+    },
+  },
+  dialogPaper: {
+    backgroundColor: "#0a0a0a !important",
+    color: "#fff !important",
+    borderRadius: "4px !important",
+    padding: "24px !important",
+    border: "1px solid rgba(192, 211, 202, 0.2) !important",
+  },
+  dialogTitle: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "1.8rem !important",
+    fontWeight: "300 !important",
+    marginBottom: "1rem !important",
+    color: "#C0D3CA !important",
+  },
+  dialogContent: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.9rem !important",
+    lineHeight: "1.6 !important",
+    marginBottom: "1.5rem !important",
+    color: "#e0e0e0 !important",
+  },
+  confirmationDialog: {
+    position: "relative",
+    padding: "30px 20px 20px !important",
+  },
+  errorMessage: {
+    color: "#f44336 !important",
+    fontSize: "0.85rem !important",
+    marginTop: "8px !important",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+  },
+  validationIndicator: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    marginTop: "10px",
+    color: "#C0D3CA",
+    fontSize: "0.8rem !important",
+  },
+  completedContainer: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }
+});
+
 const StyledStepper = () => {
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = useAtom(currentIndexAtom);
+  const [completed, setCompleted] = useState({});
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState("");
+  const [dialogType, setDialogType] = useState(null);
+  const [user] = useAtom(userAtom);
+  const [_, setOpenUserDialog] = useAtom(openUserDialog);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  // const isMobile = useMediaQuery("(max-width:600px)");
-  // const allSuitPart = useAtomValue(allSuitPartAtom);
-  const user = useAtomValue(userAtom);
-  const [counterArray] = useAtom(counterAtom);
-  const [activeStep, setActiveStep] = useAtom(currentIndexAtom);
-  // const [completed, setCompleted] = React.useState({});
+  const [priceAllSuit] = useAtom(priceAllSuitAtom);
+  const [allSuitPart] = useAtom(allSuitPartAtom);
   const [currentKind] = useAtom(currentKindAtom);
-  const [allSuitPart, setAllSuitPart] = useAtom(allSuitPartAtom);
-  const [open, setOpen] = useAtom(openUserDialog);
-  const [dialogType, setDialogType] = useState(null);
-  const previousConfigRef = useRef(null);
+  const [currentColor] = useAtom(currentColorAtom);
+  const [selectedCollar] = useAtom(selectedCollarAtom);
+  const [selectedLapelType] = useAtom(selectedLapelTypeAtom);
+  const [selectedPacketType] = useAtom(selectedPacketTypeAtom);
+  const [selectedInsideType] = useAtom(selectedInsideTypeAtom);
+  const [selectedButton] = useAtom(selectedButtonAtom);
+  const [selectedPoshet] = useAtom(selectedPoshetAtom);
+  const [selectedHolesButton] = useAtom(selectedHolesButtonAtom);
+  const [selectedHolesButtonUp] = useAtom(selectedHolesButtonUpAtom);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [counterArray] = useAtom(counterAtom);
 
-  const [currColor, setCurrColor] = useAtom(currentColorAtom);
-  const priceAllSuit = useAtomValue(priceAllSuitAtom);
-  const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);
-  const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
-  const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom);
-  const [selectedPoshet, setSelectedPoshet] = useAtom(selectedPoshetAtom);
-  const [selectedLapelType, setSelectedLapelType] = useAtom(
-    selectedLapelTypeAtom
-  );
-  const [selectedPacketType, setSelectedPacketType] = useAtom(
-    selectedPacketTypeAtom
-  );
-  const [selectedInsideType, setSelectedInsideType] = useAtom(
-    selectedInsideTypeAtom
-  );
-  const [selectedHolesButton, setSelectedHolesButton] = useAtom(
-    selectedHolesButtonAtom
-  );
-  const [selectedHolesButtonUp, setSelectedHolesButtonUp] = useAtom(
-    selectedHolesButtonUpAtom
-  );
+  // Check if the current step is validated
+  const isCurrentStepValidated = useCallback(() => {
+    if (activeStep === 0) {
+      return currentColor && currentKind && counterArray[0]?.step1Validated;
+    } else if (activeStep === 1) {
+      return selectedCollar && selectedLapelType && selectedPacketType;
+    } else if (activeStep === 2) {
+      return selectedInsideType && selectedButton && selectedHolesButton && selectedHolesButtonUp;
+    }
+    return false;
+  }, [
+    activeStep, 
+    counterArray, 
+    currentColor, 
+    currentKind, 
+    selectedCollar, 
+    selectedLapelType, 
+    selectedPacketType,
+    selectedInsideType,
+    selectedButton, 
+    selectedHolesButton, 
+    selectedHolesButtonUp
+  ]);
 
-  const insideColor = selectedInsideType || currColor;
-  const holeButtonColor = selectedHolesButton;
-  const holeButtonUpColor = selectedHolesButtonUp;
-  const buttonColor = selectedButton;
-  const poshetColor = selectedPoshet;
+  // Update completed steps when validation changes
+  useEffect(() => {
+    if (isCurrentStepValidated()) {
+      const newCompleted = { ...completed };
+      newCompleted[activeStep] = true;
+      setCompleted(newCompleted);
+    }
+  }, [
+    isCurrentStepValidated, 
+    activeStep, 
+    completed,
+    currentColor, 
+    currentKind,
+    selectedCollar, 
+    selectedLapelType, 
+    selectedPacketType,
+    selectedInsideType,
+    selectedButton,
+    selectedHolesButton,
+    selectedHolesButtonUp
+  ]);
 
-  let totalSteps = steps.length;
-  const isLastStep = activeStep === totalSteps - 1;
-  const isStepValid =
-    activeStep === 1
-      ? !!currentKind
-      : counterArray[activeStep]?.[steps[activeStep].validate];
+  const totalSteps = () => {
+    return steps.length;
+  };
 
-  // useEffect(() => {
-  //   setDialogContent(steps[activeStep].explanation);
-  //   setOpenDialog(true);
-  // }, [activeStep]);
+  const completedSteps = () => {
+    return Object.keys(completed).length;
+  };
+
+  const isLastStep = () => {
+    return activeStep === totalSteps() - 1;
+  };
+
+  const allStepsCompleted = () => {
+    return completedSteps() === totalSteps();
+  };
 
   const handleNext = () => {
-    if (!isStepValid) return;
-    // setCompleted((prev) => ({ ...prev, [activeStep]: true }));
-    if (!isLastStep) setActiveStep((prev) => prev + 1);
+    if (!isCurrentStepValidated()) {
+      setErrorMessage(`Please complete all selections in the "${steps[activeStep].label}" step`);
+      setTimeout(() => setErrorMessage(""), 5000);
+      return;
+    }
+    
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? steps.findIndex((step, i) => !(i in completed))
+        : activeStep + 1;
+    
+    setActiveStep(newActiveStep);
+    setErrorMessage("");
   };
 
   const handleBack = () => {
-    if (activeStep > 0) setActiveStep((prev) => prev - 1);
-  }
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setErrorMessage("");
+  };
 
-  const bottomPart =
-    selectedKind === "kind3" || selectedKind === "kind4"
-      ? "bottomKind3"
-      : "bottom";
+  const handleStep = (step) => () => {
+    setActiveStep(step);
+    setErrorMessage("");
+  };
 
-  const handleSubmitSuit = async () => {
-    const newSuit = {
-      kind: selectedKind || null,
-      colar: currColor,
-      sleeves: currColor,
-      insideUp: currColor,
-      packetUp: currColor,
-      bottomPart: bottomPart,
-      color: currColor || null,
-      lapelType: selectedLapelType || null,
-      lapelKind: selectedCollar || null,
-      packetType: selectedPacketType || null,
-      totalPrice: priceAllSuit,
-      buttonColor: buttonColor || null,
-      insideColor: insideColor || currColor || null,
-      poshetColor: poshetColor || null,
-      holeButtonColor: holeButtonColor || null,
-      holeButtonUpColor: holeButtonUpColor || null,
-    };
-
-    try {
-      if (user) {
-        // Create a deep copy of the current suits
-        const currentSuits = [...allSuitPart];
-
-        // Check if this exact suit configuration already exists
-        const isDuplicate = currentSuits.some((suit) => {
-          return JSON.stringify(suit) === JSON.stringify(newSuit);
-        });
-
-        if (!isDuplicate) {
-          // Add the new suit to the array
-          currentSuits.push(newSuit);
-
-          // Update state and save to backend
-          setAllSuitPart(currentSuits);
-          await postSuitProduct({
-            email: user.email,
-            allSuitPart: newSuit,
-          });
-
-          // Reset all stepper states
-          setSelectedButton(null);
-          setSelectedPoshet(null);
-          setSelectedLapelType("Standard");
-          setSelectedPacketType("packet1");
-          setSelectedInsideType(null);
-          setSelectedHolesButton(null);
-          setSelectedHolesButtonUp(null);
-          setCurrColor("blackGrey");
-          setSelectedKind("kind1");
-          setSelectedCollar("collarTight");
-          setActiveStep(0);
-          // setCompleted({});
-          previousConfigRef.current = null;
-
-          navigate("/indexSizes");
-          enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
-        } else {
-          enqueueSnackbar("חליפה זהה כבר קיימת!", { variant: "warning" });
-        }
-      } else {
-        setOpen(true);
-      }
-    } catch (error) {
-      console.error("שגיאה בשליחת הנתונים:", error);
-      enqueueSnackbar("שגיאה בשמירת המידות.", { variant: "error" });
-    }
+  const handleReset = () => {
+    setActiveStep(0);
+    setCompleted({});
+    setErrorMessage("");
   };
 
   const handleOpenDialog = (type) => {
     setDialogType(type);
-    setOpen(true);
+    setOpenUserDialog(true);
+  };
+
+  const handleExplainDialog = (content) => {
+    setDialogContent(content);
+    setOpenDialog(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    setConfirmDialogOpen(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setConfirmDialogOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      // Validate all required fields are present
+      if (!currentKind || !currentColor || !selectedCollar || !selectedLapelType || 
+          !selectedPacketType || !selectedInsideType || !selectedButton || 
+          !selectedHolesButton || !selectedHolesButtonUp) {
+        throw new Error("Missing required suit configuration details");
+      }
+      
+      const response = await postSuitProduct({
+        totalPrice: priceAllSuit,
+        kind: currentKind,
+        color: currentColor,
+        collar: selectedCollar,
+        lapel: selectedLapelType,
+        packet: selectedPacketType,
+        inside: selectedInsideType,
+        button: selectedButton,
+        poshet: selectedPoshet,
+        holesButton: selectedHolesButton,
+        holesButtonUp: selectedHolesButtonUp,
+      });
+
+      if (response.status === 201) {
+        enqueueSnackbar("Your custom suit has been created successfully!", { 
+          variant: "success",
+          autoHideDuration: 5000
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error creating suit:", error);
+      enqueueSnackbar(error.message || "Error creating suit. Please try again.", { 
+        variant: "error",
+        autoHideDuration: 5000
+      });
+    } finally {
+      setIsSubmitting(false);
+      setConfirmDialogOpen(false);
+    }
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-        backgroundColor: "#F5F5F7",
-        // width: isMobile ? "77%" :"100%",
-      }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className={classes.root}
     >
-      <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
-        <Button
-          disabled={activeStep === 0}
-          onClick={handleBack}
-          sx={{
-            color: "white",
-            border: "2px solid black",
-            backgroundColor: "#FF6D00",
-            fontSize: "16px",
-            fontWeight: "bold",
-            px: 4,
-            py: 1.5,
-            borderRadius: "12px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#E65100",
-              transform: "scale(1.05)",
-              boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
-            },
-            "&:disabled": {
-              backgroundColor: "#E0E0E0",
-              color: "#9E9E9E",
-              border: "2px solid #BDBDBD",
-              cursor: "not-allowed",
-            },
-          }}
-        >
-          חזור
-        </Button>
-
-        {isLastStep ? (
-          <Button
-            onClick={handleSubmitSuit}
-            sx={{
-              color: "white",
-              backgroundColor: "#43A047",
-              fontSize: "16px",
-              fontWeight: "bold",
-              px: 4,
-              py: 1.5,
-              borderRadius: "12px",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: "#388E3C",
-                transform: "scale(1.05)",
-                boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
-              },
-            }}
-          >
-            סיים
-          </Button>
-        ) : (
-          <Button
-            onClick={handleNext}
-            disabled={!isStepValid}
-            sx={{
-              color: "white",
-              border: "2px solid black",
-              backgroundColor: "#FF6D00",
-              fontSize: "16px",
-              fontWeight: "bold",
-              px: 4,
-              py: 1.5,
-              borderRadius: "12px",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: "#E65100",
-                transform: "scale(1.05)",
-                boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
-              },
-              "&:disabled": {
-                backgroundColor: "#E0E0E0",
-                color: "#9E9E9E",
-                border: "2px solid #BDBDBD",
-                cursor: "not-allowed",
-              },
-            }}
-          >
-            הבא
-          </Button>
-        )}
-      </Box>
-{/* 
-      <Paper
-        elevation={6}
-        sx={{
-          padding: 3,
-          maxWidth: 800,
-          width: isMobile ? "87%" : "100%",
-          borderRadius: 4,
-          backgroundColor: "#ffffff",
-        }}
-      >
-        <Stepper
-          nonLinear
-          activeStep={activeStep}
-          sx={{ width: isMobile ? "100%" : "100%" }}
+      <Container maxWidth="lg" className={classes.container}>
+        <Stepper 
+          nonLinear 
+          activeStep={activeStep} 
+          className={classes.stepper}
+          alternativeLabel
         >
           {steps.map((step, index) => (
-            <Step key={step.label} completed={completed[index]}>
-              <StepButton color="inherit" onClick={() => setActiveStep(index)}>
+            <Step key={step.label} completed={completed[index]} className={classes.step}>
+              <StepButton 
+                onClick={handleStep(index)}
+                icon={completed[index] ? 
+                  <CheckCircleIcon className={classes.stepIcon} fontSize="small" /> : 
+                  <RadioButtonUncheckedIcon className={classes.stepIcon} fontSize="small" />
+                }
+              >
                 {step.label}
               </StepButton>
             </Step>
           ))}
         </Stepper>
-      </Paper> */}
 
-      <Dialog
-        style={{ borderRadius: 8 }}
-        open={open}
-        onClose={() => setOpen(false)}
-      >
-        <div
-          style={{
-            padding: 4,
-            maxWidth: 500,
-            width: "358px",
-            height: "120px",
-            borderRadius: "10%",
-            textAlign: "center",
-            marginTop: "20px",
-            backgroundColor: "#ffffff",
-          }}
+        <Box className={classes.contentArea}>
+          {allStepsCompleted() ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={classes.completedContainer}
+            >
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 3, 
+                  backgroundColor: 'rgba(30, 30, 30, 0.6)',
+                  border: '1px solid rgba(192, 211, 202, 0.2)',
+                  borderRadius: '4px',
+                  textAlign: 'center',
+                  maxWidth: '500px'
+                }}
+              >
+                <Typography 
+                  sx={{ 
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.8rem",
+                    fontWeight: 300,
+                    color: "#C0D3CA",
+                    mb: 2
+                  }}
+                >
+                  All steps completed
+                </Typography>
+                <Typography 
+                  sx={{ 
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "0.95rem",
+                    color: "#e0e0e0",
+                    mb: 3
+                  }}
+                >
+                  Your custom suit has been designed. Would you like to place your order?
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                  <Button onClick={handleReset} className={classes.button}>
+                    Reset
+                  </Button>
+                  <Button onClick={handleConfirmSubmit} className={classes.buttonPrimary}
+                    disabled={isSubmitting}>
+                    {isSubmitting ? <CircularProgress size={24} color="inherit" /> : "Place Order"}
+                  </Button>
+                </Box>
+              </Paper>
+            </motion.div>
+          ) : (
+            <>
+              <Box className={classes.suitPartContainer}>
+                {activeStep === 0 && allSuitPart}
+                {activeStep === 1 && allSuitPart}
+                {activeStep === 2 && (
+                  user ? allSuitPart : <HaveUser />
+                )}
+
+                {errorMessage && (
+                  <Box 
+                    sx={{ 
+                      backgroundColor: 'rgba(244, 67, 54, 0.1)', 
+                      border: '1px solid rgba(244, 67, 54, 0.3)', 
+                      borderRadius: '4px', 
+                      p: 1.5, 
+                      mt: 1 
+                    }}
+                  >
+                    <Typography className={classes.errorMessage}>
+                      <ErrorOutlineIcon fontSize="small" />
+                      {errorMessage}
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+
+              <Box className={classes.controls}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    className={classes.button}
+                    size="small"
+                  >
+                    Back
+                  </Button>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      onClick={() => handleExplainDialog(steps[activeStep].explanation)}
+                      className={classes.button}
+                      size="small"
+                    >
+                      Info
+                    </Button>
+                    <Button
+                      onClick={handleNext}
+                      className={classes.buttonPrimary}
+                      size="small"
+                    >
+                      {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                  </Box>
+                </Box>
+
+                <Box className={classes.validationIndicator}>
+                  {isCurrentStepValidated() ? (
+                    <>
+                      <CheckCircleIcon fontSize="small" />
+                      <Typography variant="body2">{steps[activeStep].label} complete</Typography>
+                    </>
+                  ) : (
+                    <>
+                      <RadioButtonUncheckedIcon fontSize="small" />
+                      <Typography variant="body2">Please complete all selections</Typography>
+                    </>
+                  )}
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+
+        {/* Information Dialog */}
+        <Dialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          PaperProps={{ className: classes.dialogPaper }}
         >
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            אנא התחבר או הירשם
-          </Typography>
-          <div style={{ fontSize: "10px" }}>
-            החלק הבא זה מדידות וכדי שלא יאבדו המידות וכל המאמץ ילכו לפח אנא ירשם
-            כדי שנמור לך על המידה
-          </div>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+              <Typography className={classes.dialogTitle}>
+                Step Information
+              </Typography>
+              
+              <IconButton onClick={() => setOpenDialog(false)} sx={{ color: "#C0D3CA" }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            
+            <Typography className={classes.dialogContent}>
+              {dialogContent}
+            </Typography>
+            
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button onClick={() => setOpenDialog(false)} className={classes.button}>
+                I Understand
+              </Button>
+            </Box>
+          </Box>
+        </Dialog>
 
-          <Stack direction="row" spacing={2} justifyContent="center" mt={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleOpenDialog("login")}
-            >
-              היכנס
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => handleOpenDialog("signup")}
-            >
-              הירשם
-            </Button>
-          </Stack>
+        {/* Login/Signup Dialog */}
+        <Dialog
+          open={dialogType !== null}
+          onClose={() => setDialogType(null)}
+          PaperProps={{ className: classes.dialogPaper }}
+        >
+          <Box p={3}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+              <Typography className={classes.dialogTitle}>
+                {dialogType === "login" ? "Sign In" : "Create Account"}
+              </Typography>
+              
+              <IconButton onClick={() => setDialogType(null)} sx={{ color: "#C0D3CA" }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
 
-          {dialogType === "login" && (
-            <UserLogin setDialogType={setDialogType} />
-          )}
-          {dialogType === "signup" && (
-            <UserSignUp setDialogType={setDialogType} />
-          )}
-        </div>
-      </Dialog>
+            {dialogType === "login" && (
+              <UserLogin setDialogType={setDialogType} />
+            )}
+            {dialogType === "signup" && (
+              <UserSignUp setDialogType={setDialogType} />
+            )}
+          </Box>
+        </Dialog>
 
-      {/* <ExplainDialog
-        open={openDialog}
-        handleClose={() => setOpenDialog(false)}
-        content={dialogContent}
-      /> */}
-    </Box>
+        {/* Order Confirmation Dialog */}
+        <Dialog
+          open={confirmDialogOpen}
+          onClose={handleCancelSubmit}
+          PaperProps={{ className: classes.dialogPaper }}
+        >
+          <Box className={classes.confirmationDialog}>
+            <Typography className={classes.dialogTitle}>
+              Confirm Your Order
+            </Typography>
+            
+            <Typography className={classes.dialogContent}>
+              You're about to place an order for your custom suit with a total price of ${priceAllSuit}.
+              Would you like to proceed with this order?
+            </Typography>
+            
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
+              <Button 
+                onClick={handleCancelSubmit} 
+                className={classes.button}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSubmit} 
+                className={classes.buttonPrimary}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Confirm Order"
+                )}
+              </Button>
+            </Box>
+          </Box>
+        </Dialog>
+      </Container>
+    </motion.div>
   );
 };
 

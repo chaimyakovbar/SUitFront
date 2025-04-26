@@ -3,9 +3,62 @@ import { suitsColors } from "../../consts/KindOfColors";
 import { useAtom } from "jotai";
 import { counterAtom, currentColorAtom } from "../../Utils";
 import { useMediaQuery } from "@mui/material";
+import { motion } from "framer-motion";
+import { Box, Typography, Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
+const useStyles = makeStyles({
+  container: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: props => props.isMobile ? "12px" : "20px",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  colorButton: {
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    width: props => props.isMobile ? "50px" : "80px",
+    height: props => props.isMobile ? "50px" : "80px",
+    borderRadius: "50%",
+    cursor: "pointer",
+    position: "relative",
+    transition: "all 0.3s ease",
+    border: "2px solid transparent",
+    "&:hover": {
+      transform: "scale(1.05)",
+      boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
+    }
+  },
+  selectedColor: {
+    border: "2px solid #C0D3CA !important",
+    boxShadow: "0 5px 15px rgba(192, 211, 202, 0.3) !important",
+  },
+  checkIcon: {
+    position: "absolute",
+    top: "-8px",
+    right: "-8px",
+    color: "#C0D3CA",
+    backgroundColor: "#0a0a0a",
+    borderRadius: "50%",
+    padding: "2px",
+    fontSize: "20px",
+  },
+  colorName: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: props => props.isMobile ? "0.7rem !important" : "0.8rem !important",
+    fontWeight: "300 !important",
+    color: "#e0e0e0 !important",
+    marginTop: "8px !important",
+    textAlign: "center",
+    letterSpacing: "0.05em !important",
+  }
+});
 
 const StepOne = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
+  const classes = useStyles({ isMobile });
   const [counterArray, setCounterArray] = useAtom(counterAtom);
   const [_, setCurrentColor] = useAtom(currentColorAtom);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -19,64 +72,37 @@ const StepOne = () => {
   };
 
   return (
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: isMobile ? "8px" : "24px",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "20px",
-          
-        }}
-      >
-        {suitsColors.map((color) => (
-          <div key={color.colorId} style={{ textAlign: "center" }}>
-            <button
-              onClick={() => handleClick(color)}
-              variant="contained"
-              style={{
-                backgroundImage: `url(${color.color})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                width: isMobile ? "40px" : "100px",
-                height: isMobile ? "40px" : "100px",
-                borderRadius: "50%",
-                boxShadow:
-                  selectedColor?.colorId === color.colorId
-                    ? "0 0 0 4px #FF6D00, 0 4px 12px rgba(0, 0, 0, 0.3)"
-                    : "0 4px 12px rgba(0, 0, 0, 0.2)",
-                border:
-                  selectedColor?.colorId === color.colorId
-                    ? "3px solid #FF6D00"
-                    : "2px solid #333",
-                transition: "all 0.3s ease-in-out",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-                e.currentTarget.style.filter = "brightness(0.9)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.filter = "brightness(1)";
-              }}
-            />
-            <p
-              style={{
-                marginTop: "12px",
-                fontSize: isMobile ? "12px" : "15px",
-                color: "#444",
-                fontWeight: "bold",
-                textShadow: "0 1px 2px rgba(0,0,0,0.2)",
-              }}
-            >
-              <span style={{fontSize: isMobile ? "12px" : "20px"}}>{color.name}</span>
-            </p>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Box className={classes.container}>
+        {suitsColors.map((color, index) => (
+          <motion.div
+            key={color.colorId}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <Box
+                className={`${classes.colorButton} ${selectedColor?.colorId === color.colorId ? classes.selectedColor : ""}`}
+                style={{ backgroundImage: `url(${color.color})` }}
+                onClick={() => handleClick(color)}
+              >
+                {selectedColor?.colorId === color.colorId && (
+                  <CheckCircleIcon className={classes.checkIcon} />
+                )}
+              </Box>
+              <Typography className={classes.colorName}>
+                {color.name}
+              </Typography>
+            </Box>
+          </motion.div>
         ))}
-      </div>
-
+      </Box>
+    </motion.div>
   );
 };
 

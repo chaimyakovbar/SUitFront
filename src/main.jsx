@@ -14,9 +14,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider maxSnack={3}>
-        <div style={{backgroundColor: '#F5F5F7'}}>
           <App />
-        </div>
       </SnackbarProvider>
     </QueryClientProvider>
   </StrictMode>

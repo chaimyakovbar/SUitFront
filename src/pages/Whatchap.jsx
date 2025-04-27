@@ -60,7 +60,10 @@ const Whatchap = () => {
           </a>
 
           {/* כפתור Email */}
-          <a href="mailto:8005704@gmail.com" style={{ ...styles.actionButton, ...styles.emailButton }}>
+          <a
+            href="mailto:8005704@gmail.com"
+            style={{ ...styles.actionButton, ...styles.emailButton }}
+          >
             <Mail /> Email
           </a>
 

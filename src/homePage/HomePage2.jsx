@@ -59,7 +59,11 @@ const HomePage2 = () => {
   return (
     <div>
       <div className={classes.topDiv}>
-        <img className={classes.img} src="/assets/photoBackGround3.jpg" alt="Background" />
+        <img
+          className={classes.img}
+          src="/assets/photoBackGround3.jpg"
+          alt="Background"
+        />
 
         <div className={classes.divLink}>
           <Link
@@ -76,7 +80,6 @@ const HomePage2 = () => {
       <MostPoPular />
 
       <AllCollection targetSectionRef={targetSectionRef} />
-
     </div>
   );
 };

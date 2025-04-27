@@ -86,7 +86,7 @@ function StepTwo() {
   const [selectedKindPucket, setSelectedKindPucket] = useState(false);
   const [, setKindColor] = useAtom(currentKindAtom);
   const [selectedPacketType, setSelectedPacketType] = useAtom(selectedPacketTypeAtom);
-  const [selecteKindType, setSelectedKindType] = useAtom(selectedKindTypeAtom);
+  const [_, setSelectedKindType] = useAtom(selectedKindTypeAtom);
   const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
   const [selectedLapelType, setSelectedLapelType] = useAtom(selectedLapelTypeAtom);
 
@@ -206,18 +206,18 @@ function StepTwo() {
         className="pocket-button"
         onClick={() => handelClickPucket("packetSide")}
       >
-          כיס עקום
+           כיס ישר
       </button>
       <button
         disabled={selectedKindPucket}
         className="pocket-button"
         onClick={() => handelClickPucket("packetBottom")}
       >
+          כיס עקום
       
-        כיס ישר
       </button>
       <div className={classes.container}>
-        {selecteKindType ===  'packetBottom' &&
+        {selectedKindPucket &&
           packetType.map((kind) => (
             <Button
               key={kind.name}
@@ -236,7 +236,7 @@ function StepTwo() {
               )}
             </Button>
           ))}
-        {selecteKindType ===  'packetSide' &&
+        {!selectedKindPucket &&
           packetType2.map((kind) => (
             <Button
               key={kind.name}

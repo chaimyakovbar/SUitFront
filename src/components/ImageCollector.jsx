@@ -176,7 +176,7 @@ const ImageFilterComponent = () => {
       style={{
         position: "relative",
         right: 0,
-        width: isMobile ? "200px" : "500px",
+        width: isMobile ? "250px" : "500px",
         height: isMobile ? "350px" : "500px",
       }}
     >

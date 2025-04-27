@@ -11,6 +11,7 @@ import {
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
   priceAllSuitAtom,
+  selectedKindTypeAtom
 } from "../Utils";
 import { useAtomValue, useAtom } from "jotai";
 import { useMediaQuery } from "@mui/material";
@@ -31,8 +32,9 @@ const ImageFilterComponent = () => {
   const selectedInsideType = useAtomValue(selectedInsideTypeAtom);
   const selectedHolesButton = useAtomValue(selectedHolesButtonAtom);
   const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom);
+  const selectedKindType = useAtomValue(selectedKindTypeAtom);
 
-  const packetKind = selectedPacketType || "packetSide";
+  const packetKind = selectedKindType || "packetBottom";
   const insideColor = selectedInsideType || currColor;
   const holeButtonColor = selectedHolesButton;
   const holeButtonUpColor = selectedHolesButtonUp;

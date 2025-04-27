@@ -268,7 +268,6 @@ const StyledStepper = () => {
             disabled={!isStepValid}
             sx={{
               color: "white",
-              border: "2px solid black",
               backgroundColor: "#E65100",
               border: "2px solid #C0D3CA !important",
               fontSize: "16px",

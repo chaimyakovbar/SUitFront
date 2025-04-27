@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     backgroundColor: props => props.isMobile ? 'none' :  "rgba(30, 30, 30, 0.4)",
     borderRadius: "4px",
     border: props => props.isMobile ? 'none' : "1px solid rgba(192, 211, 202, 0.2)",
-    padding: "20px 0px 20px 20px",
+    padding: "0px 0px 20px 20px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

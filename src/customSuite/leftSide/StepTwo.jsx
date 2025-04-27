@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
-import VerifiedIcon from "@mui/icons-material/Verified";
+import { motion } from "framer-motion";
+import { Box, Typography, Button, Divider } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   currentKindAtom,
   selectedCollarAtom,
@@ -10,7 +11,6 @@ import {
   selectedPacketTypeAtom,
   selectedKindTypeAtom,
 } from "../../Utils";
-import "./styles.css";
 
 import wide from "/assets/kinds/wide.png";
 import slim from "/assets/kinds/slim.png";
@@ -26,57 +26,80 @@ import packet2 from "/assets/kinds/2.png";
 import packet3 from "/assets/kinds/3.png";
 
 const useStyles = makeStyles({
-  buttonImg: {
-    height: "60px",
-    width: "auto",
-    transition: "filter 0.3s ease-in-out",
-    objectFit: "contain",
-  },
-  container: {
-    "@media (max-width: 600px)": {
-      with: "200px",
-    },
-    display: "flex",
-    gap: "10px",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    marginBottom: "15px",
-  },
-  button: {
-    "@media (max-width: 600px)": {
-      with: "40px",
-      height: "60px",
-    },
-    width: "80px",
-    height: "80px",
-    transition: "all 0.2s ease-in-out",
-    borderRadius: "6px",
-    padding: "4px",
-    position: "relative",
-    "&:hover": {
-      backgroundColor: "#e0e0e0",
-      transform: "scale(1.05)",
-      boxShadow: "0 6px 12px #FF5722",
-    },
-  },
-  selectedButton: {
-    backgroundColor: "transparent !important",
-    boxShadow: "0 6px 12px #FF5722 !important",
-    transform: "scale(1.05) !important",
-  },
-  verifiedIcon: {
-    position: "absolute",
-    top: "5px",
-    right: "5px",
-    color: "#FF5722", // Orange color
-    fontSize: "20px", // Adjust the size as needed
-  },
-  title: {
-    fontSize: "18px",
-    fontWeight: "bold",
-    margin: "15px 0 10px",
+  sectionTitle: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "1.3rem !important",
+    fontWeight: "300 !important",
+    marginBottom: "1rem !important",
+    marginTop: "1.5rem !important",
+    color: "#C0D3CA !important",
     textAlign: "center",
-    color: "#333",
+    letterSpacing: "0.05em !important",
+  },
+  optionsContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "12px",
+    justifyContent: "center",
+    marginBottom: "20px",
+  },
+  optionButton: {
+    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
+    border: "1px solid rgba(192, 211, 202, 0.2) !important",
+    borderRadius: "4px !important",
+    padding: "8px !important",
+    position: "relative",
+    transition: "all 0.3s ease !important",
+    "&:hover": {
+      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+      transform: "translateY(-3px) !important",
+    },
+  },
+  selectedOption: {
+    backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+    border: "1px solid rgba(192, 211, 202, 0.5) !important",
+    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2) !important",
+  },
+  optionImage: {
+    height: "50px",
+    width: "auto",
+    objectFit: "contain",
+    filter: "brightness(0.9) contrast(1.1)",
+  },
+  checkIcon: {
+    position: "absolute",
+    top: "-8px",
+    right: "-8px",
+    color: "#C0D3CA",
+    backgroundColor: "#0a0a0a",
+    borderRadius: "50%",
+    padding: "2px",
+    fontSize: "20px",
+  },
+  divider: {
+    backgroundColor: "rgba(192, 211, 202, 0.2) !important",
+    margin: "1.5rem 0 !important",
+  },
+  pocketButton: {
+    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
+    border: "1px solid rgba(192, 211, 202, 0.2) !important",
+    borderRadius: "4px !important",
+    padding: "8px 16px !important",
+    margin: "10px",
+    color: "#C0D3CA",
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.9rem !important",
+    transition: "all 0.3s ease !important",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+      transform: "translateY(-3px) !important",
+    },
+    "&:disabled": {
+      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+      color: "#9E9E9E",
+      cursor: "not-allowed",
+    },
   },
 });
 
@@ -85,11 +108,14 @@ function StepTwo() {
   const [selectedKind, setSelectedKind] = useState(null);
   const [selectedKindPucket, setSelectedKindPucket] = useState(false);
   const [, setKindColor] = useAtom(currentKindAtom);
-  const [selectedPacketType, setSelectedPacketType] = useAtom(selectedPacketTypeAtom);
+  const [selectedPacketType, setSelectedPacketType] = useAtom(
+    selectedPacketTypeAtom
+  );
   const [_, setSelectedKindType] = useAtom(selectedKindTypeAtom);
   const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
-  const [selectedLapelType, setSelectedLapelType] = useAtom(selectedLapelTypeAtom);
-
+  const [selectedLapelType, setSelectedLapelType] = useAtom(
+    selectedLapelTypeAtom
+  );
 
   const suitKinds = [
     { name: "kind1", image: kind1Img },
@@ -122,117 +148,155 @@ function StepTwo() {
     { name: "packet2", image: packet2 },
     { name: "packet4", image: packet1 },
     { name: "packet5", image: packet2 },
-  ]
+  ];
 
   const handelClickPucket = (type) => {
     setSelectedKindPucket((prev) => !prev);
-    setSelectedKindType(type)
+    setSelectedKindType(type);
   };
 
   return (
-    <>
-      <h2 className={classes.title}>בחר את סוג החליפה</h2>
-      <div className={classes.container}>
-        {suitKinds.map((kind) => (
-          <Button
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Typography variant="h3" className={classes.sectionTitle}>
+        Suit Type
+      </Typography>
+      <Box className={classes.optionsContainer}>
+        {suitKinds.map((kind, index) => (
+          <motion.div
             key={kind.name}
-            onClick={() => {
-              setKindColor(kind.name);
-              setSelectedKind(kind.name);
-            }}
-            className={`${classes.button} ${
-              selectedKind === kind.name ? classes.selectedButton : ""
-            }`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
           >
-            <img
-              src={kind.image}
-              alt={kind.name}
-              className={classes.buttonImg}
-            />
-            {selectedKind === kind.name && (
-              <VerifiedIcon className={classes.verifiedIcon} />
-            )}
-          </Button>
-        ))}
-      </div>
-
-      <h3 className={classes.title}>בחר את סוג הצווארון</h3>
-      <div className={classes.container}>
-        {Laplekinds.map((kind) => (
-          <Button
-            key={kind.name}
-            onClick={() => setSelectedCollar(kind.name)}
-            className={`${classes.button} ${
-              selectedCollar === kind.name ? classes.selectedButton : ""
-            }`}
-          >
-            <img
-              src={kind.image}
-              alt={kind.name}
-              className={classes.buttonImg}
-            />
-            {selectedCollar === kind.name && (
-              <VerifiedIcon className={classes.verifiedIcon} />
-            )}
-          </Button>
-        ))}
-      </div>
-
-      <h3 className={classes.title}>בחר את סוג הדש</h3>
-      <div className={classes.container}>
-        {collarTypes.map((kind) => (
-          <Button
-            key={kind.name}
-            onClick={() => setSelectedLapelType(kind.name)}
-            className={`${classes.button} ${
-              selectedLapelType === kind.name ? classes.selectedButton : ""
-            }`}
-          >
-            <img
-              src={kind.image}
-              alt={kind.name}
-              className={classes.buttonImg}
-            />
-            {selectedLapelType === kind.name && (
-              <VerifiedIcon className={classes.verifiedIcon} />
-            )}
-          </Button>
-        ))}
-      </div>
-
-      <h3 className={classes.title}>בחר את סוג הכיסים</h3>
-      <button
-        disabled={!selectedKindPucket}
-        className="pocket-button"
-        onClick={() => handelClickPucket("packetSide")}
-      >
-           כיס ישר
-      </button>
-      <button
-        disabled={selectedKindPucket}
-        className="pocket-button"
-        onClick={() => handelClickPucket("packetBottom")}
-      >
-          כיס עקום
-      
-      </button>
-      <div className={classes.container}>
-        {selectedKindPucket &&
-          packetType.map((kind) => (
             <Button
-              key={kind.name}
-              onClick={() => setSelectedPacketType(kind.name)}
-              className={`${classes.button} ${
-                selectedPacketType === kind.name ? classes.selectedButton : ""
+              onClick={() => {
+                setKindColor(kind.name);
+                setSelectedKind(kind.name);
+              }}
+              className={`${classes.optionButton} ${
+                selectedKind === kind.name ? classes.selectedOption : ""
               }`}
             >
               <img
                 src={kind.image}
                 alt={kind.name}
-                className={classes.buttonImg}
+                className={classes.optionImage}
+              />
+              {selectedKind === kind.name && (
+                <CheckCircleIcon className={classes.checkIcon} />
+              )}
+            </Button>
+          </motion.div>
+        ))}
+      </Box>
+
+      <Divider className={classes.divider} />
+
+      <Typography variant="h3" className={classes.sectionTitle}>
+        Collar Style
+      </Typography>
+      <Box className={classes.optionsContainer}>
+        {Laplekinds.map((kind, index) => (
+          <motion.div
+            key={kind.name}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
+          >
+            <Button
+              onClick={() => setSelectedCollar(kind.name)}
+              className={`${classes.optionButton} ${
+                selectedCollar === kind.name ? classes.selectedOption : ""
+              }`}
+            >
+              <img
+                src={kind.image}
+                alt={kind.name}
+                className={classes.optionImage}
+              />
+              {selectedCollar === kind.name && (
+                <CheckCircleIcon className={classes.checkIcon} />
+              )}
+            </Button>
+          </motion.div>
+        ))}
+      </Box>
+
+      <Divider className={classes.divider} />
+
+      <Typography variant="h3" className={classes.sectionTitle}>
+        Lapel Type
+      </Typography>
+      <Box className={classes.optionsContainer}>
+        {collarTypes.map((kind, index) => (
+          <motion.div
+            key={kind.name}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
+          >
+            <Button
+              onClick={() => setSelectedLapelType(kind.name)}
+              className={`${classes.optionButton} ${
+                selectedLapelType === kind.name ? classes.selectedOption : ""
+              }`}
+            >
+              <img
+                src={kind.image}
+                alt={kind.name}
+                className={classes.optionImage}
+              />
+              {selectedLapelType === kind.name && (
+                <CheckCircleIcon className={classes.checkIcon} />
+              )}
+            </Button>
+          </motion.div>
+        ))}
+      </Box>
+
+      <Divider className={classes.divider} />
+
+      <Typography variant="h3" className={classes.sectionTitle}>
+        Pocket Style
+      </Typography>
+      <Box className={classes.optionsContainer}>
+        <Button
+          disabled={!selectedKindPucket}
+          className={classes.pocketButton}
+          onClick={() => handelClickPucket("packetSide")}
+        >
+          straight
+        </Button>
+        <Button
+          disabled={selectedKindPucket}
+          className={classes.pocketButton}
+          onClick={() => handelClickPucket("packetBottom")}
+        >
+          crooked
+        </Button>
+      </Box>
+
+      <Box className={classes.optionsContainer}>
+        {selectedKindPucket &&
+          packetType.map((kind) => (
+            <Button
+              key={kind.name}
+              onClick={() => setSelectedPacketType(kind.name)}
+              className={`${classes.optionButton} ${
+                selectedPacketType === kind.name ? classes.selectedOption : ""
+              }`}
+            >
+              <img
+                src={kind.image}
+                alt={kind.name}
+                className={classes.optionImage}
               />
               {selectedPacketType === kind.name && (
-                <VerifiedIcon className={classes.verifiedIcon} />
+                <CheckCircleIcon className={classes.checkIcon} />
               )}
             </Button>
           ))}
@@ -241,22 +305,22 @@ function StepTwo() {
             <Button
               key={kind.name}
               onClick={() => setSelectedPacketType(kind.name)}
-              className={`${classes.button} ${
-                selectedPacketType === kind.name ? classes.selectedButton : ""
+              className={`${classes.optionButton} ${
+                selectedPacketType === kind.name ? classes.selectedOption : ""
               }`}
             >
               <img
                 src={kind.image}
                 alt={kind.name}
-                className={classes.buttonImg}
+                className={classes.optionImage}
               />
               {selectedPacketType === kind.name && (
-                <VerifiedIcon className={classes.verifiedIcon} />
+                <CheckCircleIcon className={classes.checkIcon} />
               )}
             </Button>
           ))}
-      </div>
-    </>
+      </Box>
+    </motion.div>
   );
 }
 

@@ -18,10 +18,10 @@ import { suitPricing } from "../config/suitPricing";
 
 const ImageFilterComponent = () => {
   // const previousConfigRef = useRef(null);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
-  const currColor = useAtomValue(currentColorAtom)
-  const selectedKind = useAtomValue(currentKindAtom)
+  const currColor = useAtomValue(currentColorAtom);
+  const selectedKind = useAtomValue(currentKindAtom);
   const [_, setPriceAllSuit] = useAtom(priceAllSuitAtom);
   const selectedCollar = useAtomValue(selectedCollarAtom);
   const selectedButton = useAtomValue(selectedButtonAtom);
@@ -32,6 +32,7 @@ const ImageFilterComponent = () => {
   const selectedHolesButton = useAtomValue(selectedHolesButtonAtom);
   const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom);
 
+  const packetKind = selectedPacketType || "packetSide";
   const insideColor = selectedInsideType || currColor;
   const holeButtonColor = selectedHolesButton;
   const holeButtonUpColor = selectedHolesButtonUp;
@@ -280,14 +281,32 @@ const ImageFilterComponent = () => {
       />
 
       {/* Packet Bottom with specific type */}
+      {selectedPacketType === "packet4" && (
+        <img
+          src={`/assets/ragach/packet/${packetKind}/packet1/${currColor}.png`}
+          alt={`Packet Bottom - ${currColor}`}
+          style={overlayStyle}
+          onError={() =>
+            handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
+          }
+        />
+      )}
+      {selectedPacketType === "packet5" && (
+        <img
+          src={`/assets/ragach/packet/${packetKind}/packet2/${currColor}.png`}
+          alt={`Packet Bottom - ${currColor}`}
+          style={overlayStyle}
+          onError={() =>
+            handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
+          }
+        />
+      )}
       <img
-        src={`/assets/ragach/packetBottom/${selectedPacketType}/${currColor}.png`}
+        src={`/assets/ragach/packet/${packetKind}/${selectedPacketType}/${currColor}.png`}
         alt={`Packet Bottom - ${currColor}`}
         style={overlayStyle}
         onError={() =>
-          handleImageError(
-            `packetBottom: ${selectedPacketType}/${currColor}`
-          )
+          handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
         }
       />
 

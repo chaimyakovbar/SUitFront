@@ -18,6 +18,8 @@ export const selectedLapelTypeAtom = atom('Standard');
 
 export const selectedPacketTypeAtom = atom('packet1');
 
+export const selectedKindTypeAtom = atom('packetBottom');
+
 export const selectedInsideTypeAtom = atom(null)
 
 export const selectedButtonAtom = atom(null);

@@ -7,14 +7,14 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles({
   root: {
     position: "relative",
-    marginLeft: props => props.isMobile ? '160px' : '36%',
+    marginLeft: props => props.isMobile ? '120px' : '36%',
     transition: "all 0.3s ease",
   },
   imageContainer: {
     backgroundColor: props => props.isMobile ? 'none' :  "rgba(30, 30, 30, 0.4)",
     borderRadius: "4px",
     border: props => props.isMobile ? 'none' : "1px solid rgba(192, 211, 202, 0.2)",
-    padding: "20px",
+    padding: "20px 0px 20px 20px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

@@ -1,94 +1,137 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import doll1 from "../assets/suits/dollSuitGrey.webp";
 import { makeStyles } from "@mui/styles";
 import Slider from "react-slick";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, Typography } from "@mui/material";
 import { collections } from "../consts/KindOfColors";
+import { motion, useAnimation } from "framer-motion";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const useStyles = makeStyles({
-  collectionCard: {
-    position: "relative",
-    borderRadius: "10px",
-    overflow: "hidden",
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-  },
-  collectionImage: {
-    width: "100%",
-    height: "500px",
-    objectFit: "cover",
-    filter: "brightness(0.7)",
-    transition: "0.3s",
-  },
-  collectionImageHovered: {
-    filter: "brightness(1)",
-  },
-  collectionOverlay: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: "22px",
-    textShadow: "2px 2px 10px rgba(0, 0, 0, 0.5)",
-  },
-  collectionButtonContainer: {
-    display: "flex",
-    overflowX: "auto", // גלילה אופקית אפשרית כאן
-    justifyContent: "center",
-    marginTop: "10px",
-  },
-  collectionButton: {
-    padding: "10px 20px",
-    fontSize: "16px",
-    backgroundColor: "#1b3b6f",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "0.3s",
-    whiteSpace: "nowrap", // שימור של תוכן על שורה אחת
-  },
   collectionsGrid: {
-    display: "flex",
-    gap: "20px",
-    padding: "50px",
-    backgroundColor: "#FAF3E0",
-    maxWidth: "100%",
+    width: "100%",
+    position: "relative",
   },
   carouselWrapper: {
     width: "100%",
-    margin: "2rem auto",
-    overflow: "hidden",
+    margin: "0 auto",
     "& .slick-track": {
       display: "flex",
-      alignItems: "center",
-      gap: "10px",
     },
     "& .slick-list": {
-      overflow: "hidden",
-      margin: "0 -5px",
+      overflow: "visible",
+    },
+    "& .slick-dots": {
+      bottom: "-40px",
+      "& li button:before": {
+        fontSize: "6px",
+        color: "#fff",
+        opacity: 0.5,
+      },
+      "& li.slick-active button:before": {
+        color: "#fff",
+        opacity: 1,
+      },
     },
     "& .slick-slide": {
-      width: "450px !important",
-      padding: "0 5px",
+      opacity: 0.4,
+      transition: "all 0.5s ease",
+      filter: "grayscale(100%)",
+      "&.slick-active": {
+        opacity: 1,
+        filter: "grayscale(0%)",
+      },
+      "&.slick-center": {
+        opacity: 1,
+        filter: "grayscale(0%)",
+        transform: "scale(1.05)",
+      },
     },
   },
-  imageCard: {
+  collectionCard: {
     position: "relative",
     overflow: "hidden",
-    borderRadius: "12px",
-    aspectRatio: "16/10",
-    width: "100%",
-    height: "300px",
+    height: "500px",
+    margin: "0 10px",
+    cursor: "pointer",
   },
-  image: {
+  collectionImage: {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    objectPosition: "center",
+    transition: "all 0.7s ease",
+  },
+  collectionImageHovered: {
+    transform: "scale(1.05)",
+  },
+  collectionOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)",
+    padding: "40px 25px 30px",
+    transition: "all 0.3s ease",
+  },
+  collectionTitle: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "2rem !important",
+    fontWeight: "300 !important",
+    color: "#fff !important",
+    marginBottom: "12px !important",
+    letterSpacing: "0.05em !important",
+  },
+  viewCollection: {
+    display: "flex",
+    alignItems: "center",
+    color: "#fff",
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.8rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.15em !important",
+    textTransform: "uppercase",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    "& svg": {
+      marginLeft: "8px",
+      fontSize: "0.9rem",
+      transition: "transform 0.3s ease",
+    },
+    "&:hover": {
+      color: "#ccc",
+      "& svg": {
+        transform: "translateX(5px)",
+      },
+    },
+  },
+  infiniteCarousel: {
+    position: "relative",
+    width: "100%",
+    overflow: "hidden",
+  },
+  carouselTrack: {
+    display: "flex",
+    width: "fit-content",
+  },
+  carouselItem: {
+    flex: "0 0 auto",
+  },
+  floatingAnimation: {
+    animation: "$float 6s ease-in-out infinite",
+  },
+  "@keyframes float": {
+    "0%": {
+      transform: "translateY(0px)",
+    },
+    "50%": {
+      transform: "translateY(-10px)",
+    },
+    "100%": {
+      transform: "translateY(0px)",
+    },
   },
 });
 
@@ -96,77 +139,158 @@ const AllCollection = ({ targetSectionRef }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [hoveredImage, setHoveredImage] = useState(null);
+  const controls = useAnimation();
 
   const isMobile = useMediaQuery("(max-width:600px)");
+  const isTablet = useMediaQuery("(max-width:960px)");
+
+  // Start the infinite animation when component mounts
+  useEffect(() => {
+    controls.start({
+      x: ["0%", "-50%"],
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 120,
+          ease: "linear",
+        },
+      },
+    });
+  }, [controls]);
 
   const settings = {
-    slidesToShow: isMobile ? 1 : 5,
+    slidesToShow: isMobile ? 1 : isTablet ? 2 : 3,
+    slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: "0",
     infinite: true,
     autoplay: true,
-    autoplaySpeed: 20,
-    cssEase: "linear",
-    speed: 6000,
-    swipe: true,
-    touchMove: true,
-    draggable: true,
-    pauseOnHover: true,
+    autoplaySpeed: 5000,
+    speed: 1000,
+    dots: true,
     arrows: false,
+    pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          centerMode: false,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: "30px",
+        }
+      }
+    ]
   };
 
+  // Duplicate collections for infinite scroll effect
+  const duplicatedCollections = [...collections, ...collections];
+
   return (
-    <div ref={targetSectionRef} style={{ backgroundColor: "#FAF3E0" }}>
-      <div id="targetSection" className={classes.collectionsGrid}>
+    <motion.div 
+      ref={targetSectionRef}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1 }}
+      className={classes.collectionsGrid}
+    >
+      {/* Standard carousel for mobile and tablet */}
+      {(isMobile || isTablet) && (
         <Box className={classes.carouselWrapper}>
           <Slider {...settings}>
             {collections.map((collection) => (
-              <div key={collection.id} className={classes.collectionCard}>
+              <div key={collection.id}>
+                <motion.div 
+                  className={classes.collectionCard}
+                  whileHover={{ y: -8 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => navigate(`/collection/${collection.id}`)}
+                >
+                  <img
+                    src={hoveredImage === collection.id ? doll1 : collection.image}
+                    alt={collection.title}
+                    className={`${classes.collectionImage} ${
+                      hoveredImage === collection.id ? classes.collectionImageHovered : ""
+                    }`}
+                    onMouseEnter={() => setHoveredImage(collection.id)}
+                    onMouseLeave={() => setHoveredImage(null)}
+                  />
+
+                  <div className={classes.collectionOverlay}>
+                    <Typography variant="h4" className={classes.collectionTitle}>
+                      {collection.title}
+                    </Typography>
+                    <div className={classes.viewCollection}>
+                      <span>View Collection</span>
+                      <ArrowForwardIcon fontSize="small" />
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            ))}
+          </Slider>
+        </Box>
+      )}
+
+      {/* Infinite animation carousel for desktop */}
+      {!isMobile && !isTablet && (
+        <div className={classes.infiniteCarousel}>
+          <motion.div 
+            className={classes.carouselTrack}
+            animate={controls}
+          >
+            {duplicatedCollections.map((collection, index) => (
+              <motion.div 
+                key={`${collection.id}-${index}`}
+                className={`${classes.carouselItem} ${classes.collectionCard}`}
+                whileHover={{ y: -8, scale: 1.02 }}
+                onClick={() => navigate(`/collection/${collection.id}`)}
+                style={{ width: "400px", margin: "0 15px" }}
+                animate={{ 
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  y: {
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    duration: 400 + (index % 3) * 10,
+                    ease: "easeInOut",
+                  },
+                }}
+              >
                 <img
-                  src={
-                    hoveredImage === collection.id ? doll1 : collection.image
-                  }
+                  src={hoveredImage === `${collection.id}-${index}` ? doll1 : collection.image}
                   alt={collection.title}
                   className={`${classes.collectionImage} ${
-                    hoveredImage === collection.id
-                      ? classes.collectionImageHovered
-                      : ""
+                    hoveredImage === `${collection.id}-${index}` ? classes.collectionImageHovered : ""
                   }`}
-                  onMouseEnter={() => setHoveredImage(collection.id)}
+                  onMouseEnter={() => setHoveredImage(`${collection.id}-${index}`)}
                   onMouseLeave={() => setHoveredImage(null)}
                 />
 
                 <div className={classes.collectionOverlay}>
-                  {collection.title}
-                  <br />
-                  <div className={classes.collectionButtonContainer}>
-                    <button
-                      onClick={() => navigate(`/collection/${collection.id}`)}
-                      className={classes.collectionButton}
-                    >
-                      View Collection
-                    </button>
+                  <Typography variant="h4" className={classes.collectionTitle}>
+                    {collection.title}
+                  </Typography>
+                  <div className={classes.viewCollection}>
+                    <span>View Collection</span>
+                    <ArrowForwardIcon fontSize="small" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </Slider>
-          {/* <img
-            className={classes.img}
-            src="/assets/photoBackGround4.webp"
-            alt="Background"
-          />
-          <img
-            className={classes.img}
-            src="/assets/photoBackGround5.webp"
-            alt="Background"
-          />
-          <img
-            className={classes.img}
-            src="/assets/photoBackGround6.webp"
-            alt="Background"
-          /> */}
-        </Box>
-      </div>
-    </div>
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
   );
 };
 

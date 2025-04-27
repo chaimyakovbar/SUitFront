@@ -25,14 +25,14 @@ import silver from "/assets/adds/button/silver.jpg";
 import silverLight from "/assets/adds/button/silverLight.jpg";
 import white from "/assets/adds/button/white.jpg";
 
-import poset1 from '../assets/poshet/black.jpg';
+// import poset1 from '../assets/poshet/black.jpg';
 import poset2 from '../assets/poshet/black2.jpg';
-import poset3 from '../assets/poshet/black3.jpg';
+// import poset3 from '../assets/poshet/black3.jpg';
 import poset4 from '../assets/poshet/blackWithDots.jpg';
-import poset5 from '../assets/poshet/blue.jpg';
+// import poset5 from '../assets/poshet/blue.jpg';
 import poset6 from '../assets/poshet/blueLight.jpg';
 import poset7 from '../assets/poshet/blueLightWithDots.jpg';
-import poset8 from '../assets/poshet/blueNevey.jpg';
+// import poset8 from '../assets/poshet/blueNevey.jpg';
 import poset9 from '../assets/poshet/blueNevey2.jpg';
 import poset10 from '../assets/poshet/blueWithBlueLightLins.jpg';
 import poset11 from '../assets/poshet/blueWithBlueLightLins2.jpg';
@@ -48,10 +48,10 @@ import poset20 from '../assets/poshet/peenk.jpg';
 import poset21 from '../assets/poshet/prupleWithDots.jpg';
 import poset22 from '../assets/poshet/purple.jpg';
 import poset23 from '../assets/poshet/purpleLight.jpg';
-import poset24 from '../assets/poshet/red.jpg';
+// import poset24 from '../assets/poshet/red.jpg';
 import poset25 from '../assets/poshet/red2.jpg';
 import poset26 from '../assets/poshet/redLight.jpg';
-import poset27 from '../assets/poshet/redWithDots.jpg';
+// import poset27 from '../assets/poshet/redWithDots.jpg';
 import poset28 from '../assets/poshet/redWithDots2.jpg';
 import poset29 from '../assets/poshet/redWithines.jpg';
 import poset30 from '../assets/poshet/white.jpg';
@@ -485,15 +485,15 @@ export const imagesHolesUp = [
 //   { name: "yellow", color: "#FFFF00" },
 // ];
 export const imagesPoshet = [
-  { name: "black", img: poset1 },
-  { name: "black2", img: poset2 },
-  { name: "black3", img: poset3 },
+  // { name: "black", img: poset1 },
+  { name: "black", img: poset2 },
+  // { name: "black3", img: poset3 },
   { name: "blackWithDots", img: poset4 },
-  { name: "blue", img: poset5 },
+  // { name: "blue", img: poset5 },
   { name: "blueLight", img: poset6 },
   { name: "blueLightWithDots", img: poset7 },
-  { name: "blueNevey", img: poset8 },
-  { name: "blueNevey2", img: poset9 },
+  // { name: "blueNevey", img: poset8 },
+  { name: "blue", img: poset9 },
   { name: "blueWithBlueLightLins", img: poset10 },
   { name: "blueWithBlueLightLins2", img: poset11 },
   { name: "blueWithDots", img: poset12 },
@@ -508,10 +508,10 @@ export const imagesPoshet = [
   { name: "prupleWithDots", img: poset21 },
   { name: "purple", img: poset22 },
   { name: "purpleLight", img: poset23 },
-  { name: "red", img: poset24 },
-  { name: "red2", img: poset25 },
+  // { name: "red", img: poset24 },
+  { name: "red", img: poset25 },
   { name: "redLight", img: poset26 },
-  { name: "redWithDots", img: poset27 },
+  // { name: "redWithDots", img: poset27 },
   { name: "redWithDots2", img: poset28 },
   { name: "redWithines", img: poset29 },
   { name: "white", img: poset30 },

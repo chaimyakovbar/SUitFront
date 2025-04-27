@@ -116,7 +116,7 @@ const StyledStepper = () => {
 
   const handleBack = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
-  }
+  };
 
   const bottomPart =
     selectedKind === "kind3" || selectedKind === "kind4"
@@ -205,7 +205,7 @@ const StyledStepper = () => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        backgroundColor: "#F5F5F7",
+        // backgroundColor: "#F5F5F7",
         // width: isMobile ? "77%" :"100%",
       }}
     >
@@ -230,9 +230,9 @@ const StyledStepper = () => {
               boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
             },
             "&:disabled": {
-              backgroundColor: "#E0E0E0",
+              backgroundColor: "#121212",
               color: "#9E9E9E",
-              border: "2px solid #BDBDBD",
+              border: "2px solid #C0D3CA !important",
               cursor: "not-allowed",
             },
           }}
@@ -245,7 +245,7 @@ const StyledStepper = () => {
             onClick={handleSubmitSuit}
             sx={{
               color: "white",
-              backgroundColor: "#43A047",
+              backgroundColor: "#388E3C",
               fontSize: "16px",
               fontWeight: "bold",
               px: 4,
@@ -269,7 +269,8 @@ const StyledStepper = () => {
             sx={{
               color: "white",
               border: "2px solid black",
-              backgroundColor: "#FF6D00",
+              backgroundColor: "#E65100",
+              border: "2px solid #C0D3CA !important",
               fontSize: "16px",
               fontWeight: "bold",
               px: 4,
@@ -283,7 +284,7 @@ const StyledStepper = () => {
                 boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
               },
               "&:disabled": {
-                backgroundColor: "#E0E0E0",
+                backgroundColor: "#121212",
                 color: "#9E9E9E",
                 border: "2px solid #BDBDBD",
                 cursor: "not-allowed",
@@ -294,7 +295,7 @@ const StyledStepper = () => {
           </Button>
         )}
       </Box>
-{/* 
+      {/* 
       <Paper
         elevation={6}
         sx={{

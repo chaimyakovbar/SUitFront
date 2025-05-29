@@ -63,3 +63,20 @@ export const registerUser = async (values) => {
     throw error;
   }
 }
+
+// Update user data
+export const updateUser = async (userId, data) => {
+  try {
+    const response = await axiosInstance.post("/user/update", {
+      uid: userId,
+      ...data
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      throw new Error("User not found");
+    }
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};

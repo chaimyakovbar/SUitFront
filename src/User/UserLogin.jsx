@@ -10,13 +10,13 @@ import { TextField } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useSnackbar } from "notistack";
-import { openUserDialog, userAtom } from "../Utils";
+import { openUserDialog, authUserAtom } from "../Utils";
 import { loginUser } from "../api/user";
 
 const UserLogin = ({ setDialogType }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useAtom(openUserDialog);
-  const [, setUser] = useAtom(userAtom);
+  const [, setUser] = useAtom(authUserAtom);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const validationSchema = Yup.object({
@@ -50,11 +50,7 @@ const UserLogin = ({ setDialogType }) => {
 
   return (
     <>
-      <Dialog
-        open={open}
-        keepMounted
-        onClose={handleClose}
-      >
+      <Dialog open={open} keepMounted onClose={handleClose}>
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}

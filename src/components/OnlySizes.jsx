@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../Utils";
+import { authUserAtom } from "../Utils";
 import { bodyPoints } from "../consts/KindOfColors";
 import {
   Box,
@@ -15,7 +15,7 @@ import { postProduct } from "../api/suit";
 
 const OnlySizes = () => {
   const { data, isLoading } = useProduct();
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(authUserAtom);
   const [sizes, setSizes] = useState({});
   const [open, setOpen] = useState(false);
 
@@ -88,7 +88,7 @@ const OnlySizes = () => {
         overflow: "hidden",
       }}
     >
-     <Button
+      <Button
         variant="contained"
         fullWidth
         sx={{ mt: 2, width: "200px" }}
@@ -98,11 +98,7 @@ const OnlySizes = () => {
       </Button>
 
       {/* דיאלוג לתהליך אישור */}
-      <Dialog
-        open={open}
-        keepMounted
-        onClose={handleClose}
-      >
+      <Dialog open={open} keepMounted onClose={handleClose}>
         <Box sx={{ p: 2 }}>
           <Typography>בטוח לשנות?</Typography>
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>

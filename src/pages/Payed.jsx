@@ -17,14 +17,180 @@ import GetAllSuitFromDat from "../components/GetAllSuitFromData";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import useProduct from "../Hooks/useProduct";
-import { userAtom } from "../Utils";
+import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
-import HaveUser from "../components/HaveUser";
+import { makeStyles } from "@mui/styles";
+// import HaveUser from "../components/HaveUser";
+
+const useStyles = makeStyles({
+  root: {
+    backgroundColor: "#0a0a0a",
+    color: "#fff",
+    minHeight: "100vh",
+    paddingTop: "120px",
+    paddingBottom: "80px",
+  },
+  container: {
+    position: "relative",
+  },
+  paper: {
+    backgroundColor: "#202020 !important",
+    color: "#fff !important",
+    border: "1px solid rgba(255,255,255,0.1) !important",
+    borderRadius: "0 !important",
+    padding: "2rem !important",
+  },
+  title: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "2.8rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    marginBottom: "2rem !important",
+    textTransform: "uppercase",
+  },
+  subtitle: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.95rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.05em !important",
+    color: "#aaa !important",
+  },
+  price: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "2rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.05em !important",
+    color: "#fff !important",
+  },
+  shippingTitle: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "1rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    textTransform: "uppercase",
+    color: "#fff !important",
+    marginBottom: "1rem !important",
+  },
+  shippingButton: {
+    backgroundColor: "transparent !important",
+    color: "#fff !important",
+    border: "1px solid rgba(255,255,255,0.3) !important",
+    padding: "8px 16px !important",
+    fontSize: "0.85rem !important",
+    borderRadius: "0 !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    textTransform: "uppercase !important",
+    transition: "all 0.3s ease !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    marginRight: "1rem !important",
+    "&:hover": {
+      backgroundColor: "rgba(255,255,255,0.1) !important",
+      border: "1px solid rgba(255,255,255,0.5) !important",
+    },
+  },
+  shippingButtonSelected: {
+    backgroundColor: "#fff !important",
+    color: "#000 !important",
+    border: "1px solid #fff !important",
+  },
+  divider: {
+    backgroundColor: "rgba(255,255,255,0.1) !important",
+    margin: "2rem 0 !important",
+  },
+  totalRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "1rem",
+  },
+  totalText: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "1rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    textTransform: "uppercase",
+    color: "#fff !important",
+  },
+  totalPrice: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "1.5rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.05em !important",
+    color: "#fff !important",
+  },
+  profileSection: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "1rem",
+  },
+  profileTitle: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "1rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    textTransform: "uppercase",
+    color: "#fff !important",
+  },
+  editLink: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.85rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    color: "#aaa !important",
+    textDecoration: "none !important",
+    transition: "color 0.3s ease !important",
+    "&:hover": {
+      color: "#fff !important",
+    },
+  },
+  paymentButton: {
+    backgroundColor: "transparent !important",
+    color: "#fff !important",
+    border: "1px solid #fff !important",
+    padding: "12px 35px !important",
+    fontSize: "0.85rem !important",
+    borderRadius: "0 !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.15em !important",
+    textTransform: "uppercase !important",
+    transition: "all 0.3s ease !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    marginTop: "2rem !important",
+    "&:hover": {
+      backgroundColor: "#fff !important",
+      color: "#000 !important",
+    },
+    "&:disabled": {
+      backgroundColor: "rgba(255,255,255,0.1) !important",
+      border: "1px solid rgba(255,255,255,0.3) !important",
+      color: "rgba(255,255,255,0.5) !important",
+    },
+  },
+  dialog: {
+    "& .MuiDialog-paper": {
+      backgroundColor: "#202020 !important",
+      color: "#fff !important",
+      borderRadius: "0 !important",
+    },
+  },
+  dialogTitle: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "1.8rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.1em !important",
+    textTransform: "uppercase",
+    color: "#fff !important",
+    padding: "2rem !important",
+  },
+});
 
 const Payed = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
   const { data: products } = useProduct();
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(authUserAtom);
   const [open, setOpen] = useState(false);
   const [selectedSuits, setSelectedSuits] = useState(() => {
     const saved = localStorage.getItem("selectedSuits");
@@ -122,67 +288,55 @@ const Payed = () => {
     }
   };
 
-  if (!user) return <HaveUser />;
+  // if (!user) return <HaveUser />;
 
   const selectedItemsCount = selectedSuits.size;
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper
-        elevation={3}
-        sx={{
-          p: 3,
-          borderRadius: 2,
-          bgcolor: "#f8f8f8",
-        }}
-      >
-        <Stack spacing={3}>
-          {/* Order Summary Section */}
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                mb: 2,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <ShoppingBagIcon sx={{ mr: 1 }} />
-                <Typography variant="h6" fontWeight="medium">
-                  Your Order
+    <Box className={classes.root}>
+      <Container maxWidth="md" className={classes.container}>
+        <Paper className={classes.paper}>
+          <Stack spacing={3}>
+            <Box>
+              <ShoppingBagIcon sx={{ mr: 1, color: "#fff" }} />
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 2,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography className={classes.title}>Your Order</Typography>
+                </Box>
+                <IconButton onClick={handleClick} sx={{ color: "#fff" }}>
+                  <KeyboardArrowDownIcon />
+                </IconButton>
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <Typography className={classes.subtitle}>
+                  {selectedItemsCount} Item/s in your Bag for a value of
+                </Typography>
+                <Typography className={classes.price}>
+                  {totalPrice.toFixed(2)}€
                 </Typography>
               </Box>
-              <IconButton onClick={handleClick}>
-                <KeyboardArrowDownIcon />
-              </IconButton>
-            </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="body1" color="text.secondary">
-                {selectedItemsCount} Item/s in your Bag for a value of
-              </Typography>
-              <Typography variant="h6">{totalPrice.toFixed(2)}€</Typography>
-            </Box>
-
-            <Box sx={{ mb: 2 }}>
-              <Box>
-                <h2>Shipping cost:</h2>
-                <div>
+              <Box sx={{ mb: 2 }}>
+                <Typography className={classes.shippingTitle}>
+                  Shipping cost:
+                </Typography>
+                <Box>
                   <Button
                     onClick={() => {
                       setShippingCost(0);
                       setTotalPrice((prev) => prev - shippingCost);
                     }}
-                    sx={{
-                      backgroundColor:
-                        shippingCost === 0 ? "#4CAF50" : "inherit",
-                      color: shippingCost === 0 ? "white" : "inherit",
-                      "&:hover": {
-                        backgroundColor:
-                          shippingCost === 0 ? "#388E3C" : "rgba(0,0,0,0.04)",
-                      },
-                    }}
+                    className={`${classes.shippingButton} ${
+                      shippingCost === 0 ? classes.shippingButtonSelected : ""
+                    }`}
                   >
                     Free & tracked (0€)
                   </Button>
@@ -191,15 +345,9 @@ const Payed = () => {
                       setShippingCost(20);
                       setTotalPrice((prev) => prev - shippingCost + 20);
                     }}
-                    sx={{
-                      backgroundColor:
-                        shippingCost === 20 ? "#4CAF50" : "inherit",
-                      color: shippingCost === 20 ? "white" : "inherit",
-                      "&:hover": {
-                        backgroundColor:
-                          shippingCost === 20 ? "#388E3C" : "rgba(0,0,0,0.04)",
-                      },
-                    }}
+                    className={`${classes.shippingButton} ${
+                      shippingCost === 20 ? classes.shippingButtonSelected : ""
+                    }`}
                   >
                     Fast & tracked (+20€)
                   </Button>
@@ -208,92 +356,68 @@ const Payed = () => {
                       setShippingCost(35);
                       setTotalPrice((prev) => prev - shippingCost + 35);
                     }}
-                    sx={{
-                      backgroundColor:
-                        shippingCost === 35 ? "#4CAF50" : "inherit",
-                      color: shippingCost === 35 ? "white" : "inherit",
-                      "&:hover": {
-                        backgroundColor:
-                          shippingCost === 35 ? "#388E3C" : "rgba(0,0,0,0.04)",
-                      },
-                    }}
+                    className={`${classes.shippingButton} ${
+                      shippingCost === 35 ? classes.shippingButtonSelected : ""
+                    }`}
                   >
                     Fastest & tracked (+35€)
                   </Button>
-                </div>
+                </Box>
+              </Box>
+
+              <Divider className={classes.divider} />
+
+              <Box className={classes.totalRow}>
+                <Typography className={classes.totalText}>
+                  Subtotal (VAT incl.)
+                </Typography>
+                <Typography className={classes.totalPrice}>
+                  {totalPrice}€
+                </Typography>
               </Box>
             </Box>
 
-            <Divider sx={{ my: 2 }} />
-
-            <Box
-              sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
-            >
-              <Typography variant="h6">Subtotal (VAT incl.)</Typography>
-              <Typography variant="h6">{totalPrice}€</Typography>
+            <Box>
+              <Box className={classes.profileSection}>
+                <Typography className={classes.profileTitle}>
+                  Your body profile
+                </Typography>
+                <Link to="/IndexSizes" className={classes.editLink}>
+                  Edit
+                </Link>
+              </Box>
             </Box>
-          </Box>
+          </Stack>
+        </Paper>
 
-          {/* Body Profile Section */}
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 2,
-              }}
-            >
-              <Typography variant="h6">Your body profile</Typography>
-              <Link
-                to="/IndexSizes"
-                style={{
-                  textDecoration: "none",
-                  color: "#666",
-                  fontWeight: "500",
-                }}
-              >
-                Edit
-              </Link>
-            </Box>
-          </Box>
-        </Stack>
-      </Paper>
+        <Button
+          variant="outlined"
+          onClick={handlePayment}
+          disabled={isProcessing}
+          className={classes.paymentButton}
+        >
+          {isProcessing ? "Processing..." : "Continue to Payment"}
+        </Button>
 
-      <Button
-        variant="contained"
-        onClick={handlePayment}
-        disabled={isProcessing}
-        sx={{
-          mt: 3,
-          backgroundColor: "#4CAF50",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#388E3C",
-          },
-          "&:disabled": {
-            backgroundColor: "#cccccc",
-          },
-        }}
-      >
-        {isProcessing ? "Processing..." : "Continue to Payment"}
-      </Button>
-
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>Select Items</DialogTitle>
-        <DialogContent>
-          <GetAllSuitFromDat
-            onSelect={handleSelect}
-            selectedSuits={selectedSuits}
-          />
-        </DialogContent>
-      </Dialog>
-    </Container>
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          maxWidth="md"
+          fullWidth
+          className={classes.dialog}
+        >
+          <DialogTitle className={classes.dialogTitle}>
+            Select Items
+          </DialogTitle>
+          <DialogContent>
+            <GetAllSuitFromDat
+              onSelect={handleSelect}
+              selectedSuits={selectedSuits}
+            />
+          </DialogContent>
+        </Dialog>
+      </Container>
+    </Box>
   );
 };
 

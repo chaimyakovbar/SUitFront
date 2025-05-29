@@ -1,24 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Accordion, 
-  AccordionSummary, 
+import {
+  Box,
+  Container,
+  Typography,
+  Accordion,
+  AccordionSummary,
   AccordionDetails,
   Grid,
-  Paper
+  Paper,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
-import StraightenIcon from '@mui/icons-material/Straighten';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import SecurityIcon from '@mui/icons-material/Security';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
+import StraightenIcon from "@mui/icons-material/Straighten";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import SecurityIcon from "@mui/icons-material/Security";
 
 const useStyles = makeStyles({
   root: {
@@ -239,20 +239,23 @@ const PolicySupport = () => {
                 Our Policies
               </Typography>
               <Typography variant="body1" className={classes.paragraph}>
-                At Italian Suits, we strive to provide exceptional service and support to our customers. 
-                Below you'll find detailed information about our policies and services.
+                At Italian Suits, we strive to provide exceptional service and
+                support to our customers. Below you'll find detailed information
+                about our policies and services.
               </Typography>
-              
+
               {policies.map((policy, index) => (
                 <motion.div
                   key={policy.id}
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.6 + (index * 0.1) }}
+                  transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                 >
                   <Accordion className={classes.accordion}>
                     <AccordionSummary
-                      expandIcon={<ExpandMoreIcon className={classes.expandIcon} />}
+                      expandIcon={
+                        <ExpandMoreIcon className={classes.expandIcon} />
+                      }
                       className={classes.accordionSummary}
                     >
                       {policy.icon}
@@ -272,7 +275,7 @@ const PolicySupport = () => {
               ))}
             </motion.div>
           </Grid>
-          
+
           <Grid item xs={12} md={6}>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
@@ -284,13 +287,19 @@ const PolicySupport = () => {
                   Bespoke Service
                 </Typography>
                 <Typography variant="body1" className={classes.paragraph}>
-                  Our bespoke service offers a truly personalized experience. Each custom suit is crafted to your exact measurements and preferences, ensuring a perfect fit and unique style that reflects your personality.
+                  Our bespoke service offers a truly personalized experience.
+                  Each custom suit is crafted to your exact measurements and
+                  preferences, ensuring a perfect fit and unique style that
+                  reflects your personality.
                 </Typography>
                 <Typography variant="body1" className={classes.paragraph}>
-                  The bespoke process typically takes 4-6 weeks from initial consultation to final delivery. During this time, our master tailors will work meticulously to create a garment of exceptional quality.
+                  The bespoke process typically takes 4-6 weeks from initial
+                  consultation to final delivery. During this time, our master
+                  tailors will work meticulously to create a garment of
+                  exceptional quality.
                 </Typography>
               </Paper>
-              
+
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -301,14 +310,19 @@ const PolicySupport = () => {
                     Care Instructions
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    To maintain the quality and longevity of your suit, we recommend dry cleaning only when necessary, typically 2-3 times per year. Between cleanings, use a soft brush to remove dust and spot clean as needed.
+                    To maintain the quality and longevity of your suit, we
+                    recommend dry cleaning only when necessary, typically 2-3
+                    times per year. Between cleanings, use a soft brush to
+                    remove dust and spot clean as needed.
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    Always hang your suit on a proper wooden hanger to maintain its shape, and allow it to rest for at least 24 hours between wearings to allow the natural fibers to recover.
+                    Always hang your suit on a proper wooden hanger to maintain
+                    its shape, and allow it to rest for at least 24 hours
+                    between wearings to allow the natural fibers to recover.
                   </Typography>
                 </Paper>
               </motion.div>
-              
+
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -319,10 +333,14 @@ const PolicySupport = () => {
                     Warranty Information
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    All our suits come with a 1-year warranty against manufacturing defects. This includes issues with stitching, buttons, and fabric quality under normal wear conditions.
+                    All our suits come with a 1-year warranty against
+                    manufacturing defects. This includes issues with stitching,
+                    buttons, and fabric quality under normal wear conditions.
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    For the first 30 days after purchase, we also offer complimentary minor alterations to ensure your complete satisfaction with the fit of your garment.
+                    For the first 30 days after purchase, we also offer
+                    complimentary minor alterations to ensure your complete
+                    satisfaction with the fit of your garment.
                   </Typography>
                 </Paper>
               </motion.div>

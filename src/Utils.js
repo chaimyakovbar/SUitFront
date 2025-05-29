@@ -1,10 +1,15 @@
 import { atom } from "jotai"
 
 export const counterAtom = atom([
-  { step1Validated: false },
-  { step2Validated: false },
-  { step3Validated: false },
+    { step1Validated: false },
+    { step2Validated: false },
+    { step3Validated: false },
 ]);
+
+
+export const authUserAtom = atom(null);
+
+export const authLoadingAtom = atom(true);
 
 export const currentIndexAtom = atom(0);
 
@@ -35,5 +40,3 @@ export const openUserDialog = atom(false)
 export const allSuitPartAtom = atom([])
 
 export const priceAllSuitAtom = atom(0)
-
-export const userAtom = atom(null)

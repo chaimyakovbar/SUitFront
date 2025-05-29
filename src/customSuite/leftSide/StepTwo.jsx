@@ -42,8 +42,10 @@ const useStyles = makeStyles({
     gap: "12px",
     justifyContent: "center",
     marginBottom: "20px",
+    color: "white",
   },
   optionButton: {
+    color: "white",
     backgroundColor: "rgba(30, 30, 30, 0.6) !important",
     border: "1px solid rgba(192, 211, 202, 0.2) !important",
     borderRadius: "4px !important",
@@ -61,10 +63,13 @@ const useStyles = makeStyles({
     boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2) !important",
   },
   optionImage: {
+    color: "white",
     height: "50px",
     width: "auto",
     objectFit: "contain",
-    filter: "brightness(0.9) contrast(1.1)",
+    filter:
+      "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+    opacity: 0.9,
   },
   checkIcon: {
     position: "absolute",

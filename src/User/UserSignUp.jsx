@@ -7,7 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TextField } from "@mui/material";
-import { openUserDialog, userAtom } from "../Utils";
+import { openUserDialog, authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -27,9 +27,9 @@ const UserSignUp = ({ setDialogType }) => {
   });
 
   const [open, setOpen] = useAtom(openUserDialog);
-  const [, setUser] = useAtom(userAtom);
-  const { enqueueSnackbar } = useSnackbar()
-   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [, setUser] = useAtom(authUserAtom);
+  const { enqueueSnackbar } = useSnackbar();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleClose = (resetForm) => {
     setOpen(false);
@@ -53,13 +53,13 @@ const UserSignUp = ({ setDialogType }) => {
       setUser(loginData.user);
       enqueueSnackbar("נרשמת והתחברת בהצלחה!", { variant: "success" });
       setOpen(false);
-      setDialogType(null)
+      setDialogType(null);
       resetForm();
     } catch (error) {
       enqueueSnackbar(error.message || "כבר יש שימוש במייל זה", {
         variant: "error",
       });
-    }finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -84,7 +84,13 @@ const UserSignUp = ({ setDialogType }) => {
           validationSchema={SchemaYupForUser}
           onSubmit={handleCreatUser}
         >
-          {({ handleSubmit, resetForm, touched, errors, isSubmitting: formikSubmitting, }) => (
+          {({
+            handleSubmit,
+            resetForm,
+            touched,
+            errors,
+            isSubmitting: formikSubmitting,
+          }) => (
             <Form onSubmit={handleSubmit}>
               <DialogTitle>הירשם</DialogTitle>
               <DialogContent>

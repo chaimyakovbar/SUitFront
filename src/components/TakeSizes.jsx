@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../Utils";
+import { authUserAtom } from "../Utils";
 import HaveUser from "../components/HaveUser";
 import {
   userSizes,
@@ -39,7 +39,7 @@ const arrayOfImg = [shirt, tai, bottomSuit, sleevs, suit];
 const TakeSizes = () => {
   const { data, isLoading } = useProduct();
   const navigate = useNavigate();
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(authUserAtom);
   const [sizes, setSizes] = useState({});
   const [dialogType, setDialogType] = useState(null);
   const [dialogContent, setDialogContent] = useState(null);
@@ -176,8 +176,8 @@ const TakeSizes = () => {
       : "pending";
   };
 
-  const isMobile = useMediaQuery("(max-width:600px)")
-  
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   if (isLoading) return <p>טוען נתונים...</p>;
   return (
     <Box
@@ -226,7 +226,7 @@ const TakeSizes = () => {
               position: "relative",
               width: "350px",
               height: "550px",
-              left: isMobile ? '13%' : '20%',
+              left: isMobile ? "13%" : "20%",
             }}
           >
             <img
@@ -422,11 +422,7 @@ const TakeSizes = () => {
       )}
 
       {dialogType && (
-        <Dialog
-          open={dialogType !== null}
-          keepMounted
-          onClose={handleClose}
-        >
+        <Dialog open={dialogType !== null} keepMounted onClose={handleClose}>
           <Box padding={3}>
             {dialogType === "YouTube" ? (
               <Typography>כאן יוצג סרטון ההדרכה: {dialogContent}</Typography>

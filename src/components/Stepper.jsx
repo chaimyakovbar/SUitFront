@@ -14,7 +14,7 @@ import {
   currentIndexAtom,
   currentKindAtom,
   allSuitPartAtom,
-  userAtom,
+  authUserAtom,
   openUserDialog,
   currentColorAtom,
   selectedCollarAtom,
@@ -58,7 +58,7 @@ const StyledStepper = () => {
   const { enqueueSnackbar } = useSnackbar();
   // const isMobile = useMediaQuery("(max-width:600px)");
   // const allSuitPart = useAtomValue(allSuitPartAtom);
-  const user = useAtomValue(userAtom);
+  const user = useAtomValue(authUserAtom);
   const [counterArray] = useAtom(counterAtom);
   const [activeStep, setActiveStep] = useAtom(currentIndexAtom);
   // const [completed, setCompleted] = React.useState({});
@@ -124,6 +124,7 @@ const StyledStepper = () => {
       : "bottom";
 
   const handleSubmitSuit = async () => {
+    navigate("/indexSizes");
     const newSuit = {
       kind: selectedKind || null,
       colar: currColor,
@@ -143,59 +144,71 @@ const StyledStepper = () => {
       holeButtonUpColor: holeButtonUpColor || null,
     };
 
-    try {
-      if (user) {
-        // Create a deep copy of the current suits
-        const currentSuits = [...allSuitPart];
+    // try {
+    // if (user) {
+    // Create a deep copy of the current suits
+    const currentSuits = [...allSuitPart];
 
-        // Check if this exact suit configuration already exists
-        const isDuplicate = currentSuits.some((suit) => {
-          return JSON.stringify(suit) === JSON.stringify(newSuit);
-        });
+    // Check if this exact suit configuration already exists
+    const isDuplicate = currentSuits.some((suit) => {
+      return JSON.stringify(suit) === JSON.stringify(newSuit);
+    });
 
-        if (!isDuplicate) {
-          // Add the new suit to the array
-          currentSuits.push(newSuit);
+    if (!isDuplicate) {
+      // Add the new suit to the array
+      currentSuits.push(newSuit);
 
-          // Update state and save to backend
-          setAllSuitPart(currentSuits);
-          await postSuitProduct({
-            email: user.email,
-            allSuitPart: newSuit,
-          });
+      // Update state and save to backend
+      setAllSuitPart(currentSuits);
+      await postSuitProduct({
+        email: user.email,
+        allSuitPart: newSuit,
+      });
 
-          // Reset all stepper states
-          setSelectedButton(null);
-          setSelectedPoshet(null);
-          setSelectedLapelType("Standard");
-          setSelectedPacketType("packet1");
-          setSelectedInsideType(null);
-          setSelectedHolesButton(null);
-          setSelectedHolesButtonUp(null);
-          setCurrColor("blackGrey");
-          setSelectedKind("kind1");
-          setSelectedCollar("collarTight");
-          setActiveStep(0);
-          // setCompleted({});
-          previousConfigRef.current = null;
+      // Reset all stepper states
+      setSelectedButton(null);
+      setSelectedPoshet(null);
+      setSelectedLapelType("Standard");
+      setSelectedPacketType("packet1");
+      setSelectedInsideType(null);
+      setSelectedHolesButton(null);
+      setSelectedHolesButtonUp(null);
+      setCurrColor("blackGrey");
+      setSelectedKind("kind1");
+      setSelectedCollar("collarTight");
+      setActiveStep(0);
+      // setCompleted({});
+      previousConfigRef.current = null;
 
-          navigate("/indexSizes");
-          enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
-        } else {
-          enqueueSnackbar("חליפה זהה כבר קיימת!", { variant: "warning" });
-        }
-      } else {
-        setOpen(true);
-      }
-    } catch (error) {
-      console.error("שגיאה בשליחת הנתונים:", error);
-      enqueueSnackbar("שגיאה בשמירת המידות.", { variant: "error" });
+      enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
+    } else {
+      setSelectedButton(null);
+      setSelectedPoshet(null);
+      setSelectedLapelType("Standard");
+      setSelectedPacketType("packet1");
+      setSelectedInsideType(null);
+      setSelectedHolesButton(null);
+      setSelectedHolesButtonUp(null);
+      setCurrColor("blackGrey");
+      setSelectedKind("kind1");
+      setSelectedCollar("collarTight");
+      setActiveStep(0);
+      // setCompleted({});
+      previousConfigRef.current = null;
+      enqueueSnackbar("חליפה זהה כבר קיימת!", { variant: "warning" });
     }
+    // } else {
+    //   setOpen(true);
+    // }
+    // } catch (error) {
+    //   console.error("שגיאה בשליחת הנתונים:", error);
+    //   enqueueSnackbar("שגיאה בשמירת המידות.", { variant: "error" });
+    // }
   };
 
   const handleOpenDialog = (type) => {
     setDialogType(type);
-    setOpen(true);
+    // setOpen(true);
   };
 
   return (
@@ -237,7 +250,7 @@ const StyledStepper = () => {
             },
           }}
         >
-          חזור
+          back
         </Button>
 
         {isLastStep ? (
@@ -260,7 +273,7 @@ const StyledStepper = () => {
               },
             }}
           >
-            סיים
+            finish
           </Button>
         ) : (
           <Button
@@ -290,7 +303,7 @@ const StyledStepper = () => {
               },
             }}
           >
-            הבא
+            next
           </Button>
         )}
       </Box>

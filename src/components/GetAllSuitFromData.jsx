@@ -2,10 +2,11 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useProduct from "../Hooks/useProduct";
 import { deleteSuit } from "../api/suit";
-// import { Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { Typography, CircularProgress } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-// Define styles using object patterns for better readability
-const styles = {
+const useStyles = makeStyles({
   container: {
     display: "flex",
     flexDirection: "column",
@@ -21,61 +22,116 @@ const styles = {
     maxWidth: "1200px",
   },
   card: {
+    backgroundColor: "#202020",
     position: "relative",
     width: "100%",
-    height: "200px",
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    height: "300px",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "0",
     overflow: "hidden",
-    transition: "transform 0.2s ease-in-out",
+    transition: "all 0.3s ease",
+    display: "flex",
+    flexDirection: "column",
     "&:hover": {
+      border: "1px solid rgba(255,255,255,0.3)",
       transform: "translateY(-4px)",
     },
   },
   photo: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    width: "50%",
-    height: "100%",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80%",
+    height: "80%",
     objectFit: "contain",
   },
   cardControls: {
     position: "absolute",
-    top: "10px",
-    right: "10px",
+    bottom: 0,
+    left: 0,
+    right: 0,
     display: "flex",
-    gap: "8px",
-    zIndex: 100,
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "12px 16px",
+    // backgroundColor: "rgba(0,0,0,0.7)",
+    backgroundColor: "#222222",
+    backdropFilter: "blur(4px)",
+    borderTop: "1px solid rgba(255,255,255,0.1)",
   },
   checkbox: {
     width: "20px",
     height: "20px",
     cursor: "pointer",
+    accentColor: "#a8a8ff",
   },
   deleteButton: {
-    padding: "4px 8px",
-    backgroundColor: "#ff4444",
-    color: "white",
-    border: "none",
+    padding: "4px",
+    backgroundColor: "red",
+    color: "#fff",
+    border: "1px solid rgba(255,255,255,0.3)",
     borderRadius: "4px",
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "all 0.3s ease",
     "&:hover": {
-      backgroundColor: "#cc0000",
+      backgroundColor: "rgba(255,255,255,0.1)",
+      border: "1px solid rgba(255,255,255,0.5)",
+    },
+    "&:disabled": {
+      opacity: 0.5,
+      cursor: "not-allowed",
     },
   },
-  selectedCount: {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    padding: "10px 20px",
-    borderRadius: "20px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+  priceTag: {
+    color: "#fff",
+    fontFamily: "'Montserrat', sans-serif",
+    fontSize: "0.85rem",
+    letterSpacing: "0.1em",
+    fontWeight: "500",
   },
-};
+  controlsWrapper: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+  },
+  loadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "4rem",
+    color: "#fff",
+    fontFamily: "'Montserrat', sans-serif",
+    fontSize: "0.9rem",
+    letterSpacing: "0.1em",
+  },
+  errorContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "2rem",
+    color: "#ff4444",
+    fontFamily: "'Montserrat', sans-serif",
+    fontSize: "0.9rem",
+    letterSpacing: "0.1em",
+  },
+  emptyContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "2rem",
+    color: "#fff",
+    fontFamily: "'Montserrat', sans-serif",
+    fontSize: "0.9rem",
+    letterSpacing: "0.1em",
+  },
+});
 
 // Extracted to separate function with added caching mechanism
 const loadImage = async (key, path) => {
@@ -130,22 +186,23 @@ const getImagePaths = (item) => {
       key: "insideBottom",
       path: `/assets/ragach/insideBottom/${item.color}.png`,
     },
-    {
-      key: "packetBottom",
-      path: `/assets/ragach/packetBottom/${item.packetType}/${item.color}.png`,
-    },
+    // {
+    //   key: "packetBottom",
+    //   // path: `/assets/ragach/packetBottom/${item.packetType}/${item.color}.png`,
+    //   path: `/assets/ragach/packet/${item.packetKind}/packet1/${item.color}.png`,
+    // },
     { key: "packetUp", path: `/assets/ragach/packetUp/${item.color}.png` },
   ];
 
   // Add conditional parts
-  if (item?.bottomPart === 'bottom') {
+  if (item?.bottomPart === "bottom") {
     imagePaths.push({
       key: "bottom",
       path: `/assets/ragach/bottom/${item.color}.png`,
     });
   }
 
-  if (item?.bottomPart === 'bottomKind3') {
+  if (item?.bottomPart === "bottomKind3") {
     imagePaths.push({
       key: "bottomKind3",
       path: `/assets/ragach/bottomKind3/${item.color}.png`,
@@ -214,6 +271,7 @@ const getZIndex = (key) => {
 
 // Main component
 const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
+  const classes = useStyles();
   const { data, isLoading: productLoading, error } = useProduct();
   const allSuits = useMemo(() => data?.allSuitPart || [], [data?.allSuitPart]);
   console.log("Received suits data:", allSuits); // Debug log
@@ -301,8 +359,13 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
   // Handle loading state
   if (productLoading || imagesLoading) {
     return (
-      <div style={{ textAlign: "center", padding: "2rem" }}>
-        <p>Loading suits...</p>
+      <div className={classes.loadingContainer}>
+        <CircularProgress
+          color="inherit"
+          size={24}
+          style={{ marginBottom: "1rem" }}
+        />
+        <Typography>Loading suits...</Typography>
       </div>
     );
   }
@@ -310,8 +373,8 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
   // Handle error states
   if (error || imagesError) {
     return (
-      <div style={{ color: "red", padding: "1rem", textAlign: "center" }}>
-        <p>Error loading suits. Please try again later.</p>
+      <div className={classes.errorContainer}>
+        <Typography>Error loading suits. Please try again later.</Typography>
       </div>
     );
   }
@@ -319,44 +382,17 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
   // Handle empty state
   if (!allSuits.length) {
     return (
-      <div style={{ padding: "1rem", textAlign: "center" }}>
-        <p>No suits found.</p>
+      <div className={classes.emptyContainer}>
+        <Typography>No suits found.</Typography>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.cardsContainer}>
+    <div className={classes.container}>
+      <div className={classes.cardsContainer}>
         {allSuits.map((item, index) => (
-          <div key={`suit-${item._id}`} style={styles.card}>
-            <div style={styles.cardControls}>
-              <input
-                type="checkbox"
-                checked={selectedSuits.has(item._id)}
-                onChange={() => handleSelect(item._id, item.totalPrice)}
-                style={styles.checkbox}
-              />
-              <button
-                onClick={() => handleDelete(item._id)}
-                style={styles.deleteButton}
-                disabled={deleteMutation.isLoading}
-              >
-                {deleteMutation.isLoading ? "Deleting..." : "Delete"}
-              </button>
-              <p
-                style={{
-                  position: "absolute",
-                  top: "40px",
-                  left: "25px",
-                  border: "1px solid black",
-                  padding: "5px",
-                  borderRadius: "5px",
-                }}
-              >
-                {item.totalPrice}$
-              </p>
-            </div>
+          <div key={`suit-${item._id}`} className={classes.card}>
             {imagesData?.[index] &&
               Object.entries(imagesData[index])
                 .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
@@ -365,13 +401,29 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
                     key={key}
                     src={src}
                     alt={`Suit part: ${key}`}
-                    style={{
-                      ...styles.photo,
-                      zIndex: getZIndex(key),
-                    }}
+                    className={classes.photo}
+                    style={{ zIndex: getZIndex(key) }}
                     loading="lazy"
                   />
                 ))}
+            <div className={classes.cardControls}>
+              <div className={classes.priceTag}>{item.totalPrice}$</div>
+              <div className={classes.controlsWrapper}>
+                <input
+                  type="checkbox"
+                  checked={selectedSuits.has(item._id)}
+                  onChange={() => handleSelect(item._id, item.totalPrice)}
+                  className={classes.checkbox}
+                />
+                <button
+                  onClick={() => handleDelete(item._id)}
+                  className={classes.deleteButton}
+                  disabled={deleteMutation.isLoading}
+                >
+                  <DeleteIcon />
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>

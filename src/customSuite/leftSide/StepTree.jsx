@@ -94,7 +94,9 @@ const useStyles = makeStyles({
     width: "45px",
     height: "45px",
     objectFit: "contain",
-    filter: "brightness(1) contrast(1.2)",
+    filter:
+      "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+    opacity: 0.9,
     "@media (max-width:600px)": {
       width: "35px",
       height: "35px",

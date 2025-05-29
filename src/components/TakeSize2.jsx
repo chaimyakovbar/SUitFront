@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from "../Utils";
+import { authUserAtom } from "../Utils";
 import HaveUser from "../components/HaveUser";
-import {
-    userSizes,
-  sizesCollectionExpleines,
-} from "../consts/KindOfColors";
+import { userSizes, sizesCollectionExpleines } from "../consts/KindOfColors";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import {
@@ -22,7 +19,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-  import { useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { postProduct } from "../api/suit";
 
 // const drawerWidth = 240;
@@ -30,17 +27,17 @@ import { postProduct } from "../api/suit";
 const TakeSizes2 = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(authUserAtom);
   const [open, setOpen] = useState(true);
   const [sizes, setSizes] = useState({});
   const [dialogType, setDialogType] = useState(null);
   const [dialogContent, setDialogContent] = useState(null);
 
-  if (!user) return <HaveUser />;
+  // if (!user) return <HaveUser />;
 
   const handleSizeChange = (key, value) => {
     setSizes((prev) => ({ ...prev, [key]: value }));
-  }
+  };
 
   const handleOpenDialog = (type, content) => {
     setDialogType(type);
@@ -51,7 +48,7 @@ const TakeSizes2 = () => {
   const handleClose = () => {
     setDialogType(null);
     setDialogContent(null);
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,23 +68,19 @@ const TakeSizes2 = () => {
       console.error("שגיאה בשליחת הנתונים:", error);
       enqueueSnackbar("שגיאה בשמירת המידות.");
     }
-  }
+  };
 
-//   const sizes []
+  //   const sizes []
 
   return (
     <Box style={{ display: "flex" }}>
-      <Drawer
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
+      <Drawer variant="persistent" anchor="left" open={open}>
         <button
           onClick={() => navigate("/Shopping")}
           onMouseOver={(e) => (e.target.style.backgroundColor = "#5E3C1B")}
           onMouseOut={(e) => (e.target.style.backgroundColor = "#8B5E3C")}
         >
-         לך לקניות
+          לך לקניות
         </button>
 
         <Button
@@ -144,7 +137,7 @@ const TakeSizes2 = () => {
           {sizesCollectionExpleines.map((item, index) => (
             <div key={index}>
               {index + 1}
-              <div style={{ border: "1px solid black", width: "200px" }} >
+              <div style={{ border: "1px solid black", width: "200px" }}>
                 <img
                   src={item.img}
                   alt={item.title}
@@ -173,11 +166,7 @@ const TakeSizes2 = () => {
       </Box>
 
       {dialogType && (
-        <Dialog
-          open={dialogType !== null}
-          keepMounted
-          onClose={handleClose}
-        >
+        <Dialog open={dialogType !== null} keepMounted onClose={handleClose}>
           <Box padding={2}>{dialogContent}</Box>
         </Dialog>
       )}

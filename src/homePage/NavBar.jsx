@@ -180,7 +180,7 @@ const NavBar = ({ scrollToTargetSection }) => {
   ];
 
   const menuUser = [
-    { icon: <PermIdentityIcon sx={{ fontSize: "1.2rem" }} />, action: () => setOpenSignUp(true), label: "Account" },
+    { icon: <PermIdentityIcon sx={{ fontSize: "1.2rem" }} />, link: "/account", label: "Account" },
     { icon: <ShoppingBagIcon sx={{ fontSize: "1.2rem" }} />, link: "/shopping", label: "Shopping Bag" },
   ];
 

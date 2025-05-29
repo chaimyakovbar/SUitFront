@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Button, Dialog, Slide, Typography, Stack, Box } from "@mui/material";
 import UserSignUp from "./UserSignUp";
 import UserLogin from "./UserLogin";
-import { openUserDialog, userAtom } from "../Utils";
+import { openUserDialog, authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 
 const User = () => {
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(authUserAtom);
   const [open, setOpen] = useAtom(openUserDialog);
   const [dialogType, setDialogType] = useState(null);
 

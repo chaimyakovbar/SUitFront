@@ -3,12 +3,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button, Drawer, Box, Typography, TextField } from "@mui/material";
 import { bodyPoints } from "../consts/KindOfColors";
 import { useAtom } from "jotai";
-import { userAtom } from "../Utils";
+import { authUserAtom } from "../Utils";
 import { postProduct } from "../api/suit";
 
 const ShowSizes = ({ data, onClose }) => {
   const [sizes, setSizes] = useState({});
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(authUserAtom);
   const queryClient = useQueryClient();
 
   useEffect(() => {

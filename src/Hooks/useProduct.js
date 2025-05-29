@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { userAtom } from '../Utils'
+import { authUserAtom } from '../Utils'
 import { useAtom } from "jotai";
 
 const getProduct = async (user) => {
@@ -11,7 +11,7 @@ const getProduct = async (user) => {
 const arr = [];
 
 const useProduct = () => {
-  const [user] = useAtom(userAtom)
+  const [user] = useAtom(authUserAtom)
 
   const { data, isLoading: productLoading, error: productError, refetch } = useQuery({
     queryKey: ["useProduct", user],  // משתמשים במידע שהבאנו על היוזר

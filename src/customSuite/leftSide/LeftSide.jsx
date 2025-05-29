@@ -13,10 +13,10 @@ const useStyles = makeStyles({
   root: {
     position: "absolute",
     zIndex: 1000,
-    width: props => props.isMobile ? "190px" : "30%",
-    height: props => props.isMobile ? "42vh" : "52.5vh",
+    width: (props) => (props.isMobile ? "190px" : "30%"),
+    height: (props) => (props.isMobile ? "42vh" : "52.5vh"),
     overflowY: "auto",
-    padding: props => props.isMobile ? "10px" : "20px",
+    padding: (props) => (props.isMobile ? "10px" : "20px"),
     boxSizing: "border-box",
     backgroundColor: "rgba(20, 20, 20, 0.8)",
     borderRadius: "4px",
@@ -34,27 +34,28 @@ const useStyles = makeStyles({
       borderRadius: "3px",
       "&:hover": {
         backgroundColor: "rgba(192, 211, 202, 0.5)",
-      }
-    }
+      },
+    },
   },
   title: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: props => props.isMobile ? "1.2rem !important" : "1.8rem !important",
+    fontSize: (props) =>
+      props.isMobile ? "1.2rem !important" : "1.8rem !important",
     fontWeight: "300 !important",
     marginBottom: "1.5rem !important",
     color: "#C0D3CA !important",
     textAlign: "center",
     letterSpacing: "0.05em !important",
-  }
+  },
 });
 
 const LeftSide = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const classes = useStyles({ isMobile });
   const [currentIndex] = useAtom(currentIndexAtom);
-  
+
   // if (currentIndex === 2) return null;
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -30 }}
@@ -65,7 +66,7 @@ const LeftSide = () => {
       <Typography variant="h2" className={classes.title}>
         {currentIndex === 0 ? "Select Fabric" : "Customize Style"}
       </Typography>
-      
+
       {currentIndex === 0 && <StepOne />}
       {currentIndex === 1 && <StepTwo />}
       {currentIndex === 2 && <StepTree />}

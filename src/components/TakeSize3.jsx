@@ -19,6 +19,7 @@ import {
   Typography,
   Drawer,
 } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import { bodyPoints, buttons } from "../consts/KindOfColors";
 import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
@@ -68,6 +69,7 @@ const Doll = (props) => {
 };
 
 const DollDisplay = () => {
+  const isMobile = useMediaQuery("(max-width:600px)");
   const [user] = useAtom(authUserAtom);
   const { data, isLoading } = useProduct();
   const navigate = useNavigate();
@@ -289,10 +291,16 @@ const DollDisplay = () => {
           position: "absolute",
           left: "20px",
           top: "120px",
-          zIndex: 20000,
+          zIndex: 100,
         }}
       >
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div
+          style={{
+            display: isMobile ? "grid" : "flex",
+            gap: isMobile ? "2px" : "10px",
+            width: isMobile ? "130px" : "100%",
+          }}
+        >
           <Button
             onClick={() => navigate("/indexSizes")}
             style={{
@@ -347,13 +355,30 @@ const DollDisplay = () => {
           position: "absolute",
           right: "20px",
           top: "120px",
-          zIndex: 20000,
+          zIndex: 100,
         }}
       >
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <Typography variant="body2" sx={{ color: "#fff" }}>
-            Select Profile:
-          </Typography>
+        <Box
+          sx={{
+            display: isMobile ? "grid" : "flex",
+            gap: isMobile ? "2px" : "10px",
+            alignItems: "center",
+            width: isMobile ? "70px" : "100%",
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={() => setOpenNewProfileDialog(true)}
+            style={{
+              backgroundColor: "#333",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#444",
+              },
+            }}
+          >
+            New Profile
+          </Button>
           <select
             value={selectedProfile?.name || ""}
             onChange={(e) => {
@@ -376,19 +401,9 @@ const DollDisplay = () => {
               </option>
             ))}
           </select>
-          <Button
-            variant="contained"
-            onClick={() => setOpenNewProfileDialog(true)}
-            style={{
-              backgroundColor: "#333",
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#444",
-              },
-            }}
-          >
-            New Profile
-          </Button>
+          <Typography variant="body2" sx={{ color: "black" }}>
+            Select Profile:
+          </Typography>
         </Box>
       </div>
 

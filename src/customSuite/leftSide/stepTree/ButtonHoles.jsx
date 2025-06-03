@@ -8,7 +8,7 @@ import {
   selectedHolesButtonUpAtom,
 } from "../../../Utils";
 import { imagesHoles } from "../../../consts/KindOfColors";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import holes from "/assets/kinds/AllSuit.png";
 import JustUp from "/assets/kinds/JustUp.png";
 
@@ -67,7 +67,7 @@ const useStyles = makeStyles({
     "&:hover": {
       transform: "scale(1.05)",
       boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    }
+    },
   },
   selectedColor: {
     border: "1px solid rgba(192, 211, 202, 0.5)",
@@ -106,7 +106,7 @@ const useStyles = makeStyles({
       backgroundColor: "rgba(192, 211, 202, 0.1) !important",
       transform: "translateY(-2px) !important",
     },
-  }
+  },
 });
 
 const ButtonHoles = ({ handleCloseDrawer }) => {
@@ -149,20 +149,20 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
       className={classes.container}
     >
       <Box className={classes.tabsContainer}>
-        <Tabs 
-          value={tabValue} 
+        <Tabs
+          value={tabValue}
           onChange={handleTabChange}
           classes={{ indicator: classes.tabIndicator }}
           centered
         >
-          <Tab 
-            label="All Suit" 
-            className={classes.tab} 
+          <Tab
+            label="All Suit"
+            className={classes.tab}
             classes={{ selected: classes.tabSelected }}
           />
-          <Tab 
-            label="Just Upper" 
-            className={classes.tab} 
+          <Tab
+            label="Just Upper"
+            className={classes.tab}
             classes={{ selected: classes.tabSelected }}
           />
         </Tabs>
@@ -188,26 +188,32 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
               <Box
                 className={`${classes.colorButton} ${
                   tabValue === 0
-                    ? selectedHolesButton === item.name ? classes.selectedColor : ""
-                    : selectedHolesButtonUp === item.name ? classes.selectedColor : ""
+                    ? selectedHolesButton === item.name
+                      ? classes.selectedColor
+                      : ""
+                    : selectedHolesButtonUp === item.name
+                    ? classes.selectedColor
+                    : ""
                 }`}
                 style={{ backgroundColor: item.color }}
-                onClick={() => tabValue === 0 ? handleClick(item.name) : handleClick2(item.name)}
+                onClick={() =>
+                  tabValue === 0
+                    ? handleClick(item.name)
+                    : handleClick2(item.name)
+                }
                 position="relative"
               >
-                {((tabValue === 0 && selectedHolesButton === item.name) || 
+                {((tabValue === 0 && selectedHolesButton === item.name) ||
                   (tabValue === 1 && selectedHolesButtonUp === item.name)) && (
                   <CheckCircleIcon className={classes.checkIcon} />
                 )}
               </Box>
-              <Typography className={classes.colorName}>
-                {item.name}
-              </Typography>
+              <Typography className={classes.colorName}>{item.name}</Typography>
             </motion.div>
           </Grid>
         ))}
       </Grid>
-      
+
       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
         <Button className={classes.resetButton} onClick={handleReset}>
           Reset Selection

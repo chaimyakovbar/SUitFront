@@ -78,19 +78,6 @@ const App = () => {
               )
             }
           />
-          {/* <Route
-            path="/indexSizes"
-            element={
-              user ? (
-                <IndexSizes />
-              ) : (
-                <Navigate
-                to="/login"
-                state={{ from: { pathname: "/indexSizes" } }}
-                />
-              )
-            }
-          /> */}
           <Route path="/indexSizes" element={<IndexSizes />} />
           <Route path="/PolicySupport" element={<PolicySupport />} />
           <Route path="/sizes/regular" element={<TakeSizes4 />} />

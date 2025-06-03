@@ -217,19 +217,21 @@ const useStyles = makeStyles({
 
 function Account() {
   const [user, setUser] = useAtom(authUserAtom);
-  const classes = useStyles();
   const { data } = useProduct();
+  const classes = useStyles();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [openPhoneDialog, setOpenPhoneDialog] = useState(false);
   const [openAddressDialog, setOpenAddressDialog] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
-  const [address, setAddress] = useState(user?.address || "");
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
+  const [address, setAddress] = useState(user?.address);
   const [isLoading, setIsLoading] = useState(false);
   const [sizeProfiles, setSizeProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [newProfileName, setNewProfileName] = useState("");
   const [openNewProfileDialog, setOpenNewProfileDialog] = useState(false);
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false);
+  const [profileToDelete, setProfileToDelete] = useState(null);
 
   useEffect(() => {
     if (data?.sizes) {
@@ -344,6 +346,45 @@ function Account() {
     }
   };
 
+  const handleDeleteProfile = async (profileToDelete) => {
+    try {
+      const updatedSizes = { ...data?.sizes };
+      delete updatedSizes[`profile_${profileToDelete.name}`];
+
+      await postProduct({
+        email: user.email,
+        sizes: updatedSizes,
+      });
+
+      const newProfiles = sizeProfiles.filter(
+        (p) => p.name !== profileToDelete.name
+      );
+      setSizeProfiles(newProfiles);
+
+      if (selectedProfile?.name === profileToDelete.name) {
+        setSelectedProfile(newProfiles[0] || null);
+      }
+
+      enqueueSnackbar("Profile deleted successfully", { variant: "success" });
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      enqueueSnackbar("Failed to delete profile", { variant: "error" });
+    }
+  };
+
+  const handleDeleteClick = (profile) => {
+    setProfileToDelete(profile);
+    setDeleteConfirmDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (profileToDelete) {
+      handleDeleteProfile(profileToDelete);
+      setDeleteConfirmDialog(false);
+      setProfileToDelete(null);
+    }
+  };
+
   if (!user) {
     return (
       <Box className={classes.root}>
@@ -364,16 +405,6 @@ function Account() {
         </Typography>
 
         <Paper elevation={0} className={classes.paper}>
-          {/* <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
-            <Box>
-              <Typography className={classes.userName}>
-                {user.displayName || user.name} {user.lastName}
-              </Typography>
-              <Typography className={classes.userSubtitle}>
-                Account Details
-              </Typography>
-            </Box>
-          </Box> */}
 
           <Divider className={classes.divider} />
 
@@ -506,24 +537,6 @@ function Account() {
               </ListItem>
             )}
 
-            {/* <ListItem className={classes.listItem}>
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="User ID"
-                secondary={user.uid}
-                className={classes.listItemText}
-                sx={{
-                  "& .MuiListItemText-primary": {
-                    color: "#fff !important",
-                  },
-                  "& .MuiListItemText-secondary": {
-                    color: "#fff !important",
-                  },
-                }}
-              />
-            </ListItem> */}
           </List>
 
           <Divider className={classes.divider} />
@@ -540,9 +553,10 @@ function Account() {
               <Typography className={classes.userName}>
                 Size Profiles
               </Typography>
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Box>
                 <Button
                   variant="contained"
+                  style={{ margin: "5px" }}
                   className={classes.editButton}
                   startIcon={<ListAltIcon />}
                   onClick={() => (window.location.href = "/sizes/measure")}
@@ -550,6 +564,7 @@ function Account() {
                   Edit Measurements
                 </Button>
                 <Button
+                  style={{ margin: "5px" }}
                   variant="contained"
                   className={classes.editButton}
                   onClick={() => setOpenNewProfileDialog(true)}
@@ -565,24 +580,51 @@ function Account() {
               </Typography>
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                 {sizeProfiles.map((profile) => (
-                  <Button
+                  <Box
                     key={profile.name}
-                    variant={
-                      selectedProfile?.name === profile.name
-                        ? "contained"
-                        : "outlined"
-                    }
-                    onClick={() => setSelectedProfile(profile)}
-                    sx={{
-                      color: "#fff",
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                      "&:hover": {
-                        borderColor: "rgba(255, 255, 255, 0.5)",
-                      },
-                    }}
+                    sx={{ position: "relative", display: "flex", alignItems: "center", gap: 1 }}
                   >
-                    {profile.name}
-                  </Button>
+                    <Button
+                      variant={
+                        selectedProfile?.name === profile.name
+                          ? "contained"
+                          : "outlined"
+                      }
+                      onClick={() => setSelectedProfile(profile)}
+                      sx={{
+                        color: "#fff",
+                        borderColor: "rgba(255, 255, 255, 0.3)",
+                        "&:hover": {
+                          borderColor: "rgba(255, 255, 255, 0.5)",
+                        },
+                      }}
+                    >
+                      {profile.name}
+                    </Button>
+                    <button
+                      variant="outlined"
+                      onClick={() => handleDeleteClick(profile)}
+                      style={{
+                        position: "absolute",
+                        right: "-13px",
+                        top: "-10px",
+                        backgroundColor: "transparent",
+                        width: "25px",
+                        height: "25px",
+                        borderRadius: "50%",
+                        color: "#ef5350",
+                        borderColor: "#ef5350",
+                        // minWidth: "32px",
+                        // padding: "4px",
+                        "&:hover": {
+                          borderColor: "#ef5350",
+                          backgroundColor: "rgba(239, 83, 80, 0.1)",
+                        },
+                      }}
+                    >
+                      ×
+                    </button>
+                  </Box>
                 ))}
               </Box>
             </Box>
@@ -804,6 +846,45 @@ function Account() {
             sx={{ backgroundColor: "#333" }}
           >
             Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={deleteConfirmDialog}
+        onClose={() => setDeleteConfirmDialog(false)}
+        PaperProps={{
+          style: {
+            backgroundColor: "#1e1e1e",
+            color: "#fff",
+          },
+        }}
+      >
+        <DialogTitle>Delete Profile</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete the profile "{profileToDelete?.name}
+            "? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteConfirmDialog(false)}
+            sx={{ color: "#fff" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            variant="contained"
+            sx={{
+              backgroundColor: "#ef5350",
+              "&:hover": {
+                backgroundColor: "#d32f2f",
+              },
+            }}
+          >
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

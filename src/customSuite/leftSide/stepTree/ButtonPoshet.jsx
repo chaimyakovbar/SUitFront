@@ -13,9 +13,11 @@ const useStyles = makeStyles({
   },
   fabricGrid: {
     display: "flex",
-    flexWrap: "wrap",
+    flexDirection: "row",
+    overflowX: "auto",
     gap: "15px",
-    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   fabricItem: {
     display: "flex",

@@ -7,7 +7,8 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles({
   root: {
     position: "relative",
-    marginLeft: props => props.isMobile ? '120px' : '36%',
+    marginLeft: props => props.isMobile ? '0%' : '36%',
+    marginRight: props => props.isMobile ? '12%' : '0%',
     transition: "all 0.3s ease",
   },
   imageContainer: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
-    width: "80%",
+    width: "100%",
   }
 });
 

@@ -5,7 +5,7 @@ import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
 import { selectedInsideTypeAtom } from "../../../Utils";
 import { imagesInsideUp } from "../../../consts/KindOfColors";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const useStyles = makeStyles({
   container: {
@@ -13,9 +13,11 @@ const useStyles = makeStyles({
   },
   fabricGrid: {
     display: "flex",
-    flexWrap: "wrap",
+    flexDirection: "row",
+    overflowX: "auto",
     gap: "15px",
-    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   fabricItem: {
     display: "flex",
@@ -35,7 +37,7 @@ const useStyles = makeStyles({
     "&:hover": {
       transform: "scale(1.05)",
       boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    }
+    },
   },
   selectedFabric: {
     border: "1px solid rgba(192, 211, 202, 0.5)",
@@ -79,7 +81,7 @@ const useStyles = makeStyles({
       backgroundColor: "rgba(192, 211, 202, 0.1) !important",
       transform: "translateY(-2px) !important",
     },
-  }
+  },
 });
 
 const ButtonInside = ({ handleCloseDrawer }) => {
@@ -115,11 +117,17 @@ const ButtonInside = ({ handleCloseDrawer }) => {
               className={classes.fabricItem}
             >
               <Box
-                className={`${classes.fabricButton} ${item.name === selectedInsideType ? classes.selectedFabric : ""}`}
+                className={`${classes.fabricButton} ${
+                  item.name === selectedInsideType ? classes.selectedFabric : ""
+                }`}
                 onClick={() => handleClick(item.name)}
                 position="relative"
               >
-                <img src={item.img} alt={item.name} className={classes.fabricImage} />
+                <img
+                  src={item.img}
+                  alt={item.name}
+                  className={classes.fabricImage}
+                />
                 {item.name === selectedInsideType && (
                   <CheckCircleIcon className={classes.checkIcon} />
                 )}
@@ -131,7 +139,7 @@ const ButtonInside = ({ handleCloseDrawer }) => {
           </Grid>
         ))}
       </Grid>
-      
+
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Button className={classes.resetButton} onClick={handleReset}>
           Reset Selection

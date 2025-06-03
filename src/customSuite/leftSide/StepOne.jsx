@@ -6,21 +6,22 @@ import { useMediaQuery } from "@mui/material";
 import { motion } from "framer-motion";
 import { Box, Typography, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const useStyles = makeStyles({
   container: {
     display: "flex",
-    flexWrap: "wrap",
-    gap: props => props.isMobile ? "12px" : "20px",
-    justifyContent: "center",
+    flexDirection: "row",
+    overflowX: "auto",
+    gap: (props) => (props.isMobile ? "12px" : "20px"),
     alignItems: "center",
+    width: "100%",
   },
   colorButton: {
     backgroundSize: "cover",
     backgroundPosition: "center",
-    width: props => props.isMobile ? "50px" : "80px",
-    height: props => props.isMobile ? "50px" : "80px",
+    width: (props) => (props.isMobile ? "50px" : "80px"),
+    height: (props) => (props.isMobile ? "50px" : "80px"),
     borderRadius: "50%",
     cursor: "pointer",
     position: "relative",
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
     "&:hover": {
       transform: "scale(1.05)",
       boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    }
+    },
   },
   selectedColor: {
     border: "2px solid #C0D3CA !important",
@@ -47,13 +48,14 @@ const useStyles = makeStyles({
   },
   colorName: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: props => props.isMobile ? "0.7rem !important" : "0.8rem !important",
+    fontSize: (props) =>
+      props.isMobile ? "0.7rem !important" : "0.8rem !important",
     fontWeight: "300 !important",
     color: "#e0e0e0 !important",
     marginTop: "8px !important",
     textAlign: "center",
     letterSpacing: "0.05em !important",
-  }
+  },
 });
 
 const StepOne = () => {
@@ -85,9 +87,19 @@ const StepOne = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
           >
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
               <Box
-                className={`${classes.colorButton} ${selectedColor?.colorId === color.colorId ? classes.selectedColor : ""}`}
+                className={`${classes.colorButton} ${
+                  selectedColor?.colorId === color.colorId
+                    ? classes.selectedColor
+                    : ""
+                }`}
                 style={{ backgroundImage: `url(${color.color})` }}
                 onClick={() => handleClick(color)}
               >

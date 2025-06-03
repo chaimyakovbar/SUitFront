@@ -1,383 +1,348 @@
 // src/pages/LoginWithGoogle.jsx
 import React, { useState } from "react";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../firebase";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Google as GoogleIcon, Email as EmailIcon } from "@mui/icons-material";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import {
   Button,
-  CircularProgress,
-  Alert,
-  Paper,
   Typography,
   Box,
-  Stack,
-  Divider,
+  CircularProgress,
+  Container,
+  Paper,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tabs,
-  Tab,
+  Divider,
 } from "@mui/material";
-import { registerUser, loginUser } from "../api/user";
+import GoogleIcon from "@mui/icons-material/Google";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  root: {
+    backgroundColor: "#0a0a0a",
+    color: "#fff",
+    minHeight: "100vh",
+    paddingTop: "120px",
+    paddingBottom: "80px",
+  },
+  container: {
+    position: "relative",
+  },
+  paper: {
+    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
+    padding: "2.5rem !important",
+    maxWidth: 500,
+    width: "100%",
+    borderRadius: "4px !important",
+    textAlign: "center",
+    border: "1px solid rgba(192, 211, 202, 0.2) !important",
+  },
+  heading: {
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontSize: "2.2rem !important",
+    fontWeight: "300 !important",
+    marginBottom: "2rem !important",
+    letterSpacing: "0.05em !important",
+    color: "#fff !important",
+  },
+  errorText: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.9rem !important",
+    fontWeight: "300 !important",
+    color: "#ff6b6b !important",
+    marginBottom: "1rem !important",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+    marginBottom: "2rem",
+  },
+  textField: {
+    "& .MuiOutlinedInput-root": {
+      color: "#fff !important",
+      fontFamily: "'Montserrat', sans-serif !important",
+      "& fieldset": {
+        borderColor: "rgba(192, 211, 202, 0.2) !important",
+      },
+      "&:hover fieldset": {
+        borderColor: "rgba(192, 211, 202, 0.4) !important",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#C0D3CA !important",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgba(192, 211, 202, 0.7) !important",
+      fontFamily: "'Montserrat', sans-serif !important",
+    },
+  },
+  signInButton: {
+    backgroundColor: "transparent !important",
+    color: "#C0D3CA !important",
+    border: "1px solid #C0D3CA !important",
+    padding: "12px 35px !important",
+    fontSize: "0.85rem !important",
+    borderRadius: "0 !important",
+    fontWeight: "400 !important",
+    letterSpacing: "0.15em !important",
+    textTransform: "uppercase !important",
+    transition: "all 0.3s ease !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    marginBottom: "1rem !important",
+    width: "100% !important",
+    "&:hover": {
+      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+      transform: "translateY(-2px) !important",
+    },
+    "&:disabled": {
+      backgroundColor: "rgba(192, 211, 202, 0.05) !important",
+      border: "1px solid rgba(192, 211, 202, 0.3) !important",
+      color: "rgba(192, 211, 202, 0.5) !important",
+    },
+  },
+  signUpButton: {
+    backgroundColor: "transparent !important",
+    color: "#fff !important",
+    border: "1px solid #fff !important",
+    padding: "12px 35px !important",
+    fontSize: "0.85rem !important",
+    borderRadius: "0 !important",
+    fontWeight: "400 !important",
+    letterSpacing: "0.15em !important",
+    textTransform: "uppercase !important",
+    transition: "all 0.3s ease !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    width: "100% !important",
+    "&:hover": {
+      backgroundColor: "#fff !important",
+      color: "#000 !important",
+    },
+    "&:disabled": {
+      backgroundColor: "rgba(255, 255, 255, 0.05) !important",
+      border: "1px solid rgba(255, 255, 255, 0.3) !important",
+      color: "rgba(255, 255, 255, 0.5) !important",
+    },
+  },
+  toggleText: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.9rem !important",
+    color: "#C0D3CA !important",
+    marginTop: "-1rem",
+    marginBottom: "1.5rem",
+    cursor: "pointer",
+    textDecoration: "underline",
+    transition: "color 0.2s",
+    "&:hover": {
+      color: "#fff !important",
+    },
+  },
+  divider: {
+    backgroundColor: "rgba(192, 211, 202, 0.2) !important",
+    margin: "2rem 0 !important",
+  },
+  dividerText: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.9rem !important",
+    color: "rgba(192, 211, 202, 0.7) !important",
+    margin: "0 1rem !important",
+  },
+});
 
 const LoginWithGoogle = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const [showEmailAuth, setShowEmailAuth] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
-    lastName: "",
-    phoneNumber: "",
-    address: "",
-  });
+  const [searchParams] = useSearchParams();
+  const { googleSignIn, emailSignIn, emailSignUp, isLoading, error } =
+    useAuth();
+  const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const handleSuccessfulAuth = () => {
-    // Get the intended destination from location state, or default to "/"
-    const from = location.state?.from?.pathname || "/";
-    navigate(from, { replace: true });
+  const getRedirectPath = () => {
+    // 1. Check for redirect in query params
+    const redirectTo = searchParams.get("redirect");
+    if (redirectTo) {
+      return redirectTo;
+    }
+
+    // 2. Check for stored location in state
+    const from = location.state?.from?.pathname;
+    if (from) {
+      return from;
+    }
+
+    // 3. Default to dashboard if no redirect specified
+    return "/dashboard";
   };
 
   const handleGoogleAuth = async (isNewUser = false) => {
-    setLoading(true);
-    setError(null);
     try {
-      if (isNewUser) {
-        provider.setCustomParameters({
-          prompt: "select_account",
-        });
-      }
-
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const userData = {
-        email: user.email,
-        name: user.displayName?.split(" ")[0] || "",
-        lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
-        photoURL: user.photoURL,
-        phoneNumber: "",
-        address: "",
-        password: user.uid,
-      };
-
-      try {
-        if (isNewUser) {
-          await registerUser(userData);
-        }
-
-        const loginResponse = await loginUser({
-          email: user.email,
-          password: user.uid,
-        });
-
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            ...loginResponse.user,
-          })
-        );
-
-        handleSuccessfulAuth();
-      } catch (backendError) {
-        console.error("❌ Error with backend:", backendError);
-        setError(backendError.message || "Error connecting to server");
-      }
+      await googleSignIn.mutateAsync({ isNewUser });
+      const redirectPath = getRedirectPath();
+      navigate(redirectPath, { replace: true });
     } catch (error) {
-      console.error("❌ Error with Google auth:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      console.error("Authentication error:", error);
+      // Error is already handled in the useAuth hook
     }
   };
 
-  const handleEmailAuth = async () => {
-    setLoading(true);
-    setError(null);
+  const handleEmailAuth = async (e) => {
+    e.preventDefault();
     try {
-      if (activeTab === 0) {
-        // Sign In
-        const loginResponse = await loginUser({
-          email: formData.email,
-          password: formData.password,
+      if (isSignUp) {
+        // Sign up with Firebase
+        const user = await emailSignUp.mutateAsync({ email, password });
+        // Send extra fields to backend
+        await fetch("http://localhost:3020/user/auth-webhook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+            name,
+            address,
+            phone,
+            firebaseUid: user.uid,
+          }),
         });
-        localStorage.setItem("user", JSON.stringify(loginResponse.user));
       } else {
-        // Sign Up
-        await registerUser(formData);
-        const loginResponse = await loginUser({
-          email: formData.email,
-          password: formData.password,
-        });
-        localStorage.setItem("user", JSON.stringify(loginResponse.user));
+        await emailSignIn.mutateAsync({ email, password });
       }
-      setShowEmailAuth(false);
-      handleSuccessfulAuth();
+      const redirectPath = getRedirectPath();
+      navigate(redirectPath, { replace: true });
     } catch (error) {
-      setError(error.message || "Authentication failed");
-    } finally {
-      setLoading(false);
+      console.error("Email authentication error:", error);
     }
-  };
-
-  const handleInputChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#161616",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "80vh",
-        marginTop: "100px",
-      }}
-    >
-      <Paper
-        elevation={3}
-        sx={{
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: 400,
-          width: "100%",
-        }}
-      >
-        <Typography variant="h5" component="h1" gutterBottom>
-          Welcome to SuitFront
-        </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        <Stack spacing={2} sx={{ width: "100%", mt: 2 }}>
-          {/* Main Login Options */}
-          <Typography variant="h6" sx={{ alignSelf: "center", mb: 1 }}>
-            Login Options
+    <Box className={classes.root}>
+      <Container maxWidth="sm">
+        <Paper className={classes.paper} elevation={0}>
+          <Typography className={classes.heading}>
+            Welcome to SuitFront
           </Typography>
 
-          <Button
-            variant="contained"
-            onClick={() => handleGoogleAuth(false)}
-            disabled={loading}
-            startIcon={
-              loading ? (
-                <CircularProgress size={20} color="inherit" />
-              ) : (
-                <GoogleIcon />
-              )
-            }
-            sx={{
-              backgroundColor: "#4285F4",
-              "&:hover": {
-                backgroundColor: "#357ABD",
-              },
-              height: "48px",
-              fontSize: "1.1rem",
-            }}
-          >
-            {loading ? "Signing in..." : "Login with Google"}
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={() => {
-              setActiveTab(0); // Set to Sign In tab
-              setShowEmailAuth(true);
-            }}
-            startIcon={<EmailIcon />}
-            sx={{
-              backgroundColor: "#2E7D32",
-              "&:hover": {
-                backgroundColor: "#1B5E20",
-              },
-              height: "48px",
-              fontSize: "1.1rem",
-            }}
-          >
-            Login with Email
-          </Button>
-
-          <Divider sx={{ my: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              New to SuitFront?
+          {error && (
+            <Typography className={classes.errorText}>
+              {error.message}
             </Typography>
-          </Divider>
+          )}
 
-          {/* Sign Up Options */}
-          <Typography variant="h6" sx={{ alignSelf: "center", mb: 1 }}>
-            Create Account
+          <form onSubmit={handleEmailAuth} className={classes.form}>
+            {isSignUp && (
+              <>
+                <TextField
+                  className={classes.textField}
+                  label="Name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  fullWidth
+                  variant="outlined"
+                />
+                <TextField
+                  className={classes.textField}
+                  label="Address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                  fullWidth
+                  variant="outlined"
+                />
+                <TextField
+                  className={classes.textField}
+                  label="Phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  fullWidth
+                  variant="outlined"
+                />
+              </>
+            )}
+            <TextField
+              className={classes.textField}
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              fullWidth
+              variant="outlined"
+            />
+            <TextField
+              className={classes.textField}
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              fullWidth
+              variant="outlined"
+            />
+            <Button
+              type="submit"
+              className={classes.signInButton}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : isSignUp ? (
+                "Sign Up with Email"
+              ) : (
+                "Login with Email"
+              )}
+            </Button>
+          </form>
+
+          <Typography
+            className={classes.toggleText}
+            onClick={() => setIsSignUp((prev) => !prev)}
+            component="div"
+          >
+            {isSignUp
+              ? "Already have an account? Login"
+              : "Don't have an account? Sign Up"}
           </Typography>
 
+          <Box sx={{ display: "flex", alignItems: "center", my: 2 }}>
+            <Divider className={classes.divider} sx={{ flex: 1 }} />
+            <Typography className={classes.dividerText}>OR</Typography>
+            <Divider className={classes.divider} sx={{ flex: 1 }} />
+          </Box>
+
           <Button
-            variant="outlined"
-            onClick={() => handleGoogleAuth(true)}
-            disabled={loading}
+            className={classes.signInButton}
             startIcon={
-              loading ? (
+              isLoading ? (
                 <CircularProgress size={20} color="inherit" />
               ) : (
                 <GoogleIcon />
               )
             }
-            sx={{
-              borderColor: "#4285F4",
-              color: "#4285F4",
-              "&:hover": {
-                borderColor: "#357ABD",
-                backgroundColor: "rgba(66, 133, 244, 0.04)",
-              },
-              height: "48px",
-              fontSize: "1.1rem",
-            }}
+            onClick={() => handleGoogleAuth(false)}
+            disabled={isLoading}
           >
-            {loading ? "Creating account..." : "Sign up with Google"}
+            {isLoading ? "Loging..." : "Login with Google"}
           </Button>
 
           <Button
-            variant="outlined"
-            onClick={() => {
-              setActiveTab(1); // Set to Sign Up tab
-              setShowEmailAuth(true);
-            }}
-            startIcon={<EmailIcon />}
-            sx={{
-              borderColor: "#2E7D32",
-              color: "#2E7D32",
-              "&:hover": {
-                borderColor: "#1B5E20",
-                backgroundColor: "rgba(46, 125, 50, 0.04)",
-              },
-              height: "48px",
-              fontSize: "1.1rem",
-            }}
+            className={classes.signUpButton}
+            startIcon={<GoogleIcon />}
+            onClick={() => handleGoogleAuth(true)}
+            disabled={isLoading}
           >
-            Sign up with Email
+            Sign up with Google
           </Button>
-        </Stack>
-      </Paper>
-
-      {/* Email Authentication Dialog */}
-      <Dialog
-        open={showEmailAuth}
-        onClose={() => setShowEmailAuth(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          <Tabs
-            value={activeTab}
-            onChange={(e, newValue) => setActiveTab(newValue)}
-            centered
-          >
-            <Tab label="Login" />
-            <Tab label="Sign Up" />
-          </Tabs>
-        </DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} sx={{ mt: 2 }}>
-            {activeTab === 1 && (
-              <>
-                <TextField
-                  label="First Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                />
-                <TextField
-                  label="Last Name"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                />
-              </>
-            )}
-            <TextField
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              fullWidth
-              required
-            />
-            <TextField
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              fullWidth
-              required
-            />
-            {activeTab === 1 && (
-              <>
-                <TextField
-                  label="Phone Number"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                />
-                <TextField
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                  multiline
-                  rows={2}
-                />
-              </>
-            )}
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowEmailAuth(false)}>Cancel</Button>
-          <Button
-            onClick={handleEmailAuth}
-            variant="contained"
-            disabled={
-              loading ||
-              !formData.email ||
-              !formData.password ||
-              (activeTab === 1 &&
-                (!formData.name ||
-                  !formData.lastName ||
-                  !formData.phoneNumber ||
-                  !formData.address))
-            }
-          >
-            {loading ? "Processing..." : activeTab === 0 ? "Login" : "Sign Up"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </Paper>
+      </Container>
     </Box>
   );
 };

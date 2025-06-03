@@ -43,13 +43,13 @@ const useStyles = makeStyles({
   divider: {
     backgroundColor: "rgba(192, 211, 202, 0.2) !important",
     margin: "2rem 0 !important",
-  }
+  },
 });
 
 const IndexCustomSuit = () => {
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width:600px)");
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -68,21 +68,29 @@ const IndexCustomSuit = () => {
             Design Your Custom Suit
           </Typography>
           <Typography variant="body1" className={classes.subheading}>
-            Create a bespoke suit tailored to your exact preferences. Select from premium fabrics, 
-            customize every detail, and achieve the perfect fit.
+            Create a bespoke suit tailored to your exact preferences. Select
+            from premium fabrics, customize every detail, and achieve the
+            perfect fit.
           </Typography>
         </motion.div>
-        
+
         <Divider className={classes.divider} />
-        
-      <Stepper2 />
-        <Box className={classes.contentWrapper}>
-          <LeftSide />
-          {/* <RightSide /> */}
-          <MiddleSide isMobile={isMobile} />
-        </Box>
+
+        <Stepper2 />
+
+        {isMobile ? (
+          <div>
+            <MiddleSide isMobile={isMobile} />
+
+            <LeftSide />
+          </div>
+        ) : (
+          <Box className={classes.contentWrapper}>
+            <LeftSide />
+            <MiddleSide isMobile={isMobile} />
+          </Box>
+        )}
       </Container>
-      
     </motion.div>
   );
 };

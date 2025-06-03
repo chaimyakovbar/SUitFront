@@ -1,7 +1,7 @@
 // src/pages/LoginWithGoogle.jsx
 import React, { useState } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import useAuth from "../Hooks/useAuth";
+import { useAuth } from "../Hooks/useAuth";
 import {
   Button,
   Typography,

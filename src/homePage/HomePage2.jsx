@@ -1,18 +1,19 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
-import { 
-  Box, 
-  Typography, 
-  Button, 
-  Container, 
-  Grid, 
-  useMediaQuery, 
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
+  Grid,
+  // useMediaQuery,
   Divider,
-  IconButton
+  IconButton,
 } from "@mui/material";
+import ButtonReactBits from "../reactBits/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
 import NavBar from "./NavBar";
@@ -47,7 +48,8 @@ const useStyles = makeStyles({
     left: 0,
     width: "100%",
     height: "100%",
-    background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)",
+    background:
+      "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)",
     zIndex: 1,
   },
   heroContent: {
@@ -207,20 +209,21 @@ const HomePage2 = () => {
   const targetSectionRef = useRef(null);
   const popularSectionRef = useRef(null);
   const classes = useStyles();
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const isTablet = useMediaQuery("(max-width:960px)");
+    // const isMobile = useMediaQuery("(max-width:600px)");
+    // const isTablet = useMediaQuery("(max-width:960px)");
 
-  useEffect(() => {
-    // Add Google Fonts
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap';
-    document.head.appendChild(link);
-    
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, []);
+  // useEffect(() => {
+  //   // Add Google Fonts
+  //   const link = document.createElement("link");
+  //   link.rel = "stylesheet";
+  //   link.href =
+  //     "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap";
+  //   document.head.appendChild(link);
+
+  //   return () => {
+  //     document.head.removeChild(link);
+  //   };
+  // }, []);
 
   // const scrollToSection = (ref) => {
   //   ref.current.scrollIntoView({
@@ -232,20 +235,20 @@ const HomePage2 = () => {
   return (
     <div className={classes.root}>
       <NavBar />
-      
+
       {/* Hero Section */}
       <section className={classes.heroSection}>
-        <motion.img 
+        <motion.img
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 10, ease: "easeOut" }}
-          className={classes.videoBackground} 
-          src="/assets/photoBackGround3.jpg" 
-          alt="Background" 
+          className={classes.videoBackground}
+          src="/assets/photoBackGround3.jpg"
+          alt="Background"
         />
         <div className={classes.heroOverlay}></div>
 
-        <motion.div 
+        <motion.div
           className={classes.heroContent}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -255,21 +258,30 @@ const HomePage2 = () => {
             Timeless Elegance
           </Typography>
           <Typography variant="body1" className={classes.heroSubtitle}>
-            Discover our exclusive collection of meticulously crafted suits, where traditional craftsmanship meets contemporary design. Each piece is tailored to perfection, ensuring an impeccable fit and unparalleled sophistication.
+            Discover our exclusive collection of meticulously crafted suits,
+            where traditional craftsmanship meets contemporary design. Each
+            piece is tailored to perfection, ensuring an impeccable fit and
+            unparalleled sophistication.
           </Typography>
-          
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Button 
+
+          {/* <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}> */}
+            {/* <Button
               component={Link}
               to="/customSuit"
               className={classes.ctaButton}
             >
               Design Your Suit
+            </Button> */}
+
+            <Button style={{border: "1px solid #fff", borderRadius: "10px", padding: "12px 35px", fontSize: "0.85rem", fontWeight: "400", letterSpacing: "0.15em", textTransform: "uppercase", transition: "all 0.3s ease", fontFamily: "'Montserrat', sans-serif"}} component={Link} to="/customSuit">
+              <ButtonReactBits
+                text="Design Your Suit"
+                disabled={false}
+                speed={3}
+                className="custom-class"
+              />
             </Button>
-          </motion.div>
+          {/* </motion.div> */}
         </motion.div>
 
         {/* <motion.div 
@@ -288,8 +300,8 @@ const HomePage2 = () => {
       <Divider className={classes.divider} />
 
       {/* Popular Section */}
-      <Box 
-        component="section" 
+      <Box
+        component="section"
         className={`${classes.section} ${classes.sectionLight}`}
         ref={popularSectionRef}
       >
@@ -304,10 +316,11 @@ const HomePage2 = () => {
               Most Popular
             </Typography>
             <Typography variant="body1" className={classes.sectionSubtitle}>
-              Our finest selection of suits that have become customer favorites for their exceptional quality and timeless style.
+              Our finest selection of suits that have become customer favorites
+              for their exceptional quality and timeless style.
             </Typography>
           </motion.div>
-          
+
           <MostPoPular />
         </Container>
       </Box>
@@ -315,8 +328,8 @@ const HomePage2 = () => {
       <Divider className={classes.divider} />
 
       {/* Featured Section */}
-      <Box 
-        component="section" 
+      <Box
+        component="section"
         className={`${classes.section} ${classes.sectionDark}`}
       >
         <Container maxWidth="lg">
@@ -328,9 +341,9 @@ const HomePage2 = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8 }}
               >
-                <img 
-                  src="/assets/photoBackGround4.webp" 
-                  alt="Featured Collection" 
+                <img
+                  src="/assets/photoBackGround4.webp"
+                  alt="Featured Collection"
                   className={classes.featuredImage}
                 />
               </motion.div>
@@ -347,9 +360,13 @@ const HomePage2 = () => {
                   The Art of Tailoring
                 </Typography>
                 <Typography variant="body1" className={classes.featuredText}>
-                  Our master tailors bring decades of experience to every suit, combining traditional techniques with modern precision. Each garment is crafted with meticulous attention to detail, from the selection of premium fabrics to the final hand-stitched finishes.
+                  Our master tailors bring decades of experience to every suit,
+                  combining traditional techniques with modern precision. Each
+                  garment is crafted with meticulous attention to detail, from
+                  the selection of premium fabrics to the final hand-stitched
+                  finishes.
                 </Typography>
-                <Button 
+                <Button
                   component={Link}
                   to="/about"
                   className={classes.featuredButton}
@@ -365,8 +382,8 @@ const HomePage2 = () => {
       <Divider className={classes.divider} />
 
       {/* Collections Section */}
-      <Box 
-        component="section" 
+      <Box
+        component="section"
         className={`${classes.section} ${classes.sectionLight}`}
         ref={targetSectionRef}
         id="targetSection"
@@ -382,10 +399,11 @@ const HomePage2 = () => {
               Our Collections
             </Typography>
             <Typography variant="body1" className={classes.sectionSubtitle}>
-              Browse through our carefully curated collections designed for every occasion and personal style.
+              Browse through our carefully curated collections designed for
+              every occasion and personal style.
             </Typography>
           </motion.div>
-          
+
           <AllCollection targetSectionRef={targetSectionRef} />
         </Container>
       </Box>

@@ -16,7 +16,7 @@ import wide from "/assets/kinds/wide.png";
 import slim from "/assets/kinds/slim.png";
 import standard from "/assets/kinds/standard.png";
 import kind1Img from "/assets/kinds/kind1.png";
-import kind2Img from "/assets/kinds/kind2.png";
+import kind2Img from "/assets/kinds/kind2.2.png";
 import kind3Img from "/assets/kinds/kind3.png";
 import kind4Img from "/assets/kinds/kind4.png";
 import collarTight from "/assets/kinds/collarTight.png";
@@ -38,9 +38,10 @@ const useStyles = makeStyles({
   },
   optionsContainer: {
     display: "flex",
-    flexWrap: "wrap",
+    flexDirection: "row",
+    overflowX: "auto",
     gap: "12px",
-    justifyContent: "center",
+    alignItems: "center",
     marginBottom: "20px",
     color: "white",
   },
@@ -64,8 +65,8 @@ const useStyles = makeStyles({
   },
   optionImage: {
     color: "white",
-    height: "50px",
-    width: "auto",
+    height: "100px",
+    width: "120px",
     objectFit: "contain",
     filter:
       "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",

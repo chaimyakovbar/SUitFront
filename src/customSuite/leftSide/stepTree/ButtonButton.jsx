@@ -5,7 +5,7 @@ import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
 import { selectedButtonAtom } from "../../../Utils";
 import { imageButton } from "../../../consts/KindOfColors";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const useStyles = makeStyles({
   container: {
@@ -13,9 +13,11 @@ const useStyles = makeStyles({
   },
   buttonGrid: {
     display: "flex",
-    flexWrap: "wrap",
+    flexDirection: "row",
+    overflowX: "auto",
     gap: "15px",
-    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   buttonItem: {
     display: "flex",
@@ -36,7 +38,7 @@ const useStyles = makeStyles({
     "&:hover": {
       transform: "scale(1.05)",
       boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    }
+    },
   },
   selectedButton: {
     border: "1px solid rgba(192, 211, 202, 0.5)",
@@ -80,7 +82,7 @@ const useStyles = makeStyles({
       backgroundColor: "rgba(192, 211, 202, 0.1) !important",
       transform: "translateY(-2px) !important",
     },
-  }
+  },
 });
 
 const ButtonButton = ({ handleCloseDrawer }) => {
@@ -114,11 +116,17 @@ const ButtonButton = ({ handleCloseDrawer }) => {
               className={classes.buttonItem}
             >
               <Box
-                className={`${classes.button} ${selectedButton === item.name ? classes.selectedButton : ""}`}
+                className={`${classes.button} ${
+                  selectedButton === item.name ? classes.selectedButton : ""
+                }`}
                 onClick={() => handleClick(item.name)}
                 position="relative"
               >
-                <img src={item.img} alt={item.name} className={classes.buttonImage} />
+                <img
+                  src={item.img}
+                  alt={item.name}
+                  className={classes.buttonImage}
+                />
                 {selectedButton === item.name && (
                   <CheckCircleIcon className={classes.checkIcon} />
                 )}
@@ -130,7 +138,7 @@ const ButtonButton = ({ handleCloseDrawer }) => {
           </Grid>
         ))}
       </Grid>
-      
+
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Button className={classes.resetButton} onClick={handleReset}>
           Reset Selection

@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { useMediaQuery } from "react-responsive";
-import { useSetAtom } from "jotai";
-import { openUserDialog } from "../Utils";
-import { 
-  AppBar, 
-  Toolbar, 
-  IconButton, 
-  Box, 
+// import { useSetAtom } from "jotai";
+// import { openUserDialog } from "../Utils";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Box,
   Typography,
   Container,
   Drawer,
   List,
   ListItem,
-  Divider
+  Divider,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
@@ -128,12 +128,12 @@ const useStyles = makeStyles({
     letterSpacing: "0.15em !important",
     textTransform: "uppercase",
     display: "block",
-    padding: "10px 0",
+    padding: "10px 0 10px 50px",
     borderBottom: "1px solid rgba(255,255,255,0.1)",
     transition: "all 0.3s ease",
     "&:hover": {
       color: "#ccc !important",
-      paddingLeft: "5px",
+      paddingLeft: "55px",
     },
   },
   mobileMenuDivider: {
@@ -157,7 +157,7 @@ const NavBar = ({ scrollToTargetSection }) => {
   const isMobile = useMediaQuery({ maxWidth: 960 });
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const setOpenSignUp = useSetAtom(openUserDialog);
+  // const setOpenSignUp = useSetAtom(openUserDialog);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -172,7 +172,11 @@ const NavBar = ({ scrollToTargetSection }) => {
 
   const menuItems = [
     { text: "Home", link: "/", exact: true },
-    { text: "Collections", link: "/#targetSection", action: scrollToTargetSection },
+    {
+      text: "Collections",
+      link: "/#targetSection",
+      action: scrollToTargetSection,
+    },
     { text: "About", link: "/about" },
     { text: "Contact", link: "/contact" },
     { text: "Size Guide", link: "/indexSizes" },
@@ -180,8 +184,16 @@ const NavBar = ({ scrollToTargetSection }) => {
   ];
 
   const menuUser = [
-    { icon: <PermIdentityIcon sx={{ fontSize: "1.2rem" }} />, link: "/account", label: "Account" },
-    { icon: <ShoppingBagIcon sx={{ fontSize: "1.2rem" }} />, link: "/shopping", label: "Shopping Bag" },
+    {
+      icon: <PermIdentityIcon sx={{ fontSize: "1.2rem" }} />,
+      link: "/account",
+      label: "Account",
+    },
+    {
+      icon: <ShoppingBagIcon sx={{ fontSize: "1.2rem" }} />,
+      link: "/shopping",
+      label: "Shopping Bag",
+    },
   ];
 
   useEffect(() => {
@@ -200,11 +212,17 @@ const NavBar = ({ scrollToTargetSection }) => {
 
   return (
     <>
-      <AppBar 
-        className={`${classes.appBar} ${scrolled ? classes.appBarScrolled : ""}`}
+      <AppBar
+        className={`${classes.appBar} ${
+          scrolled ? classes.appBarScrolled : ""
+        }`}
       >
         <Container maxWidth="lg">
-          <Toolbar className={`${classes.toolbar} ${scrolled ? classes.toolbarScrolled : ""}`}>
+          <Toolbar
+            className={`${classes.toolbar} ${
+              scrolled ? classes.toolbarScrolled : ""
+            }`}
+          >
             <Link to="/" className={classes.logo}>
               Suit
             </Link>
@@ -231,7 +249,9 @@ const NavBar = ({ scrollToTargetSection }) => {
                       <Link
                         to={item.link}
                         className={`${classes.navLink} ${
-                          isActive(item.link, item.exact) ? classes.activeLink : ""
+                          isActive(item.link, item.exact)
+                            ? classes.activeLink
+                            : ""
                         }`}
                         onClick={item.action}
                       >
@@ -293,7 +313,11 @@ const NavBar = ({ scrollToTargetSection }) => {
 
         <List className={classes.mobileMenuList}>
           {menuItems.map((item) => (
-            <ListItem key={item.text} className={classes.mobileMenuItem} disablePadding>
+            <ListItem
+              key={item.text}
+              className={classes.mobileMenuItem}
+              disablePadding
+            >
               <Link
                 to={item.link}
                 className={classes.mobileMenuLink}

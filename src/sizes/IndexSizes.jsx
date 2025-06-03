@@ -1,17 +1,17 @@
 import React from "react";
-import TakeSizes from "../components/TakeSizes";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Button, Tooltip, Divider } from "@mui/material";
-import TakeSizes2 from "../components/TakeSize2";
-import TakeSizes3 from "../components/TakeSize3";
-// import { useAtomValue } from "jotai";
-// import { authUserAtom } from "../Utils";
-import TakeSizes4 from "../components/TakeSizes4";
+// import TakeSizes from "../components/TakeSizes";
+// import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+// import { Button, Tooltip, Divider } from "@mui/material";
+// import TakeSizes2 from "../components/TakeSize2";
+// import TakeSizes3 from "../components/TakeSize3";
+import { useMediaQuery } from "@mui/material";
+// import TakeSizes4 from "../components/TakeSizes4";
 import { useNavigate } from "react-router-dom";
 import imgFor from "../assets/takeSizesM.png";
 import imgFor2 from "../assets/takeSizesR.png";
 
 const IndexSizes = () => {
+  const isMobile = useMediaQuery("(max-width:600px)");
   // const [optionOne, setOptionOne] = useState(false);
   // const user = useAtomValue(authUserAtom);
   const navigate = useNavigate();
@@ -24,17 +24,24 @@ const IndexSizes = () => {
           backgroundColor: "#161616",
         }}
       >
-        <h1 style={{ display: "flex", justifyContent: "center", color: "white" }}>
+        <h1
+          style={{ display: "flex", justifyContent: "center", color: "white" }}
+        >
           Choose your plan
         </h1>
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: isMobile ? "block" : "flex",
+            justifyContent: "center",
+          }}
+        >
           <button
             style={{
               backgroundColor: "transparent",
               color: "white",
               borderRadius: "8px",
               border: "1px solid gray",
-              marginRight: "10px",
+              marginRight: isMobile ? "0px" : "10px",
               cursor: "pointer",
             }}
             onClick={() => navigate("/sizes/regular")}
@@ -55,7 +62,8 @@ const IndexSizes = () => {
               color: "white",
               borderRadius: "8px",
               border: "1px solid gray",
-              marginLeft: "10px",
+              marginLeft: isMobile ? "0px" : "10px",
+              marginTop: isMobile ? "10px" : "0px",
             }}
             onClick={() => navigate("/sizes/measure")}
           >

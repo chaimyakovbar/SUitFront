@@ -500,13 +500,13 @@ function Account() {
                     },
                   }}
                 />
-                <Button
+                <button
                   variant="contained"
                   className={classes.smallEditButton}
                   onClick={() => setOpenAddressDialog(true)}
                 >
                   Edit
-                </Button>
+                </button>
               </ListItem>
             )}
             {!user.address && (
@@ -527,13 +527,13 @@ function Account() {
                     },
                   }}
                 />
-                <Button
+                <button
                   variant="contained"
                   className={classes.smallEditButton}
                   onClick={() => setOpenAddressDialog(true)}
                 >
                   Add Address
-                </Button>
+                </button>
               </ListItem>
             )}
             {user.phoneNumber && (
@@ -554,13 +554,13 @@ function Account() {
                     },
                   }}
                 />
-                <Button
+                <button
                   variant="contained"
                   className={classes.smallEditButton}
                   onClick={() => setOpenPhoneDialog(true)}
                 >
                   Edit
-                </Button>
+                </button>
               </ListItem>
             )}
             {!user.phoneNumber && (
@@ -607,23 +607,24 @@ function Account() {
                 Size Profiles
               </Typography>
               <Box>
-                <Button
+                <button
                   variant="contained"
                   style={{ margin: "5px" }}
+       
                   className={classes.editButton}
                   startIcon={<ListAltIcon />}
                   onClick={() => (window.location.href = "/sizes/measure")}
                 >
                   Edit Measurements
-                </Button>
-                <Button
+                </button>
+                <button
                   style={{ margin: "5px" }}
                   variant="contained"
                   className={classes.editButton}
                   onClick={() => setOpenNewProfileDialog(true)}
                 >
                   Add New Profile
-                </Button>
+                </button>
               </Box>
             </Box>
 

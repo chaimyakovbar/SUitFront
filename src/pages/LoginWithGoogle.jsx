@@ -25,12 +25,13 @@ const useStyles = makeStyles({
   },
   container: {
     position: "relative",
+    
   },
   paper: {
+    width: "90%",
     backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-    padding: "2.5rem !important",
+    padding: "1rem !important",
     maxWidth: 500,
-    width: "100%",
     borderRadius: "4px !important",
     textAlign: "center",
     border: "1px solid rgba(192, 211, 202, 0.2) !important",

@@ -385,6 +385,61 @@ function Account() {
     }
   };
 
+  const renderSizesTable = () => {
+    if (!data?.sizesTable) return null;
+
+    const { jacket, pants } = data.sizesTable;
+
+    return (
+      <Paper
+        elevation={3}
+        sx={{
+          p: 3,
+          mb: 3,
+          backgroundColor: "#1a1a1a",
+          color: "#fff",
+          borderRadius: "10px",
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2, color: "#FFD700" }}>
+          Your Saved Sizes
+        </Typography>
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              backgroundColor: "#333",
+              p: 2,
+              borderRadius: "8px",
+              minWidth: "150px",
+            }}
+          >
+            <Typography variant="subtitle2" color="text.secondary">
+              Jacket Size
+            </Typography>
+            <Typography variant="h6" color="#FFD700">
+              {jacket}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              backgroundColor: "#333",
+              p: 2,
+              borderRadius: "8px",
+              minWidth: "150px",
+            }}
+          >
+            <Typography variant="subtitle2" color="text.secondary">
+              Pants Size
+            </Typography>
+            <Typography variant="h6" color="#FFD700">
+              {pants}
+            </Typography>
+          </Box>
+        </Box>
+      </Paper>
+    );
+  };
+
   if (!user) {
     return (
       <Box className={classes.root}>
@@ -405,7 +460,6 @@ function Account() {
         </Typography>
 
         <Paper elevation={0} className={classes.paper}>
-
           <Divider className={classes.divider} />
 
           <List>
@@ -536,7 +590,6 @@ function Account() {
                 </Button>
               </ListItem>
             )}
-
           </List>
 
           <Divider className={classes.divider} />
@@ -582,7 +635,12 @@ function Account() {
                 {sizeProfiles.map((profile) => (
                   <Box
                     key={profile.name}
-                    sx={{ position: "relative", display: "flex", alignItems: "center", gap: 1 }}
+                    sx={{
+                      position: "relative",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
                   >
                     <Button
                       variant={
@@ -667,6 +725,9 @@ function Account() {
               </Box>
             )}
           </Box>
+
+          {/* Display saved sizes */}
+          {renderSizesTable()}
 
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <Button

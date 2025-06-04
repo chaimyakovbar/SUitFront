@@ -47,7 +47,7 @@ export const useAuth = () => {
                 // If user not found in our database, sign out from Firebase
                 await signOut(auth);
                 setUser(null);
-                throw new Error('User not found in our database');
+                throw new Error('User not found in our database', error);
             }
         },
         onError: (error) => {
@@ -79,7 +79,7 @@ export const useAuth = () => {
                 // If user not found in our database, sign out from Firebase
                 await signOut(auth);
                 setUser(null);
-                throw new Error('User not found in our database');
+                throw new Error('User not found in our database', error);
             }
         },
         onError: (error) => {
@@ -112,7 +112,7 @@ export const useAuth = () => {
                 // If user not found in our database, sign out from Firebase
                 await signOut(auth);
                 setUser(null);
-                throw new Error('User not found in our database');
+                throw new Error('User not found in our database', error);
             }
         },
         onError: (error) => {

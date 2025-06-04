@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Button from "@mui/material/Button";
 import Stepper from "@mui/material/Stepper";
 import { useAtom, useAtomValue } from "jotai";
@@ -56,7 +56,7 @@ const steps = [
 const StyledStepper = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  // const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery("(max-width:600px)");
   // const allSuitPart = useAtomValue(allSuitPartAtom);
   const user = useAtomValue(authUserAtom);
   const [counterArray] = useAtom(counterAtom);
@@ -222,13 +222,28 @@ const StyledStepper = () => {
         // width: isMobile ? "77%" :"100%",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+          ...(isMobile && {
+            position: "absolute",
+            top: "350px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1000,
+          }),
+          ...(!isMobile && {
+            mt: 3,
+          }),
+        }}
+      >
         <Button
           disabled={activeStep === 0}
           onClick={handleBack}
           sx={{
             color: "white",
-            border: "2px solid black",
             backgroundColor: "#FF6D00",
             fontSize: "16px",
             fontWeight: "bold",
@@ -245,7 +260,6 @@ const StyledStepper = () => {
             "&:disabled": {
               backgroundColor: "#121212",
               color: "#9E9E9E",
-              border: "2px solid #C0D3CA !important",
               cursor: "not-allowed",
             },
           }}
@@ -282,7 +296,6 @@ const StyledStepper = () => {
             sx={{
               color: "white",
               backgroundColor: "#E65100",
-              border: "2px solid #C0D3CA !important",
               fontSize: "16px",
               fontWeight: "bold",
               px: 4,
@@ -298,7 +311,6 @@ const StyledStepper = () => {
               "&:disabled": {
                 backgroundColor: "#121212",
                 color: "#9E9E9E",
-                border: "2px solid #BDBDBD",
                 cursor: "not-allowed",
               },
             }}

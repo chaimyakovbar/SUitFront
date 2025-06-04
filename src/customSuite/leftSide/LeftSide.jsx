@@ -11,10 +11,8 @@ import StepTree from "./StepTree"
 
 const useStyles = makeStyles({
   root: {
-    position: "absolute",
-    zIndex: 1000,
-    width: (props) => (props.isMobile ? "380px" : "30%"),
-    height: (props) => (props.isMobile ? "25vh" : "63vh"),
+    width: (props) => (props.isMobile ? "100%" : "70%"),
+    height: (props) => (props.isMobile ? "27vh" : "63vh"),
     overflowY: "auto",
     padding: (props) => (props.isMobile ? "10px" : "20px"),
     boxSizing: "border-box",

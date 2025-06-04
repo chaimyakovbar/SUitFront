@@ -7,7 +7,7 @@ import {
   Button,
   Container,
   Grid,
-  // useMediaQuery,
+  useMediaQuery,
   Divider,
   IconButton,
 } from "@mui/material";
@@ -18,7 +18,7 @@ import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
 import NavBar from "./NavBar";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     background: "#0a0a0a",
     color: "#fff",
@@ -52,32 +52,33 @@ const useStyles = makeStyles({
       "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)",
     zIndex: 1,
   },
-  heroContent: {
+  heroContent: (props) => ({
     position: "relative",
     zIndex: 2,
     textAlign: "center",
-    maxWidth: "800px",
+    maxWidth: props.isMobile ? "350px" : "800px",
     padding: "0 20px",
-  },
-  heroTitle: {
+  }),
+  heroTitle: (props) => ({
+    maxWidth: props.isMobile ? "350px" : "800px",
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "4rem !important",
+    fontSize: props.isMobile ? "2.5rem !important" : "4rem !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.15em !important",
+    letterSpacing: props.isMobile ? "0.05em !important" : "0.15em !important",
     marginBottom: "1.5rem !important",
     textTransform: "uppercase",
     lineHeight: "1.2 !important",
-  },
-  heroSubtitle: {
+  }),
+  heroSubtitle: (props) => ({
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.95rem !important",
+    fontSize: props.isMobile ? "0.85rem !important" : "0.95rem !important",
     fontWeight: "300 !important",
     letterSpacing: "0.05em !important",
     marginBottom: "2.5rem !important",
-    maxWidth: "600px",
+    maxWidth: props.isMobile ? "350px" : "600px",
     margin: "0 auto 2.5rem !important",
     lineHeight: "1.8 !important",
-  },
+  }),
   ctaButton: {
     backgroundColor: "transparent !important",
     color: "#fff !important",
@@ -98,7 +99,7 @@ const useStyles = makeStyles({
   scrollDown: {
     position: "absolute",
     bottom: "30px",
-    left: "50%",
+    marginLeft: "30px",
     transform: "translateX(-50%)",
     zIndex: 2,
     color: "#fff",
@@ -203,34 +204,21 @@ const useStyles = makeStyles({
       color: "#000 !important",
     },
   },
-});
+}));
 
 const HomePage2 = () => {
   const targetSectionRef = useRef(null);
   const popularSectionRef = useRef(null);
-  const classes = useStyles();
-    // const isMobile = useMediaQuery("(max-width:600px)");
-    // const isTablet = useMediaQuery("(max-width:960px)");
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const classes = useStyles({ isMobile });
+  // const isTablet = useMediaQuery("(max-width:960px)");
 
-  // useEffect(() => {
-  //   // Add Google Fonts
-  //   const link = document.createElement("link");
-  //   link.rel = "stylesheet";
-  //   link.href =
-  //     "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap";
-  //   document.head.appendChild(link);
-
-  //   return () => {
-  //     document.head.removeChild(link);
-  //   };
-  // }, []);
-
-  // const scrollToSection = (ref) => {
-  //   ref.current.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "start",
-  //   });
-  // };
+  const scrollToSection = (ref) => {
+    ref.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -264,27 +252,32 @@ const HomePage2 = () => {
             unparalleled sophistication.
           </Typography>
 
-          {/* <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}> */}
-            {/* <Button
-              component={Link}
-              to="/customSuit"
-              className={classes.ctaButton}
-            >
-              Design Your Suit
-            </Button> */}
-
-            <Button style={{border: "1px solid #fff", borderRadius: "10px", padding: "12px 35px", fontSize: "0.85rem", fontWeight: "400", letterSpacing: "0.15em", textTransform: "uppercase", transition: "all 0.3s ease", fontFamily: "'Montserrat', sans-serif"}} component={Link} to="/customSuit">
-              <ButtonReactBits
-                text="Design Your Suit"
-                disabled={false}
-                speed={3}
-                className="custom-class"
-              />
-            </Button>
+          <Button
+            style={{
+              border: "1px solid #fff",
+              borderRadius: "10px",
+              padding: "12px 35px",
+              fontSize: "0.85rem",
+              fontWeight: "400",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              transition: "all 0.3s ease",
+              fontFamily: "'Montserrat', sans-serif",
+            }}
+            component={Link}
+            to="/customSuit"
+          >
+            <ButtonReactBits
+              text="Design Your Suit"
+              disabled={false}
+              speed={3}
+              className="custom-class"
+            />
+          </Button>
           {/* </motion.div> */}
         </motion.div>
 
-        {/* <motion.div 
+        <motion.div
           className={classes.scrollDown}
           onClick={() => scrollToSection(popularSectionRef)}
           animate={{ y: [0, 10, 0] }}
@@ -294,7 +287,7 @@ const HomePage2 = () => {
             SCROLL DOWN
           </Typography>
           <KeyboardArrowDownIcon fontSize="small" />
-        </motion.div> */}
+        </motion.div>
       </section>
 
       <Divider className={classes.divider} />

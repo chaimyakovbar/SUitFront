@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { counterAtom, currentColorAtom } from "../../Utils";
 import { useMediaQuery } from "@mui/material";
 import { motion } from "framer-motion";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
@@ -89,6 +89,7 @@ const StepOne = () => {
           >
             <Box
               sx={{
+                width: "100%",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

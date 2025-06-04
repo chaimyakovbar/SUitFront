@@ -11,8 +11,8 @@ const axiosInstance = axios.create({
     },
 });
 
-export const postProduct = async ({ email, sizes }) => {
-    return axiosInstance.post("/product", { email, sizes });
+export const postProduct = async ({ email, sizes, sizesTable }) => {
+    return axiosInstance.post("/product", { email, sizes, sizesTable });
 };
 
 export const postSuitProduct = async ({ email, allSuitPart }) => {
@@ -23,8 +23,8 @@ export const postSuitProduct = async ({ email, allSuitPart }) => {
     return response.data; // This will include the suits with their IDs
 };
 
-export const getAllProducts = async () => {
-    return axiosInstance.get("/product");
+export const getAllProducts = async (email) => {
+    return axiosInstance.get(`/product?email=${email}`);
 };
 
 export const deleteSuit = async (suitId) => {

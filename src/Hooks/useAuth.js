@@ -5,16 +5,46 @@ import { useAtom } from 'jotai';
 import { authUserAtom } from '../Utils';
 import axios from 'axios';
 
-const baseURL = "http://localhost:3020";
-// const baseURL = "https://suitback.onrender.com";
+// Production URL
+const baseURL = "https://suitback.onrender.com";
 
+// Create axios instance with proper configuration
 const axiosInstance = axios.create({
     baseURL,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
-    },
+        "Accept": "application/json"
+    }
 });
+
+// Add request interceptor for debugging
+axiosInstance.interceptors.request.use(
+    (config) => {
+        console.log('Making request to:', config.baseURL + config.url);
+        return config;
+    },
+    (error) => {
+        console.error('Request error:', error);
+        return Promise.reject(error);
+    }
+);
+
+// Add response interceptor for debugging
+axiosInstance.interceptors.response.use(
+    (response) => {
+        console.log('Response received:', response.status);
+        return response;
+    },
+    (error) => {
+        console.error('Response error:', {
+            status: error.response?.status,
+            data: error.response?.data,
+            config: error.config
+        });
+        return Promise.reject(error);
+    }
+);
 
 export const useAuth = () => {
     const [user, setUser] = useAtom(authUserAtom);
@@ -32,22 +62,29 @@ export const useAuth = () => {
         },
         onSuccess: async (firebaseUser) => {
             try {
+                console.log('Firebase auth successful, user:', firebaseUser.email);
                 // Send email to our webhook
                 const response = await axiosInstance.post('/user/auth-webhook', {
                     email: firebaseUser.email
                 });
+                console.log('Webhook response:', response.data);
 
                 if (!response.data.success) {
-                    throw new Error(response.data.message);
+                    throw new Error(response.data.message || 'Authentication failed');
                 }
 
                 // Store the user data from our database
                 setUser(response.data.user);
             } catch (error) {
+                console.error('Detailed auth error:', {
+                    message: error.message,
+                    response: error.response?.data,
+                    status: error.response?.status
+                });
                 // If user not found in our database, sign out from Firebase
                 await signOut(auth);
                 setUser(null);
-                throw new Error('User not found in our database', error);
+                throw new Error(error.response?.data?.message || 'User not found in our database');
             }
         },
         onError: (error) => {

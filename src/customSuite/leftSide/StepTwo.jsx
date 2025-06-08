@@ -271,16 +271,16 @@ function StepTwo() {
       </Typography>
       <Box className={classes.optionsContainer}>
         <Button
-          disabled={!selectedKindPucket}
+          disabled={selectedKindPucket}
           className={classes.pocketButton}
-          onClick={() => handelClickPucket("packetSide")}
+          onClick={() => handelClickPucket("packetBottom")}
         >
           straight
         </Button>
         <Button
-          disabled={selectedKindPucket}
+          disabled={!selectedKindPucket}
           className={classes.pocketButton}
-          onClick={() => handelClickPucket("packetBottom")}
+          onClick={() => handelClickPucket("packetSide")}
         >
           crooked
         </Button>

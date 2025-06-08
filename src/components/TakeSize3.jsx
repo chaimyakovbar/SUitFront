@@ -606,15 +606,26 @@ const DollDisplay = () => {
         </div>
 
         <Drawer
-          style={{ zIndex: 20001 }}
+          style={{ zIndex: 20001, width: isMobile ? "80%" : "400px" }}
           anchor="right"
           open={sideDrawerOpen}
           onClose={toggleSideDrawer}
         >
-          <Box sx={{ width: 400, p: 3, backgroundColor: "#f5f5f5" }}>
+          <Box
+            sx={{
+              width: isMobile ? "270px" : "400px",
+              p: isMobile ? 1 : 3,
+              backgroundColor: "#f5f5f5",
+            }}
+          >
             <Typography
               variant="h5"
-              sx={{ mb: 3, textAlign: "center", fontWeight: "bold" }}
+              sx={{
+                mb: isMobile ? 1 : 3,
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: isMobile ? "1.2rem" : "1.5rem",
+              }}
             >
               כל המידות
             </Typography>
@@ -623,10 +634,10 @@ const DollDisplay = () => {
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 2,
+                gap: isMobile ? 1 : 2,
                 maxHeight: "80vh",
                 overflowY: "auto",
-                padding: "10px",
+                padding: isMobile ? "5px" : "10px",
               }}
             >
               {bodyPoints.map((point) => {
@@ -642,7 +653,7 @@ const DollDisplay = () => {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      p: 2,
+                      p: isMobile ? 1 : 2,
                       borderRadius: 2,
                       bgcolor: isCompleted
                         ? "rgba(76, 175, 80, 0.1)"
@@ -660,7 +671,11 @@ const DollDisplay = () => {
                   >
                     <Typography
                       variant="subtitle1"
-                      sx={{ mb: 1, fontWeight: "bold" }}
+                      sx={{
+                        mb: isMobile ? 0.5 : 1,
+                        fontWeight: "bold",
+                        fontSize: isMobile ? "0.9rem" : "1rem",
+                      }}
                     >
                       {point.label}
                     </Typography>
@@ -673,14 +688,22 @@ const DollDisplay = () => {
                           handleSizeChange(point.category, e.target.value)
                         }
                         sx={{
-                          width: "100px",
+                          width: isMobile ? "80px" : "100px",
                           "& .MuiOutlinedInput-root": {
                             backgroundColor: "white",
+                            height: isMobile ? "32px" : "40px",
                           },
                         }}
                         InputProps={{
                           endAdornment: (
-                            <Typography variant="body2">cm</Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: isMobile ? "0.75rem" : "0.875rem",
+                              }}
+                            >
+                              cm
+                            </Typography>
                           ),
                         }}
                       />
@@ -695,12 +718,12 @@ const DollDisplay = () => {
 
             <Box
               sx={{
-                mt: 3,
+                mt: isMobile ? 1 : 3,
                 display: "flex",
                 justifyContent: "center",
-                gap: 2,
+                gap: isMobile ? 1 : 2,
                 borderTop: "1px solid #ddd",
-                paddingTop: 2,
+                paddingTop: isMobile ? 1 : 2,
               }}
             >
               <Button
@@ -709,9 +732,9 @@ const DollDisplay = () => {
                 fullWidth
                 onClick={handleSubmit}
                 sx={{
-                  py: 1.5,
+                  py: isMobile ? 1 : 1.5,
                   fontWeight: "bold",
-                  fontSize: "1.1rem",
+                  fontSize: isMobile ? "0.9rem" : "1.1rem",
                 }}
               >
                 שמור את כל המידות

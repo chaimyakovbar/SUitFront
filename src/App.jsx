@@ -72,8 +72,8 @@ const App = () => {
                 <IndexCustomSuit />
               ) : (
                 <Navigate
-                to="/login"
-                state={{ from: { pathname: "/customSuit" } }}
+                  to="/login"
+                  state={{ from: { pathname: "/customSuit" } }}
                 />
               )
             }

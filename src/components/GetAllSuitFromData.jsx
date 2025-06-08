@@ -131,6 +131,19 @@ const useStyles = makeStyles({
     fontSize: "0.9rem",
     letterSpacing: "0.1em",
   },
+  deleteLoadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1001,
+  },
 });
 
 // Extracted to separate function with added caching mechanism
@@ -274,6 +287,7 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
   const classes = useStyles();
   const { data, isLoading: productLoading, error } = useProduct();
   const allSuits = useMemo(() => data?.allSuitPart || [], [data?.allSuitPart]);
+  const [deletingSuitId, setDeletingSuitId] = useState(null);
   console.log("Received suits data:", allSuits); // Debug log
 
   // Use parent's selectedSuits if provided
@@ -350,9 +364,16 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
       return;
     }
     try {
-      await deleteMutation.mutateAsync(suitId);
+      setDeletingSuitId(suitId);
+      // Start both the deletion and delay in parallel
+      await Promise.all([
+        deleteMutation.mutateAsync(suitId),
+        new Promise((resolve) => setTimeout(resolve, 500)),
+      ]);
     } catch (error) {
       console.error("Failed to delete suit:", error);
+    } finally {
+      setDeletingSuitId(null);
     }
   };
 
@@ -393,6 +414,18 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
       <div className={classes.cardsContainer}>
         {allSuits.map((item, index) => (
           <div key={`suit-${item._id}`} className={classes.card}>
+            {deletingSuitId === item._id && (
+              <div className={classes.deleteLoadingOverlay}>
+                <CircularProgress
+                  color="inherit"
+                  size={24}
+                  style={{ marginBottom: "1rem" }}
+                />
+                <Typography style={{ color: "#fff" }}>
+                  Deleting suit...
+                </Typography>
+              </div>
+            )}
             {imagesData?.[index] &&
               Object.entries(imagesData[index])
                 .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
@@ -420,7 +453,11 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
                   className={classes.deleteButton}
                   disabled={deleteMutation.isLoading}
                 >
-                  <DeleteIcon />
+                  {deleteMutation.isLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    <DeleteIcon />
+                  )}
                 </button>
               </div>
             </div>

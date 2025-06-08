@@ -12,6 +12,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import GetAllSuitFromDat from "../components/GetAllSuitFromData";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -20,6 +24,7 @@ import useProduct from "../Hooks/useProduct";
 import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 import { makeStyles } from "@mui/styles";
+import { useMediaQuery } from "@mui/material";
 // import HaveUser from "../components/HaveUser";
 
 const useStyles = makeStyles({
@@ -169,6 +174,8 @@ const useStyles = makeStyles({
     },
   },
   dialog: {
+    width: (props) => (props.isMobile ? "100% !important" : "100% !important"),
+    height: (props) => (props.isMobile ? "80% !important" : "100% !important"),
     "& .MuiDialog-paper": {
       backgroundColor: "#202020 !important",
       color: "#fff !important",
@@ -187,7 +194,8 @@ const useStyles = makeStyles({
 });
 
 const Payed = () => {
-  const classes = useStyles();
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const classes = useStyles({ isMobile });
   const navigate = useNavigate();
   const { data: products } = useProduct();
   const [user] = useAtom(authUserAtom);
@@ -202,6 +210,39 @@ const Payed = () => {
   });
   const [shippingCost, setShippingCost] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [sizeProfiles, setSizeProfiles] = useState([]);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [profileType, setProfileType] = useState("regular"); // 'regular' or 'sizesTable'
+  const [hasSizesTable, setHasSizesTable] = useState(false);
+
+  // Initialize profiles from data
+  useEffect(() => {
+    if (products?.sizes) {
+      // Check for sizesTable
+      if (products.sizesTable) {
+        setHasSizesTable(true);
+      }
+
+      const profiles = Object.entries(products.sizes).reduce(
+        (acc, [key, value]) => {
+          if (key.startsWith("profile_")) {
+            const profileName = key.replace("profile_", "");
+            acc.push({
+              name: profileName,
+              sizes: value || {},
+            });
+          }
+          return acc;
+        },
+        []
+      );
+
+      setSizeProfiles(profiles);
+      if (profiles.length > 0 && !selectedProfile) {
+        setSelectedProfile(profiles[0]);
+      }
+    }
+  }, [products]);
 
   // Automatically select all suits when entering the payment page
   useEffect(() => {
@@ -366,26 +407,145 @@ const Payed = () => {
               </Box>
 
               <Divider className={classes.divider} />
-
-              <Box className={classes.totalRow}>
-                <Typography className={classes.totalText}>
-                  Subtotal (VAT incl.)
-                </Typography>
-                <Typography className={classes.totalPrice}>
-                  {totalPrice}€
-                </Typography>
-              </Box>
             </Box>
-
             <Box>
-              <Box className={classes.profileSection}>
-                <Typography className={classes.profileTitle}>
-                  Your body profile
+              <Box sx={{ mb: 3 }}>
+                <div>
+                  <Typography className={classes.shippingTitle}>
+                    Select Size Profile Type
+                  </Typography>
+                  <Link to="/IndexSizes" className={classes.editLink}>
+                    Edit
+                  </Link>
+                </div>
+
+                <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                  <Button
+                    onClick={() => setProfileType("regular")}
+                    className={`${classes.shippingButton} ${
+                      profileType === "regular"
+                        ? classes.shippingButtonSelected
+                        : ""
+                    }`}
+                  >
+                    Regular Profile
+                  </Button>
+                  {hasSizesTable && (
+                    <Button
+                      onClick={() => setProfileType("sizesTable")}
+                      className={`${classes.shippingButton} ${
+                        profileType === "sizesTable"
+                          ? classes.shippingButtonSelected
+                          : ""
+                      }`}
+                    >
+                      Size Table
+                    </Button>
+                  )}
+                </Box>
+
+                {profileType === "regular" && (
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <Select
+                      value={selectedProfile?.name || ""}
+                      onChange={(e) => {
+                        const profile = sizeProfiles.find(
+                          (p) => p.name === e.target.value
+                        );
+                        setSelectedProfile(profile);
+                      }}
+                      sx={{
+                        color: "#fff",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "rgba(255, 255, 255, 0.3)",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "rgba(255, 255, 255, 0.5)",
+                        },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "#fff",
+                        },
+                      }}
+                    >
+                      {sizeProfiles.map((profile) => (
+                        <MenuItem key={profile.name} value={profile.name}>
+                          {profile.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+
+                {profileType === "sizesTable" && products?.sizesTable && (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography sx={{ color: "#fff", mb: 1 }}>
+                      Jacket Size: {products.sizesTable.jacket}
+                    </Typography>
+                    <Typography sx={{ color: "#fff" }}>
+                      Pants Size: {products.sizesTable.pants}
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+              <Box className={classes.profileSection}></Box>
+
+              {/* Contact Information */}
+              <Box sx={{ mt: 3 }}>
+                <Typography className={classes.shippingTitle}>
+                  Contact Information
                 </Typography>
-                <Link to="/IndexSizes" className={classes.editLink}>
-                  Edit
+                {user?.address ? (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography
+                      sx={{ color: "#fff", fontSize: "0.9rem", mb: 0.5 }}
+                    >
+                      Address:
+                    </Typography>
+                    <Typography sx={{ color: "#aaa", fontSize: "0.85rem" }}>
+                      {user.address}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography sx={{ color: "#ef5350", fontSize: "0.9rem" }}>
+                      Missing address, please add your address in your account
+                      settings
+                    </Typography>
+                  </Box>
+                )}
+
+                {user?.phoneNumber ? (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography
+                      sx={{ color: "#fff", fontSize: "0.9rem", mb: 0.5 }}
+                    >
+                      Phone:
+                    </Typography>
+                    <Typography sx={{ color: "#aaa", fontSize: "0.85rem" }}>
+                      {user.phoneNumber}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography sx={{ color: "#ef5350", fontSize: "0.9rem" }}>
+                      Missing phone number, please add your phone in your
+                      account settings
+                    </Typography>
+                  </Box>
+                )}
+
+                <Link to="/account" className={classes.editLink}>
+                  Edit Contact Information
                 </Link>
               </Box>
+            </Box>
+            <Box className={classes.totalRow}>
+              <Typography className={classes.totalText}>
+                Subtotal (VAT incl.)
+              </Typography>
+              <Typography className={classes.totalPrice}>
+                {totalPrice}€
+              </Typography>
             </Box>
           </Stack>
         </Paper>
@@ -393,7 +553,7 @@ const Payed = () => {
         <Button
           variant="outlined"
           onClick={handlePayment}
-          disabled={isProcessing}
+          disabled={isProcessing || !selectedProfile}
           className={classes.paymentButton}
         >
           {isProcessing ? "Processing..." : "Continue to Payment"}

@@ -610,7 +610,6 @@ function Account() {
                 <button
                   variant="contained"
                   style={{ margin: "5px" }}
-       
                   className={classes.editButton}
                   startIcon={<ListAltIcon />}
                   onClick={() => (window.location.href = "/sizes/measure")}

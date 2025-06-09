@@ -25,7 +25,6 @@ const useStyles = makeStyles({
   },
   container: {
     position: "relative",
-    
   },
   paper: {
     width: "90%",
@@ -181,7 +180,26 @@ const LoginWithGoogle = () => {
 
   const handleGoogleAuth = async (isNewUser = false) => {
     try {
-      await googleSignIn.mutateAsync({ isNewUser });
+      const user = await googleSignIn.mutateAsync({ isNewUser });
+
+      // Send user data to backend
+      const response = await fetch("http://localhost:3020/user/auth-webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: user.email,
+          name: user.displayName,
+          firebaseUid: user.uid,
+          // Add any additional user data from Google auth
+          photoURL: user.photoURL,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to sync user data with backend");
+      }
+
       const redirectPath = getRedirectPath();
       navigate(redirectPath, { replace: true });
     } catch (error) {

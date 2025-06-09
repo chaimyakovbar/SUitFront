@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAtom } from "jotai";
 import { motion } from "framer-motion";
-import { Box, Typography, Button, Divider } from "@mui/material";
+import { Box, Typography, Button, Divider, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
@@ -16,7 +16,8 @@ import wide from "/assets/kinds/wide.png";
 import slim from "/assets/kinds/slim.png";
 import standard from "/assets/kinds/standard.png";
 import kind1Img from "/assets/kinds/kind1.png";
-import kind2Img from "/assets/kinds/kind2.2.png";
+// import kind2Img from "/assets/kinds/kind2.2.png";
+import kind2Img from "/assets/kinds/kind2.png";
 import kind3Img from "/assets/kinds/kind3.png";
 import kind4Img from "/assets/kinds/kind4.png";
 import collarTight from "/assets/kinds/collarTight.png";
@@ -50,7 +51,7 @@ const useStyles = makeStyles({
     backgroundColor: "rgba(30, 30, 30, 0.6) !important",
     border: "1px solid rgba(192, 211, 202, 0.2) !important",
     borderRadius: "4px !important",
-    padding: "8px !important",
+    padding: "1px !important",
     position: "relative",
     transition: "all 0.3s ease !important",
     "&:hover": {
@@ -65,8 +66,8 @@ const useStyles = makeStyles({
   },
   optionImage: {
     color: "white",
-    height: "100px",
-    width: "120px",
+    width: (props) => (props.isMobile ? "65px" : "100px"),
+    height: (props) => (props.isMobile ? "65px" : "120px"),
     objectFit: "contain",
     filter:
       "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
@@ -92,7 +93,7 @@ const useStyles = makeStyles({
     borderRadius: "4px !important",
     padding: "8px 16px !important",
     margin: "10px",
-    color: "#C0D3CA",
+    color: "rgb(193 211 201) !important",
     fontFamily: "'Montserrat', sans-serif !important",
     fontSize: "0.9rem !important",
     transition: "all 0.3s ease !important",
@@ -103,14 +104,15 @@ const useStyles = makeStyles({
     },
     "&:disabled": {
       backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-      color: "#9E9E9E",
+      color: "grey !important",
       cursor: "not-allowed",
     },
   },
 });
 
 function StepTwo() {
-  const classes = useStyles();
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const classes = useStyles({ isMobile });
   const [selectedKind, setSelectedKind] = useState(null);
   const [selectedKindPucket, setSelectedKindPucket] = useState(false);
   const [, setKindColor] = useAtom(currentKindAtom);

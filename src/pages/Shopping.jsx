@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HaveUser from "../components/HaveUser";
 // import { authUserAtom } from "../Utils";
 // import { useAtom } from "jotai";
@@ -27,6 +27,15 @@ const useStyles = makeStyles({
     flexWrap: "wrap",
     gap: "20px",
     marginBottom: "40px",
+    position: "sticky",
+    top: "60px",
+    zIndex: 100,
+    backgroundColor: "#0a0a0a",
+    padding: "20px 0",
+    transition: "background-color 0.3s ease",
+  },
+  headerScrolled: {
+    backgroundColor: "transparent",
   },
   mainContent: {
     flex: 1,
@@ -68,7 +77,18 @@ const Shopping = () => {
   // const [user] = useAtom(authUserAtom);
   const classes = useStyles();
   const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { data } = useProduct();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 60);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleSideDrawer = () => {
     setSideDrawerOpen(!sideDrawerOpen);
@@ -79,7 +99,11 @@ const Shopping = () => {
   return (
     <Box className={classes.root}>
       <Container maxWidth="lg" className={classes.container}>
-        <Box className={classes.header}>
+        <Box
+          className={`${classes.header} ${
+            isScrolled ? classes.headerScrolled : ""
+          }`}
+        >
           <Link to="/Payed" style={{ textDecoration: "none" }}>
             <Button variant="outlined" className={classes.button}>
               for payment
@@ -89,14 +113,6 @@ const Shopping = () => {
 
         <Box className={classes.mainContent}>
           <GetAllSuitFromData />
-        </Box>
-
-        <Box className={classes.footer}>
-          <Link to="/Payed" style={{ textDecoration: "none" }}>
-            <Button variant="outlined" className={classes.button}>
-              for payment
-            </Button>
-          </Link>
         </Box>
 
         <Drawer

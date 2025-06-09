@@ -184,7 +184,7 @@ const ImageFilterComponent = () => {
         style={{
           position: "absolute",
           right: 10,
-          bottom: 0,
+          top: 65,
           backgroundColor: "rgba(0, 0, 0, 0.7)",
           color: "white",
           padding: "8px 16px",

@@ -63,65 +63,51 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
   categoryBox: {
-    backgroundColor: "rgba(30, 30, 30, 0.6)",
-    borderRadius: "8px",
-    border: "1px solid rgba(192, 211, 202, 0.3)",
-    width: "50px",
-    height: "30px",
-    padding: "8px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    height: "100%",
+    minHeight: "20px",
+    backgroundColor: "rgba(20, 20, 20, 0.8) !important",
+    border: "1px solid rgba(192, 211, 202, 0.2)",
+    backdropFilter: "blur(8px)",
     transition: "all 0.3s ease",
-    cursor: "pointer",
     "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.2)",
-      transform: "translateY(-3px)",
-    },
-    "@media (max-width:600px)": {
-      width: "60px",
-      height: "60px",
-      padding: "5px",
+      transform: "translateY(-4px)",
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+      border: "1px solid rgba(192, 211, 202, 0.4)",
     },
   },
   selectedCategory: {
-    backgroundColor: "rgba(192, 211, 202, 0.2)",
-    border: "1px solid rgba(192, 211, 202, 0.6)",
-    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
+    border: "1px solid rgba(192, 211, 202, 0.6) !important",
+    boxShadow: "0 8px 24px rgba(192, 211, 202, 0.15) !important",
   },
   categoryImage: {
-    width: "45px",
-    height: "45px",
-    objectFit: "contain",
+    width: (props) => (props.isMobile ? "70%" : "60px") + " !important",
+    height: (props) => (props.isMobile ? "auto" : "60px") + " !important",
+    objectFit: "contain !important",
     filter:
       "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
     opacity: 0.9,
-    "@media (max-width:600px)": {
-      width: "35px",
-      height: "35px",
-    },
+    marginBottom: "16px !important",
+    transition: "all 0.3s ease",
   },
-  categoryTitle: {
+  categoryLabel: {
+    color: "#C0D3CA !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.7rem !important",
-    fontWeight: "400 !important",
-    color: "#e0e0e0 !important",
+    fontSize: "0.9rem !important",
+    fontWeight: "500 !important",
+    letterSpacing: "0.02em !important",
     textAlign: "center",
-    marginTop: "5px",
-    "@media (max-width:600px)": {
-      fontSize: "0.7rem !important",
-    },
+    marginTop: "8px !important",
   },
   checkIcon: {
-    position: "absolute",
-    top: "-8px",
-    right: "-8px",
-    color: "#C0D3CA",
-    backgroundColor: "#0a0a0a",
-    borderRadius: "50%",
-    padding: "2px",
-    fontSize: "10px",
+    position: "absolute !important",
+    top: "12px !important",
+    right: "12px !important",
+    color: "#C0D3CA !important",
+    backgroundColor: "rgba(10, 10, 10, 0.8) !important",
+    borderRadius: "50% !important",
+    padding: "4px !important",
+    fontSize: "20px !important",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2) !important",
   },
   drawerPaper: {
     backgroundColor: "#0a0a0a !important",
@@ -157,7 +143,7 @@ const useStyles = makeStyles({
 
 const StepTree = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
-  const classes = useStyles();
+  const classes = useStyles({ isMobile });
   //   const [currentIndex] = useAtom(currentIndexAtom);
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -200,16 +186,39 @@ const StepTree = () => {
       className={classes.root}
     >
       <Typography
-        // variant="h2"
-        // className={classes.title}
-        style={{ fontSize: "1rem", marginBottom: "1.5rem", marginTop: "-80px" }}
+        style={{
+          fontSize: "1.2rem",
+          marginBottom: "2rem",
+          marginTop: "-80px",
+          color: "#C0D3CA",
+          fontFamily: "'Cormorant Garamond', serif",
+          fontWeight: 300,
+          letterSpacing: "0.05em",
+        }}
       >
         Finishing Details
       </Typography>
 
-      <Grid container spacing={2}>
+      <Grid
+        container
+        spacing={isMobile ? 1 : 3}
+        sx={{
+          maxWidth: isMobile ? "100%" : "1200px",
+          margin: "0 auto",
+          padding: isMobile ? "0 8px" : "0 24px",
+        }}
+      >
         {categories.map(({ key, label, image }) => (
-          <Grid item xs={6} key={key}>
+          <Grid
+            item
+            xs={6}
+            sm={4}
+            md={3}
+            key={key}
+            sx={{
+              padding: isMobile ? "4px" : "12px",
+            }}
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -223,18 +232,47 @@ const StepTree = () => {
                   selectedCategory === key ? classes.selectedCategory : ""
                 }`}
                 onClick={() => handleClick(key, label)}
-                position="relative"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: isMobile ? "12px 8px" : "24px 16px",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  height: isMobile ? "100px" : "auto",
+                  minHeight: isMobile ? "100px" : "auto",
+                }}
               >
-                <Typography className={classes.categoryTitle}>
-                  {label}
-                </Typography>
                 <img
                   src={image}
                   alt={label}
                   className={classes.categoryImage}
+                  style={{
+                    width: isMobile ? "45%" : "120px",
+                    height: isMobile ? "auto" : "120px",
+                    marginBottom: isMobile ? "8px" : "16px",
+                  }}
                 />
+                <Typography
+                  className={classes.categoryLabel}
+                  style={{
+                    fontSize: isMobile ? "0.7rem" : "0.9rem",
+                    marginTop: isMobile ? "4px" : "8px",
+                  }}
+                >
+                  {label}
+                </Typography>
                 {selectedCategory === key && (
-                  <CheckCircleIcon className={classes.checkIcon} />
+                  <CheckCircleIcon
+                    className={classes.checkIcon}
+                    style={{
+                      fontSize: isMobile ? "16px" : "20px",
+                      top: isMobile ? "6px" : "12px",
+                      right: isMobile ? "6px" : "12px",
+                      padding: isMobile ? "2px" : "4px",
+                    }}
+                  />
                 )}
               </Box>
             </motion.div>
@@ -249,7 +287,7 @@ const StepTree = () => {
         PaperProps={{
           className: classes.drawerPaper,
           sx: {
-            width: isMobile ? "90%" : "350px",
+            width: isMobile ? "60%" : "350px",
           },
         }}
       >

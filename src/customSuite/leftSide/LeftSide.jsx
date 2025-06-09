@@ -1,17 +1,20 @@
 import React from "react";
-import StepOne from "./StepOne"
-import StepTwo from "./StepTwo"
-import { useAtom } from "jotai"
-import { currentIndexAtom } from "../../Utils"
-import { useMediaQuery } from "@mui/material"
-import { motion } from "framer-motion"
-import { Box, Paper, Typography } from "@mui/material"
-import { makeStyles } from "@mui/styles"
-import StepTree from "./StepTree"
+import StepOne from "./StepOne";
+import StepTwo from "./StepTwo";
+import { useAtom } from "jotai";
+import { currentIndexAtom } from "../../Utils";
+import { useMediaQuery } from "@mui/material";
+import { motion } from "framer-motion";
+import { Box, Paper, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import StepTree from "./StepTree";
 
 const useStyles = makeStyles({
   root: {
-    width: (props) => (props.isMobile ? "100%" : "70%"),
+    position: (props) => (props.isMobile ? "absolute" : "relative"),
+    bottom: (props) => (props.isMobile ? "-105px" : "0"),
+    zIndex: 1000,
+    width: (props) => (props.isMobile ? "90%" : "500px"),
     height: (props) => (props.isMobile ? "27vh" : "63vh"),
     overflowY: "auto",
     padding: (props) => (props.isMobile ? "10px" : "20px"),
@@ -62,7 +65,7 @@ const LeftSide = () => {
       className={classes.root}
     >
       <Typography variant="h2" className={classes.title}>
-        {currentIndex === 0 ? "Select Fabric" : "Customize Style"}
+        {currentIndex === 0 ? "Select Fabric" : ""}
       </Typography>
 
       {currentIndex === 0 && <StepOne />}

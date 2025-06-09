@@ -7,7 +7,7 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles({
   root: {
     position: "relative",
-    marginLeft: props => props.isMobile ? '0%' : '36%',
+    marginLeft: props => props.isMobile ? '0%' : '0%',
     marginRight: props => props.isMobile ? '12%' : '0%',
     transition: "all 0.3s ease",
   },

@@ -16,6 +16,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Fade,
 } from "@mui/material";
 import GetAllSuitFromDat from "../components/GetAllSuitFromData";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -25,101 +26,117 @@ import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 import { makeStyles } from "@mui/styles";
 import { useMediaQuery } from "@mui/material";
-// import HaveUser from "../components/HaveUser";
+import PaymentDialog from "../components/Payment/PaymentDialog";
+import { postSuitProduct } from "../api/suit";
 
 const useStyles = makeStyles({
   root: {
     backgroundColor: "#0a0a0a",
     color: "#fff",
     minHeight: "100vh",
-    paddingTop: "120px",
+    paddingTop: "80px",
     paddingBottom: "80px",
+    transition: "all 0.3s ease",
   },
   container: {
     position: "relative",
+    maxWidth: "1000px !important",
   },
   paper: {
     backgroundColor: "#202020 !important",
     color: "#fff !important",
     border: "1px solid rgba(255,255,255,0.1) !important",
-    borderRadius: "0 !important",
-    padding: "2rem !important",
+    borderRadius: "4px !important",
+    padding: "3rem !important",
+    transition: "all 0.3s ease",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.2) !important",
+    "&:hover": {
+      boxShadow: "0 6px 24px rgba(0,0,0,0.3) !important",
+    },
   },
   title: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "2.8rem !important",
+    fontSize: "2.4rem !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
-    marginBottom: "2rem !important",
+    letterSpacing: "0.12em !important",
+    marginBottom: "1.5rem !important",
     textTransform: "uppercase",
+    transition: "all 0.3s ease",
   },
   subtitle: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.95rem !important",
+    fontSize: "0.9rem !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.05em !important",
+    letterSpacing: "0.08em !important",
     color: "#aaa !important",
+    marginBottom: "0.5rem !important",
   },
   price: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "2rem !important",
+    fontSize: "2.2rem !important",
     fontWeight: "300 !important",
     letterSpacing: "0.05em !important",
     color: "#fff !important",
+    marginBottom: "2rem !important",
   },
   shippingTitle: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "1rem !important",
-    fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    fontSize: "0.95rem !important",
+    fontWeight: "400 !important",
+    letterSpacing: "0.12em !important",
     textTransform: "uppercase",
     color: "#fff !important",
-    marginBottom: "1rem !important",
+    marginBottom: "1.2rem !important",
   },
   shippingButton: {
     backgroundColor: "transparent !important",
     color: "#fff !important",
-    border: "1px solid rgba(255,255,255,0.3) !important",
-    padding: "8px 16px !important",
-    fontSize: "0.85rem !important",
-    borderRadius: "0 !important",
+    border: "1px solid rgba(255,255,255,0.2) !important",
+    padding: "10px 20px !important",
+    fontSize: "0.8rem !important",
+    borderRadius: "2px !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    letterSpacing: "0.12em !important",
     textTransform: "uppercase !important",
     transition: "all 0.3s ease !important",
     fontFamily: "'Montserrat', sans-serif !important",
     marginRight: "1rem !important",
+    marginBottom: "0.5rem !important",
     "&:hover": {
       backgroundColor: "rgba(255,255,255,0.1) !important",
-      border: "1px solid rgba(255,255,255,0.5) !important",
+      border: "1px solid rgba(255,255,255,0.4) !important",
+      transform: "translateY(-1px)",
     },
   },
   shippingButtonSelected: {
     backgroundColor: "#fff !important",
     color: "#000 !important",
     border: "1px solid #fff !important",
+    boxShadow: "0 2px 8px rgba(255,255,255,0.2) !important",
   },
   divider: {
     backgroundColor: "rgba(255,255,255,0.1) !important",
-    margin: "2rem 0 !important",
+    margin: "2.5rem 0 !important",
   },
   totalRow: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "1rem",
+    marginBottom: "1.5rem",
+    padding: "1rem 0",
+    borderTop: "1px solid rgba(255,255,255,0.1)",
   },
   totalText: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "1rem !important",
-    fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    fontSize: "0.9rem !important",
+    fontWeight: "400 !important",
+    letterSpacing: "0.12em !important",
     textTransform: "uppercase",
     color: "#fff !important",
   },
   totalPrice: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "1.5rem !important",
+    fontSize: "1.8rem !important",
     fontWeight: "300 !important",
     letterSpacing: "0.05em !important",
     color: "#fff !important",
@@ -128,68 +145,102 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "1rem",
+    marginBottom: "1.5rem",
   },
   profileTitle: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "1rem !important",
-    fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    fontSize: "0.95rem !important",
+    fontWeight: "400 !important",
+    letterSpacing: "0.12em !important",
     textTransform: "uppercase",
     color: "#fff !important",
   },
   editLink: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.85rem !important",
+    fontSize: "0.8rem !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    letterSpacing: "0.12em !important",
     color: "#aaa !important",
     textDecoration: "none !important",
-    transition: "color 0.3s ease !important",
+    transition: "all 0.3s ease !important",
     "&:hover": {
       color: "#fff !important",
+      transform: "translateX(2px)",
     },
   },
   paymentButton: {
     backgroundColor: "transparent !important",
     color: "#fff !important",
     border: "1px solid #fff !important",
-    padding: "12px 35px !important",
+    padding: "14px 40px !important",
     fontSize: "0.85rem !important",
-    borderRadius: "0 !important",
+    borderRadius: "2px !important",
     fontWeight: "300 !important",
     letterSpacing: "0.15em !important",
     textTransform: "uppercase !important",
     transition: "all 0.3s ease !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    marginTop: "2rem !important",
+    marginTop: "2.5rem !important",
+    width: "100% !important",
     "&:hover": {
       backgroundColor: "#fff !important",
       color: "#000 !important",
+      transform: "translateY(-2px)",
+      boxShadow: "0 4px 12px rgba(255,255,255,0.2) !important",
     },
     "&:disabled": {
-      backgroundColor: "rgba(255,255,255,0.1) !important",
-      border: "1px solid rgba(255,255,255,0.3) !important",
-      color: "rgba(255,255,255,0.5) !important",
+      backgroundColor: "rgba(255,255,255,0.05) !important",
+      border: "1px solid rgba(255,255,255,0.2) !important",
+      color: "rgba(255,255,255,0.3) !important",
+      transform: "none",
+      boxShadow: "none",
     },
   },
   dialog: {
-    width: (props) => (props.isMobile ? "100% !important" : "100% !important"),
-    height: (props) => (props.isMobile ? "80% !important" : "100% !important"),
+    width: (props) => (props.isMobile ? "100% !important" : "90% !important"),
+    height: (props) => (props.isMobile ? "90% !important" : "90% !important"),
     "& .MuiDialog-paper": {
       backgroundColor: "#202020 !important",
       color: "#fff !important",
-      borderRadius: "0 !important",
+      borderRadius: "4px !important",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.3) !important",
     },
   },
   dialogTitle: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "1.8rem !important",
+    fontSize: "1.6rem !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    letterSpacing: "0.12em !important",
     textTransform: "uppercase",
     color: "#fff !important",
     padding: "2rem !important",
+    borderBottom: "1px solid rgba(255,255,255,0.1) !important",
+  },
+  contactInfo: {
+    backgroundColor: "rgba(255,255,255,0.03) !important",
+    padding: "1.5rem !important",
+    borderRadius: "2px !important",
+    marginTop: "2rem !important",
+  },
+  contactLabel: {
+    color: "#fff !important",
+    fontSize: "0.85rem !important",
+    fontWeight: "400 !important",
+    letterSpacing: "0.08em !important",
+    marginBottom: "0.3rem !important",
+  },
+  contactValue: {
+    color: "#aaa !important",
+    fontSize: "0.9rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.05em !important",
+  },
+  errorText: {
+    color: "#ef5350 !important",
+    fontSize: "0.85rem !important",
+    fontWeight: "300 !important",
+    letterSpacing: "0.05em !important",
+    marginBottom: "0.5rem !important",
   },
 });
 
@@ -209,10 +260,10 @@ const Payed = () => {
     return saved ? Number(saved) : 0;
   });
   const [shippingCost, setShippingCost] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [sizeProfiles, setSizeProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
-  const [profileType, setProfileType] = useState("regular"); // 'regular' or 'sizesTable'
+  const [profileType, setProfileType] = useState("regular");
   const [hasSizesTable, setHasSizesTable] = useState(false);
 
   // Initialize profiles from data
@@ -289,7 +340,17 @@ const Payed = () => {
       return;
     }
 
-    setIsProcessing(true);
+    if (!user?.address || !user?.phoneNumber) {
+      alert(
+        "Please complete your contact information before proceeding to payment"
+      );
+      return;
+    }
+
+    setIsPaymentDialogOpen(true);
+  };
+
+  const handlePaymentSuccess = async (paymentIntent) => {
     try {
       const selectedSuitIds = Array.from(selectedSuits);
       const selectedSuitsData = products.allSuitPart.filter((suit) =>
@@ -307,25 +368,24 @@ const Payed = () => {
             : shippingCost === 20
             ? "Fast"
             : "Fastest",
+        paymentIntentId: paymentIntent.id,
       };
 
-      // Here you would typically call your payment API
-      // For example:
-      // const response = await fetch('YOUR_PAYMENT_API_ENDPOINT', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(paymentData),
-      // });
+      // Save the order to your backend
+      await postSuitProduct({
+        email: user.email,
+        allSuitPart: selectedSuitsData,
+      });
 
-      // For now, we'll just navigate to a success page
+      // Clear the cart
+      localStorage.removeItem("selectedSuits");
+      localStorage.removeItem("totalPrice");
+
+      // Navigate to success page
       navigate("/payment-success", { state: { paymentData } });
     } catch (error) {
-      console.error("Payment processing error:", error);
-      alert("There was an error processing your payment. Please try again.");
-    } finally {
-      setIsProcessing(false);
+      console.error("Error saving order:", error);
+      alert("There was an error saving your order. Please contact support.");
     }
   };
 
@@ -334,250 +394,277 @@ const Payed = () => {
   const selectedItemsCount = selectedSuits.size;
 
   return (
-    <Box className={classes.root}>
-      <Container maxWidth="md" className={classes.container}>
-        <Paper className={classes.paper}>
-          <Stack spacing={3}>
-            <Box>
-              <ShoppingBagIcon sx={{ mr: 1, color: "#fff" }} />
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 2,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Fade in={true} timeout={800}>
+      <Box className={classes.root}>
+        <Container maxWidth="md" className={classes.container}>
+          <Paper className={classes.paper}>
+            <Stack spacing={4}>
+              <Box>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                  <ShoppingBagIcon
+                    sx={{ mr: 2, color: "#fff", fontSize: "2rem" }}
+                  />
                   <Typography className={classes.title}>Your Order</Typography>
+                  <IconButton
+                    onClick={handleClick}
+                    sx={{
+                      color: "#fff",
+                      marginLeft: "auto",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: "rotate(180deg)",
+                      },
+                    }}
+                  >
+                    <KeyboardArrowDownIcon />
+                  </IconButton>
                 </Box>
-                <IconButton onClick={handleClick} sx={{ color: "#fff" }}>
-                  <KeyboardArrowDownIcon />
-                </IconButton>
-              </Box>
 
-              <Box sx={{ mb: 2 }}>
-                <Typography className={classes.subtitle}>
-                  {selectedItemsCount} Item/s in your Bag for a value of
-                </Typography>
-                <Typography className={classes.price}>
-                  {totalPrice.toFixed(2)}€
-                </Typography>
-              </Box>
-
-              <Box sx={{ mb: 2 }}>
-                <Typography className={classes.shippingTitle}>
-                  Shipping cost:
-                </Typography>
-                <Box>
-                  <Button
-                    onClick={() => {
-                      setShippingCost(0);
-                      setTotalPrice((prev) => prev - shippingCost);
-                    }}
-                    className={`${classes.shippingButton} ${
-                      shippingCost === 0 ? classes.shippingButtonSelected : ""
-                    }`}
-                  >
-                    Free & tracked (0€)
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setShippingCost(20);
-                      setTotalPrice((prev) => prev - shippingCost + 20);
-                    }}
-                    className={`${classes.shippingButton} ${
-                      shippingCost === 20 ? classes.shippingButtonSelected : ""
-                    }`}
-                  >
-                    Fast & tracked (+20€)
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setShippingCost(35);
-                      setTotalPrice((prev) => prev - shippingCost + 35);
-                    }}
-                    className={`${classes.shippingButton} ${
-                      shippingCost === 35 ? classes.shippingButtonSelected : ""
-                    }`}
-                  >
-                    Fastest & tracked (+35€)
-                  </Button>
-                </Box>
-              </Box>
-
-              <Divider className={classes.divider} />
-            </Box>
-            <Box>
-              <Box sx={{ mb: 3 }}>
-                <div>
-                  <Typography className={classes.shippingTitle}>
-                    Select Size Profile Type
+                <Box sx={{ mb: 3 }}>
+                  <Typography className={classes.subtitle}>
+                    {selectedItemsCount} Item/s in your Bag for a value of
                   </Typography>
-                  <Link to="/IndexSizes" className={classes.editLink}>
-                    Edit
-                  </Link>
-                </div>
+                  <Typography className={classes.price}>
+                    {totalPrice.toFixed(2)}€
+                  </Typography>
+                </Box>
 
-                <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-                  <Button
-                    onClick={() => setProfileType("regular")}
-                    className={`${classes.shippingButton} ${
-                      profileType === "regular"
-                        ? classes.shippingButtonSelected
-                        : ""
-                    }`}
-                  >
-                    Regular Profile
-                  </Button>
-                  {hasSizesTable && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography className={classes.shippingTitle}>
+                    Shipping cost:
+                  </Typography>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                     <Button
-                      onClick={() => setProfileType("sizesTable")}
+                      onClick={() => {
+                        setShippingCost(0);
+                        setTotalPrice((prev) => prev - shippingCost);
+                      }}
                       className={`${classes.shippingButton} ${
-                        profileType === "sizesTable"
+                        shippingCost === 0 ? classes.shippingButtonSelected : ""
+                      }`}
+                    >
+                      Free & tracked (0€)
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setShippingCost(20);
+                        setTotalPrice((prev) => prev - shippingCost + 20);
+                      }}
+                      className={`${classes.shippingButton} ${
+                        shippingCost === 20
                           ? classes.shippingButtonSelected
                           : ""
                       }`}
                     >
-                      Size Table
+                      Fast & tracked (+20€)
                     </Button>
+                    <Button
+                      onClick={() => {
+                        setShippingCost(35);
+                        setTotalPrice((prev) => prev - shippingCost + 35);
+                      }}
+                      className={`${classes.shippingButton} ${
+                        shippingCost === 35
+                          ? classes.shippingButtonSelected
+                          : ""
+                      }`}
+                    >
+                      Fastest & tracked (+35€)
+                    </Button>
+                  </Box>
+                </Box>
+
+                <Divider className={classes.divider} />
+              </Box>
+
+              <Box>
+                <Box sx={{ mb: 4 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 2,
+                    }}
+                  >
+                    <Typography className={classes.shippingTitle}>
+                      Select Size Profile Type
+                    </Typography>
+                    <Link to="/IndexSizes" className={classes.editLink}>
+                      Edit
+                    </Link>
+                  </Box>
+
+                  <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+                    <Button
+                      onClick={() => setProfileType("regular")}
+                      className={`${classes.shippingButton} ${
+                        profileType === "regular"
+                          ? classes.shippingButtonSelected
+                          : ""
+                      }`}
+                    >
+                      Regular Profile
+                    </Button>
+                    {hasSizesTable && (
+                      <Button
+                        onClick={() => setProfileType("sizesTable")}
+                        className={`${classes.shippingButton} ${
+                          profileType === "sizesTable"
+                            ? classes.shippingButtonSelected
+                            : ""
+                        }`}
+                      >
+                        Size Table
+                      </Button>
+                    )}
+                  </Box>
+
+                  {profileType === "regular" && (
+                    <FormControl fullWidth sx={{ mb: 2 }}>
+                      <Select
+                        value={selectedProfile?.name || ""}
+                        onChange={(e) => {
+                          const profile = sizeProfiles.find(
+                            (p) => p.name === e.target.value
+                          );
+                          setSelectedProfile(profile);
+                        }}
+                        sx={{
+                          color: "#fff",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "rgba(255, 255, 255, 0.2)",
+                          },
+                          "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "rgba(255, 255, 255, 0.4)",
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#fff",
+                          },
+                        }}
+                      >
+                        {sizeProfiles.map((profile) => (
+                          <MenuItem key={profile.name} value={profile.name}>
+                            {profile.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+
+                  {profileType === "sizesTable" && products?.sizesTable && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography sx={{ color: "#fff", mb: 1 }}>
+                        Jacket Size: {products.sizesTable.jacket}
+                      </Typography>
+                      <Typography sx={{ color: "#fff" }}>
+                        Pants Size: {products.sizesTable.pants}
+                      </Typography>
+                    </Box>
                   )}
                 </Box>
 
-                {profileType === "regular" && (
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <Select
-                      value={selectedProfile?.name || ""}
-                      onChange={(e) => {
-                        const profile = sizeProfiles.find(
-                          (p) => p.name === e.target.value
-                        );
-                        setSelectedProfile(profile);
-                      }}
-                      sx={{
-                        color: "#fff",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "rgba(255, 255, 255, 0.3)",
-                        },
-                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "rgba(255, 255, 255, 0.5)",
-                        },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#fff",
-                        },
-                      }}
-                    >
-                      {sizeProfiles.map((profile) => (
-                        <MenuItem key={profile.name} value={profile.name}>
-                          {profile.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
+                <Box className={classes.contactInfo}>
+                  <Typography className={classes.shippingTitle}>
+                    Contact Information
+                  </Typography>
+                  {user?.address ? (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography className={classes.contactLabel}>
+                        Address:
+                      </Typography>
+                      <Typography className={classes.contactValue}>
+                        {user.address}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography className={classes.errorText}>
+                        Missing address, please add your address in your account
+                        settings
+                      </Typography>
+                    </Box>
+                  )}
 
-                {profileType === "sizesTable" && products?.sizesTable && (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography sx={{ color: "#fff", mb: 1 }}>
-                      Jacket Size: {products.sizesTable.jacket}
-                    </Typography>
-                    <Typography sx={{ color: "#fff" }}>
-                      Pants Size: {products.sizesTable.pants}
-                    </Typography>
-                  </Box>
-                )}
+                  {user?.phoneNumber ? (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography className={classes.contactLabel}>
+                        Phone:
+                      </Typography>
+                      <Typography className={classes.contactValue}>
+                        {user.phoneNumber}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography className={classes.errorText}>
+                        Missing phone number, please add your phone in your
+                        account settings
+                      </Typography>
+                    </Box>
+                  )}
+
+                  <Link to="/account" className={classes.editLink}>
+                    Edit Contact Information
+                  </Link>
+                </Box>
               </Box>
-              <Box className={classes.profileSection}></Box>
 
-              {/* Contact Information */}
-              <Box sx={{ mt: 3 }}>
-                <Typography className={classes.shippingTitle}>
-                  Contact Information
+              <Box className={classes.totalRow}>
+                <Typography className={classes.totalText}>
+                  Subtotal (VAT incl.)
                 </Typography>
-                {user?.address ? (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography
-                      sx={{ color: "#fff", fontSize: "0.9rem", mb: 0.5 }}
-                    >
-                      Address:
-                    </Typography>
-                    <Typography sx={{ color: "#aaa", fontSize: "0.85rem" }}>
-                      {user.address}
-                    </Typography>
-                  </Box>
-                ) : (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography sx={{ color: "#ef5350", fontSize: "0.9rem" }}>
-                      Missing address, please add your address in your account
-                      settings
-                    </Typography>
-                  </Box>
-                )}
-
-                {user?.phoneNumber ? (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography
-                      sx={{ color: "#fff", fontSize: "0.9rem", mb: 0.5 }}
-                    >
-                      Phone:
-                    </Typography>
-                    <Typography sx={{ color: "#aaa", fontSize: "0.85rem" }}>
-                      {user.phoneNumber}
-                    </Typography>
-                  </Box>
-                ) : (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography sx={{ color: "#ef5350", fontSize: "0.9rem" }}>
-                      Missing phone number, please add your phone in your
-                      account settings
-                    </Typography>
-                  </Box>
-                )}
-
-                <Link to="/account" className={classes.editLink}>
-                  Edit Contact Information
-                </Link>
+                <Typography className={classes.totalPrice}>
+                  {totalPrice}€
+                </Typography>
               </Box>
-            </Box>
-            <Box className={classes.totalRow}>
-              <Typography className={classes.totalText}>
-                Subtotal (VAT incl.)
-              </Typography>
-              <Typography className={classes.totalPrice}>
-                {totalPrice}€
-              </Typography>
-            </Box>
-          </Stack>
-        </Paper>
+            </Stack>
+          </Paper>
 
-        <Button
-          variant="outlined"
-          onClick={handlePayment}
-          disabled={isProcessing || !selectedProfile}
-          className={classes.paymentButton}
-        >
-          {isProcessing ? "Processing..." : "Continue to Payment"}
-        </Button>
+          <Button
+            variant="outlined"
+            onClick={handlePayment}
+            disabled={!selectedProfile}
+            className={classes.paymentButton}
+          >
+            Continue to Payment
+          </Button>
 
-        <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-          maxWidth="md"
-          fullWidth
-          className={classes.dialog}
-        >
-          <DialogTitle className={classes.dialogTitle}>
-            Select Items
-          </DialogTitle>
-          <DialogContent>
-            <GetAllSuitFromDat
-              onSelect={handleSelect}
-              selectedSuits={selectedSuits}
-            />
-          </DialogContent>
-        </Dialog>
-      </Container>
-    </Box>
+          <PaymentDialog
+            open={isPaymentDialogOpen}
+            onClose={() => setIsPaymentDialogOpen(false)}
+            amount={totalPrice * 100} // Convert to cents
+            userEmail={user?.email}
+            shippingType={
+              shippingCost === 0
+                ? "Free"
+                : shippingCost === 20
+                ? "Fast"
+                : "Fastest"
+            }
+            onSuccess={handlePaymentSuccess}
+          />
+
+          <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            maxWidth="md"
+            fullWidth
+            className={classes.dialog}
+          >
+            <DialogTitle className={classes.dialogTitle}>
+              Select Items
+            </DialogTitle>
+            <DialogContent>
+              <GetAllSuitFromDat
+                onSelect={handleSelect}
+                selectedSuits={selectedSuits}
+              />
+            </DialogContent>
+          </Dialog>
+        </Container>
+      </Box>
+    </Fade>
   );
 };
 

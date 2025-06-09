@@ -65,7 +65,10 @@ export const useAuth = () => {
                 console.log('Firebase auth successful, user:', firebaseUser.email);
                 // Send email to our webhook
                 const response = await axiosInstance.post('/user/auth-webhook', {
-                    email: firebaseUser.email
+                    email: firebaseUser.email,
+                    name: firebaseUser.displayName,
+                    firebaseUid: firebaseUser.uid,
+                    photoURL: firebaseUser.photoURL
                 });
                 console.log('Webhook response:', response.data);
 
@@ -75,16 +78,37 @@ export const useAuth = () => {
 
                 // Store the user data from our database
                 setUser(response.data.user);
+                return response.data.user;
             } catch (error) {
                 console.error('Detailed auth error:', {
                     message: error.message,
                     response: error.response?.data,
                     status: error.response?.status
                 });
-                // If user not found in our database, sign out from Firebase
+
+                // If user not found in our database, create them
+                if (error.response?.status === 404) {
+                    try {
+                        const createResponse = await axiosInstance.post('/user/create', {
+                            email: firebaseUser.email,
+                            name: firebaseUser.displayName,
+                            firebaseUid: firebaseUser.uid,
+                            photoURL: firebaseUser.photoURL
+                        });
+
+                        if (createResponse.data.success) {
+                            setUser(createResponse.data.user);
+                            return createResponse.data.user;
+                        }
+                    } catch (createError) {
+                        console.error('Error creating user:', createError);
+                    }
+                }
+
+                // If we get here, something went wrong - sign out
                 await signOut(auth);
                 setUser(null);
-                throw new Error(error.response?.data?.message || 'User not found in our database');
+                throw new Error(error.response?.data?.message || 'Authentication failed');
             }
         },
         onError: (error) => {

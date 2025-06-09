@@ -12,7 +12,7 @@ import StepTree from "./StepTree";
 const useStyles = makeStyles({
   root: {
     position: (props) => (props.isMobile ? "absolute" : "relative"),
-    bottom: (props) => (props.isMobile ? "50px" : "0"),
+    bottom: (props) => (props.isMobile ? "0" : "0"),
     zIndex: 1000,
     width: (props) => (props.isMobile ? "90%" : "500px"),
     height: (props) => (props.isMobile ? "27vh" : "63vh"),

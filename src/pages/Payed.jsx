@@ -371,18 +371,59 @@ const Payed = () => {
         paymentIntentId: paymentIntent.id,
       };
 
-      // Save the order to your backend
-      await postSuitProduct({
+      // Create order with pending approval status
+      const orderData = {
+        userId: user.email || user.uid || `user_${Date.now()}`,
+        name: user.displayName || user.name || "Unknown User",
         email: user.email,
-        allSuitPart: selectedSuitsData,
-      });
+        phoneNumber: user.phoneNumber || "0000000000",
+        address: user.address || "No address provided",
+        paymentId: paymentIntent.id,
+        totalAmount: totalPrice,
+        shippingCost: shippingCost,
+        shippingSpeed:
+          shippingCost === 0
+            ? "STANDARD"
+            : shippingCost === 20
+            ? "EXPRESS"
+            : "SAME_DAY",
+        selectedSuits: selectedSuitsData,
+        sizeProfile: selectedProfile?.name || "",
+        sizeMeasurements: selectedProfile?.sizes || {},
+        paymentDate: new Date().toISOString(),
+      };
+
+      // Save the order with pending status
+      const response = await fetch(
+        "http://localhost:3020/payments/create-order-pending",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      const orderResult = await response.json();
+      console.log("Order created with pending status:", orderResult);
 
       // Clear the cart
       localStorage.removeItem("selectedSuits");
       localStorage.removeItem("totalPrice");
 
-      // Navigate to success page
-      navigate("/payment-success", { state: { paymentData } });
+      // Navigate to success page with pending status info
+      navigate("/payment-success", {
+        state: {
+          paymentData,
+          orderStatus: "PENDING",
+          orderId: orderResult.orderId,
+          message:
+            "Your payment has been processed and is awaiting approval. You will receive a confirmation email once your order is approved.",
+        },
+      });
     } catch (error) {
       console.error("Error saving order:", error);
       alert("There was an error saving your order. Please contact support.");

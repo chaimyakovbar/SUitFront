@@ -20,12 +20,14 @@ import Shopping from "./pages/Shopping";
 import AccessibilityMenu from "./pages/AccessibilityMenu";
 import Whatchap from "./pages/Whatchap";
 import Payed from "./pages/Payed";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import NavBar from "./homePage/NavBar";
 import LoginWithGoogle from "./pages/LoginWithGoogle";
 import { AuthProvider } from "./context/AuthContext";
 import TakeSizes4 from "./components/TakeSizes4";
 import TakeSizes3 from "./components/TakeSize3";
 import Account from "./pages/Account";
+import CheckoutModern from "./pages/CheckoutModern";
 
 const App = () => {
   const user = useAtomValue(authUserAtom);
@@ -33,7 +35,7 @@ const App = () => {
     <AuthProvider>
       <Router>
         <NavBar />
-        <Whatchap />
+        {/* <Whatchap /> */}
         <AccessibilityMenu />
         <Routes>
           <Route path="/" element={<HomePage2 />} />
@@ -43,7 +45,8 @@ const App = () => {
             path="/Shopping"
             element={
               user ? (
-                <Shopping />
+                // <Shopping />
+                <CheckoutModern />
               ) : (
                 <Navigate
                   to="/login"

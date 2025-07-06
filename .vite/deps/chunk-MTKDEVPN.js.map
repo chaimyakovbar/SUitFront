@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../node_modules/hyphenate-style-name/index.js"],
+  "sourcesContent": ["/* eslint-disable no-var, prefer-template */\nvar uppercasePattern = /[A-Z]/g\nvar msPattern = /^ms-/\nvar cache = {}\n\nfunction toHyphenLower(match) {\n  return '-' + match.toLowerCase()\n}\n\nfunction hyphenateStyleName(name) {\n  if (cache.hasOwnProperty(name)) {\n    return cache[name]\n  }\n\n  var hName = name.replace(uppercasePattern, toHyphenLower)\n  return (cache[name] = msPattern.test(hName) ? '-' + hName : hName)\n}\n\nexport default hyphenateStyleName\n"],
+  "mappings": ";AACA,IAAI,mBAAmB;AACvB,IAAI,YAAY;AAChB,IAAI,QAAQ,CAAC;AAEb,SAAS,cAAc,OAAO;AAC5B,SAAO,MAAM,MAAM,YAAY;AACjC;AAEA,SAAS,mBAAmB,MAAM;AAChC,MAAI,MAAM,eAAe,IAAI,GAAG;AAC9B,WAAO,MAAM,IAAI;AAAA,EACnB;AAEA,MAAI,QAAQ,KAAK,QAAQ,kBAAkB,aAAa;AACxD,SAAQ,MAAM,IAAI,IAAI,UAAU,KAAK,KAAK,IAAI,MAAM,QAAQ;AAC9D;AAEA,IAAO,+BAAQ;",
+  "names": []
+}

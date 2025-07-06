@@ -83,8 +83,8 @@ export default AccessibilityMenu;
 // Styled Components
 const MenuContainer = styled.div`
   position: fixed;
-  bottom: 40px;
-  right: 20px;
+  bottom: 80px;
+  left: 20px;
   z-index: 1000;
 `;
 

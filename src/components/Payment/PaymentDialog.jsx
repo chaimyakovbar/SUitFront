@@ -140,7 +140,7 @@ const PaymentDialog = ({
   useEffect(() => {
     if (open) {
       // Create PaymentIntent as soon as the dialog opens
-      fetch("http://localhost:3020/api/payments/create-payment-intent", {
+      fetch("http://localhost:3020/payments/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

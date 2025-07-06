@@ -12,12 +12,19 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     gap: "2rem",
-    padding: "2rem",
+    paddingTop: "1rem",
   },
   cardsContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
     gap: "2rem",
+    width: "100%",
+    maxWidth: "1200px",
+  },
+  cardsContainerList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
     width: "100%",
     maxWidth: "1200px",
   },
@@ -27,7 +34,7 @@ const useStyles = makeStyles({
     width: "100%",
     height: "300px",
     border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: "0",
+    borderRadius: "12px",
     overflow: "hidden",
     transition: "all 0.3s ease",
     display: "flex",
@@ -35,6 +42,24 @@ const useStyles = makeStyles({
     "&:hover": {
       border: "1px solid rgba(255,255,255,0.3)",
       transform: "translateY(-4px)",
+      boxShadow: "0 8px 25px rgba(0,0,0,0.3)",
+    },
+  },
+  cardList: {
+    backgroundColor: "#202020",
+    position: "relative",
+    width: "100%",
+    height: "120px",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "12px",
+    overflow: "hidden",
+    transition: "all 0.3s ease",
+    display: "flex",
+    flexDirection: "row",
+    "&:hover": {
+      border: "1px solid rgba(255,255,255,0.3)",
+      transform: "translateY(-2px)",
+      boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
     },
   },
   photo: {
@@ -46,6 +71,15 @@ const useStyles = makeStyles({
     height: "80%",
     objectFit: "contain",
   },
+  photoList: {
+    position: "absolute",
+    top: "50%",
+    left: "60px",
+    transform: "translateY(-50%)",
+    width: "80px",
+    height: "80px",
+    objectFit: "contain",
+  },
   cardControls: {
     position: "absolute",
     bottom: 0,
@@ -55,10 +89,40 @@ const useStyles = makeStyles({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "12px 16px",
-    // backgroundColor: "rgba(0,0,0,0.7)",
     backgroundColor: "#222222",
     backdropFilter: "blur(4px)",
     borderTop: "1px solid rgba(255,255,255,0.1)",
+  },
+  cardControlsList: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    bottom: 0,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "12px 16px",
+    backgroundColor: "#222222",
+    backdropFilter: "blur(4px)",
+    borderLeft: "1px solid rgba(255,255,255,0.1)",
+    minWidth: "200px",
+  },
+  cardInfo: {
+    position: "absolute",
+    left: "160px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    color: "#fff",
+    fontFamily: "'Montserrat', sans-serif",
+  },
+  cardTitle: {
+    fontSize: "1.1rem",
+    fontWeight: "600",
+    marginBottom: "4px",
+  },
+  cardDetails: {
+    fontSize: "0.9rem",
+    color: "rgba(255,255,255,0.7)",
   },
   checkbox: {
     width: "20px",
@@ -92,6 +156,13 @@ const useStyles = makeStyles({
     fontSize: "0.85rem",
     letterSpacing: "0.1em",
     fontWeight: "500",
+  },
+  priceTagList: {
+    color: "#fff",
+    fontFamily: "'Montserrat', sans-serif",
+    fontSize: "1.1rem",
+    letterSpacing: "0.1em",
+    fontWeight: "600",
   },
   controlsWrapper: {
     display: "flex",
@@ -283,12 +354,33 @@ const getZIndex = (key) => {
 };
 
 // Main component
-const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
+const DynamicImage = ({
+  onSelect,
+  selectedSuits: parentSelectedSuits,
+  viewMode = "grid",
+  sortBy = "newest",
+}) => {
   const classes = useStyles();
   const { data, isLoading: productLoading, error } = useProduct();
   const allSuits = useMemo(() => data?.allSuitPart || [], [data?.allSuitPart]);
   const [deletingSuitId, setDeletingSuitId] = useState(null);
   console.log("Received suits data:", allSuits); // Debug log
+
+  // Sort suits based on sortBy prop
+  const sortedSuits = useMemo(() => {
+    const suits = [...allSuits];
+    switch (sortBy) {
+      case "price-low":
+        return suits.sort((a, b) => a.totalPrice - b.totalPrice);
+      case "price-high":
+        return suits.sort((a, b) => b.totalPrice - a.totalPrice);
+      case "newest":
+      default:
+        return suits.sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+    }
+  }, [allSuits, sortBy]);
 
   // Use parent's selectedSuits if provided
   const [selectedSuits, setSelectedSuits] = useState(() => {
@@ -322,8 +414,8 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
 
   // Create a stable queryKey by memoizing the MongoDB _ids
   const suitsQueryKey = useMemo(
-    () => ["images", allSuits.map((item) => item._id).join("-")],
-    [allSuits]
+    () => ["images", sortedSuits.map((item) => item._id).join("-")],
+    [sortedSuits]
   );
 
   const {
@@ -332,8 +424,8 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
     error: imagesError,
   } = useQuery({
     queryKey: suitsQueryKey,
-    queryFn: () => Promise.all(allSuits.map((item) => fetchImages(item))),
-    enabled: allSuits.length > 0 && !productLoading,
+    queryFn: () => Promise.all(sortedSuits.map((item) => fetchImages(item))),
+    enabled: sortedSuits.length > 0 && !productLoading,
     staleTime: 5 * 60 * 1000,
     cacheTime: 30 * 60 * 1000,
     retry: 2,
@@ -351,7 +443,7 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
       }
       // Call parent's onSelect if provided
       if (onSelect) {
-        onSelect(suitId, price);
+        onSelect(suitId);
       }
       return newSet;
     });
@@ -401,7 +493,7 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
   }
 
   // Handle empty state
-  if (!allSuits.length) {
+  if (!sortedSuits.length) {
     return (
       <div className={classes.emptyContainer}>
         <Typography>No suits found.</Typography>
@@ -409,60 +501,90 @@ const DynamicImage = ({ onSelect, selectedSuits: parentSelectedSuits }) => {
     );
   }
 
-  return (
-    <div className={classes.container}>
-      <div className={classes.cardsContainer}>
-        {allSuits.map((item, index) => (
-          <div key={`suit-${item._id}`} className={classes.card}>
-            {deletingSuitId === item._id && (
-              <div className={classes.deleteLoadingOverlay}>
-                <CircularProgress
-                  color="inherit"
-                  size={24}
-                  style={{ marginBottom: "1rem" }}
-                />
-                <Typography style={{ color: "#fff" }}>
-                  Deleting suit...
-                </Typography>
-              </div>
-            )}
-            {imagesData?.[index] &&
-              Object.entries(imagesData[index])
-                .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
-                .map(([key, src]) => (
-                  <img
-                    key={key}
-                    src={src}
-                    alt={`Suit part: ${key}`}
-                    className={classes.photo}
-                    style={{ zIndex: getZIndex(key) }}
-                    loading="lazy"
-                  />
-                ))}
-            <div className={classes.cardControls}>
-              <div className={classes.priceTag}>{item.totalPrice}$</div>
-              <div className={classes.controlsWrapper}>
-                <input
-                  type="checkbox"
-                  checked={selectedSuits.has(item._id)}
-                  onChange={() => handleSelect(item._id, item.totalPrice)}
-                  className={classes.checkbox}
-                />
-                <button
-                  onClick={() => handleDelete(item._id)}
-                  className={classes.deleteButton}
-                  disabled={deleteMutation.isLoading}
-                >
-                  {deleteMutation.isLoading ? (
-                    <CircularProgress size={20} color="inherit" />
-                  ) : (
-                    <DeleteIcon />
-                  )}
-                </button>
-              </div>
+  const renderCard = (item, index) => {
+    const isListView = viewMode === "list";
+    const cardClass = isListView ? classes.cardList : classes.card;
+    const photoClass = isListView ? classes.photoList : classes.photo;
+    const controlsClass = isListView
+      ? classes.cardControlsList
+      : classes.cardControls;
+    const priceClass = isListView ? classes.priceTagList : classes.priceTag;
+
+    return (
+      <div key={`suit-${item._id}`} className={cardClass}>
+        {deletingSuitId === item._id && (
+          <div className={classes.deleteLoadingOverlay}>
+            <CircularProgress
+              color="inherit"
+              size={24}
+              style={{ marginBottom: "1rem" }}
+            />
+            <Typography style={{ color: "#fff" }}>Deleting suit...</Typography>
+          </div>
+        )}
+
+        {imagesData?.[index] &&
+          Object.entries(imagesData[index])
+            .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
+            .map(([key, src]) => (
+              <img
+                key={key}
+                src={src}
+                alt={`Suit part: ${key}`}
+                className={photoClass}
+                style={{ zIndex: getZIndex(key) }}
+                loading="lazy"
+              />
+            ))}
+
+        {/* {isListView && (
+          <div className={classes.cardInfo}>
+            <div className={classes.cardTitle}>
+              {item.color} {item.kind} Suit
+            </div>
+            <div className={classes.cardDetails}>
+              {item.lapelType} • {item.lapelKind} •{" "}
+              {item.collarType || "Standard"}
             </div>
           </div>
-        ))}
+        )} */}
+
+        <div className={controlsClass}>
+          <div className={priceClass}>{item.totalPrice}$</div>
+          <div className={classes.controlsWrapper}>
+            <input
+              type="checkbox"
+              checked={selectedSuits.has(item._id)}
+              onChange={() => handleSelect(item._id, item.totalPrice)}
+              className={classes.checkbox}
+            />
+            <button
+              onClick={() => handleDelete(item._id)}
+              className={classes.deleteButton}
+              disabled={deleteMutation.isLoading}
+            >
+              {deleteMutation.isLoading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <DeleteIcon />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className={classes.container}>
+      <div
+        className={
+          viewMode === "list"
+            ? classes.cardsContainerList
+            : classes.cardsContainer
+        }
+      >
+        {sortedSuits.map((item, index) => renderCard(item, index))}
       </div>
     </div>
   );

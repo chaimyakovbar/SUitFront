@@ -151,8 +151,7 @@ const LoginWithGoogle = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const { googleSignIn, emailSignIn, emailSignUp, isLoading, error } =
-    useAuth();
+  const { googleSignIn, emailSignIn, emailSignUp, error } = useAuth();
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -160,6 +159,8 @@ const LoginWithGoogle = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const getRedirectPath = () => {
     // 1. Check for redirect in query params
@@ -180,34 +181,24 @@ const LoginWithGoogle = () => {
 
   const handleGoogleAuth = async (isNewUser = false) => {
     try {
+      setIsGoogleLoading(true);
       await googleSignIn.mutateAsync({ isNewUser });
       const redirectPath = getRedirectPath();
       navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Authentication error:", error);
       // Error is already handled in the useAuth hook
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
   const handleEmailAuth = async (e) => {
     e.preventDefault();
     try {
+      setIsEmailLoading(true);
       if (isSignUp) {
-        // Sign up with Firebase
-        const user = await emailSignUp.mutateAsync({ email, password });
-        // Send extra fields to backend
-        await fetch("http://localhost:3020/user/auth-webhook", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            email,
-            name,
-            address,
-            phone,
-            firebaseUid: user.uid,
-          }),
-        });
+        await emailSignUp.mutateAsync({ email, password });
       } else {
         await emailSignIn.mutateAsync({ email, password });
       }
@@ -215,6 +206,8 @@ const LoginWithGoogle = () => {
       navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Email authentication error:", error);
+    } finally {
+      setIsEmailLoading(false);
     }
   };
 
@@ -244,6 +237,7 @@ const LoginWithGoogle = () => {
                   required
                   fullWidth
                   variant="outlined"
+                  disabled={isEmailLoading}
                 />
                 <TextField
                   className={classes.textField}
@@ -254,6 +248,7 @@ const LoginWithGoogle = () => {
                   required
                   fullWidth
                   variant="outlined"
+                  disabled={isEmailLoading}
                 />
                 <TextField
                   className={classes.textField}
@@ -264,6 +259,7 @@ const LoginWithGoogle = () => {
                   required
                   fullWidth
                   variant="outlined"
+                  disabled={isEmailLoading}
                 />
               </>
             )}
@@ -276,6 +272,7 @@ const LoginWithGoogle = () => {
               required
               fullWidth
               variant="outlined"
+              disabled={isEmailLoading}
             />
             <TextField
               className={classes.textField}
@@ -286,13 +283,14 @@ const LoginWithGoogle = () => {
               required
               fullWidth
               variant="outlined"
+              disabled={isEmailLoading}
             />
             <Button
               type="submit"
               className={classes.signInButton}
-              disabled={isLoading}
+              disabled={isEmailLoading || isGoogleLoading}
             >
-              {isLoading ? (
+              {isEmailLoading ? (
                 <CircularProgress size={20} color="inherit" />
               ) : isSignUp ? (
                 "Sign Up with Email"
@@ -304,8 +302,12 @@ const LoginWithGoogle = () => {
 
           <Typography
             className={classes.toggleText}
-            onClick={() => setIsSignUp((prev) => !prev)}
+            onClick={() => !isEmailLoading && setIsSignUp((prev) => !prev)}
             component="div"
+            sx={{
+              opacity: isEmailLoading ? 0.5 : 1,
+              pointerEvents: isEmailLoading ? "none" : "auto",
+            }}
           >
             {isSignUp
               ? "Already have an account? Login"
@@ -321,25 +323,31 @@ const LoginWithGoogle = () => {
           <Button
             className={classes.signInButton}
             startIcon={
-              isLoading ? (
+              isGoogleLoading ? (
                 <CircularProgress size={20} color="inherit" />
               ) : (
                 <GoogleIcon />
               )
             }
             onClick={() => handleGoogleAuth(false)}
-            disabled={isLoading}
+            disabled={isGoogleLoading || isEmailLoading}
           >
-            {isLoading ? "Loging..." : "Login with Google"}
+            {isGoogleLoading ? "Connecting..." : "Login with Google"}
           </Button>
 
           <Button
             className={classes.signUpButton}
-            startIcon={<GoogleIcon />}
+            startIcon={
+              isGoogleLoading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <GoogleIcon />
+              )
+            }
             onClick={() => handleGoogleAuth(true)}
-            disabled={isLoading}
+            disabled={isGoogleLoading || isEmailLoading}
           >
-            Sign up with Google
+            {isGoogleLoading ? "Connecting..." : "Sign up with Google"}
           </Button>
         </Paper>
       </Container>

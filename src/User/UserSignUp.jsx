@@ -16,14 +16,14 @@ import { registerUser, loginUser } from "../api/user";
 
 const UserSignUp = ({ setDialogType }) => {
   const SchemaYupForUser = Yup.object({
-    name: Yup.string().required("חובה למלא שם"),
-    lastName: Yup.string("יש למלא שם משפחה"),
-    email: Yup.string().email("אימייל לא תקין").required("חובה למלא אימייל"),
+    name: Yup.string().required("Name is required"),
+    lastName: Yup.string("Last name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
     phoneNumber: Yup.string()
-      .matches(/^\+?[0-9]{9,12}$/, "טלפון לא תקין")
-      .required("חובה למלא מספר טלפון"),
-    address: Yup.string().required("חובה למלא כתובת"),
-    password: Yup.string().required("חובה לבחור סיסמא"),
+      .matches(/^\+?[0-9]{9,12}$/, "Invalid phone number")
+      .required("Phone number is required"),
+    address: Yup.string().required("Address is required"),
+    password: Yup.string().required("Password is required"),
   });
 
   const [open, setOpen] = useAtom(openUserDialog);
@@ -51,12 +51,14 @@ const UserSignUp = ({ setDialogType }) => {
       });
 
       setUser(loginData.user);
-      enqueueSnackbar("נרשמת והתחברת בהצלחה!", { variant: "success" });
+      enqueueSnackbar("Registration and login successful!", {
+        variant: "success",
+      });
       setOpen(false);
       setDialogType(null);
       resetForm();
     } catch (error) {
-      enqueueSnackbar(error.message || "כבר יש שימוש במייל זה", {
+      enqueueSnackbar(error.message || "Email is already in use", {
         variant: "error",
       });
     } finally {
@@ -92,14 +94,14 @@ const UserSignUp = ({ setDialogType }) => {
             isSubmitting: formikSubmitting,
           }) => (
             <Form onSubmit={handleSubmit}>
-              <DialogTitle>הירשם</DialogTitle>
+              <DialogTitle>Sign Up</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  אנא מלא את פרטי המשתמש שלך
+                  Please fill in your user details
                 </DialogContentText>
                 <Field
                   as={TextField}
-                  label="שם"
+                  label="Name"
                   name="name"
                   fullWidth
                   error={touched.name && Boolean(errors.name)}
@@ -107,7 +109,7 @@ const UserSignUp = ({ setDialogType }) => {
                 />
                 <Field
                   as={TextField}
-                  label="משפחה"
+                  label="Last Name"
                   name="lastName"
                   fullWidth
                   error={touched.lastName && Boolean(errors.lastName)}
@@ -115,7 +117,7 @@ const UserSignUp = ({ setDialogType }) => {
                 />
                 <Field
                   as={TextField}
-                  label="אימייל"
+                  label="Email"
                   name="email"
                   type="email"
                   fullWidth
@@ -124,7 +126,7 @@ const UserSignUp = ({ setDialogType }) => {
                 />
                 <Field
                   as={TextField}
-                  label="טלפון"
+                  label="Phone"
                   name="phoneNumber"
                   fullWidth
                   error={touched.phoneNumber && Boolean(errors.phoneNumber)}
@@ -132,7 +134,7 @@ const UserSignUp = ({ setDialogType }) => {
                 />
                 <Field
                   as={TextField}
-                  label="כתובת"
+                  label="Address"
                   name="address"
                   fullWidth
                   error={touched.address && Boolean(errors.address)}
@@ -140,7 +142,7 @@ const UserSignUp = ({ setDialogType }) => {
                 />
                 <Field
                   as={TextField}
-                  label="סיסמה"
+                  label="Password"
                   name="password"
                   type="password"
                   fullWidth
@@ -149,12 +151,12 @@ const UserSignUp = ({ setDialogType }) => {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => handleClose(resetForm)}>ביטול</Button>
+                <Button onClick={() => handleClose(resetForm)}>Cancel</Button>
                 <Button
                   type="submit"
                   disabled={isSubmitting || formikSubmitting}
                 >
-                  {isSubmitting ? "נרשם..." : "הירשם"}
+                  {isSubmitting ? "Signing up..." : "Sign Up"}
                 </Button>
               </DialogActions>
             </Form>

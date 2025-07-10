@@ -41,6 +41,6 @@ export const allSuitPartAtom = atom([])
 
 export const priceAllSuitAtom = atom(0)
 
-// export const baseURLAtom = atom("https://suitback.onrender.com")
+export const baseURLAtom = atom("https://suitback.onrender.com")
 
-export const baseURLAtom = atom("http://localhost:3020")
+// export const baseURLAtom = atom("http://localhost:3020")

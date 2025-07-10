@@ -395,7 +395,7 @@ const Payed = () => {
 
       // Save the order with pending status
       const response = await fetch(
-        "http://localhost:3020/payments/create-order-pending",
+        "https://suitback.onrender.com/payments/create-order-pending",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

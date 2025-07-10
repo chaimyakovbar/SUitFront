@@ -6,7 +6,8 @@ import { authUserAtom } from '../Utils';
 import axios from 'axios';
 
 // Production URL
-const baseURL = "https://suitback.onrender.com";
+// const baseURL = "https://suitback.onrender.com";
+const baseURL = "http://localhost:3020";
 
 // Create axios instance with proper configuration
 const axiosInstance = axios.create({
@@ -146,7 +147,40 @@ export const useAuth = () => {
         onError: (error) => {
             console.error('Email sign in error:', error);
             setUser(null);
-            throw error;
+
+            // Translate Firebase errors to English
+            let errorMessage = "Login error";
+
+            switch (error.code) {
+                case 'auth/invalid-credential':
+                    errorMessage = "Invalid email or password";
+                    break;
+                case 'auth/user-not-found':
+                    errorMessage = "No user found with this email";
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = "Wrong password";
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = "Invalid email address";
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = "Account is disabled";
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = "Too many login attempts. Please try again later";
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = "Internet connection problem";
+                    break;
+                default:
+                    errorMessage = "Login error. Please try again";
+            }
+
+            // Create a new error with the translated message
+            const translatedError = new Error(errorMessage);
+            translatedError.originalError = error;
+            throw translatedError;
         },
     });
 
@@ -208,6 +242,79 @@ export const useAuth = () => {
         onError: (error) => {
             console.error('Email sign up error:', error);
             setUser(null);
+
+            // Translate Firebase errors to English
+            let errorMessage = "Registration error";
+
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = "Email address already exists in the system";
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = "Invalid email address";
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = "Password must contain at least 6 characters";
+                    break;
+                case 'auth/operation-not-allowed':
+                    errorMessage = "Registration with email and password is not enabled";
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = "Internet connection problem";
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = "Too many attempts. Please try again later";
+                    break;
+                default:
+                    errorMessage = "Registration error. Please try again";
+            }
+
+            // Create a new error with the translated message
+            const translatedError = new Error(errorMessage);
+            translatedError.originalError = error;
+            throw translatedError;
+        },
+    });
+
+    // Mutation for password reset
+    const resetPassword = useMutation({
+        mutationFn: async ({ email }) => {
+            console.log('🔐 Attempting to send password reset email to:', email);
+            try {
+                // Use our server to send beautiful password reset email
+                const response = await axiosInstance.post('/email/password-reset', { email });
+                console.log('✅ Password reset email sent successfully:', response.data);
+                return response.data;
+            } catch (error) {
+                console.error('❌ Password reset error details:', {
+                    status: error.response?.status,
+                    data: error.response?.data,
+                    message: error.message,
+                    fullError: error
+                });
+
+                // Translate server errors to English
+                let errorMessage = "Error sending password reset email";
+
+                if (error.response?.status === 400) {
+                    errorMessage = error.response.data?.message || "Invalid email address";
+                } else if (error.response?.status === 500) {
+                    errorMessage = "Server error. Please try again later";
+                } else if (error.code === 'ERR_NETWORK') {
+                    errorMessage = "Internet connection problem";
+                }
+
+                const translatedError = new Error(errorMessage);
+                translatedError.originalError = error;
+                throw translatedError;
+            }
+        },
+        onSuccess: () => {
+            console.log('🎉 Password reset email sent successfully');
+        },
+        onError: (error) => {
+            console.error('💥 Password reset mutation error:', error);
+            throw error;
         },
     });
 
@@ -223,11 +330,12 @@ export const useAuth = () => {
 
     return {
         user,
-        isLoading: googleSignIn.isLoading || emailSignIn.isLoading || emailSignUp.isLoading,
-        error: googleSignIn.error || emailSignIn.error || emailSignUp.error,
+        isLoading: googleSignIn.isLoading || emailSignIn.isLoading || emailSignUp.isLoading || resetPassword.isLoading,
+        error: googleSignIn.error || emailSignIn.error || emailSignUp.error || resetPassword.error,
         googleSignIn,
         emailSignIn,
         emailSignUp,
+        resetPassword,
         signOut: signOutMutation.mutate,
     };
 }; 

@@ -57,7 +57,7 @@ export const registerUser = async (values) => {
     return response.data;
   } catch (error) {
     if (error.response?.status === 400) {
-      throw new Error(error.response.data.message || "כבר יש שימוש במייל זה");
+      throw new Error(error.response.data.message || "Email is already in use");
     }
     console.error("Error registering user:", error);
     throw error;

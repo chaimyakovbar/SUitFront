@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  TextField, 
-  Button, 
-  Grid, 
+import { sendContactMessage } from "../api/contact";
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Grid,
   Paper,
   Divider,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PhoneIcon from '@mui/icons-material/Phone';
-import EmailIcon from '@mui/icons-material/Email';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const useStyles = makeStyles({
   root: {
@@ -166,51 +166,50 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Message Sent Successfully!");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+
+    try {
+      const data = await sendContactMessage(formData);
+
+      if (data.success) {
+        alert("Message Sent Successfully!");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        alert("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Failed to send message. Please try again.");
+    }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
-      className={classes.root}
-    >
+    <div className={classes.root}>
       <Container maxWidth="lg" className={classes.container}>
         <Link to="/" className={classes.returnButton}>
           <ArrowBackIcon className={classes.returnIcon} />
           Return to Main Page
         </Link>
 
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+        <div>
           <Typography variant="h1" className={classes.heading}>
             Contact Us
           </Typography>
-        </motion.div>
+        </div>
 
         <Grid container spacing={4}>
           <Grid item xs={12} md={7}>
-            <motion.div
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
+            <div>
               <Paper elevation={0} className={classes.formContainer}>
                 <Typography variant="h2" className={classes.subheading}>
                   Send Us a Message
                 </Typography>
                 <Typography variant="body1" className={classes.paragraph}>
-                  We'd love to hear from you. Please fill out the form below and we'll get back to you as soon as possible.
+                  We'd love to hear from you. Please fill out the form below and
+                  we'll get back to you as soon as possible.
                 </Typography>
-                
+
                 <form onSubmit={handleSubmit}>
                   <TextField
                     className={classes.textField}
@@ -222,7 +221,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                   />
-                  
+
                   <TextField
                     className={classes.textField}
                     label="Email Address"
@@ -234,7 +233,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                   />
-                  
+
                   <TextField
                     className={classes.textField}
                     label="Subject"
@@ -245,7 +244,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                   />
-                  
+
                   <TextField
                     className={classes.textField}
                     label="Message"
@@ -258,90 +257,101 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                   />
-                  
-                  <Button 
-                    type="submit" 
-                    className={classes.submitButton}
-                  >
+
+                  <Button type="submit" className={classes.submitButton}>
                     Send Message
                   </Button>
                 </form>
               </Paper>
-            </motion.div>
+            </div>
           </Grid>
-          
+
           <Grid item xs={12} md={5}>
-            <motion.div
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
+            <div>
               <Paper elevation={0} className={classes.contactInfo}>
                 <Typography variant="h2" className={classes.subheading}>
                   Contact Information
                 </Typography>
-                
+
                 <div className={classes.contactItem}>
                   <LocationOnIcon className={classes.contactIcon} />
                   <div>
-                    <Typography variant="body2" className={classes.contactLabel}>
+                    <Typography
+                      variant="body2"
+                      className={classes.contactLabel}
+                    >
                       Address
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      Via Roma 123<br />
-                      Milan, 20121<br />
+                      Via Roma 123
+                      <br />
+                      Milan, 20121
+                      <br />
                       Italy
                     </Typography>
                   </div>
                 </div>
-                
+
                 <div className={classes.contactItem}>
                   <PhoneIcon className={classes.contactIcon} />
                   <div>
-                    <Typography variant="body2" className={classes.contactLabel}>
+                    <Typography
+                      variant="body2"
+                      className={classes.contactLabel}
+                    >
                       Phone
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      +39 123 456 7890<br />
+                      +39 123 456 7890
+                      <br />
                       +39 098 765 4321
                     </Typography>
                   </div>
                 </div>
-                
+
                 <div className={classes.contactItem}>
                   <EmailIcon className={classes.contactIcon} />
                   <div>
-                    <Typography variant="body2" className={classes.contactLabel}>
+                    <Typography
+                      variant="body2"
+                      className={classes.contactLabel}
+                    >
                       Email
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      info@italiansuits.com<br />
+                      info@italiansuits.com
+                      <br />
                       support@italiansuits.com
                     </Typography>
                   </div>
                 </div>
-                
+
                 <Divider className={classes.divider} />
-                
+
                 <div className={classes.contactItem}>
                   <AccessTimeIcon className={classes.contactIcon} />
                   <div>
-                    <Typography variant="body2" className={classes.contactLabel}>
+                    <Typography
+                      variant="body2"
+                      className={classes.contactLabel}
+                    >
                       Opening Hours
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      Monday - Friday: 9:00 AM - 7:00 PM<br />
-                      Saturday: 10:00 AM - 6:00 PM<br />
+                      Monday - Friday: 9:00 AM - 7:00 PM
+                      <br />
+                      Saturday: 10:00 AM - 6:00 PM
+                      <br />
                       Sunday: Closed
                     </Typography>
                   </div>
                 </div>
               </Paper>
-            </motion.div>
+            </div>
           </Grid>
         </Grid>
       </Container>
-    </motion.div>
+    </div>
   );
 };
 

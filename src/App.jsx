@@ -23,6 +23,7 @@ import Payed from "./pages/Payed";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NavBar from "./homePage/NavBar";
 import LoginWithGoogle from "./pages/LoginWithGoogle";
+import ResetPassword from "./pages/ResetPassword";
 import { AuthProvider } from "./context/AuthContext";
 import TakeSizes4 from "./components/TakeSizes4";
 import TakeSizes3 from "./components/TakeSize3";
@@ -40,6 +41,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage2 />} />
           <Route path="/login" element={<LoginWithGoogle />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           {/* <Route path="/customSuit" element={<IndexCustomSuit />} /> */}
           <Route
             path="/Shopping"

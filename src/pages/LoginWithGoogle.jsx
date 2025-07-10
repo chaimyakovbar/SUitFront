@@ -43,6 +43,9 @@ const useStyles = makeStyles({
     borderRadius: "8px !important",
     textAlign: "center",
     border: "1px solid rgba(192, 211, 202, 0.2) !important",
+    "@media (max-width: 768px)": {
+      padding: "1rem !important",
+    },
   },
   heading: {
     fontFamily: "'Cormorant Garamond', serif !important",
@@ -148,6 +151,9 @@ const useStyles = makeStyles({
     },
     "& .MuiInputAdornment-root": {
       color: "rgba(192, 211, 202, 0.7) !important",
+    },
+    "& input": {
+      textAlign: "center !important",
     },
   },
   emailButton: {
@@ -473,6 +479,9 @@ const LoginWithGoogle = () => {
                   fullWidth
                   variant="outlined"
                   disabled={isEmailLoading}
+                  inputProps={{
+                    style: { textAlign: "center" },
+                  }}
                 />
               </>
             )}

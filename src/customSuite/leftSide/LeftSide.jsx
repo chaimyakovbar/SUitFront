@@ -50,7 +50,7 @@ const useStyles = makeStyles({
   },
 });
 
-const LeftSide = () => {
+const LeftSide = ({ isPants }) => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const classes = useStyles({ isMobile });
   const [currentIndex] = useAtom(currentIndexAtom);
@@ -70,7 +70,7 @@ const LeftSide = () => {
 
       {currentIndex === 0 && <StepOne />}
       {currentIndex === 1 && <StepTwo />}
-      {currentIndex === 2 && <StepTree />}
+      {currentIndex === 2 && <StepTree isPants={isPants} />}
     </motion.div>
   );
 };

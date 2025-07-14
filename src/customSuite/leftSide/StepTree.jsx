@@ -8,11 +8,16 @@ import {
   IconButton,
   Divider,
   Grid,
+  TextField,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { makeStyles } from "@mui/styles";
-// import { useAtom } from "jotai";
-// import { currentIndexAtom } from "../../Utils";
+import { useAtom } from "jotai";
+import {
+  selectedSleeveButtonsAtom,
+  textInsideTextAtom,
+  showTextInsideAtom,
+} from "../../Utils";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
@@ -20,6 +25,8 @@ import inside from "/assets/kinds/insid.svg";
 import poshet from "/assets/kinds/poshet.svg";
 import button from "/assets/kinds/button.svg";
 import holes from "/assets/kinds/AllSuit2.png";
+import PantsControls from "../../components/PantsControls";
+import TextInsideModal from "../../components/TextInsideModal";
 
 import ButtonInside from "./stepTree/ButtonInside";
 import ButtonHoles from "./stepTree/ButtonHoles";
@@ -141,10 +148,14 @@ const useStyles = makeStyles({
   },
 });
 
-const StepTree = () => {
+const StepTree = ({ isPants }) => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const classes = useStyles({ isMobile });
-  //   const [currentIndex] = useAtom(currentIndexAtom);
+  const [selectedSleeveButtons, setSelectedSleeveButtons] = useAtom(
+    selectedSleeveButtonsAtom
+  );
+  // const [textInsideText, setTextInsideText] = useAtom(textInsideTextAtom);
+  const [_, setShowTextInside] = useAtom(showTextInsideAtom);
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -155,6 +166,65 @@ const StepTree = () => {
   const handleClick = (key, label) => {
     setSelectedCategory(key);
     setDrawerTitle(label);
+
+    if (key === "sleeveButtons") {
+      const sleeveButtonsOptions = [
+        { value: "none", label: "ללא כפתורי שרוולים" },
+        { value: "tree", label: "3 כפתורי שרוולים" },
+        { value: "four", label: "4 כפתורי שרוולים" },
+        { value: "five", label: "5 כפתורי שרוולים" },
+      ];
+
+      setDrawerContent(
+        <Box sx={{ padding: "16px" }}>
+          <Typography variant="h6" sx={{ mb: 2, color: "#C0D3CA" }}>
+            בחר כפתורי שרוולים
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {sleeveButtonsOptions.map((option) => (
+              <Button
+                key={option.value}
+                onClick={() => {
+                  setSelectedSleeveButtons(option.value);
+                  handleCloseDrawer();
+                }}
+                sx={{
+                  justifyContent: "space-between",
+                  backgroundColor:
+                    selectedSleeveButtons === option.value
+                      ? "rgba(192, 211, 202, 0.1)"
+                      : "rgba(30, 30, 30, 0.6)",
+                  border:
+                    selectedSleeveButtons === option.value
+                      ? "1px solid rgba(192, 211, 202, 0.5)"
+                      : "1px solid rgba(192, 211, 202, 0.1)",
+                  color: "#C0D3CA",
+                  padding: "12px 16px",
+                  borderRadius: "4px",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "rgba(192, 211, 202, 0.1)",
+                    border: "1px solid rgba(192, 211, 202, 0.3)",
+                  },
+                }}
+              >
+                {option.label}
+                {selectedSleeveButtons === option.value && (
+                  <CheckCircleIcon sx={{ color: "#C0D3CA" }} />
+                )}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+      );
+      setDrawerOpen(true);
+      return;
+    }
+
+    if (key === "textInside") {
+      setShowTextInside(true);
+      return;
+    }
 
     const components = {
       imagesInsideUp: <ButtonInside handleCloseDrawer={handleCloseDrawer} />,
@@ -176,145 +246,163 @@ const StepTree = () => {
     { key: "imagesPoshet", label: "Pocket Square", image: poshet },
     { key: "imageButton", label: "Button Style", image: button },
     { key: "imagesHoles", label: "Button Holes", image: holes },
+    { key: "sleeveButtons", label: "Sleeve Buttons", image: button },
+    { key: "textInside", label: "Text Inside", image: inside },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8, delay: 0.3 }}
-      className={classes.root}
-    >
-      <Typography
-        style={{
-          fontSize: "1.2rem",
-          marginBottom: "2rem",
-          marginTop: "-80px",
-          color: "#C0D3CA",
-          fontFamily: "'Cormorant Garamond', serif",
-          fontWeight: 300,
-          letterSpacing: "0.05em",
-        }}
-      >
-        Finishing Details
-      </Typography>
-
-      <Grid
-        container
-        spacing={isMobile ? 1 : 3}
-        sx={{
-          maxWidth: isMobile ? "100%" : "1200px",
-          margin: "0 auto",
-          padding: isMobile ? "0 8px" : "0 24px",
-        }}
-      >
-        {categories.map(({ key, label, image }) => (
-          <Grid
-            item
-            xs={6}
-            sm={4}
-            md={3}
-            key={key}
-            sx={{
-              padding: isMobile ? "4px" : "12px",
+    <>
+      {isPants ? (
+        <div>
+          <Typography variant="h2" className={classes.title}>
+            <PantsControls />
+          </Typography>
+        </div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className={classes.root}
+        >
+          <Typography
+            style={{
+              fontSize: "1.2rem",
+              marginBottom: "2rem",
+              marginTop: "-80px",
+              color: "#C0D3CA",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 300,
+              letterSpacing: "0.05em",
             }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                delay: categories.findIndex((c) => c.key === key) * 0.1,
-              }}
-            >
-              <Box
-                className={`${classes.categoryBox} ${
-                  selectedCategory === key ? classes.selectedCategory : ""
-                }`}
-                onClick={() => handleClick(key, label)}
+            Finishing Details
+          </Typography>
+
+          <Grid
+            container
+            spacing={isMobile ? 1 : 3}
+            sx={{
+              maxWidth: isMobile ? "100%" : "1200px",
+              margin: "0 auto",
+              padding: isMobile ? "0 8px" : "0 24px",
+            }}
+          >
+            {categories.map(({ key, label, image }) => (
+              <Grid
+                item
+                xs={6}
+                sm={4}
+                md={3}
+                key={key}
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: isMobile ? "12px 8px" : "24px 16px",
-                  borderRadius: "12px",
-                  cursor: "pointer",
-                  height: isMobile ? "100px" : "auto",
-                  minHeight: isMobile ? "100px" : "auto",
+                  padding: isMobile ? "4px" : "12px",
                 }}
               >
-                <img
-                  src={image}
-                  alt={label}
-                  className={classes.categoryImage}
-                  style={{
-                    width: isMobile ? "45%" : "120px",
-                    height: isMobile ? "auto" : "120px",
-                    marginBottom: isMobile ? "8px" : "16px",
-                  }}
-                />
-                <Typography
-                  className={classes.categoryLabel}
-                  style={{
-                    fontSize: isMobile ? "0.7rem" : "0.9rem",
-                    marginTop: isMobile ? "4px" : "8px",
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: categories.findIndex((c) => c.key === key) * 0.1,
                   }}
                 >
-                  {label}
-                </Typography>
-                {selectedCategory === key && (
-                  <CheckCircleIcon
-                    className={classes.checkIcon}
-                    style={{
-                      fontSize: isMobile ? "16px" : "20px",
-                      top: isMobile ? "6px" : "12px",
-                      right: isMobile ? "6px" : "12px",
-                      padding: isMobile ? "2px" : "4px",
+                  <Box
+                    className={`${classes.categoryBox} ${
+                      selectedCategory === key ? classes.selectedCategory : ""
+                    }`}
+                    onClick={() => handleClick(key, label)}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: isMobile ? "12px 8px" : "24px 16px",
+                      borderRadius: "12px",
+                      cursor: "pointer",
+                      height: isMobile ? "100px" : "auto",
+                      minHeight: isMobile ? "100px" : "auto",
                     }}
-                  />
-                )}
-              </Box>
-            </motion.div>
+                  >
+                    <img
+                      src={image}
+                      alt={label}
+                      className={classes.categoryImage}
+                      style={{
+                        width: isMobile ? "45%" : "120px",
+                        height: isMobile ? "auto" : "120px",
+                        marginBottom: isMobile ? "8px" : "16px",
+                      }}
+                    />
+                    <Typography
+                      className={classes.categoryLabel}
+                      style={{
+                        fontSize: isMobile ? "0.7rem" : "0.9rem",
+                        marginTop: isMobile ? "4px" : "8px",
+                      }}
+                    >
+                      {label}
+                    </Typography>
+                    {selectedCategory === key && (
+                      <CheckCircleIcon
+                        className={classes.checkIcon}
+                        style={{
+                          fontSize: isMobile ? "16px" : "20px",
+                          top: isMobile ? "6px" : "12px",
+                          right: isMobile ? "6px" : "12px",
+                          padding: isMobile ? "2px" : "4px",
+                        }}
+                      />
+                    )}
+                  </Box>
+                </motion.div>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
 
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={handleCloseDrawer}
-        PaperProps={{
-          className: classes.drawerPaper,
-          sx: {
-            width: isMobile ? "60%" : "350px",
-          },
-        }}
-      >
-        <Box sx={{ padding: "24px" }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 2,
+          <Drawer
+            anchor="right"
+            open={drawerOpen}
+            onClose={handleCloseDrawer}
+            PaperProps={{
+              className: classes.drawerPaper,
+              sx: {
+                width: isMobile ? "60%" : "350px",
+              },
             }}
           >
-            <Typography className={classes.drawerTitle}>
-              {drawerTitle}
-            </Typography>
+            <Box sx={{ padding: "24px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography className={classes.drawerTitle}>
+                  {drawerTitle}
+                </Typography>
 
-            <IconButton onClick={handleCloseDrawer} sx={{ color: "#C0D3CA" }}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+                <IconButton
+                  onClick={handleCloseDrawer}
+                  sx={{ color: "#C0D3CA" }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
 
-          <Divider className={classes.divider} />
+              <Divider className={classes.divider} />
 
-          {drawerContent}
-        </Box>
-      </Drawer>
-    </motion.div>
+              {drawerContent}
+            </Box>
+          </Drawer>
+        </motion.div>
+      )}
+
+      {/* TextInside Modal */}
+      <TextInsideModal />
+    </>
   );
 };
 

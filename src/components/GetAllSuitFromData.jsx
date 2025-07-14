@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useProduct from "../Hooks/useProduct";
 import { deleteSuit } from "../api/suit";
 import { makeStyles } from "@mui/styles";
@@ -215,6 +215,33 @@ const useStyles = makeStyles({
     justifyContent: "center",
     zIndex: 1001,
   },
+  viewToggleContainer: {
+    display: "flex",
+    gap: "1rem",
+    marginBottom: "2rem",
+    justifyContent: "center",
+  },
+  viewToggleButton: {
+    padding: "12px 24px",
+    backgroundColor: "#333333",
+    color: "#fff",
+    border: "2px solid rgba(255,255,255,0.2)",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontFamily: "'Montserrat', sans-serif",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: "#444444",
+      border: "2px solid rgba(255,255,255,0.4)",
+    },
+    "&.active": {
+      backgroundColor: "#a8a8ff",
+      color: "#000",
+      border: "2px solid #a8a8ff",
+    },
+  },
 });
 
 // Extracted to separate function with added caching mechanism
@@ -254,81 +281,169 @@ const buttonColorMap = {
   // Add other mappings as needed
 };
 
-const getImagePaths = (item) => {
-  const imagePaths = [
-    {
-      key: "insideUp",
-      path: `/assets/ragach/insideUp/${item.insideColor}.png`,
-    },
-    {
-      key: "lapelCollar",
-      path: `/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
-    },
-    { key: "colar", path: `/assets/ragach/colar/${item.color}.png` },
-    { key: "sleeves", path: `/assets/ragach/sleeves/${item.color}.png` },
-    {
-      key: "insideBottom",
-      path: `/assets/ragach/insideBottom/${item.color}.png`,
-    },
-    // {
-    //   key: "packetBottom",
-    //   // path: `/assets/ragach/packetBottom/${item.packetType}/${item.color}.png`,
-    //   path: `/assets/ragach/packet/${item.packetKind}/packet1/${item.color}.png`,
-    // },
-    { key: "packetUp", path: `/assets/ragach/packetUp/${item.color}.png` },
-  ];
+const getImagePaths = (item, viewType = "suit") => {
+  const imagePaths = [];
 
-  // Add conditional parts
-  if (item?.bottomPart === "bottom") {
-    imagePaths.push({
-      key: "bottom",
-      path: `/assets/ragach/bottom/${item.color}.png`,
-    });
-  }
+  if (viewType === "suit") {
+    // חליפה - כל החלקים
+    imagePaths.push(
+      {
+        key: "insideUp",
+        path: `/assets/ragach/insideUp/${item.insideColor}.png`,
+      },
+      {
+        key: "lapelCollar",
+        path: `/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
+      },
+      { key: "colar", path: `/assets/ragach/colar/${item.color}.png` },
+      { key: "sleeves", path: `/assets/ragach/sleeves/${item.color}.png` },
+      {
+        key: "insideBottom",
+        path: `/assets/ragach/insideBottom/${item.color}.png`,
+      },
+      { key: "packetUp", path: `/assets/ragach/packetUp/${item.color}.png` }
+    );
 
-  if (item?.bottomPart === "bottomKind3") {
-    imagePaths.push({
-      key: "bottomKind3",
-      path: `/assets/ragach/bottomKind3/${item.color}.png`,
-    });
-  }
+    // Add packet based on packet type and kind - only what user selected
 
-  if (item?.holeButtonColor) {
-    imagePaths.push({
-      key: "holeButton",
-      path: `/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
-    });
-  }
+    if (item.packetType) {
+      const packetType = item.packetType;
+      // Use packetKind if exists, otherwise default to "packetBottom"
+      const packetKind = item.packetKind || "packetBottom"; // ברירת מחדל
 
-  if (item?.holeButtonUpColor) {
-    imagePaths.push({
-      key: "holeButtonUp",
-      path: `/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
-    });
-  }
+      imagePaths.push({
+        key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
+        path: `/assets/ragach/packet/${packetKind}/${packetType}/${item.color}.png`,
+      });
+    } else {
+      console.warn("⚠️ Missing packetType for suit:", item._id);
+      console.warn("  packetType:", item.packetType);
+    }
 
-  if (item.poshetColor) {
-    imagePaths.push({
-      key: "poshetColor",
-      path: `/assets/adds/poshet/${item.poshetColor}.png`,
-    });
-  }
+    // Add conditional parts for suit
+    if (item?.bottomPart === "bottom") {
+      imagePaths.push({
+        key: "bottom",
+        path: `/assets/ragach/bottom/${item.color}.png`,
+      });
+    }
 
-  if (item.buttonColor) {
-    const actualColor = buttonColorMap[item.buttonColor] || item.buttonColor;
+    if (item?.bottomPart === "bottomKind3") {
+      imagePaths.push({
+        key: "bottomKind3",
+        path: `/assets/ragach/bottomKind3/${item.color}.png`,
+      });
+    }
+
+    if (item?.holeButtonColor) {
+      imagePaths.push({
+        key: "holeButton",
+        path: `/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
+      });
+    }
+
+    if (item?.holeButtonUpColor) {
+      imagePaths.push({
+        key: "holeButtonUp",
+        path: `/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
+      });
+    }
+
+    if (item.poshetColor) {
+      imagePaths.push({
+        key: "poshetColor",
+        path: `/assets/adds/poshet/${item.poshetColor}.png`,
+      });
+    }
+
+    if (item.buttonColor) {
+      const actualColor = buttonColorMap[item.buttonColor] || item.buttonColor;
+      imagePaths.push({
+        key: "button",
+        path: `/assets/ragach/button/${item.kind}/${actualColor}.png`,
+      });
+    }
+
+    // Add sleeve buttons if exists
+    if (item.sleeveButtons && item.sleeveButtons !== "none") {
+      imagePaths.push({
+        key: "sleeveButtons",
+        path: `/assets/ragach/sleevseButton/${item.sleeveButtons}/${item.color}.png`,
+      });
+    }
+
+    // Add text inside if exists
+    if (item.textInsideText) {
+      imagePaths.push({
+        key: "textInside",
+        path: `/assets/adds/TextInside.png`,
+      });
+    }
+  } else if (viewType === "pants") {
+    // מכנסיים - רק החלקים הרלוונטיים
+    // Use pantsColor if exists, otherwise use suit color
+    const pantsColor = item.pantsColor || item.color;
+
     imagePaths.push({
-      key: "button",
-      path: `/assets/ragach/button/${item.kind}/${actualColor}.png`,
+      key: "pants",
+      path: `/assets/pants/AllPants/${pantsColor}.png`,
     });
+
+    // Add lines if exists
+    if (item.pantsLines && item.pantsLines !== "none") {
+      imagePaths.push({
+        key: "pantsLines",
+        path: `/assets/pants/lines/${item.pantsLines}/${pantsColor}.png`,
+      });
+    }
+
+    // Add hole and button - always show (default is Regular)
+    const holeButtonType = item.pantsHoleButton || "Regular"; // ברירת מחדל
+    imagePaths.push({
+      key: "pantsHoleButton",
+      path: `/assets/pants/HoleAndButton/${holeButtonType}/${pantsColor}.png`,
+    });
+
+    // Add hem if exists
+    if (item.pantsHem && item.pantsHem !== "none") {
+      imagePaths.push({
+        key: "pantsHem",
+        path: `/assets/pants/Hem/${pantsColor}.png`,
+      });
+    }
+
+    // Add sleeve buttons if exists
+    if (item.sleeveButtons && item.sleeveButtons !== "none") {
+      imagePaths.push({
+        key: "sleeveButtons",
+        path: `/assets/ragach/sleevseButton/${item.sleeveButtons}/${pantsColor}.png`,
+      });
+    }
+
+    // Add poshet for pants if exists
+    if (item.poshetColor) {
+      imagePaths.push({
+        key: "poshetColor",
+        path: `/assets/adds/poshet/${item.poshetColor}.png`,
+      });
+    }
+
+    // Add text inside if exists
+    if (item.textInsideText) {
+      imagePaths.push({
+        key: "textInside",
+        path: `/assets/adds/TextInside.png`,
+      });
+    }
   }
 
   return imagePaths;
 };
 
-const fetchImages = async (item) => {
+const fetchImages = async (item, viewType = "suit") => {
   if (!item) return {};
 
-  const imagePaths = getImagePaths(item);
+  const imagePaths = getImagePaths(item, viewType);
   const images = await Promise.all(
     imagePaths.map(({ key, path }) => loadImage(key, path))
   );
@@ -342,11 +457,18 @@ const fetchImages = async (item) => {
 // Get z-index for image layers
 const getZIndex = (key) => {
   const zIndexMap = {
-    packetBottom: 10,
+    packetBottom: 20, // הכי גבוה - הכיסים התחתונים
+    packetSide: 15, // גבוה - הכיסים הצדדיים
     button: 8,
     holeButton: 7,
     holeButtonUp: 6,
     poshetColor: 5,
+    pantsHem: 4,
+    pantsHoleButton: 3,
+    pantsLines: 2,
+    textInside: 1,
+    sleeveButtons: 1,
+    pants: 1,
     default: 1,
   };
 
@@ -364,6 +486,7 @@ const DynamicImage = ({
   const { data, isLoading: productLoading, error } = useProduct();
   const allSuits = useMemo(() => data?.allSuitPart || [], [data?.allSuitPart]);
   const [deletingSuitId, setDeletingSuitId] = useState(null);
+  const [cardViewTypes, setCardViewTypes] = useState({}); // Store view type for each card
   console.log("Received suits data:", allSuits); // Debug log
 
   // Sort suits based on sortBy prop
@@ -412,24 +535,60 @@ const DynamicImage = ({
     },
   });
 
-  // Create a stable queryKey by memoizing the MongoDB _ids
-  const suitsQueryKey = useMemo(
-    () => ["images", sortedSuits.map((item) => item._id).join("-")],
-    [sortedSuits]
+  // Create a cache for images
+  const [imagesCache, setImagesCache] = useState({});
+  const [loadingStates, setLoadingStates] = useState({});
+
+  // Function to load images for a specific suit and view type
+  const loadImagesForSuit = useCallback(
+    async (suitId, viewType) => {
+      const cacheKey = `${suitId}-${viewType}`;
+
+      // Check if already in cache
+      if (imagesCache[cacheKey]) {
+        return imagesCache[cacheKey];
+      }
+
+      // Set loading state
+      setLoadingStates((prev) => ({ ...prev, [cacheKey]: true }));
+
+      try {
+        const suit = sortedSuits.find((s) => s._id === suitId);
+        if (!suit) return null;
+
+        const images = await fetchImages(suit, viewType);
+
+        // Cache the result
+        setImagesCache((prev) => ({ ...prev, [cacheKey]: images }));
+        return images;
+      } catch (error) {
+        console.error(`Error loading images for ${suitId}:`, error);
+        return null;
+      } finally {
+        setLoadingStates((prev) => ({ ...prev, [cacheKey]: false }));
+      }
+    },
+    [sortedSuits, imagesCache]
   );
 
-  const {
-    data: imagesData,
-    isLoading: imagesLoading,
-    error: imagesError,
-  } = useQuery({
-    queryKey: suitsQueryKey,
-    queryFn: () => Promise.all(sortedSuits.map((item) => fetchImages(item))),
-    enabled: sortedSuits.length > 0 && !productLoading,
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 30 * 60 * 1000,
-    retry: 2,
+  // Load images for all suits on mount
+  useEffect(() => {
+    sortedSuits.forEach((suit) => {
+      const viewType = cardViewTypes[suit._id] || "suit";
+      loadImagesForSuit(suit._id, viewType);
+    });
+  }, [sortedSuits, loadImagesForSuit]);
+
+  // Get images data for display
+  const imagesData = sortedSuits.map((suit) => {
+    const viewType = cardViewTypes[suit._id] || "suit";
+    const cacheKey = `${suit._id}-${viewType}`;
+    return imagesCache[cacheKey] || null;
   });
+
+  // Check loading state
+  const isLoading =
+    productLoading || Object.values(loadingStates).some(Boolean);
 
   const handleSelect = (suitId, price) => {
     setSelectedSuits((prev) => {
@@ -450,7 +609,6 @@ const DynamicImage = ({
   };
 
   const handleDelete = async (suitId) => {
-    console.log("Deleting suit with ID:", suitId); // Debug log
     if (!suitId) {
       console.error("No suit ID provided for deletion");
       return;
@@ -470,7 +628,7 @@ const DynamicImage = ({
   };
 
   // Handle loading state
-  if (productLoading || imagesLoading) {
+  if (isLoading) {
     return (
       <div className={classes.loadingContainer}>
         <CircularProgress
@@ -484,7 +642,7 @@ const DynamicImage = ({
   }
 
   // Handle error states
-  if (error || imagesError) {
+  if (error) {
     return (
       <div className={classes.errorContainer}>
         <Typography>Error loading suits. Please try again later.</Typography>
@@ -510,6 +668,25 @@ const DynamicImage = ({
       : classes.cardControls;
     const priceClass = isListView ? classes.priceTagList : classes.priceTag;
 
+    // Get view type for this specific card
+    const cardViewType = cardViewTypes[item._id] || "suit";
+
+    // Function to toggle view type for this card
+    const toggleCardViewType = async () => {
+      const newViewType = cardViewType === "suit" ? "pants" : "suit";
+
+      setCardViewTypes((prev) => ({
+        ...prev,
+        [item._id]: newViewType,
+      }));
+
+      // Load images for the new view type if not in cache
+      const cacheKey = `${item._id}-${newViewType}`;
+      if (!imagesCache[cacheKey]) {
+        await loadImagesForSuit(item._id, newViewType);
+      }
+    };
+
     return (
       <div key={`suit-${item._id}`} className={cardClass}>
         {deletingSuitId === item._id && (
@@ -525,6 +702,7 @@ const DynamicImage = ({
 
         {imagesData?.[index] &&
           Object.entries(imagesData[index])
+            .filter(([key]) => key !== "textInside") // Remove textInside from display
             .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
             .map(([key, src]) => (
               <img
@@ -552,6 +730,19 @@ const DynamicImage = ({
         <div className={controlsClass}>
           <div className={priceClass}>{item.totalPrice}$</div>
           <div className={classes.controlsWrapper}>
+            {/* View Type Toggle Button */}
+            <button
+              onClick={toggleCardViewType}
+              className={classes.viewToggleButton}
+              style={{
+                padding: "4px 8px",
+                fontSize: "0.7rem",
+                marginRight: "8px",
+              }}
+            >
+              {cardViewType === "suit" ? "מכנסיים" : "חליפה"}
+            </button>
+
             <input
               type="checkbox"
               checked={selectedSuits.has(item._id)}

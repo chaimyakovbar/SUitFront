@@ -1,15 +1,4 @@
-import axios from "axios";
-
-const baseURL = "https://suitback.onrender.com"
-// const baseURL = "http://localhost:3020";
-
-const axiosInstance = axios.create({
-    baseURL,
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+import { axiosInstance } from "../config/api.js";
 
 // Save order data to database (excluding payment info)
 export const saveOrder = async (orderData) => {
@@ -83,11 +72,11 @@ export const clearLocalOrders = () => {
     localStorage.removeItem('orders');
 };
 
-// Remove purchased suits from database
+// Remove purchased suits from database after successful payment
 export const removePurchasedSuits = async (orderId, suitIds) => {
     try {
-        const response = await axiosInstance.post(`/orders/${orderId}/remove-suits`, {
-            suitIds: suitIds
+        const response = await axiosInstance.delete(`/orders/${orderId}/suits`, {
+            data: { suitIds }
         });
         return response.data;
     } catch (error) {

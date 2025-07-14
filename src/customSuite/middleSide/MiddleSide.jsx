@@ -1,5 +1,6 @@
 import React from "react";
 import ImageFilterComponent from "../../components/ImageCollector";
+import ImageFilterComponentForPants from "../../components/ImageCollectorForPants";
 import { motion } from "framer-motion";
 import { Box, Paper } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
   }
 });
 
-const MiddleSide = ({ isMobile }) => {
+const MiddleSide = ({ isMobile, isPants }) => {
   const classes = useStyles({ isMobile });
 
   return (
@@ -35,7 +36,14 @@ const MiddleSide = ({ isMobile }) => {
       className={classes.root}
     >
       <Box className={classes.imageContainer}>
-        <ImageFilterComponent />
+{
+  isPants ? (
+    <ImageFilterComponentForPants />
+  ) : (
+    <ImageFilterComponent />
+  )
+}
+        
       </Box>
     </motion.div>
   );

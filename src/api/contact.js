@@ -1,18 +1,9 @@
-const baseURL = "https://suitback.onrender.com"
-// const baseURL = "http://localhost:3020";
+import { axiosInstance } from "../config/api.js";
 
-export const sendContactMessage = async (formData) => {
+export const sendContactMessage = async (messageData) => {
     try {
-        const response = await fetch(`${baseURL}/contact/send`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-        return data;
+        const response = await axiosInstance.post("/contact", messageData);
+        return response.data;
     } catch (error) {
         console.error("Error sending contact message:", error);
         throw error;

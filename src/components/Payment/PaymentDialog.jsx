@@ -49,7 +49,8 @@ const PaymentForm = ({ amount, onSuccess, onCancel }) => {
       } else if (paymentIntent && paymentIntent.status === "succeeded") {
         onSuccess(paymentIntent);
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Payment error:", error);
       enqueueSnackbar("An error occurred while processing your payment.", {
         variant: "error",
       });
@@ -140,18 +141,26 @@ const PaymentDialog = ({
   useEffect(() => {
     if (open) {
       // Create PaymentIntent as soon as the dialog opens
-      fetch("https://suitback.onrender.com/payments/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          userEmail,
-          shippingType,
-        }),
-      })
+      fetch(
+        `${
+          import.meta.env.MODE === "development"
+            ? "http://localhost:3020"
+            : "https://suitback.onrender.com"
+        }/payments/create-payment-intent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount,
+            userEmail,
+            shippingType,
+          }),
+        }
+      )
         .then((res) => res.json())
         .then((data) => setClientSecret(data.clientSecret))
-        .catch((err) => {
+        .catch((error) => {
+          console.error("Payment initialization error:", error);
           enqueueSnackbar("Failed to initialize payment", { variant: "error" });
           onClose();
         });

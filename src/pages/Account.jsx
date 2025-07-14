@@ -957,15 +957,21 @@ function Account() {
   useEffect(() => {
     const fetchOrders = async () => {
       if (!user?.email) {
+        console.log("❌ No user.email found:", user);
         return;
       }
+
+      console.log("🔍 Fetching orders for userId:", user.email);
+      console.log("👤 Full user object:", user);
 
       setOrdersLoading(true);
       try {
         const response = await getUserOrders(user.email);
+        console.log("📦 Orders response:", response);
 
         if (response.success) {
           setOrders(response.orders || []);
+          console.log("✅ Orders loaded:", response.orders?.length || 0);
         } else {
           console.error("❌ Failed to fetch orders:", response.message);
         }
@@ -2028,7 +2034,6 @@ function Account() {
             >
               <List sx={{ p: 0 }}>
                 <ListItem
-                  button
                   className={`${classes.sidebarItem} ${
                     activeSection === "profile" ? "active" : ""
                   }`}
@@ -2036,6 +2041,7 @@ function Account() {
                   sx={{
                     borderBottom:
                       "1px solid rgba(192, 211, 202, 0.1) !important",
+                    cursor: "pointer",
                   }}
                 >
                   <ListItemIcon className={classes.sidebarIcon}>
@@ -2048,7 +2054,6 @@ function Account() {
                 </ListItem>
 
                 <ListItem
-                  button
                   className={`${classes.sidebarItem} ${
                     activeSection === "measurements" ? "active" : ""
                   }`}
@@ -2056,6 +2061,7 @@ function Account() {
                   sx={{
                     borderBottom:
                       "1px solid rgba(192, 211, 202, 0.1) !important",
+                    cursor: "pointer",
                   }}
                 >
                   <ListItemIcon className={classes.sidebarIcon}>
@@ -2068,11 +2074,13 @@ function Account() {
                 </ListItem>
 
                 <ListItem
-                  button
                   className={`${classes.sidebarItem} ${
                     activeSection === "orders" ? "active" : ""
                   }`}
                   onClick={() => setActiveSection("orders")}
+                  sx={{
+                    cursor: "pointer",
+                  }}
                 >
                   <ListItemIcon className={classes.sidebarIcon}>
                     <Badge badgeContent={orders.length} color="error">

@@ -609,6 +609,7 @@ const DynamicImage = ({
   };
 
   const handleDelete = async (suitId) => {
+    console.log("Deleting suit with ID:", suitId); // Debug log
     if (!suitId) {
       console.error("No suit ID provided for deletion");
       return;

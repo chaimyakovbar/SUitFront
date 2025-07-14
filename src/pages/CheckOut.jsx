@@ -22,6 +22,9 @@ const Checkout = ({
       const userId =
         user?.uid || user?.id || user?.email || `user_${Date.now()}`;
 
+      console.log("User object:", user);
+      console.log("Generated userId:", userId);
+
       // Build full suit objects array
       let fullSuits = [];
       if (products?.allSuitPart && selectedSuits) {
@@ -49,35 +52,49 @@ const Checkout = ({
         // Add any other relevant user data you want to store
       };
 
-      // Try to save to server first, fallback to localStorage
-      try {
-        const orderResult = await saveOrder(userData);
-        if (orderResult.success) {
-          // Try to remove purchased suits from database
-          try {
-            await removePurchasedSuits(fullSuits);
-          } catch (removeError) {
-            console.warn("Failed to remove suits from database:", removeError);
-          }
+      console.log("Sending userData to server:", userData);
 
-          // Call success callback if provided
-          if (onPaymentSuccess) {
-            onPaymentSuccess(orderResult);
-          }
-        } else {
-          throw new Error(orderResult.message || "Failed to save order");
-        }
-      } catch (error) {
-        // Fallback to localStorage if server save fails
+      // Try to save to server first, fallback to localStorage
+      let savedOrder = null;
+      try {
+        const response = await saveOrder(userData);
+        savedOrder = response.order;
+        console.log("User data saved to server successfully");
+
+        // Remove purchased suits from database
         try {
-          const existingOrders = JSON.parse(
-            localStorage.getItem("localOrders") || "[]"
+          await removePurchasedSuits(
+            savedOrder.orderId,
+            Array.from(selectedSuits)
           );
-          existingOrders.push(userData);
-          localStorage.setItem("localOrders", JSON.stringify(existingOrders));
-        } catch (localStorageError) {
-          console.error("Error saving user data:", error);
+          console.log("Purchased suits removed from database successfully");
+        } catch (removeError) {
+          console.warn("Failed to remove suits from database:", removeError);
+          // Continue with the process even if suit removal fails
         }
+      } catch (serverError) {
+        console.warn(
+          "Server not available, saving to localStorage:",
+          serverError
+        );
+
+        // Save to localStorage as fallback
+        const existingOrders = JSON.parse(
+          localStorage.getItem("orders") || "[]"
+        );
+        savedOrder = {
+          ...userData,
+          orderId: Date.now(), // Generate local ID
+          savedLocally: true,
+        };
+        existingOrders.push(savedOrder);
+        localStorage.setItem("orders", JSON.stringify(existingOrders));
+        console.log("User data saved to localStorage successfully");
+      }
+
+      // Call the success callback if provided
+      if (onPaymentSuccess) {
+        onPaymentSuccess(paymentDetails, savedOrder);
       }
     } catch (error) {
       console.error("Error saving user data:", error);
@@ -135,6 +152,8 @@ const Checkout = ({
           }}
           onApprove={(data, actions) => {
             return actions.order.capture().then((details) => {
+              console.log("Payment completed successfully:", details);
+
               // Save user data to database (excluding payment info)
               saveUserDataToDatabase(details);
 

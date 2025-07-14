@@ -20,7 +20,7 @@ import {
 import { useAtomValue, useAtom } from "jotai";
 import { useMediaQuery } from "@mui/material";
 import { suitPricing } from "../config/suitPricing";
-import TextInside from "../../public/assets/adds/textInside.png";
+import TextInside from "../../public/assets/adds/TextInside.png";
 
 const ImageFilterComponent = () => {
   // const previousConfigRef = useRef(null);

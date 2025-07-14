@@ -1,51 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, provider } from '../firebase';
+import { auth, provider } from '../firebase.js';
 import { useAtom } from 'jotai';
 import { authUserAtom } from '../Utils';
-import axios from 'axios';
-
-// Production URL
-const baseURL = "https://suitback.onrender.com";
-// const baseURL = "http://localhost:3020";
-
-// Create axios instance with proper configuration
-const axiosInstance = axios.create({
-    baseURL,
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-});
-
-// Add request interceptor for debugging
-axiosInstance.interceptors.request.use(
-    (config) => {
-        console.log('Making request to:', config.baseURL + config.url);
-        return config;
-    },
-    (error) => {
-        console.error('Request error:', error);
-        return Promise.reject(error);
-    }
-);
-
-// Add response interceptor for debugging
-axiosInstance.interceptors.response.use(
-    (response) => {
-        console.log('Response received:', response.status);
-        return response;
-    },
-    (error) => {
-        console.error('Response error:', {
-            status: error.response?.status,
-            data: error.response?.data,
-            config: error.config
-        });
-        return Promise.reject(error);
-    }
-);
+import { userAPI } from '../config/api.js';
 
 export const useAuth = () => {
     const [user, setUser] = useAtom(authUserAtom);
@@ -65,21 +23,21 @@ export const useAuth = () => {
             try {
                 console.log('Firebase auth successful, user:', firebaseUser.email);
                 // Send email to our webhook
-                const response = await axiosInstance.post('/user/auth-webhook', {
+                const response = await userAPI.authWebhook({
                     email: firebaseUser.email,
                     name: firebaseUser.displayName,
                     firebaseUid: firebaseUser.uid,
                     photoURL: firebaseUser.photoURL
                 });
-                console.log('Webhook response:', response.data);
+                console.log('Webhook response:', response);
 
-                if (!response.data.success) {
-                    throw new Error(response.data.message || 'Authentication failed');
+                if (!response.success) {
+                    throw new Error(response.message || 'Authentication failed');
                 }
 
                 // Store the user data from our database
-                setUser(response.data.user);
-                return response.data.user;
+                setUser(response.user);
+                return response.user;
             } catch (error) {
                 console.error('Detailed auth error:', {
                     message: error.message,
@@ -90,16 +48,16 @@ export const useAuth = () => {
                 // If user not found in our database, create them
                 if (error.response?.status === 404) {
                     try {
-                        const createResponse = await axiosInstance.post('/user/create', {
+                        const createResponse = await userAPI.createUser({
                             email: firebaseUser.email,
                             name: firebaseUser.displayName,
                             firebaseUid: firebaseUser.uid,
                             photoURL: firebaseUser.photoURL
                         });
 
-                        if (createResponse.data.success) {
-                            setUser(createResponse.data.user);
-                            return createResponse.data.user;
+                        if (createResponse.success) {
+                            setUser(createResponse.user);
+                            return createResponse.user;
                         }
                     } catch (createError) {
                         console.error('Error creating user:', createError);
@@ -127,16 +85,16 @@ export const useAuth = () => {
         onSuccess: async (firebaseUser) => {
             try {
                 // Send email to our webhook
-                const response = await axiosInstance.post('/user/auth-webhook', {
+                const response = await userAPI.authWebhook({
                     email: firebaseUser.email
                 });
 
-                if (!response.data.success) {
-                    throw new Error(response.data.message);
+                if (!response.success) {
+                    throw new Error(response.message);
                 }
 
                 // Store the user data from our database
-                setUser(response.data.user);
+                setUser(response.user);
             } catch (error) {
                 // If user not found in our database, sign out from Firebase
                 await signOut(auth);
@@ -193,20 +151,20 @@ export const useAuth = () => {
         onSuccess: async (firebaseUser) => {
             try {
                 // Send email to our webhook
-                const response = await axiosInstance.post('/user/auth-webhook', {
+                const response = await userAPI.authWebhook({
                     email: firebaseUser.email,
                     name: firebaseUser.displayName,
                     firebaseUid: firebaseUser.uid,
                     photoURL: firebaseUser.photoURL
                 });
 
-                if (!response.data.success) {
-                    throw new Error(response.data.message || 'Authentication failed');
+                if (!response.success) {
+                    throw new Error(response.message || 'Authentication failed');
                 }
 
                 // Store the user data from our database
-                setUser(response.data.user);
-                return response.data.user;
+                setUser(response.user);
+                return response.user;
             } catch (error) {
                 console.error('Detailed auth error:', {
                     message: error.message,
@@ -217,16 +175,16 @@ export const useAuth = () => {
                 // If user not found in our database, create them
                 if (error.response?.status === 404) {
                     try {
-                        const createResponse = await axiosInstance.post('/user/create', {
+                        const createResponse = await userAPI.createUser({
                             email: firebaseUser.email,
                             name: firebaseUser.displayName,
                             firebaseUid: firebaseUser.uid,
                             photoURL: firebaseUser.photoURL
                         });
 
-                        if (createResponse.data.success) {
-                            setUser(createResponse.data.user);
-                            return createResponse.data.user;
+                        if (createResponse.success) {
+                            setUser(createResponse.user);
+                            return createResponse.user;
                         }
                     } catch (createError) {
                         console.error('Error creating user:', createError);
@@ -282,9 +240,9 @@ export const useAuth = () => {
             console.log('🔐 Attempting to send password reset email to:', email);
             try {
                 // Use our server to send beautiful password reset email
-                const response = await axiosInstance.post('/email/password-reset', { email });
-                console.log('✅ Password reset email sent successfully:', response.data);
-                return response.data;
+                const response = await userAPI.resetPassword(email);
+                console.log('✅ Password reset email sent successfully:', response);
+                return response;
             } catch (error) {
                 console.error('❌ Password reset error details:', {
                     status: error.response?.status,
@@ -293,20 +251,7 @@ export const useAuth = () => {
                     fullError: error
                 });
 
-                // Translate server errors to English
-                let errorMessage = "Error sending password reset email";
-
-                if (error.response?.status === 400) {
-                    errorMessage = error.response.data?.message || "Invalid email address";
-                } else if (error.response?.status === 500) {
-                    errorMessage = "Server error. Please try again later";
-                } else if (error.code === 'ERR_NETWORK') {
-                    errorMessage = "Internet connection problem";
-                }
-
-                const translatedError = new Error(errorMessage);
-                translatedError.originalError = error;
-                throw translatedError;
+                throw error;
             }
         },
         onSuccess: () => {

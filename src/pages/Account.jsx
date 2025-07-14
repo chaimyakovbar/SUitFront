@@ -957,21 +957,15 @@ function Account() {
   useEffect(() => {
     const fetchOrders = async () => {
       if (!user?.email) {
-        console.log("❌ No user.email found:", user);
         return;
       }
-
-      console.log("🔍 Fetching orders for userId:", user.email);
-      console.log("👤 Full user object:", user);
 
       setOrdersLoading(true);
       try {
         const response = await getUserOrders(user.email);
-        console.log("📦 Orders response:", response);
 
         if (response.success) {
           setOrders(response.orders || []);
-          console.log("✅ Orders loaded:", response.orders?.length || 0);
         } else {
           console.error("❌ Failed to fetch orders:", response.message);
         }

@@ -1,30 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Box,
-  Typography,
-  Paper,
   Container,
+  Paper,
+  Typography,
+  Button,
   Stack,
   Divider,
   IconButton,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  Fade,
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
-  Fade,
 } from "@mui/material";
-import GetAllSuitFromDat from "../components/GetAllSuitFromData";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import useProduct from "../Hooks/useProduct";
-import { authUserAtom } from "../Utils";
-import { useAtom } from "jotai";
 import { makeStyles } from "@mui/styles";
+import { useAtom } from "jotai";
+import { authUserAtom } from "../Utils";
+import useProduct from "../Hooks/useProduct";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import GetAllSuitFromDat from "../components/GetAllSuitFromData";
 import { useMediaQuery } from "@mui/material";
 import PaymentDialog from "../components/Payment/PaymentDialog";
 import { postSuitProduct } from "../api/suit";
@@ -394,14 +391,11 @@ const Payed = () => {
       };
 
       // Save the order with pending status
-      const response = await fetch(
-        "https://suitback.onrender.com/payments/create-order-pending",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData),
-        }
-      );
+      const response = await fetch(`${baseURL}/payments/create-order-pending`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to create order");

@@ -10,12 +10,17 @@ import {
   selectedPoshetAtom,
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
+  selectedSleeveButtonsAtom,
+  textInsideTextAtom,
+  textInsideFontAtom,
+  textInsideColorAtom,
   priceAllSuitAtom,
-  selectedKindTypeAtom
+  selectedKindTypeAtom,
 } from "../Utils";
 import { useAtomValue, useAtom } from "jotai";
 import { useMediaQuery } from "@mui/material";
 import { suitPricing } from "../config/suitPricing";
+import TextInside from "../../public/assets/adds/textInside.png";
 
 const ImageFilterComponent = () => {
   // const previousConfigRef = useRef(null);
@@ -33,6 +38,10 @@ const ImageFilterComponent = () => {
   const selectedHolesButton = useAtomValue(selectedHolesButtonAtom);
   const selectedHolesButtonUp = useAtomValue(selectedHolesButtonUpAtom);
   const selectedKindType = useAtomValue(selectedKindTypeAtom);
+  const selectedSleeveButtons = useAtomValue(selectedSleeveButtonsAtom);
+  const textInsideText = useAtomValue(textInsideTextAtom);
+  const textInsideFont = useAtomValue(textInsideFontAtom);
+  const textInsideColor = useAtomValue(textInsideColorAtom);
 
   const packetKind = selectedKindType || "packetBottom";
   const insideColor = selectedInsideType || currColor;
@@ -53,7 +62,13 @@ const ImageFilterComponent = () => {
     }, 200);
 
     return () => clearTimeout(timer);
-  }, [selectedKind]);
+  }, [
+    selectedKind,
+    selectedSleeveButtons,
+    textInsideText,
+    textInsideFont,
+    textInsideColor,
+  ]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -358,6 +373,51 @@ const ImageFilterComponent = () => {
           onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
         />
       )}
+
+      {/* Sleeve buttons overlay - only show if selected */}
+      {selectedSleeveButtons !== "none" && (
+        <img
+          src={`/assets/ragach/sleevseButton/${selectedSleeveButtons}/${currColor}.png`}
+          alt={`Sleeve Buttons - ${selectedSleeveButtons}`}
+          style={overlayStyle}
+          onError={() =>
+            handleImageError(
+              `sleeveButtons: ${selectedSleeveButtons}/${currColor}`
+            )
+          }
+        />
+      )}
+
+      {/* TextInside overlay - REMOVED: Text is saved to database but not displayed on suit */}
+      {/* {textInsideText && (
+        <div style={{ ...overlayStyle, zIndex: 200 }}>
+          <img
+            src="/assets/adds/TextInside.png"
+            alt="TextInside"
+            style={imageStyle}
+            onError={() => handleImageError("TextInside")}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              color: textInsideColor,
+              padding: "8px 16px",
+              borderRadius: "4px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              textAlign: "center",
+              minWidth: "120px",
+              fontFamily: textInsideFont,
+            }}
+          >
+            {textInsideText}
+          </div>
+        </div>
+      )} */}
     </div>
   );
 };

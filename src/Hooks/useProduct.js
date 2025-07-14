@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosInstance } from '../config/api.js';
 import { authUserAtom } from '../Utils'
 import { useAtom } from "jotai";
 
 const getProduct = async (user) => {
-  const { data } = await axios.get(`https://suitback.onrender.com/product?email=${user.email}`);
+  const { data } = await axiosInstance.get(`/product?email=${user.email}`);
   return data;
 };
 

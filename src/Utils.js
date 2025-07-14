@@ -41,6 +41,19 @@ export const allSuitPartAtom = atom([])
 
 export const priceAllSuitAtom = atom(0)
 
-export const baseURLAtom = atom("https://suitback.onrender.com")
 
-// export const baseURLAtom = atom("http://localhost:3020")
+
+// Pants customization atoms
+export const selectedPantsColorAtom = atom(''); // Empty = use suit color
+export const selectedPantsLinesAtom = atom('none'); // none, OneLinesInTheTop, twoLinesInTheTop
+export const selectedPantsHoleButtonAtom = atom('Regular'); // Regular, behindLeftSide, behindRegular, LeftSide
+export const selectedPantsHemAtom = atom('none'); // none, Hem
+
+// TextInside functionality
+export const textInsideTextAtom = atom(''); // Free text for TextInside
+export const textInsideFontAtom = atom('Arial'); // Font family for TextInside
+export const textInsideColorAtom = atom('#ffffff'); // Text color for TextInside
+export const showTextInsideAtom = atom(false); // Whether to show TextInside modal
+
+// Sleeve buttons selection
+export const selectedSleeveButtonsAtom = atom('none'); // none, tree, four, five

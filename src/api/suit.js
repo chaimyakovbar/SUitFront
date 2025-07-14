@@ -1,15 +1,4 @@
-import axios from "axios"
-
-const baseURL = "https://suitback.onrender.com"
-// const baseURL = "http://localhost:3020"
-
-const axiosInstance = axios.create({
-    baseURL,
-    withCredentials: true, // אם אתה עובד עם קוקיז
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+import { axiosInstance } from "../config/api.js"
 
 export const postProduct = async ({ email, sizes, sizesTable }) => {
     return axiosInstance.post("/product", { email, sizes, sizesTable });

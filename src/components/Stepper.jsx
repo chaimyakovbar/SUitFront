@@ -26,6 +26,16 @@ import {
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
   priceAllSuitAtom,
+  // Add missing atoms
+  selectedPantsColorAtom,
+  selectedPantsLinesAtom,
+  selectedPantsHoleButtonAtom,
+  selectedPantsHemAtom,
+  selectedSleeveButtonsAtom,
+  textInsideTextAtom,
+  textInsideFontAtom,
+  textInsideColorAtom,
+  selectedKindTypeAtom,
 } from "../Utils";
 import ExplainDialog from "./ExplainDialog";
 import { useSnackbar } from "notistack";
@@ -34,6 +44,10 @@ import { useNavigate } from "react-router-dom";
 import UserLogin from "../User/UserLogin";
 import UserSignUp from "../User/UserSignUp";
 import { postSuitProduct } from "../api/suit";
+import {
+  createCompleteSuitObject,
+  resetSuitState,
+} from "../utils/suitStateManager";
 
 const steps = [
   {
@@ -90,6 +104,25 @@ const StyledStepper = () => {
     selectedHolesButtonUpAtom
   );
 
+  // Add missing atoms
+  const [selectedPantsColor, setSelectedPantsColor] = useAtom(
+    selectedPantsColorAtom
+  );
+  const [selectedPantsLines, setSelectedPantsLines] = useAtom(
+    selectedPantsLinesAtom
+  );
+  const [selectedPantsHoleButton, setSelectedPantsHoleButton] = useAtom(
+    selectedPantsHoleButtonAtom
+  );
+  const [selectedPantsHem, setSelectedPantsHem] = useAtom(selectedPantsHemAtom);
+  const [selectedSleeveButtons, setSelectedSleeveButtons] = useAtom(
+    selectedSleeveButtonsAtom
+  );
+  const [textInsideText, setTextInsideText] = useAtom(textInsideTextAtom);
+  const [textInsideFont, setTextInsideFont] = useAtom(textInsideFontAtom);
+  const [textInsideColor, setTextInsideColor] = useAtom(textInsideColorAtom);
+  const [selectedKindType, setSelectedKindType] = useAtom(selectedKindTypeAtom);
+
   const insideColor = selectedInsideType || currColor;
   const holeButtonColor = selectedHolesButton;
   const holeButtonUpColor = selectedHolesButtonUp;
@@ -118,31 +151,32 @@ const StyledStepper = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
   };
 
-  const bottomPart =
-    selectedKind === "kind3" || selectedKind === "kind4"
-      ? "bottomKind3"
-      : "bottom";
-
   const handleSubmitSuit = async () => {
     navigate("/indexSizes");
-    const newSuit = {
-      kind: selectedKind || null,
-      colar: currColor,
-      sleeves: currColor,
-      insideUp: currColor,
-      packetUp: currColor,
-      bottomPart: bottomPart,
-      color: currColor || null,
-      lapelType: selectedLapelType || null,
-      lapelKind: selectedCollar || null,
-      packetType: selectedPacketType || null,
-      totalPrice: priceAllSuit,
-      buttonColor: buttonColor || null,
-      insideColor: insideColor || currColor || null,
-      poshetColor: poshetColor || null,
-      holeButtonColor: holeButtonColor || null,
-      holeButtonUpColor: holeButtonUpColor || null,
-    };
+
+    // Create complete suit object using the utility function
+    const newSuit = createCompleteSuitObject({
+      currentColor: currColor,
+      selectedKind,
+      selectedCollar,
+      selectedLapelType,
+      selectedPacketType,
+      selectedKindType, // Add this
+      selectedButton: buttonColor,
+      selectedPoshet: poshetColor,
+      selectedHolesButton: holeButtonColor,
+      selectedHolesButtonUp: holeButtonUpColor,
+      selectedInsideType: insideColor,
+      selectedPantsColor,
+      selectedPantsLines,
+      selectedPantsHoleButton,
+      selectedPantsHem,
+      selectedSleeveButtons,
+      textInsideText,
+      textInsideFont,
+      textInsideColor,
+      priceAllSuit,
+    });
 
     // try {
     // if (user) {
@@ -165,33 +199,60 @@ const StyledStepper = () => {
         allSuitPart: newSuit,
       });
 
-      // Reset all stepper states
-      setSelectedButton(null);
-      setSelectedPoshet(null);
-      setSelectedLapelType("Standard");
-      setSelectedPacketType("packet1");
-      setSelectedInsideType(null);
-      setSelectedHolesButton(null);
-      setSelectedHolesButtonUp(null);
-      setCurrColor("blackGrey");
-      setSelectedKind("kind1");
-      setSelectedCollar("collarTight");
+      // Reset all stepper states using the utility function
+      const setters = {
+        setSelectedButton,
+        setSelectedPoshet,
+        setSelectedLapelType,
+        setSelectedPacketType,
+        setSelectedInsideType,
+        setSelectedHolesButton,
+        setSelectedHolesButtonUp,
+        setCurrColor,
+        setSelectedKind,
+        setSelectedCollar,
+        setSelectedPantsColor,
+        setSelectedPantsLines,
+        setSelectedPantsHoleButton,
+        setSelectedPantsHem,
+        setSelectedSleeveButtons,
+        setTextInsideText,
+        setTextInsideFont,
+        setTextInsideColor,
+        setSelectedKindType,
+      };
+
+      resetSuitState(setters);
       setActiveStep(0);
       // setCompleted({});
       previousConfigRef.current = null;
 
       enqueueSnackbar("החליפה נשמרה בהצלחה!", { variant: "success" });
     } else {
-      setSelectedButton(null);
-      setSelectedPoshet(null);
-      setSelectedLapelType("Standard");
-      setSelectedPacketType("packet1");
-      setSelectedInsideType(null);
-      setSelectedHolesButton(null);
-      setSelectedHolesButtonUp(null);
-      setCurrColor("blackGrey");
-      setSelectedKind("kind1");
-      setSelectedCollar("collarTight");
+      // Reset all stepper states using the utility function
+      const setters = {
+        setSelectedButton,
+        setSelectedPoshet,
+        setSelectedLapelType,
+        setSelectedPacketType,
+        setSelectedInsideType,
+        setSelectedHolesButton,
+        setSelectedHolesButtonUp,
+        setCurrColor,
+        setSelectedKind,
+        setSelectedCollar,
+        setSelectedPantsColor,
+        setSelectedPantsLines,
+        setSelectedPantsHoleButton,
+        setSelectedPantsHem,
+        setSelectedSleeveButtons,
+        setTextInsideText,
+        setTextInsideFont,
+        setTextInsideColor,
+        setSelectedKindType,
+      };
+
+      resetSuitState(setters);
       setActiveStep(0);
       // setCompleted({});
       previousConfigRef.current = null;

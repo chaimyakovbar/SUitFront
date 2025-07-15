@@ -2,7 +2,7 @@ import axios from "axios";
 
 // API Configuration - Switch between local and remote servers
 // Choose your preferred server
-const USE_LOCAL = true; // Set to false to use remote server
+const USE_LOCAL = false; // Set to false to use remote server
 
 const baseURL = USE_LOCAL
     ? "http://localhost:3020"

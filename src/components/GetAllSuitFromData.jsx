@@ -368,7 +368,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.sleeveButtons && item.sleeveButtons !== "none") {
       imagePaths.push({
         key: "sleeveButtons",
-        path: `/assets/ragach/sleevseButton/${item.sleeveButtons}/${item.color}.png`,
+        path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${item.color}.png`,
       });
     }
 
@@ -416,7 +416,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.sleeveButtons && item.sleeveButtons !== "none") {
       imagePaths.push({
         key: "sleeveButtons",
-        path: `/assets/ragach/sleevseButton/${item.sleeveButtons}/${pantsColor}.png`,
+        path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${pantsColor}.png`,
       });
     }
 

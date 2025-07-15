@@ -375,9 +375,9 @@ const ImageFilterComponent = () => {
       )}
 
       {/* Sleeve buttons overlay - only show if selected */}
-      {selectedSleeveButtons !== "none" && (
+      {/* {selectedSleeveButtons !== "none" && (
         <img
-          src={`/assets/ragach/sleevseButton/${selectedSleeveButtons}/${currColor}.png`}
+          src={`public/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.png`}
           alt={`Sleeve Buttons - ${selectedSleeveButtons}`}
           style={overlayStyle}
           onError={() =>
@@ -386,7 +386,7 @@ const ImageFilterComponent = () => {
             )
           }
         />
-      )}
+      )} */}
 
       {/* TextInside overlay - REMOVED: Text is saved to database but not displayed on suit */}
       {/* {textInsideText && (

@@ -20,7 +20,7 @@ const IndexSizes = () => {
     <div style={{ backgroundColor: "#f0f2f5" }}>
       <div
         style={{
-          marginTop: "200px",
+          marginTop: isMobile ? "100px" : "200px",
           backgroundColor: "#161616",
         }}
       >

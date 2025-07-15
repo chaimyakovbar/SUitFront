@@ -365,12 +365,12 @@ const getImagePaths = (item, viewType = "suit") => {
     }
 
     // Add sleeve buttons if exists
-    if (item.sleeveButtons && item.sleeveButtons !== "none") {
-      imagePaths.push({
-        key: "sleeveButtons",
-        path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${item.color}.png`,
-      });
-    }
+    // if (item.sleeveButtons && item.sleeveButtons !== "none") {
+    //   imagePaths.push({
+    //     key: "sleeveButtons",
+    //     path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${item.color}.png`,
+    //   });
+    // }
 
     // Add text inside if exists
     if (item.textInsideText) {

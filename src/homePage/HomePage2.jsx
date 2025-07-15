@@ -18,7 +18,7 @@ import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
 import NavBar from "./NavBar";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(({
   root: {
     background: "#0a0a0a",
     color: "#fff",

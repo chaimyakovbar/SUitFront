@@ -57,3 +57,5 @@ export const showTextInsideAtom = atom(false); // Whether to show TextInside mod
 
 // Sleeve buttons selection
 export const selectedSleeveButtonsAtom = atom('none'); // none, tree, four, five
+
+export const selectedTopCollarColorAtom = atom('black');

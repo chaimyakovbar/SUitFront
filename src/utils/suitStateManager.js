@@ -209,7 +209,8 @@ export const createCompleteSuitObject = (atoms) => {
         textInsideText,
         textInsideFont,
         textInsideColor,
-        priceAllSuit
+        priceAllSuit,
+        topCollarColor, // <-- add this line
     } = atoms;
 
     const bottomPart = selectedKind === "kind3" || selectedKind === "kind4" ? "bottomKind3" : "bottom";
@@ -244,5 +245,7 @@ export const createCompleteSuitObject = (atoms) => {
         textInsideText: textInsideText || null,
         textInsideFont: textInsideFont || null,
         textInsideColor: textInsideColor || null,
+        // Top collar color
+        topCollarColor: topCollarColor || null,
     };
 }; 

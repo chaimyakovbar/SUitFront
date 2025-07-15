@@ -36,6 +36,7 @@ import {
   textInsideFontAtom,
   textInsideColorAtom,
   selectedKindTypeAtom,
+  selectedTopCollarColorAtom,
 } from "../Utils";
 import ExplainDialog from "./ExplainDialog";
 import { useSnackbar } from "notistack";
@@ -122,6 +123,7 @@ const StyledStepper = () => {
   const [textInsideFont, setTextInsideFont] = useAtom(textInsideFontAtom);
   const [textInsideColor, setTextInsideColor] = useAtom(textInsideColorAtom);
   const [selectedKindType, setSelectedKindType] = useAtom(selectedKindTypeAtom);
+  const topCollarColor = useAtomValue(selectedTopCollarColorAtom);
 
   const insideColor = selectedInsideType || currColor;
   const holeButtonColor = selectedHolesButton;
@@ -176,6 +178,7 @@ const StyledStepper = () => {
       textInsideFont,
       textInsideColor,
       priceAllSuit,
+      topCollarColor, // <-- add this
     });
 
     // try {

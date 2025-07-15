@@ -45,7 +45,7 @@ pants/
     └── greyLight.png
 ```
 
-### כפתורי שרוולים (`public/assets/ragach/sleevseButton/`):
+### כפתורי שרוולים (`public/assets/adds/sleevseButton/`):
 
 ```
 sleevseButton/

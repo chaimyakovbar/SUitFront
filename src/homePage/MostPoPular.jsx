@@ -11,6 +11,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
+import { baseURL } from "../config/api";
 
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -414,8 +415,8 @@ const MostPoPular = () => {
     setError(null);
 
     try {
-      // נסה לטעון מהשרת
-      const response = await fetch("http://localhost:3020/orders/suits");
+      // נסה לטעון מהשרת לפי הקונפיגורציה
+      const response = await fetch(`${baseURL}/orders/suits`);
       if (response.ok) {
         const data = await response.json();
         if (data.success) {

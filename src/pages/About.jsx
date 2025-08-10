@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useLanguage } from "../context/LanguageContext";
 
 const useStyles = makeStyles({
   root: {
@@ -107,6 +108,7 @@ const useStyles = makeStyles({
 
 const About = () => {
   const classes = useStyles();
+  const { t } = useLanguage();
 
   return (
     <motion.div
@@ -119,7 +121,7 @@ const About = () => {
       <Container maxWidth="lg" className={classes.container}>
         <Link to="/" className={classes.returnButton}>
           <ArrowBackIcon className={classes.returnIcon} />
-          Return to Main Page
+          {t("returnToMain")}
         </Link>
 
         <motion.div
@@ -128,7 +130,7 @@ const About = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <Typography variant="h1" className={classes.heading}>
-            Our Heritage
+            {t("ourHeritage")}
           </Typography>
         </motion.div>
 
@@ -140,22 +142,13 @@ const About = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <Typography variant="h2" className={classes.subheading}>
-                Italian Suit Craftsmanship Since 1957
+                {t("italianCraftsmanship")}
               </Typography>
               <Typography variant="body1" className={classes.paragraph}>
-                Founded in 1957, our Italian suit atelier has been a symbol of
-                timeless elegance and exceptional craftsmanship for over six
-                decades. Located in the heart of Italy, we take pride in
-                designing and tailoring high-quality suits that blend tradition
-                with modern sophistication.
+                {t("aboutParagraph1")}
               </Typography>
               <Typography variant="body1" className={classes.paragraph}>
-                Each suit is crafted with precision by skilled artisans using
-                the finest Italian fabrics, ensuring a perfect fit and
-                unparalleled comfort. Whether you're looking for a classic
-                business suit, a stylish tuxedo, or a custom-made masterpiece,
-                our collection offers a wide range of designs to suit every
-                occasion.
+                {t("aboutParagraph2")}
               </Typography>
             </motion.div>
           </Grid>
@@ -167,7 +160,7 @@ const About = () => {
               className={classes.imageContainer}
             >
               <img
-                src="/assets/about/tailor-workshop.jpg"
+                src="/assets/oldMan.jpg"
                 alt="Tailor workshop"
                 className={classes.image}
               />
@@ -186,21 +179,13 @@ const About = () => {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               <Typography variant="h2" className={classes.subheading}>
-                The Art of Tailoring
+                {t("artOfTailoring")}
               </Typography>
               <Typography variant="body1" className={classes.paragraph}>
-                Our commitment to excellence and attention to detail have made
-                us a trusted name in men's fashion, attracting clients from
-                around the world. We believe that a well-tailored suit is more
-                than just clothing—it's a statement of confidence, style, and
-                tradition.
+                {t("aboutParagraph3")}
               </Typography>
               <Typography variant="body1" className={classes.paragraph}>
-                Each garment passes through the hands of at least 16 specialized
-                artisans, from pattern makers to button specialists. We maintain
-                the traditional techniques that have been passed down through
-                generations, ensuring that every stitch contributes to both the
-                aesthetic appeal and structural integrity of the final piece.
+                {t("aboutParagraph4")}
               </Typography>
             </motion.div>
           </Grid>
@@ -212,7 +197,7 @@ const About = () => {
               className={classes.imageContainer}
             >
               <img
-                src="/assets/about/suit-detail.jpg"
+                src="/assets/takeSizes.jpg"
                 alt="Suit detail"
                 className={classes.image}
               />
@@ -227,9 +212,7 @@ const About = () => {
           transition={{ duration: 0.8, delay: 1.2 }}
         >
           <Typography variant="body1" className={classes.highlight}>
-            "Visit us and experience the essence of Italian tailoring, where
-            quality meets heritage, and every suit tells a story of
-            craftsmanship and tradition."
+            "{t("aboutQuote")}"
           </Typography>
         </motion.div>
       </Container>

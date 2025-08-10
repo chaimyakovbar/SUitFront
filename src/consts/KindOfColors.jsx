@@ -26,35 +26,35 @@ import silverLight from "/assets/adds/button/silverLight.jpg";
 import white from "/assets/adds/button/white.jpg";
 
 // import poset1 from '../assets/poshet/black.jpg';
-import poset2 from '../assets/poshet/black2.jpg';
+import poset2 from "../assets/poshet/black2.jpg";
 // import poset3 from '../assets/poshet/black3.jpg';
-import poset4 from '../assets/poshet/blackWithDots.jpg';
+import poset4 from "../assets/poshet/blackWithDots.jpg";
 // import poset5 from '../assets/poshet/blue.jpg';
-import poset6 from '../assets/poshet/blueLight.jpg';
-import poset7 from '../assets/poshet/blueLightWithDots.jpg';
+import poset6 from "../assets/poshet/blueLight.jpg";
+import poset7 from "../assets/poshet/blueLightWithDots.jpg";
 // import poset8 from '../assets/poshet/blueNevey.jpg';
-import poset9 from '../assets/poshet/blueNevey2.jpg';
-import poset10 from '../assets/poshet/blueWithBlueLightLins.jpg';
-import poset11 from '../assets/poshet/blueWithBlueLightLins2.jpg';
-import poset12 from '../assets/poshet/blueWithDots.jpg';
-import poset13 from '../assets/poshet/blueWithDots2.jpg';
-import poset14 from '../assets/poshet/blueWithLines.jpg';
-import poset15 from '../assets/poshet/brown.jpg';
-import poset16 from '../assets/poshet/brownWithDots.jpg';
-import poset17 from '../assets/poshet/gold.jpg';
-import poset18 from '../assets/poshet/goldWhite.jpg';
-import poset19 from '../assets/poshet/grey.jpg';
-import poset20 from '../assets/poshet/peenk.jpg';
-import poset21 from '../assets/poshet/prupleWithDots.jpg';
-import poset22 from '../assets/poshet/purple.jpg';
-import poset23 from '../assets/poshet/purpleLight.jpg';
+import poset9 from "../assets/poshet/blueNevey2.jpg";
+import poset10 from "../assets/poshet/blueWithBlueLightLins.jpg";
+import poset11 from "../assets/poshet/blueWithBlueLightLins2.jpg";
+import poset12 from "../assets/poshet/blueWithDots.jpg";
+import poset13 from "../assets/poshet/blueWithDots2.jpg";
+import poset14 from "../assets/poshet/blueWithLines.jpg";
+import poset15 from "../assets/poshet/brown.jpg";
+import poset16 from "../assets/poshet/brownWithDots.jpg";
+import poset17 from "../assets/poshet/gold.jpg";
+import poset18 from "../assets/poshet/goldWhite.jpg";
+import poset19 from "../assets/poshet/grey.jpg";
+import poset20 from "../assets/poshet/peenk.jpg";
+import poset21 from "../assets/poshet/prupleWithDots.jpg";
+import poset22 from "../assets/poshet/purple.jpg";
+import poset23 from "../assets/poshet/purpleLight.jpg";
 // import poset24 from '../assets/poshet/red.jpg';
-import poset25 from '../assets/poshet/red2.jpg';
-import poset26 from '../assets/poshet/redLight.jpg';
+import poset25 from "../assets/poshet/red2.jpg";
+import poset26 from "../assets/poshet/redLight.jpg";
 // import poset27 from '../assets/poshet/redWithDots.jpg';
-import poset28 from '../assets/poshet/redWithDots2.jpg';
-import poset29 from '../assets/poshet/redWithines.jpg';
-import poset30 from '../assets/poshet/white.jpg';
+import poset28 from "../assets/poshet/redWithDots2.jpg";
+import poset29 from "../assets/poshet/redWithines.jpg";
+import poset30 from "../assets/poshet/white.jpg";
 
 import Suit1 from "../assets/suits/1.webp";
 import Suit2 from "../assets/suits/2.webp";
@@ -95,6 +95,7 @@ import size14 from "../assets/sizes/14.jpg";
 import size15 from "../assets/sizes/15.jpg";
 import size16 from "../assets/sizes/16.jpg";
 
+// ===== מדידות גוף - שמות באנגלית =====
 export const userSizes = [
   "Chest",
   "Waist",
@@ -112,8 +113,29 @@ export const userSizes = [
   "Thigh",
   "Knee",
   "Ankles",
-]
-export const  bodyPoints = [
+];
+
+// ===== מדידות חליפה - שמות באנגלית =====
+export const userSizesSuit = [
+  "Chest",
+  "Waist",
+  "Seat",
+  "Jacket Length",
+  "Front Width",
+  "Rear Width",
+  "Armhole",
+  "Biceps",
+  "Shoulder",
+  "Sleeve Length",
+  "Trousers Length",
+  "Waistband",
+  "Stride Length",
+  "Thigh",
+  "Knee",
+  "Ankles",
+];
+// ===== נקודות על תמונה דו-ממדית למדידות גוף (למסך צד) =====
+export const bodyPoints = [
   {
     id: "chest",
     label: "חזה",
@@ -226,9 +248,14 @@ export const  bodyPoints = [
     y: 50,
     category: userSizes[15],
   },
-]
+];
 export const sizesCollectionExpleines = [
-  { img: size1, video: null, title: "לוקחים את המטר ושמים מסביב למוטן מעדקים ואז אחרי זה שמים אצבע אחד כדי שיהיה מקו"},
+  {
+    img: size1,
+    video: null,
+    title:
+      "לוקחים את המטר ושמים מסביב למוטן מעדקים ואז אחרי זה שמים אצבע אחד כדי שיהיה מקו",
+  },
   { img: size2, video: null, title: "" },
   { img: size3, video: null, title: "" },
   { img: size4, video: null, title: "" },
@@ -245,7 +272,123 @@ export const sizesCollectionExpleines = [
   { img: size15, video: null, title: "" },
   { img: size16, video: null, title: "" },
 ];
+// ===== נקודות על תמונה דו-ממדית למדידות חליפה (למסך צד) =====
+export const bodyPointsSuit = [
+  {
+    id: "chest",
+    label: "היקף חזה",
+    x: 60,
+    y: 35,
+    category: userSizesSuit[0],
+  },
+  {
+    id: "waist",
+    label: "היקף מותניים",
+    x: 60,
+    y: 50,
+    category: userSizesSuit[1],
+  },
+  {
+    id: "seat",
+    label: "היקף ירכיים",
+    x: 60,
+    y: 65,
+    category: userSizesSuit[2],
+  },
+  {
+    id: "jacketLength",
+    label: "אורך ז'קט",
+    x: 40,
+    y: 25,
+    category: userSizesSuit[3],
+  },
+  {
+    id: "frontWidth",
+    label: "רוחב חזית",
+    x: 60,
+    y: 30,
+    category: userSizesSuit[4],
+  },
+  {
+    id: "rearWidth",
+    label: "רוחב גב",
+    x: 88,
+    y: 32,
+    category: userSizesSuit[5],
+  },
+  {
+    id: "armhole",
+    label: "היקף בית שחי",
+    x: 70,
+    y: 26,
+    category: userSizesSuit[6],
+  },
+  {
+    id: "biceps",
+    label: "היקף זרוע",
+    x: 72,
+    y: 35,
+    category: userSizesSuit[7],
+  },
+  {
+    id: "shoulder",
+    label: "רוחב כתף",
+    x: 88,
+    y: 70,
+    category: userSizesSuit[8],
+  },
+  {
+    id: "sleeveLength",
+    label: "אורך שרוול",
+    x: 71,
+    y: 62,
+    category: userSizesSuit[9],
+  },
+  {
+    id: "trousersLength",
+    label: "אורך מכנסיים",
+    x: 42,
+    y: 65,
+    category: userSizesSuit[10],
+  },
+  {
+    id: "waistband",
+    label: "היקף חגורה",
+    x: 51,
+    y: 60,
+    category: userSizesSuit[11],
+  },
+  {
+    id: "strideLength",
+    label: "אורך צעד",
+    x: 51,
+    y: 67,
+    category: userSizesSuit[12],
+  },
+  {
+    id: "thigh",
+    label: "היקף ירך",
+    x: 43,
+    y: 75,
+    category: userSizesSuit[13],
+  },
+  {
+    id: "knee",
+    label: "היקף ברך",
+    x: 43,
+    y: 85,
+    category: userSizesSuit[14],
+  },
+  {
+    id: "ankles",
+    label: "היקף קרסול",
+    x: 88,
+    y: 50,
+    category: userSizesSuit[15],
+  },
+];
 
+// ===== כפתורים על המודל התלת-ממדי למדידות גוף =====
 export const buttons = [
   {
     id: 1,
@@ -253,8 +396,8 @@ export const buttons = [
     position: [0, 6.2, 1],
     size: 0.2,
     tooltip: "חזה עליון",
-    label: "Center Button",
-    explain:  "לוקחים את המטר ושמים מסביב למוטן מעדקים ואז אחרי זה שמים אצבע אחד כדי שיהיה מקו",
+    label: "חזה עליון",
+    explain: "מדידת היקף החזה - מסביב לחלק הרחב ביותר של החזה",
     img: size1,
     video: "",
   },
@@ -263,8 +406,9 @@ export const buttons = [
     name: "Waist",
     position: [0, 5.3, 1],
     size: 0.15,
-    tooltip: "",
-    label: "Top Left Button",
+    tooltip: "היקף מותניים",
+    label: "היקף מותניים",
+    explain: "מדידת היקף המותניים - מסביב לחלק הצר ביותר של המותניים",
     img: size2,
     video: "",
   },
@@ -273,8 +417,9 @@ export const buttons = [
     name: "Seat",
     position: [0, 4.6, -1],
     size: 0.15,
-    tooltip: "",
-    label: "Top Right Button",
+    tooltip: "היקף ירכיים",
+    label: "היקף ירכיים",
+    explain: "מדידת היקף הירכיים - מסביב לחלק הרחב ביותר של הירכיים",
     img: size3,
     video: "",
   },
@@ -283,8 +428,9 @@ export const buttons = [
     name: "Jacket Length",
     position: [-0.7, 7.25, 1],
     size: 0.15,
-    tooltip: "",
-    label: "Bottom Left Button",
+    tooltip: "אורך ז'קט",
+    label: "אורך ז'קט",
+    explain: "מדידת אורך הז'קט - מהכתף עד לקצה הז'קט",
     img: size4,
     video: "",
   },
@@ -293,8 +439,9 @@ export const buttons = [
     name: "Front Width",
     position: [0, 6.8, 1],
     size: 0.15,
-    tooltip: "",
-    label: "Bottom Right Button",
+    tooltip: "רוחב חזית",
+    label: "רוחב חזית",
+    explain: "מדידת רוחב חזית הז'קט",
     img: size5,
     video: "",
   },
@@ -303,8 +450,9 @@ export const buttons = [
     name: "Rear Width",
     position: [0, 6.5, -1],
     size: 0.1,
-    tooltip: "",
-    label: "Top Center Button",
+    tooltip: "רוחב גב",
+    label: "רוחב גב",
+    explain: "מדידת רוחב גב הז'קט",
     img: size6,
     video: "",
   },
@@ -313,8 +461,9 @@ export const buttons = [
     name: "Armhole",
     position: [1, 7.2, -0.8],
     size: 0.1,
-    tooltip: "",
-    label: "Bottom Center Button",
+    tooltip: "היקף בית שחי",
+    label: "היקף בית שחי",
+    explain: "מדידת היקף בית השחי של הז'קט",
     img: size7,
     video: "",
   },
@@ -323,8 +472,9 @@ export const buttons = [
     name: "Biceps",
     position: [1.3, 6.3, -0.2],
     size: 0.1,
-    tooltip: "",
-    label: "Top Right Button",
+    tooltip: "היקף זרוע",
+    label: "היקף זרוע",
+    explain: "מדידת היקף הזרוע - בחלק הרחב ביותר",
     img: size8,
     video: "",
   },
@@ -333,8 +483,9 @@ export const buttons = [
     name: "Shoulder",
     position: [0, 7.5, -1],
     size: 0.1,
-    tooltip: "",
-    label: "Top Left Button",
+    tooltip: "רוחב כתף",
+    label: "רוחב כתף",
+    explain: "מדידת רוחב הכתף - מכתף לכתף",
     img: size9,
     video: "",
   },
@@ -343,8 +494,9 @@ export const buttons = [
     name: "Sleeve Length",
     position: [1.8, 4.8, 0],
     size: 0.1,
-    tooltip: "",
-    label: "Center Top Button",
+    tooltip: "אורך שרוול",
+    label: "אורך שרוול",
+    explain: "מדידת אורך השרוול - מהכתף עד לקצה השרוול",
     img: size10,
     video: "",
   },
@@ -353,8 +505,9 @@ export const buttons = [
     name: "Trousers Length",
     position: [1, 0.4, 0],
     size: 0.1,
-    tooltip: "",
-    label: "Bottom Right Button",
+    tooltip: "אורך מכנסיים",
+    label: "אורך מכנסיים",
+    explain: "מדידת אורך המכנסיים - מהמותניים עד לקצה המכנסיים",
     img: size11,
     video: "",
   },
@@ -363,8 +516,9 @@ export const buttons = [
     name: "Waistband",
     position: [0, 4.8, 1],
     size: 0.1,
-    tooltip: "",
-    label: "Bottom Left Button",
+    tooltip: "היקף חגורה",
+    label: "היקף חגורה",
+    explain: "מדידת היקף החגורה של המכנסיים",
     img: size12,
     video: "",
   },
@@ -373,8 +527,9 @@ export const buttons = [
     name: "Stride Length",
     position: [0, 4.4, 1],
     size: 0.1,
-    tooltip: "",
-    label: "Center Bottom Button",
+    tooltip: "אורך צעד",
+    label: "אורך צעד",
+    explain: "מדידת אורך הצעד - מהמותניים עד לרצפה דרך המפשעה",
     img: size13,
     video: "",
   },
@@ -383,8 +538,9 @@ export const buttons = [
     name: "Thigh",
     position: [0.5, 3.5, 1],
     size: 0.1,
-    tooltip: "",
-    label: "Right Button",
+    tooltip: "היקף ירך",
+    label: "היקף ירך",
+    explain: "מדידת היקף הירך - בחלק הרחב ביותר",
     img: size14,
     video: "",
   },
@@ -393,8 +549,9 @@ export const buttons = [
     name: "Knee",
     position: [0.5, 3, 1],
     size: 0.1,
-    tooltip: "",
-    label: "Left Button",
+    tooltip: "היקף ברך",
+    label: "היקף ברך",
+    explain: "מדידת היקף הברך",
     img: size15,
     video: "",
   },
@@ -403,8 +560,191 @@ export const buttons = [
     name: "Ankles",
     position: [0.7, 0.4, 0.4],
     size: 0.1,
-    tooltip: "",
-    label: "Center Button",
+    tooltip: "היקף קרסול",
+    label: "היקף קרסול",
+    explain: "מדידת היקף הקרסול",
+    img: size16,
+    video: "",
+  },
+];
+
+// ===== כפתורים על המודל התלת-ממדי למדידות חליפה =====
+export const buttonsSuit = [
+  {
+    id: 1,
+    name: "Chest",
+    position: [0, 4.2, 1.5],
+    size: 0.15,
+    tooltip: "היקף חזה",
+    label: "היקף חזה",
+    explain: "מדידת היקף החזה של החליפה - מסביב לחלק הרחב ביותר של החזה בחליפה",
+    img: size1,
+    video: "",
+  },
+  {
+    id: 2,
+    name: "Waist",
+    position: [0, 5.3, 1.5],
+    size: 0.15,
+    tooltip: "היקף מותניים",
+    label: "היקף מותניים",
+    explain:
+      "מדידת היקף המותניים של החליפה - מסביב לחלק הצר ביותר של המותניים בחליפה",
+    img: size2,
+    video: "",
+  },
+  {
+    id: 3,
+    name: "Seat",
+    position: [-1.3, 6.6,  1.5],
+    size: 0.15,
+    tooltip: "היקף ירכיים",
+    label: "היקף ירכיים",
+    explain:
+      "מדידת היקף הירכיים של החליפה - מסביב לחלק הרחב ביותר של הירכיים בחליפה",
+    img: size3,
+    video: "",
+  },
+  {
+    id: 4,
+    name: "Jacket Length",
+    position: [1.3, 6.6, 1.5],
+    size: 0.15,
+    tooltip: "אורך ז'קט",
+    label: "אורך ז'קט",
+    explain: "מדידת אורך הז'קט - מהכתף עד לקצה הז'קט (לא כולל השרוולים)",
+    img: size4,
+    video: "",
+  },
+  {
+    id: 5,
+    name: "Front Width",
+    position: [1.1, 5, 1.5],
+    size: 0.15,
+    tooltip: "רוחב חזית",
+    label: "רוחב חזית",
+    explain: "מדידת רוחב חזית הז'קט - הרוחב של החלק הקדמי של הז'קט",
+    img: size5,
+    video: "",
+  },
+  {
+    id: 6,
+    name: "Rear Width",
+    position: [-0.7, 2.1,  1.5],
+    size: 0.15,
+    tooltip: "רוחב גב",
+    label: "רוחב גב",
+    explain: "מדידת רוחב גב הז'קט - הרוחב של החלק האחורי של הז'קט",
+    img: size6,
+    video: "",
+  },
+  {
+    id: 7,
+    name: "Armhole",
+    position: [2, 7.5, -0.4],
+    size: 0.15,
+    tooltip: "היקף בית שחי",
+    label: "היקף בית שחי",
+    explain: "מדידת היקף בית השחי של הז'קט - היקף הפתח של השרוול בז'קט",
+    img: size7,
+    video: "",
+  },
+  {
+    id: 8,
+    name: "Biceps",
+    position: [3.3, 6.3, -0.3],
+    size: 0.15,
+    tooltip: "היקף זרוע",
+    label: "היקף זרוע",
+    explain: "מדידת היקף הזרוע בחליפה - בחלק הרחב ביותר של הזרוע בחליפה",
+    img: size8,
+    video: "",
+  },
+  {
+    id: 9,
+    name: "Shoulder",
+    position: [5, 5,  0.5],
+    size: 0.15,
+    tooltip: "רוחב כתף",
+    label: "רוחב כתף",
+    explain: "מדידת רוחב הכתף בחליפה - מכתף לכתף על הז'קט",
+    img: size9,
+    video: "",
+  },
+  {
+    id: 10,
+    name: "Sleeve Length",
+    position: [0, 7.8, -1.5],
+    size: 0.15,
+    tooltip: "אורך שרוול",
+    label: "אורך שרוול",
+    explain: "מדידת אורך השרוול - מהכתף עד לקצה השרוול של הז'קט",
+    img: size10,
+    video: "",
+  },
+  {
+    id: 11,
+    name: "Trousers Length",
+    position: [-2, 7.5, -0.4],
+    size: 0.15,
+    tooltip: "אורך מכנסיים",
+    label: "אורך מכנסיים",
+    explain: "מדידת אורך המכנסיים - מהמותניים עד לקצה המכנסיים",
+    img: size11,
+    video: "",
+  },
+  {
+    id: 12,
+    name: "Waistband",
+    position: [0, 4.8, 3],
+    size: 0.15,
+    tooltip: "היקף חגורה",
+    label: "היקף חגורה",
+    explain: "מדידת היקף החגורה של המכנסיים",
+    img: size12,
+    video: "",
+  },
+  {
+    id: 13,
+    name: "Stride Length",
+    position: [0, 4.4, 3],
+    size: 0.15,
+    tooltip: "אורך צעד",
+    label: "אורך צעד",
+    explain: "מדידת אורך הצעד - מהמותניים עד לרצפה דרך המפשעה",
+    img: size13,
+    video: "",
+  },
+  {
+    id: 14,
+    name: "Thigh",
+    position: [0.5, 3.5, 3],
+    size: 0.15,
+    tooltip: "היקף ירך",
+    label: "היקף ירך",
+    explain: "מדידת היקף הירך - בחלק הרחב ביותר",
+    img: size14,
+    video: "",
+  },
+  {
+    id: 15,
+    name: "Knee",
+    position: [0.5, 3, 3],
+    size: 0.15,
+    tooltip: "היקף ברך",
+    label: "היקף ברך",
+    explain: "מדידת היקף הברך",
+    img: size15,
+    video: "",
+  },
+  {
+    id: 16,
+    name: "Ankles",
+    position: [0.7, 0.4, 3],
+    size: 0.15,
+    tooltip: "היקף קרסול",
+    label: "היקף קרסול",
+    explain: "מדידת היקף הקרסול",
     img: size16,
     video: "",
   },

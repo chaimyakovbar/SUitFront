@@ -15,7 +15,6 @@ import { makeStyles } from "@mui/styles";
 import { useAtom, useAtomValue } from "jotai";
 import {
   selectedSleeveButtonsAtom,
-  textInsideTextAtom,
   showTextInsideAtom,
   currentColorAtom,
   selectedTopCollarColorAtom,

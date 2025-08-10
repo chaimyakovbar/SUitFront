@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { useMediaQuery } from "react-responsive";
-// import { useSetAtom } from "jotai";
-// import { openUserDialog } from "../Utils";
 import {
   AppBar,
   Toolbar,
@@ -20,8 +18,10 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import User from "../User/User";
+import LanguageToggle from "../components/LanguageToggle";
+import { useLanguage } from "../context/LanguageContext";
 
 const useStyles = makeStyles({
   appBar: {
@@ -151,12 +151,13 @@ const useStyles = makeStyles({
   },
 });
 
-const NavBar = ({ scrollToTargetSection }) => {
+const NavBar = () => {
   const classes = useStyles();
   const location = useLocation();
   const isMobile = useMediaQuery({ maxWidth: 960 });
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
   // const setOpenSignUp = useSetAtom(openUserDialog);
 
   const toggleMobileMenu = () => {
@@ -171,28 +172,24 @@ const NavBar = ({ scrollToTargetSection }) => {
   };
 
   const menuItems = [
-    { text: "Home", link: "/", exact: true },
-    {
-      text: "Collections",
-      link: "/#targetSection",
-      action: scrollToTargetSection,
-    },
-    { text: "About", link: "/about" },
-    { text: "Contact", link: "/contact" },
-    { text: "Size Guide", link: "/indexSizes" },
-    { text: "Support", link: "/PolicySupport" },
+    { text: t("home"), link: "/", exact: true },
+    { text: t("customSuit"), link: "/customSuit", exact: true },
+    { text: t("about"), link: "/about" },
+    { text: t("contact"), link: "/contact" },
+    { text: t("sizeGuide"), link: "/indexSizes" },
+    { text: t("support"), link: "/PolicySupport" },
   ];
 
   const menuUser = [
     {
       icon: <PermIdentityIcon sx={{ fontSize: "1.2rem" }} />,
       link: "/account",
-      label: "Account",
+      label: t("account"),
     },
     {
       icon: <ShoppingBagIcon sx={{ fontSize: "1.2rem" }} />,
       link: "/shopping",
-      label: "Shopping Bag",
+      label: t("shoppingBag"),
     },
   ];
 
@@ -241,34 +238,35 @@ const NavBar = ({ scrollToTargetSection }) => {
               <>
                 <Box className={classes.navContainer}>
                   {menuItems.map((item) => (
-                    <motion.div
-                      key={item.text}
-                      whileTap={{ y: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Link
-                        to={item.link}
-                        className={`${classes.navLink} ${
-                          isActive(item.link, item.exact)
-                            ? classes.activeLink
-                            : ""
-                        }`}
-                        onClick={item.action}
-                      >
-                        {item.text}
-                      </Link>
-                    </motion.div>
+                    <AnimatePresence key={item.text}>
+                      {item.link ? (
+                        <Link
+                          to={item.link}
+                          className={`${classes.navLink} ${
+                            isActive(item.link, item.exact)
+                              ? classes.activeLink
+                              : ""
+                          }`}
+                          onClick={item.action}
+                        >
+                          {item.text}
+                        </Link>
+                      ) : (
+                        <span
+                          className={classes.navLink}
+                          style={{ cursor: "pointer" }}
+                          onClick={item.action}
+                        >
+                          {item.text}
+                        </span>
+                      )}
+                    </AnimatePresence>
                   ))}
                 </Box>
 
                 <Box className={classes.navContainer}>
                   {menuUser.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <AnimatePresence key={index}>
                       <IconButton
                         component={item.link ? Link : "button"}
                         to={item.link}
@@ -279,8 +277,9 @@ const NavBar = ({ scrollToTargetSection }) => {
                       >
                         {item.icon}
                       </IconButton>
-                    </motion.div>
+                    </AnimatePresence>
                   ))}
+                  <LanguageToggle />
                   <User />
                 </Box>
               </>
@@ -318,16 +317,29 @@ const NavBar = ({ scrollToTargetSection }) => {
               className={classes.mobileMenuItem}
               disablePadding
             >
-              <Link
-                to={item.link}
-                className={classes.mobileMenuLink}
-                onClick={() => {
-                  if (item.action) item.action();
-                  toggleMobileMenu();
-                }}
-              >
-                {item.text}
-              </Link>
+              {item.link ? (
+                <Link
+                  to={item.link}
+                  className={classes.mobileMenuLink}
+                  onClick={() => {
+                    if (item.action) item.action();
+                    toggleMobileMenu();
+                  }}
+                >
+                  {item.text}
+                </Link>
+              ) : (
+                <span
+                  className={classes.mobileMenuLink}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    if (item.action) item.action();
+                    toggleMobileMenu();
+                  }}
+                >
+                  {item.text}
+                </span>
+              )}
             </ListItem>
           ))}
         </List>

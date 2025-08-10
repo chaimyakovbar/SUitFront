@@ -8,7 +8,7 @@ import { collections } from "../consts/KindOfColors";
 import { motion, useAnimation } from "framer-motion";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const useStyles = makeStyles({
   collectionsGrid: {
@@ -72,7 +72,8 @@ const useStyles = makeStyles({
     bottom: 0,
     left: 0,
     width: "100%",
-    background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)",
+    background:
+      "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)",
     padding: "40px 25px 30px",
     transition: "all 0.3s ease",
   },
@@ -177,7 +178,7 @@ const AllCollection = ({ targetSectionRef }) => {
         settings: {
           slidesToShow: 2,
           centerMode: false,
-        }
+        },
       },
       {
         breakpoint: 600,
@@ -185,17 +186,18 @@ const AllCollection = ({ targetSectionRef }) => {
           slidesToShow: 1,
           centerMode: true,
           centerPadding: "30px",
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 
   // Duplicate collections for infinite scroll effect
   const duplicatedCollections = [...collections, ...collections];
 
   return (
-    <motion.div 
+    <motion.div
       ref={targetSectionRef}
+      id="AllCollection"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
@@ -208,24 +210,31 @@ const AllCollection = ({ targetSectionRef }) => {
           <Slider {...settings}>
             {collections.map((collection) => (
               <div key={collection.id}>
-                <motion.div 
+                <motion.div
                   className={classes.collectionCard}
                   whileHover={{ y: -8 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => navigate(`/collection/${collection.id}`)}
+                  onClick={() => navigate(`/customSuit`)}
                 >
                   <img
-                    src={hoveredImage === collection.id ? doll1 : collection.image}
+                    src={
+                      hoveredImage === collection.id ? doll1 : collection.image
+                    }
                     alt={collection.title}
                     className={`${classes.collectionImage} ${
-                      hoveredImage === collection.id ? classes.collectionImageHovered : ""
+                      hoveredImage === collection.id
+                        ? classes.collectionImageHovered
+                        : ""
                     }`}
                     onMouseEnter={() => setHoveredImage(collection.id)}
                     onMouseLeave={() => setHoveredImage(null)}
                   />
 
                   <div className={classes.collectionOverlay}>
-                    <Typography variant="h4" className={classes.collectionTitle}>
+                    <Typography
+                      variant="h4"
+                      className={classes.collectionTitle}
+                    >
                       {collection.title}
                     </Typography>
                     <div className={classes.viewCollection}>
@@ -243,18 +252,15 @@ const AllCollection = ({ targetSectionRef }) => {
       {/* Infinite animation carousel for desktop */}
       {!isMobile && !isTablet && (
         <div className={classes.infiniteCarousel}>
-          <motion.div 
-            className={classes.carouselTrack}
-            animate={controls}
-          >
+          <motion.div className={classes.carouselTrack} animate={controls}>
             {duplicatedCollections.map((collection, index) => (
-              <motion.div 
+              <motion.div
                 key={`${collection.id}-${index}`}
                 className={`${classes.carouselItem} ${classes.collectionCard}`}
                 whileHover={{ y: -8, scale: 1.02 }}
-                onClick={() => navigate(`/collection/${collection.id}`)}
+                onClick={() => navigate(`/customSuit`)}
                 style={{ width: "400px", margin: "0 15px" }}
-                animate={{ 
+                animate={{
                   y: [0, -10, 0],
                 }}
                 transition={{
@@ -267,12 +273,20 @@ const AllCollection = ({ targetSectionRef }) => {
                 }}
               >
                 <img
-                  src={hoveredImage === `${collection.id}-${index}` ? doll1 : collection.image}
+                  src={
+                    hoveredImage === `${collection.id}-${index}`
+                      ? doll1
+                      : collection.image
+                  }
                   alt={collection.title}
                   className={`${classes.collectionImage} ${
-                    hoveredImage === `${collection.id}-${index}` ? classes.collectionImageHovered : ""
+                    hoveredImage === `${collection.id}-${index}`
+                      ? classes.collectionImageHovered
+                      : ""
                   }`}
-                  onMouseEnter={() => setHoveredImage(`${collection.id}-${index}`)}
+                  onMouseEnter={() =>
+                    setHoveredImage(`${collection.id}-${index}`)
+                  }
                   onMouseLeave={() => setHoveredImage(null)}
                 />
 

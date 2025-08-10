@@ -48,6 +48,7 @@ import {
   Delete as DeleteIcon,
   Schedule as ScheduleIcon,
   ErrorOutline as ErrorOutlineIcon,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { bodyPoints } from "../consts/KindOfColors";
@@ -55,7 +56,7 @@ import useProduct from "../Hooks/useProduct";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { updateUser } from "../api/user";
+import { updateUser, deleteSizeProfile } from "../api/user";
 import { useSnackbar } from "notistack";
 import { getUserOrders } from "../api/orders";
 
@@ -98,6 +99,13 @@ const loadImage = async (key, path) => {
 
 const getImagePaths = (item) => {
   const imagePaths = [
+    // Base suit image - use stored path if available, otherwise construct it
+    {
+      key: "baseSuit",
+      path:
+        item.baseSuitImagePath ||
+        `/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+    },
     {
       key: "insideUp",
       path: `/assets/ragach/insideUp/${item.insideColor}.png`,
@@ -184,6 +192,19 @@ const getZIndex = (key) => {
     holeButton: 7,
     holeButtonUp: 6,
     poshetColor: 5,
+    // חליפה - כל החלקים
+    baseSuit: 0, // התמונה הבסיסית של החליפה - הכי נמוך
+    insideUp: 1,
+    lapelCollar: 2,
+    colar: 3,
+    sleeves: 4,
+    insideBottom: 5,
+    packetUp: 6,
+    bottom: 7,
+    bottomKind3: 7,
+    // חלקים נוספים
+    suitBody: 0, // alias for baseSuit
+    collar: 3, // alias for colar
     default: 1,
   };
 
@@ -430,7 +451,7 @@ const useStyles = makeStyles({
     transition: "all 0.4s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      transform: "translateY(-4px)",
+      // transform: "translateY(-4px)",
       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
       border: "1px solid rgba(192, 211, 202, 0.3) !important",
     },
@@ -614,7 +635,7 @@ const useStyles = makeStyles({
     transition: "all 0.3s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      transform: "translateY(-2px)",
+      // transform: "translateY(-2px)",
       boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
       border: "1px solid rgba(192, 211, 202, 0.2)",
     },
@@ -669,7 +690,7 @@ const useStyles = makeStyles({
     transition: "all 0.4s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      transform: "translateY(-4px)",
+      // transform: "translateY(-4px)",
       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
       border: "1px solid rgba(192, 211, 202, 0.3) !important",
     },
@@ -734,9 +755,9 @@ const useStyles = makeStyles({
     border: "1px solid rgba(33, 150, 243, 0.3)",
   },
   statusCompleted: {
-    backgroundColor: "rgba(76, 175, 80, 0.15)",
+    backgroundColor: "rgba(98, 5, 248, 0.15)",
     color: "#4CAF50",
-    border: "1px solid rgba(76, 175, 80, 0.3)",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
   },
   statusCancelled: {
     backgroundColor: "rgba(244, 67, 54, 0.15)",
@@ -770,7 +791,7 @@ const useStyles = makeStyles({
     width: "100% !important",
     "&:hover": {
       backgroundColor: "rgba(192, 211, 202, 0.2) !important",
-      transform: "translateY(-2px) !important",
+      // transform: "translateY(-2px) !important",
       boxShadow: "0 8px 25px rgba(192, 211, 202, 0.2) !important",
     },
   },
@@ -788,7 +809,7 @@ const useStyles = makeStyles({
       backgroundColor: "rgba(192, 211, 202, 0.05) !important",
       color: "#fff !important",
       paddingLeft: "2rem !important",
-      transform: "translateX(4px)",
+      // transform: "translateX(4px)",
     },
     "&.active": {
       backgroundColor: "rgba(192, 211, 202, 0.1) !important",
@@ -892,7 +913,7 @@ const useStyles = makeStyles({
     backdropFilter: "blur(10px)",
     "&:hover": {
       border: "1px solid rgba(192, 211, 202, 0.2) !important",
-      transform: "translateY(-2px)",
+      // transform: "translateY(-2px)",
       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
     },
     "@media (max-width: 768px)": {
@@ -918,7 +939,7 @@ const useStyles = makeStyles({
   },
   suitSpecRow: {
     display: "flex !important",
-    justifyContent: "space-between !important",
+    gap: 5,
     alignItems: "center !important",
     padding: "0.25rem 0 !important",
   },
@@ -941,6 +962,9 @@ function Account() {
   const [openAddressDialog, setOpenAddressDialog] = useState(false);
   const [openNameDialog, setOpenNameDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openOrderDetailsDialog, setOpenOrderDetailsDialog] = useState(false);
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [profileToDelete, setProfileToDelete] = useState(null);
 
   // Form states
@@ -948,6 +972,15 @@ function Account() {
   const [address, setAddress] = useState(user?.address || "");
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
+
+  // Update form states when user changes
+  useEffect(() => {
+    console.log("👤 User data updated:", user);
+    setPhoneNumber(user?.phoneNumber || "");
+    setAddress(user?.address || "");
+    setFirstName(user?.firstName || "");
+    setLastName(user?.lastName || "");
+  }, [user]);
 
   // Size profiles state
   const [sizeProfiles, setSizeProfiles] = useState([]);
@@ -1009,7 +1042,7 @@ function Account() {
     }
   }, [data]);
 
-  const handleLogout = async () => {
+  const confirmLogout = async () => {
     try {
       await signOut(auth);
       navigate("/");
@@ -1097,16 +1130,36 @@ function Account() {
     setOpenDeleteDialog(true);
   };
 
-  const confirmDeleteProfile = () => {
-    if (profileToDelete) {
+  const confirmDeleteProfile = async () => {
+    if (!profileToDelete || !user?.email) {
+      setOpenDeleteDialog(false);
+      setProfileToDelete(null);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Delete profile from database
+      await deleteSizeProfile(user.email, profileToDelete);
+
+      // Update local state
       setSizeProfiles((prev) => prev.filter((p) => p.name !== profileToDelete));
       if (selectedProfile?.name === profileToDelete) {
         setSelectedProfile(
           sizeProfiles.find((p) => p.name !== profileToDelete) || null
         );
       }
+
+      enqueueSnackbar("Profile deleted successfully", { variant: "success" });
       setOpenDeleteDialog(false);
       setProfileToDelete(null);
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      enqueueSnackbar(error.message || "Failed to delete profile", {
+        variant: "error",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -1658,7 +1711,7 @@ function Account() {
                 marginBottom: "1.5rem",
                 transition: "all 0.4s ease",
                 "&:hover": {
-                  transform: "translateY(-4px)",
+                  // transform: "translateY(-4px)",
                   boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
                   border: "1px solid rgba(192, 211, 202, 0.3) !important",
                 },
@@ -1680,7 +1733,14 @@ function Account() {
                     {formatDate(order.paymentDate)}
                   </Typography>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    color: "white",
+                  }}
+                >
                   {getStatusIcon(order.status)}
                   <Chip
                     label={order.status}
@@ -1688,10 +1748,11 @@ function Account() {
                     size="small"
                     sx={{
                       fontFamily: "'Montserrat', sans-serif",
-                      fontSize: "0.8rem",
-                      fontWeight: "600",
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
+                      // fontSize: "0.8rem",
+                      // fontWeight: "600",
+                      // letterSpacing: "0.05em",
+                      // textTransform: "uppercase",
+                      color: "white",
                     }}
                   />
                   {order.shippingSpeed === "EXPRESS" && (
@@ -1712,78 +1773,73 @@ function Account() {
                   padding: "1.5rem",
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  style={{
-                    color: "#C0D3CA",
-                    mb: 1,
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Suits ({order.selectedSuits.length})
-                </Typography>
-
-                {/* Suits Grid */}
+                {/* Compact Suits Preview */}
                 <Box
                   sx={{
-                    display: "grid",
-                    gridTemplateColumns: {
-                      xs: "1fr",
-                      sm: "repeat(auto-fit, minmax(280px, 1fr))",
-                      md: "repeat(auto-fit, minmax(300px, 1fr))",
-                    },
+                    display: "flex",
+                    flexDirection: "column",
                     gap: "1rem",
                     marginBottom: "1.5rem",
                   }}
                 >
-                  {order.selectedSuits.map((suit, index) => (
-                    <Card
+                  {order.selectedSuits.slice(0, 2).map((suit, index) => (
+                    <Box
                       key={suit._id || index}
-                      className={classes.suitSpecCard}
                       sx={{
-                        position: "relative",
-                        overflow: "hidden",
-                        minHeight: "300px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1rem",
+                        padding: "1rem",
+                        backgroundColor: "rgba(192, 211, 202, 0.02)",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(192, 211, 202, 0.1)",
                       }}
                     >
-                      {/* Suit Image */}
+                      {/* Small Suit Image */}
                       <Box
                         sx={{
-                          position: "relative",
-                          width: "100%",
-                          height: "200px",
+                          width: "80px",
+                          height: "80px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
                           backgroundColor: "rgba(0, 0, 0, 0.1)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          mb: 2,
+                          flexShrink: 0,
                         }}
                       >
                         <SuitImage suit={suit} />
                       </Box>
 
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                          mb: 1,
-                          px: 2,
-                        }}
-                      >
+                      {/* Suit Info */}
+                      <Box sx={{ flex: 1 }}>
                         <Typography
                           sx={{
                             color: "#C0D3CA",
                             fontSize: "1rem",
                             fontWeight: "600",
                             fontFamily: "'Montserrat', sans-serif",
+                            marginBottom: "0.25rem",
                           }}
                         >
-                          Suit #{index + 1}
+                          {suit.kind === "kind1" && "Standard Suit"}
+                          {suit.kind === "kind2" && "Premium Suit"}
+                          {suit.kind === "kind3" && "Luxury Suit"}
+                          {suit.kind === "kind4" && "Custom Luxury Suit"}
+                          {!["kind1", "kind2", "kind3", "kind4"].includes(
+                            suit.kind
+                          ) && suit.kind}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.7)",
+                            fontSize: "0.9rem",
+                            fontFamily: "'Montserrat', sans-serif",
+                            marginBottom: "0.25rem",
+                          }}
+                        >
+                          {suit.color} • {suit.lapelType}
                         </Typography>
                         <Typography
                           sx={{
@@ -1796,164 +1852,52 @@ function Account() {
                           {formatCurrency(suit.totalPrice || 0)}
                         </Typography>
                       </Box>
+                    </Box>
+                  ))}
 
-                      {/* Suit Specifications */}
-                      <Box
+                  {
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "0.75rem",
+                        borderTop: "1px solid rgba(192, 211, 202, 0.1)",
+                        marginTop: "0.5rem",
+                      }}
+                    >
+                      <Button
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setOpenOrderDetailsDialog(true);
+                        }}
                         sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "0.5rem",
-                          px: 2,
-                          pb: 2,
+                          color: "rgba(255, 255, 255, 0.7)",
+                          fontSize: "0.85rem",
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontWeight: "500",
+                          textTransform: "none",
+                          padding: "0.5rem 1rem",
+                          backgroundColor: "rgba(192, 211, 202, 0.05)",
+                          border: "1px solid rgba(192, 211, 202, 0.2)",
+                          borderRadius: "6px",
+                          "&:hover": {
+                            backgroundColor: "rgba(192, 211, 202, 0.1)",
+                            border: "1px solid rgba(192, 211, 202, 0.3)",
+                          },
+                          "@media (max-width: 768px)": {
+                            fontSize: "0.8rem",
+                            padding: "0.4rem 0.8rem",
+                            width: "100%",
+                          },
                         }}
                       >
-                        {/* Suit Type */}
-                        {suit.kind && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Type:
-                            </Typography>
-                            <Typography className={classes.suitSpecValue}>
-                              {suit.kind === "kind1" && "Standard Suit"}
-                              {suit.kind === "kind2" && "Premium Suit"}
-                              {suit.kind === "kind3" && "Luxury Suit"}
-                              {suit.kind === "kind4" && "Custom Luxury Suit"}
-                              {!["kind1", "kind2", "kind3", "kind4"].includes(
-                                suit.kind
-                              ) && suit.kind}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Main Color */}
-                        {suit.color && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Main Color:
-                            </Typography>
-                            <Typography
-                              className={classes.suitSpecValue}
-                              sx={{ textTransform: "capitalize" }}
-                            >
-                              {suit.color}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Lapel Type */}
-                        {suit.lapelType && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Lapel:
-                            </Typography>
-                            <Typography className={classes.suitSpecValue}>
-                              {suit.lapelType}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Collar Type */}
-                        {suit.lapelKind && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Collar:
-                            </Typography>
-                            <Typography className={classes.suitSpecValue}>
-                              {suit.lapelKind === "collarTight" &&
-                                "Tight Collar"}
-                              {suit.lapelKind === "collarDistant" &&
-                                "Wide Collar"}
-                              {!["collarTight", "collarDistant"].includes(
-                                suit.lapelKind
-                              ) && suit.lapelKind}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Pocket Type */}
-                        {suit.packetType && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Pockets:
-                            </Typography>
-                            <Typography className={classes.suitSpecValue}>
-                              {suit.packetType === "packet1" && "Standard"}
-                              {suit.packetType === "packet2" && "Enhanced"}
-                              {suit.packetType === "packet3" && "Premium"}
-                              {!["packet1", "packet2", "packet3"].includes(
-                                suit.packetType
-                              ) && suit.packetType}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Inside Color */}
-                        {suit.insideColor && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Lining:
-                            </Typography>
-                            <Typography
-                              className={classes.suitSpecValue}
-                              sx={{ textTransform: "capitalize" }}
-                            >
-                              {suit.insideColor}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Button Color */}
-                        {suit.buttonColor && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Buttons:
-                            </Typography>
-                            <Typography
-                              className={classes.suitSpecValue}
-                              sx={{ textTransform: "capitalize" }}
-                            >
-                              {suit.buttonColor}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Pocket Square */}
-                        {suit.poshetColor && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Pocket Square:
-                            </Typography>
-                            <Typography
-                              className={classes.suitSpecValue}
-                              sx={{ textTransform: "capitalize" }}
-                            >
-                              {suit.poshetColor}
-                            </Typography>
-                          </Box>
-                        )}
-
-                        {/* Button Holes */}
-                        {(suit.holeButtonColor || suit.holeButtonUpColor) && (
-                          <Box className={classes.suitSpecRow}>
-                            <Typography className={classes.suitSpecLabel}>
-                              Button Holes:
-                            </Typography>
-                            <Typography
-                              className={classes.suitSpecValue}
-                              sx={{ textTransform: "capitalize" }}
-                            >
-                              {suit.holeButtonColor && suit.holeButtonUpColor
-                                ? `${suit.holeButtonColor}, ${suit.holeButtonUpColor}`
-                                : suit.holeButtonColor ||
-                                  suit.holeButtonUpColor}
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                    </Card>
-                  ))}
+                        {order.selectedSuits.length > 2
+                          ? `View all ${order.selectedSuits.length} suits`
+                          : "View More Details"}
+                      </Button>
+                    </Box>
+                  }
                 </Box>
-
                 <Box className={classes.deliveryInfo}>
                   <Typography className={classes.deliveryText}>
                     Estimated Delivery:{" "}
@@ -1964,18 +1908,6 @@ function Account() {
                   <Typography className={classes.orderTotal}>
                     {formatCurrency(order.totalAmount + order.shippingCost)}
                   </Typography>
-                </Box>
-
-                <Box
-                  sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}
-                >
-                  <Button
-                    className={classes.editButton}
-                    startIcon={<VisibilityIcon />}
-                    size="small"
-                  >
-                    View Details
-                  </Button>
                 </Box>
               </Box>
             </Card>
@@ -2105,7 +2037,7 @@ function Account() {
                   fullWidth
                   className={classes.logoutButton}
                   startIcon={<LogoutIcon />}
-                  onClick={handleLogout}
+                  onClick={() => setOpenLogoutDialog(true)}
                 >
                   Log Out
                 </Button>
@@ -2180,7 +2112,10 @@ function Account() {
               Orders
             </Typography>
           </Box>
-          <Box className={classes.mobileTabItem} onClick={handleLogout}>
+          <Box
+            className={classes.mobileTabItem}
+            onClick={() => setOpenLogoutDialog(true)}
+          >
             <LogoutIcon className={classes.mobileTabIcon} />
             <Typography className={classes.mobileTabLabel}>Logout</Typography>
           </Box>
@@ -2508,6 +2443,7 @@ function Account() {
           <Button
             onClick={confirmDeleteProfile}
             variant="contained"
+            disabled={isLoading}
             sx={{
               backgroundColor: "#ef5350",
               color: "#fff",
@@ -2516,7 +2452,555 @@ function Account() {
               },
             }}
           >
-            Delete Profile
+            {isLoading ? <CircularProgress size={24} /> : "Delete Profile"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Order Details Dialog */}
+      <Dialog
+        open={openOrderDetailsDialog}
+        onClose={() => setOpenOrderDetailsDialog(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          style: {
+            backgroundColor: "#202020",
+            color: "#fff",
+            borderRadius: "8px",
+            border: "1px solid rgba(192, 211, 202, 0.2)",
+            margin: "1rem",
+            maxHeight: "90vh",
+            overflow: "hidden",
+          },
+        }}
+        sx={{
+          "& .MuiDialog-paper": {
+            "@media (max-width: 768px)": {
+              margin: "0.5rem",
+              maxHeight: "95vh",
+              width: "calc(100% - 1rem)",
+            },
+          },
+        }}
+      >
+        {selectedOrder && (
+          <>
+            <DialogTitle
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "1.8rem",
+                color: "#C0D3CA",
+                borderBottom: "1px solid rgba(192, 211, 202, 0.2)",
+                padding: "1.5rem",
+              }}
+              sx={{
+                "@media (max-width: 768px)": {
+                  fontSize: "1.4rem",
+                  padding: "1rem",
+                },
+              }}
+            >
+              Order Details - #{selectedOrder.orderId.slice(-8).toUpperCase()}
+            </DialogTitle>
+            <DialogContent
+              sx={{
+                padding: "1.5rem",
+                "@media (max-width: 768px)": {
+                  padding: "1rem",
+                },
+              }}
+            >
+              {/* Order Header */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 3,
+                  padding: "1rem",
+                  backgroundColor: "rgba(192, 211, 202, 0.02)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(192, 211, 202, 0.1)",
+                }}
+              >
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#C0D3CA",
+                      fontSize: "1.2rem",
+                      fontWeight: "600",
+                      fontFamily: "'Montserrat', sans-serif",
+                      mb: 0.5,
+                    }}
+                  >
+                    {formatDate(selectedOrder.paymentDate)}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.7)",
+                      fontSize: "0.9rem",
+                      fontFamily: "'Montserrat', sans-serif",
+                    }}
+                  >
+                    Total:{" "}
+                    {formatCurrency(
+                      selectedOrder.totalAmount + selectedOrder.shippingCost
+                    )}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  {getStatusIcon(selectedOrder.status)}
+                  <Chip
+                    label={selectedOrder.status}
+                    className={getStatusClass(selectedOrder.status)}
+                    size="small"
+                    sx={{ color: "white" }}
+                  />
+                  {selectedOrder.shippingSpeed === "EXPRESS" && (
+                    <Chip
+                      icon={<DiamondIcon />}
+                      label="Express"
+                      className={classes.luxuryBadge}
+                      size="small"
+                    />
+                  )}
+                </Box>
+              </Box>
+
+              {/* Detailed Suits */}
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "#C0D3CA",
+                  mb: 2,
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: "600",
+                  fontSize: "1.3rem",
+                }}
+              >
+                Suits ({selectedOrder.selectedSuits.length})
+              </Typography>
+
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+              >
+                {selectedOrder.selectedSuits.map((suit, index) => (
+                  <Card
+                    key={suit._id || index}
+                    sx={{
+                      backgroundColor: "rgba(192, 211, 202, 0.02)",
+                      border: "1px solid rgba(192, 211, 202, 0.1)",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        p: 2,
+                        "@media (max-width: 768px)": {
+                          flexDirection: "column",
+                          alignItems: "center",
+                          textAlign: "center",
+                        },
+                      }}
+                    >
+                      {/* Large Suit Image */}
+                      <Box
+                        sx={{
+                          width: "150px",
+                          height: "150px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          backgroundColor: "rgba(0, 0, 0, 0.1)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          mr: 2,
+                          flexShrink: 0,
+                          "@media (max-width: 768px)": {
+                            width: "120px",
+                            height: "120px",
+                            mr: 0,
+                            mb: 1,
+                          },
+                        }}
+                      >
+                        <SuitImage suit={suit} />
+                      </Box>
+
+                      {/* Suit Details */}
+                      <Box
+                        sx={{
+                          flex: 1,
+                          "@media (max-width: 768px)": {
+                            width: "100%",
+                          },
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: "#C0D3CA",
+                            fontSize: "1.3rem",
+                            fontWeight: "600",
+                            fontFamily: "'Montserrat', sans-serif",
+                            mb: 1,
+                          }}
+                        >
+                          Suit #{index + 1} -{" "}
+                          {suit.kind === "kind1" && "Standard Suit"}
+                          {suit.kind === "kind2" && "Premium Suit"}
+                          {suit.kind === "kind3" && "Luxury Suit"}
+                          {suit.kind === "kind4" && "Custom Luxury Suit"}
+                          {!["kind1", "kind2", "kind3", "kind4"].includes(
+                            suit.kind
+                          ) && suit.kind}
+                        </Typography>
+
+                        <Typography
+                          sx={{
+                            color: "#C0D3CA",
+                            fontSize: "1.4rem",
+                            fontWeight: "600",
+                            fontFamily: "'Cormorant Garamond', serif",
+                            mb: 2,
+                          }}
+                        >
+                          {formatCurrency(suit.totalPrice || 0)}
+                        </Typography>
+
+                        {/* Specifications Grid */}
+                        <Grid
+                          container
+                          spacing={2}
+                          sx={{
+                            "@media (max-width: 768px)": {
+                              spacing: 1,
+                            },
+                          }}
+                        >
+                          {suit.color && (
+                            <Grid item xs={12} sm={6}>
+                              <Box className={classes.suitSpecRow}>
+                                <Typography className={classes.suitSpecLabel}>
+                                  Color:
+                                </Typography>
+                                <Typography
+                                  className={classes.suitSpecValue}
+                                  sx={{ textTransform: "capitalize" }}
+                                >
+                                  {suit.color}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                          {suit.lapelType && (
+                            <Grid item xs={12} sm={6}>
+                              <Box className={classes.suitSpecRow}>
+                                <Typography className={classes.suitSpecLabel}>
+                                  Lapel:
+                                </Typography>
+                                <Typography className={classes.suitSpecValue}>
+                                  {suit.lapelType}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                          {suit.lapelKind && (
+                            <Grid item xs={12} sm={6}>
+                              <Box className={classes.suitSpecRow}>
+                                <Typography className={classes.suitSpecLabel}>
+                                  Collar:
+                                </Typography>
+                                <Typography className={classes.suitSpecValue}>
+                                  {suit.lapelKind === "collarTight"
+                                    ? "Tight Collar"
+                                    : "Wide Collar"}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                          {suit.insideColor && (
+                            <Grid item xs={12} sm={6}>
+                              <Box className={classes.suitSpecRow}>
+                                <Typography className={classes.suitSpecLabel}>
+                                  Lining:
+                                </Typography>
+                                <Typography
+                                  className={classes.suitSpecValue}
+                                  sx={{ textTransform: "capitalize" }}
+                                >
+                                  {suit.insideColor}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                          {suit.buttonColor && (
+                            <Grid item xs={12} sm={6}>
+                              <Box className={classes.suitSpecRow}>
+                                <Typography className={classes.suitSpecLabel}>
+                                  Buttons:
+                                </Typography>
+                                <Typography
+                                  className={classes.suitSpecValue}
+                                  sx={{ textTransform: "capitalize" }}
+                                >
+                                  {suit.buttonColor}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                          {suit.poshetColor && (
+                            <Grid item xs={12} sm={6}>
+                              <Box className={classes.suitSpecRow}>
+                                <Typography className={classes.suitSpecLabel}>
+                                  Pocket Square:
+                                </Typography>
+                                <Typography
+                                  className={classes.suitSpecValue}
+                                  sx={{ textTransform: "capitalize" }}
+                                >
+                                  {suit.poshetColor}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </Box>
+                    </Box>
+                  </Card>
+                ))}
+              </Box>
+
+              {/* Size Profile & Measurements */}
+              {(selectedOrder.sizeProfile ||
+                selectedOrder.sizeMeasurements) && (
+                <Box
+                  sx={{
+                    mt: 3,
+                    padding: "1.5rem",
+                    backgroundColor: "rgba(192, 211, 202, 0.02)",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(192, 211, 202, 0.1)",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "#C0D3CA",
+                      fontSize: "1.2rem",
+                      fontWeight: "600",
+                      fontFamily: "'Montserrat', sans-serif",
+                      mb: 2,
+                    }}
+                  >
+                    Size Profile & Measurements
+                  </Typography>
+
+                  {selectedOrder.sizeProfile && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography
+                        sx={{
+                          color: "rgba(255, 255, 255, 0.7)",
+                          fontSize: "0.9rem",
+                          fontFamily: "'Montserrat', sans-serif",
+                          mb: 0.5,
+                        }}
+                      >
+                        Profile Used:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "#C0D3CA",
+                          fontSize: "1rem",
+                          fontWeight: "600",
+                          fontFamily: "'Montserrat', sans-serif",
+                        }}
+                      >
+                        {selectedOrder.sizeProfile}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {selectedOrder.sizeMeasurements &&
+                    Object.keys(selectedOrder.sizeMeasurements).length > 0 && (
+                      <Box>
+                        <Typography
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.7)",
+                            fontSize: "0.9rem",
+                            fontFamily: "'Montserrat', sans-serif",
+                            mb: 1,
+                          }}
+                        >
+                          Measurements:
+                        </Typography>
+                        <Grid container spacing={2}>
+                          {Object.entries(selectedOrder.sizeMeasurements).map(
+                            ([key, value]) => (
+                              <Grid item xs={12} sm={6} md={4} key={key}>
+                                <Box
+                                  sx={{
+                                    padding: "0.75rem",
+                                    backgroundColor:
+                                      "rgba(255, 255, 255, 0.03)",
+                                    borderRadius: "6px",
+                                    border:
+                                      "1px solid rgba(255, 255, 255, 0.08)",
+                                  }}
+                                >
+                                  <Typography
+                                    sx={{
+                                      color: "rgba(255, 255, 255, 0.7)",
+                                      fontSize: "0.8rem",
+                                      fontFamily: "'Montserrat', sans-serif",
+                                      textTransform: "capitalize",
+                                      mb: 0.25,
+                                    }}
+                                  >
+                                    {key.replace(/([A-Z])/g, " $1").trim()}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      color: "#C0D3CA",
+                                      fontSize: "1rem",
+                                      fontWeight: "600",
+                                      fontFamily: "'Montserrat', sans-serif",
+                                    }}
+                                  >
+                                    {value} cm
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                            )
+                          )}
+                        </Grid>
+                      </Box>
+                    )}
+                </Box>
+              )}
+
+              {/* Delivery Info */}
+              <Box
+                sx={{
+                  mt: 3,
+                  padding: "1rem",
+                  backgroundColor: "rgba(192, 211, 202, 0.02)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(192, 211, 202, 0.1)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "rgba(255, 255, 255, 0.7)",
+                    fontSize: "0.9rem",
+                    fontFamily: "'Montserrat', sans-serif",
+                  }}
+                >
+                  Estimated Delivery:{" "}
+                  {selectedOrder.estimatedDeliveryDate
+                    ? formatDate(selectedOrder.estimatedDeliveryDate)
+                    : "Calculating..."}
+                </Typography>
+              </Box>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                padding: "1.5rem",
+                borderTop: "1px solid rgba(192, 211, 202, 0.2)",
+                "@media (max-width: 768px)": {
+                  padding: "1rem",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                },
+              }}
+            >
+              <Button
+                onClick={() => setOpenOrderDetailsDialog(false)}
+                sx={{
+                  color: "#fff",
+                  "@media (max-width: 768px)": {
+                    width: "100%",
+                  },
+                }}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog
+        open={openLogoutDialog}
+        onClose={() => setOpenLogoutDialog(false)}
+        PaperProps={{
+          style: {
+            backgroundColor: "#202020",
+            color: "#fff",
+            borderRadius: "8px",
+            border: "1px solid rgba(192, 211, 202, 0.2)",
+            maxWidth: "400px",
+            width: "100%",
+          },
+        }}
+      >
+        <DialogTitle
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "1.5rem",
+            color: "#C0D3CA",
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <LogoutIcon style={{ color: "#C0D3CA" }} />
+          Confirm Logout
+        </DialogTitle>
+        <DialogContent>
+          <Typography
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "1rem",
+              color: "#fff",
+              marginBottom: "1rem",
+            }}
+          >
+            Are you sure you want to log out?
+          </Typography>
+          <Typography
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.9rem",
+              color: "rgba(255, 255, 255, 0.7)",
+              fontStyle: "italic",
+            }}
+          >
+            You will need to log in again to access your account.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenLogoutDialog(false)}
+            sx={{ color: "#fff" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={confirmLogout}
+            variant="contained"
+            sx={{
+              backgroundColor: "#ef5350",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#d32f2f",
+              },
+            }}
+          >
+            Logout
           </Button>
         </DialogActions>
       </Dialog>

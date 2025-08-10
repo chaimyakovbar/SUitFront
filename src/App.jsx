@@ -11,6 +11,8 @@ import {
   Route,
   Routes,
   Navigate,
+  useNavigate,
+  useLocation,
 } from "react-router-dom";
 import IndexCustomSuit from "./customSuite/IndexCustomSuit";
 // import ImageFilterComponent from './components/ImageCollector'
@@ -25,73 +27,95 @@ import NavBar from "./homePage/NavBar";
 import LoginWithGoogle from "./pages/LoginWithGoogle";
 import ResetPassword from "./pages/ResetPassword";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { LanguageProvider } from "./context/LanguageContext.jsx";
 import TakeSizes4 from "./components/TakeSizes4";
 import TakeSizes3 from "./components/TakeSize3";
+import TakeSizes5 from "./components/TakeSizes5.jsx";
 import Account from "./pages/Account";
 import CheckoutModern from "./pages/CheckoutModern";
+
+// NavBarWrapper provides scrollToAllCollection logic for NavBar
+const NavBarWrapper = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const scrollToAllCollection = () => {
+    if (location.pathname === "/") {
+      const element = document.getElementById("targetSection");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate("/", { state: { scrollToAllCollection: true } });
+    }
+  };
+  return <NavBar scrollToTargetSection={scrollToAllCollection} />;
+};
 
 const App = () => {
   const user = useAtomValue(authUserAtom);
   return (
     <AuthProvider>
-      <Router>
-        <NavBar />
-        {/* <Whatchap /> */}
-        <AccessibilityMenu />
-        <Routes>
-          <Route path="/" element={<HomePage2 />} />
-          <Route path="/login" element={<LoginWithGoogle />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          {/* <Route path="/customSuit" element={<IndexCustomSuit />} /> */}
-          <Route
-            path="/Shopping"
-            element={
-              user ? (
-                // <Shopping />
-                <CheckoutModern />
-              ) : (
-                <Navigate
-                  to="/login"
-                  state={{ from: { pathname: "/Shopping" } }}
-                />
-              )
-            }
-          />
-          <Route
-            path="/account"
-            element={
-              user ? (
-                <Account />
-              ) : (
-                <Navigate
-                  to="/login"
-                  state={{ from: { pathname: "/account" } }}
-                />
-              )
-            }
-          />
-          <Route
-            path="/customSuit"
-            element={
-              user ? (
-                <IndexCustomSuit />
-              ) : (
-                <Navigate
-                  to="/login"
-                  state={{ from: { pathname: "/customSuit" } }}
-                />
-              )
-            }
-          />
-          <Route path="/indexSizes" element={<IndexSizes />} />
-          <Route path="/PolicySupport" element={<PolicySupport />} />
-          <Route path="/sizes/regular" element={<TakeSizes4 />} />
-          <Route path="/sizes/measure" element={<TakeSizes3 />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/Payed" element={<Payed />} />
-        </Routes>
-      </Router>
+      <LanguageProvider>
+        <Router>
+          <NavBarWrapper />
+          {/* <Whatchap /> */}
+          <AccessibilityMenu />
+          <Routes>
+            <Route path="/" element={<HomePage2 />} />
+            <Route path="/login" element={<LoginWithGoogle />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            {/* <Route path="/customSuit" element={<IndexCustomSuit />} /> */}
+            <Route
+              path="/Shopping"
+              element={
+                user ? (
+                  // <Shopping />
+                  <CheckoutModern />
+                ) : (
+                  <Navigate
+                    to="/login"
+                    state={{ from: { pathname: "/Shopping" } }}
+                  />
+                )
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                user ? (
+                  <Account />
+                ) : (
+                  <Navigate
+                    to="/login"
+                    state={{ from: { pathname: "/account" } }}
+                  />
+                )
+              }
+            />
+            <Route
+              path="/customSuit"
+              element={
+                user ? (
+                  <IndexCustomSuit />
+                ) : (
+                  <Navigate
+                    to="/login"
+                    state={{ from: { pathname: "/customSuit" } }}
+                  />
+                )
+              }
+            />
+            <Route path="/indexSizes" element={<IndexSizes />} />
+            <Route path="/PolicySupport" element={<PolicySupport />} />
+            <Route path="/sizes/regular" element={<TakeSizes4 />} />
+            <Route path="/sizes/measure" element={<TakeSizes3 />} />
+            <Route path="/sizes/suitMeasur" element={<TakeSizes5 />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/Payed" element={<Payed />} />
+          </Routes>
+        </Router>
+      </LanguageProvider>
     </AuthProvider>
   );
 };

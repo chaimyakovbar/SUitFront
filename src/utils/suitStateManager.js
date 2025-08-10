@@ -247,5 +247,7 @@ export const createCompleteSuitObject = (atoms) => {
         textInsideColor: textInsideColor || null,
         // Top collar color
         topCollarColor: topCollarColor || null,
+        // Base suit image path
+        baseSuitImagePath: `/assets/ragach/Kinds/${selectedKind}/${currentColor}.png`,
     };
 }; 

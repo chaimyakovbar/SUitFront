@@ -5438,7 +5438,7 @@ var require_react_dom_client_development = __commonJS({
           );
         returnFiber = Object.prototype.toString.call(newChild);
         throw Error(
-          "Objects are not valid as a React child (found: " + ("[object Object]" === returnFiber ? "object with keys {" + Object.keys(newChild).join(", ") + "}" : returnFiber) + "). If you meant to render a collection of children, use an array instead."
+          "Objects are not valid as a React child (found: " + ("[object Object]" === returnFiber ? "object with keys {" + Object.keys(newChild).join(", ") + "}" : returnFiber) + "). If you meant to render a IN PROGRESSS of children, use an array instead."
         );
       }
       function warnOnFunctionType(returnFiber, invalidChild) {

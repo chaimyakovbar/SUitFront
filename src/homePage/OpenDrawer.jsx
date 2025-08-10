@@ -1,14 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import User from "../User/User"
+import User from "../User/User";
 
 const OpenDrawer = ({ scrollToTargetSection }) => {
-
   const menuItems = [
     { text: "indexSizes", link: "/indexSizes" },
     { text: "HOME", link: "/" },
-    { text: "ALL COLLECTION", link: "/#targetSection", action: scrollToTargetSection },
+    {
+      text: "ALL COLLECTION",
+      link: "/#targetSection",
+      action: scrollToTargetSection,
+    },
     { text: "ABOUT US", link: "/about" },
     { text: "CONTACT", link: "/contact" },
     { text: "POLICY SUPPORT", link: "/PolicySupport" },
@@ -23,7 +26,6 @@ const OpenDrawer = ({ scrollToTargetSection }) => {
         padding: "20px",
       }}
     >
-
       <List style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding style={{ width: "auto" }}>
@@ -50,8 +52,7 @@ const OpenDrawer = ({ scrollToTargetSection }) => {
         ))}
       </List>
 
-         <User />
-
+      <User />
     </div>
   );
 };

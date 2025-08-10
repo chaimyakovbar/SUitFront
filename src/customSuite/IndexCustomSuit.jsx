@@ -132,9 +132,9 @@ const IndexCustomSuit = () => {
               onClick={() => setIsPants(!isPants)}
             >
               {isPants ? (
-                <img src={pantsIcon} alt="Pants" className={classes.whiteIcon} />
-                ) : (
-                  <img src={SuitIcon} alt="Suit" className={classes.whiteIcon} />
+                <img src={SuitIcon} alt="Suit" className={classes.whiteIcon} />
+              ) : (
+                  <img src={pantsIcon} alt="Pants" className={classes.whiteIcon} />
                 )}
               </Button>
             )}

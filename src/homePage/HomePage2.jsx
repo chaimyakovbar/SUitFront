@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { makeStyles } from "@mui/styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -12,13 +12,14 @@ import {
   IconButton,
 } from "@mui/material";
 import ButtonReactBits from "../reactBits/Button";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
 import NavBar from "./NavBar";
+import { useLanguage } from "../context/LanguageContext";
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles({
   root: {
     background: "#0a0a0a",
     color: "#fff",
@@ -71,29 +72,33 @@ const useStyles = makeStyles(({
   }),
   heroSubtitle: (props) => ({
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: props.isMobile ? "0.85rem !important" : "0.95rem !important",
+    fontSize: props.isMobile ? "0.9rem !important" : "1.1rem !important",
     fontWeight: "300 !important",
     letterSpacing: "0.05em !important",
-    marginBottom: "2.5rem !important",
-    maxWidth: props.isMobile ? "350px" : "600px",
-    margin: "0 auto 2.5rem !important",
+    marginBottom: "3rem !important",
+    maxWidth: props.isMobile ? "350px" : "700px",
+    margin: "0 auto 3rem !important",
     lineHeight: "1.8 !important",
   }),
   ctaButton: {
-    backgroundColor: "transparent !important",
-    color: "#fff !important",
-    border: "1px solid #fff !important",
-    padding: "12px 35px !important",
-    fontSize: "0.85rem !important",
-    borderRadius: "0 !important",
-    fontWeight: "400 !important",
+    backgroundColor: "rgba(255,255,255,0.95) !important",
+    color: "#000 !important",
+    border: "2px solid #fff !important",
+    padding: "16px 45px !important",
+    fontSize: "0.9rem !important",
+    borderRadius: "3px !important",
+    fontWeight: "600 !important",
     letterSpacing: "0.15em !important",
     textTransform: "uppercase !important",
-    transition: "all 0.3s ease !important",
+    transition: "all 0.4s ease !important",
     fontFamily: "'Montserrat', sans-serif !important",
+    boxShadow: "0 4px 15px rgba(255,255,255,0.3) !important",
+    backdropFilter: "blur(10px) !important",
     "&:hover": {
       backgroundColor: "#fff !important",
       color: "#000 !important",
+      transform: "translateY(-2px) !important",
+      boxShadow: "0 8px 25px rgba(255,255,255,0.4) !important",
     },
   },
   scrollDown: {
@@ -204,14 +209,23 @@ const useStyles = makeStyles(({
       color: "#000 !important",
     },
   },
-}));
+});
 
 const HomePage2 = () => {
   const targetSectionRef = useRef(null);
   const popularSectionRef = useRef(null);
   const isMobile = useMediaQuery("(max-width:600px)");
   const classes = useStyles({ isMobile });
-  // const isTablet = useMediaQuery("(max-width:960px)");
+  const location = useLocation();
+  const { t } = useLanguage();
+
+  React.useEffect(() => {
+    if (location.state && location.state.scrollToAllCollection) {
+      if (targetSectionRef.current) {
+        targetSectionRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   const scrollToSection = (ref) => {
     ref.current.scrollIntoView({
@@ -243,32 +257,19 @@ const HomePage2 = () => {
           transition={{ duration: 1, delay: 0.3 }}
         >
           <Typography variant="h1" className={classes.heroTitle}>
-            Timeless Elegance
+            {t("heroTitle")}
           </Typography>
           <Typography variant="body1" className={classes.heroSubtitle}>
-            Discover our exclusive collection of meticulously crafted suits,
-            where traditional craftsmanship meets contemporary design. Each
-            piece is tailored to perfection, ensuring an impeccable fit and
-            unparalleled sophistication.
+            {t("heroSubtitle")}
           </Typography>
 
           <Button
-            style={{
-              border: "1px solid #fff",
-              borderRadius: "10px",
-              padding: "12px 35px",
-              fontSize: "0.85rem",
-              fontWeight: "400",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              transition: "all 0.3s ease",
-              fontFamily: "'Montserrat', sans-serif",
-            }}
+            className={classes.ctaButton}
             component={Link}
             to="/customSuit"
           >
             <ButtonReactBits
-              text="Design Your Suit"
+              text={t("designButton")}
               disabled={false}
               speed={3}
               className="custom-class"
@@ -284,7 +285,7 @@ const HomePage2 = () => {
           transition={{ repeat: Infinity, duration: 1.5 }}
         >
           <Typography variant="body2" className={classes.scrollText}>
-            SCROLL DOWN
+            {t("scrollDown")}
           </Typography>
           <KeyboardArrowDownIcon fontSize="small" />
         </motion.div>
@@ -306,11 +307,10 @@ const HomePage2 = () => {
             transition={{ duration: 0.8 }}
           >
             <Typography variant="h2" className={classes.sectionTitle}>
-              Most Popular
+              {t("mostPopular")}
             </Typography>
             <Typography variant="body1" className={classes.sectionSubtitle}>
-              Our finest selection of suits that have become customer favorites
-              for their exceptional quality and timeless style.
+              {t("mostPopularSubtitle")}
             </Typography>
           </motion.div>
 
@@ -350,21 +350,17 @@ const HomePage2 = () => {
                 className={classes.featuredContent}
               >
                 <Typography variant="h3" className={classes.featuredTitle}>
-                  The Art of Tailoring
+                  {t("artOfTailoring")}
                 </Typography>
                 <Typography variant="body1" className={classes.featuredText}>
-                  Our master tailors bring decades of experience to every suit,
-                  combining traditional techniques with modern precision. Each
-                  garment is crafted with meticulous attention to detail, from
-                  the selection of premium fabrics to the final hand-stitched
-                  finishes.
+                  {t("artOfTailoringText")}
                 </Typography>
                 <Button
                   component={Link}
                   to="/about"
                   className={classes.featuredButton}
                 >
-                  Our Process
+                  {t("ourProcess")}
                 </Button>
               </motion.div>
             </Grid>
@@ -389,11 +385,10 @@ const HomePage2 = () => {
             transition={{ duration: 0.8 }}
           >
             <Typography variant="h2" className={classes.sectionTitle}>
-              Our Collections
+              {t("ourCollections")}
             </Typography>
             <Typography variant="body1" className={classes.sectionSubtitle}>
-              Browse through our carefully curated collections designed for
-              every occasion and personal style.
+              {t("collectionsSubtitle")}
             </Typography>
           </motion.div>
 

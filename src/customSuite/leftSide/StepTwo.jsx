@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useAtom } from "jotai";
 import { motion } from "framer-motion";
-import { Box, Typography, Button, Divider, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Divider,
+  useMediaQuery,
+  Slider,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
@@ -12,11 +19,7 @@ import {
   selectedKindTypeAtom,
 } from "../../Utils";
 
-import wide from "/assets/kinds/wide.png";
-import slim from "/assets/kinds/slim.png";
-import standard from "/assets/kinds/standard.png";
 import kind1Img from "/assets/kinds/kind1.png";
-// import kind2Img from "/assets/kinds/kind2.2.png";
 import kind2Img from "/assets/kinds/kind2.png";
 import kind3Img from "/assets/kinds/kind3.png";
 import kind4Img from "/assets/kinds/kind4.png";
@@ -39,6 +42,7 @@ const useStyles = makeStyles({
   },
   optionsContainer: {
     display: "flex",
+    justifyContent: "center",
     flexDirection: "row",
     overflowX: "auto",
     gap: "12px",
@@ -65,13 +69,9 @@ const useStyles = makeStyles({
     boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2) !important",
   },
   optionImage: {
+    width: "60px",
+    height: "80px",
     color: "white",
-    width: (props) => (props.isMobile ? "65px" : "100px"),
-    height: (props) => (props.isMobile ? "65px" : "120px"),
-    objectFit: "contain",
-    filter:
-      "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
-    opacity: 0.9,
   },
   checkIcon: {
     position: "absolute",
@@ -86,6 +86,31 @@ const useStyles = makeStyles({
   divider: {
     backgroundColor: "rgba(192, 211, 202, 0.2) !important",
     margin: "1.5rem 0 !important",
+  },
+  sliderContainer: {
+    padding: "0 20px",
+    marginBottom: "20px",
+  },
+  slider: {
+    color: "#C0D3CA !important",
+    "& .MuiSlider-track": {
+      backgroundColor: "#C0D3CA !important",
+    },
+    "& .MuiSlider-rail": {
+      backgroundColor: "rgba(192, 211, 202, 0.3) !important",
+    },
+    "& .MuiSlider-thumb": {
+      backgroundColor: "#C0D3CA !important",
+      border: "2px solid #0a0a0a !important",
+    },
+    "& .MuiSlider-mark": {
+      backgroundColor: "rgba(192, 211, 202, 0.5) !important",
+    },
+    "& .MuiSlider-markLabel": {
+      color: "#C0D3CA !important",
+      fontFamily: "'Montserrat', sans-serif !important",
+      fontSize: "0.8rem !important",
+    },
   },
   pocketButton: {
     backgroundColor: "rgba(30, 30, 30, 0.6) !important",
@@ -114,16 +139,14 @@ function StepTwo() {
   const isMobile = useMediaQuery("(max-width:600px)");
   const classes = useStyles({ isMobile });
   const [selectedKind, setSelectedKind] = useState(null);
-  const [selectedKindPucket, setSelectedKindPucket] = useState(false);
+  const [selectedKindPucket, setSelectedKindPucket] = useState(true);
   const [, setKindColor] = useAtom(currentKindAtom);
   const [selectedPacketType, setSelectedPacketType] = useAtom(
     selectedPacketTypeAtom
   );
   const [_, setSelectedKindType] = useAtom(selectedKindTypeAtom);
   const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
-  const [selectedLapelType, setSelectedLapelType] = useAtom(
-    selectedLapelTypeAtom
-  );
+  const [, setSelectedLapelType] = useAtom(selectedLapelTypeAtom);
 
   const suitKinds = [
     { name: "kind1", image: kind1Img },
@@ -135,12 +158,14 @@ function StepTwo() {
   const Laplekinds = [
     { name: "collarTight", image: collarTight },
     { name: "collarDistant", image: collarDistant },
+    { name: "collarCircel", image: collarDistant },
   ];
 
-  const collarTypes = [
-    { name: "Slim", image: slim },
-    { name: "Standard", image: standard },
-    { name: "Wide", image: wide },
+  const lapelLevels = [
+    { value: 1, label: "Slime" },
+    { value: 2, label: "Standard" },
+    { value: 3, label: "Wide" },
+    { value: 4, label: "Extra Wide" },
   ];
 
   const packetType = [
@@ -189,11 +214,24 @@ function StepTwo() {
                 selectedKind === kind.name ? classes.selectedOption : ""
               }`}
             >
-              <img
-                src={kind.image}
-                alt={kind.name}
-                className={classes.optionImage}
-              />
+              <div
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "white",
+                  filter:
+                    "contrast(0.5) brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+                }}
+              >
+                <img
+                  src={kind.image}
+                  alt={kind.name}
+                  style={{ width: "60px", height: "80px", color: "white" }}
+                />
+              </div>
               {selectedKind === kind.name && (
                 <CheckCircleIcon className={classes.checkIcon} />
               )}
@@ -221,11 +259,24 @@ function StepTwo() {
                 selectedCollar === kind.name ? classes.selectedOption : ""
               }`}
             >
-              <img
-                src={kind.image}
-                alt={kind.name}
-                className={classes.optionImage}
-              />
+              <div
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "white",
+                  filter:
+                    "contrast(0.5) brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+                }}
+              >
+                <img
+                  src={kind.image}
+                  alt={kind.name}
+                  className={classes.optionImage}
+                />
+              </div>
               {selectedCollar === kind.name && (
                 <CheckCircleIcon className={classes.checkIcon} />
               )}
@@ -234,36 +285,27 @@ function StepTwo() {
         ))}
       </Box>
 
-      <Divider className={classes.divider} />
-
-      <Typography variant="h3" className={classes.sectionTitle}>
-        Lapel Type
-      </Typography>
-      <Box className={classes.optionsContainer}>
-        {collarTypes.map((kind, index) => (
-          <motion.div
-            key={kind.name}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
-          >
-            <Button
-              onClick={() => setSelectedLapelType(kind.name)}
-              className={`${classes.optionButton} ${
-                selectedLapelType === kind.name ? classes.selectedOption : ""
-              }`}
-            >
-              <img
-                src={kind.image}
-                alt={kind.name}
-                className={classes.optionImage}
-              />
-              {selectedLapelType === kind.name && (
-                <CheckCircleIcon className={classes.checkIcon} />
-              )}
-            </Button>
-          </motion.div>
-        ))}
+      <Box className={classes.sliderContainer}>
+        <Slider
+          aria-label="Lapel Type"
+          defaultValue={2}
+          getAriaValueText={(value) =>
+            lapelLevels.find((level) => level.value === value)?.label ||
+            "Standard"
+          }
+          valueLabelDisplay="auto"
+          step={1}
+          marks={lapelLevels}
+          min={1}
+          max={4}
+          className={classes.slider}
+          onChange={(event, newValue) => {
+            const selectedLevel = lapelLevels.find(
+              (level) => level.value === newValue
+            );
+            setSelectedLapelType(selectedLevel?.label || "Standard");
+          }}
+        />
       </Box>
 
       <Divider className={classes.divider} />
@@ -298,11 +340,24 @@ function StepTwo() {
                 selectedPacketType === kind.name ? classes.selectedOption : ""
               }`}
             >
-              <img
-                src={kind.image}
-                alt={kind.name}
-                className={classes.optionImage}
-              />
+              <div
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "white",
+                  filter:
+                    "contrast(0.5) brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+                }}
+              >
+                <img
+                  src={kind.image}
+                  alt={kind.name}
+                  className={classes.optionImage}
+                />
+              </div>
               {selectedPacketType === kind.name && (
                 <CheckCircleIcon className={classes.checkIcon} />
               )}
@@ -317,11 +372,24 @@ function StepTwo() {
                 selectedPacketType === kind.name ? classes.selectedOption : ""
               }`}
             >
-              <img
-                src={kind.image}
-                alt={kind.name}
-                className={classes.optionImage}
-              />
+              <div
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "white",
+                  filter:
+                    "contrast(0.5) brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+                }}
+              >
+                <img
+                  src={kind.image}
+                  alt={kind.name}
+                  className={classes.optionImage}
+                />
+              </div>
               {selectedPacketType === kind.name && (
                 <CheckCircleIcon className={classes.checkIcon} />
               )}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { sendContactMessage } from "../api/contact";
+import { useLanguage } from "../context/LanguageContext.jsx";
 import {
   Box,
   Container,
@@ -12,6 +13,7 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { makeStyles } from "@mui/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -155,6 +157,11 @@ const useStyles = makeStyles({
 
 const Contact = () => {
   const classes = useStyles();
+  const { t, language } = useLanguage();
+  const { enqueueSnackbar } = useSnackbar();
+
+  console.log("Current language:", language);
+  console.log("Contact Us translation:", t("contactUs"));
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -173,14 +180,29 @@ const Contact = () => {
       const data = await sendContactMessage(formData);
 
       if (data.success) {
-        alert("Message Sent Successfully!");
+        enqueueSnackbar(
+          language === "he"
+            ? "ההודעה נשלחה בהצלחה!"
+            : "Message Sent Successfully!",
+          { variant: "success" }
+        );
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
-        alert("Failed to send message. Please try again.");
+        enqueueSnackbar(
+          language === "he"
+            ? "שגיאה בשליחת ההודעה. אנא נסה שוב."
+            : "Failed to send message. Please try again.",
+          { variant: "error" }
+        );
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Failed to send message. Please try again.");
+      enqueueSnackbar(
+        language === "he"
+          ? "שגיאה בשליחת ההודעה. אנא נסה שוב."
+          : "Failed to send message. Please try again.",
+        { variant: "error" }
+      );
     }
   };
 
@@ -189,12 +211,12 @@ const Contact = () => {
       <Container maxWidth="lg" className={classes.container}>
         <Link to="/" className={classes.returnButton}>
           <ArrowBackIcon className={classes.returnIcon} />
-          Return to Main Page
+          {t("returnToMainPage")}
         </Link>
 
         <div>
           <Typography variant="h1" className={classes.heading}>
-            Contact Us
+            {t("contactUs")}
           </Typography>
         </div>
 
@@ -203,28 +225,26 @@ const Contact = () => {
             <div>
               <Paper elevation={0} className={classes.formContainer}>
                 <Typography variant="h2" className={classes.subheading}>
-                  Send Us a Message
+                  {t("sendUsMessage")}
                 </Typography>
                 <Typography variant="body1" className={classes.paragraph}>
-                  We'd love to hear from you. Please fill out the form below and
-                  we'll get back to you as soon as possible.
+                  {t("contactDescription")}
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
                   <TextField
                     className={classes.textField}
-                    label="Full Name"
+                    label={t("fullName")}
                     variant="outlined"
                     fullWidth
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                   />
 
                   <TextField
                     className={classes.textField}
-                    label="Email Address"
+                    label={t("emailAddress")}
                     variant="outlined"
                     fullWidth
                     type="email"
@@ -236,18 +256,17 @@ const Contact = () => {
 
                   <TextField
                     className={classes.textField}
-                    label="Subject"
+                    label={t("subject")}
                     variant="outlined"
                     fullWidth
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    required
                   />
 
                   <TextField
                     className={classes.textField}
-                    label="Message"
+                    label={t("message")}
                     variant="outlined"
                     fullWidth
                     multiline
@@ -255,11 +274,10 @@ const Contact = () => {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    required
                   />
 
                   <Button type="submit" className={classes.submitButton}>
-                    Send Message
+                    {t("sendMessage")}
                   </Button>
                 </form>
               </Paper>
@@ -270,17 +288,17 @@ const Contact = () => {
             <div>
               <Paper elevation={0} className={classes.contactInfo}>
                 <Typography variant="h2" className={classes.subheading}>
-                  Contact Information
+                  {t("contactInformation")}
                 </Typography>
 
-                <div className={classes.contactItem}>
+                {/* <div className={classes.contactItem}>
                   <LocationOnIcon className={classes.contactIcon} />
                   <div>
                     <Typography
                       variant="body2"
                       className={classes.contactLabel}
                     >
-                      Address
+                      {t("address")}
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
                       Via Roma 123
@@ -290,7 +308,7 @@ const Contact = () => {
                       Italy
                     </Typography>
                   </div>
-                </div>
+                </div> */}
 
                 <div className={classes.contactItem}>
                   <PhoneIcon className={classes.contactIcon} />
@@ -299,12 +317,10 @@ const Contact = () => {
                       variant="body2"
                       className={classes.contactLabel}
                     >
-                      Phone
+                      {t("phone")}
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      +39 123 456 7890
-                      <br />
-                      +39 098 765 4321
+                      0548720720
                     </Typography>
                   </div>
                 </div>
@@ -316,12 +332,10 @@ const Contact = () => {
                       variant="body2"
                       className={classes.contactLabel}
                     >
-                      Email
+                      {t("email")}
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      info@italiansuits.com
-                      <br />
-                      support@italiansuits.com
+                      suit.custom.made@gmail.com
                     </Typography>
                   </div>
                 </div>
@@ -335,14 +349,22 @@ const Contact = () => {
                       variant="body2"
                       className={classes.contactLabel}
                     >
-                      Opening Hours
+                      {t("openingHours")}
                     </Typography>
                     <Typography variant="body1" className={classes.contactText}>
-                      Monday - Friday: 9:00 AM - 7:00 PM
-                      <br />
-                      Saturday: 10:00 AM - 6:00 PM
-                      <br />
-                      Sunday: Closed
+                      {language === "he" ? (
+                        <>
+                          ראשון - חמישי: 10:30 - 17:00
+                          <br />
+                          שישי - שבת: סגור
+                        </>
+                      ) : (
+                        <>
+                          Sunday - Thursday: 10:30 - 17:00
+                          <br />
+                          Friday - Saturday: Closed
+                        </>
+                      )}
                     </Typography>
                   </div>
                 </div>

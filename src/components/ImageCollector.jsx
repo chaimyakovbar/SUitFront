@@ -51,9 +51,11 @@ const ImageFilterComponent = () => {
   const poshetColor = selectedPoshet;
 
   const bottomPart =
-    selectedKind === "kind3" || selectedKind === "kind4"
-      ? "bottomKind3"
-      : "bottom";
+    selectedKind === "kind2"
+      ? "bottom2"
+      : selectedKind === "kind1"
+      ? "bottom"
+      : "bottomKind3";
 
   useEffect(() => {
     setLoading(true);
@@ -251,9 +253,15 @@ const ImageFilterComponent = () => {
 
       {/* Base parts */}
       <img
+        src={`/assets/ragach/Kinds/${selectedKind}/${currColor}.png`}
+        alt={`Suit Body - ${selectedKind} ${currColor}`}
+              style={{ ...imageStyle, zIndex: 2 }}   onError={() => handleImageError("suitBody")}
+      />
+
+      <img
         src={`/assets/ragach/colar/${currColor}.png`}
         alt={`Collar - ${currColor}`}
-        style={imageStyle}
+        style={{ ...imageStyle, zIndex: 200 }}
         onError={() => handleImageError("collar")}
       />
 
@@ -281,16 +289,14 @@ const ImageFilterComponent = () => {
       <img
         src={`/assets/ragach/${bottomPart}/${currColor}.png`}
         alt={`Bottom - ${currColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("bottom")}
+              style={{ ...imageStyle, zIndex: 2 }}   onError={() => handleImageError("bottom")}
       />
 
       {/* Fixed Lapel/Collar path */}
       <img
         src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
         alt={`Lapel Collar - ${currColor}`}
-        style={imageStyle}
-        onError={() =>
+        style={{ ...imageStyle, zIndex: 200 }}      onError={() =>
           handleImageError(
             `lapelCollar: ${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}`
           )
@@ -339,8 +345,8 @@ const ImageFilterComponent = () => {
       <img
         src={`/assets/ragach/packetUp/${currColor}.png`}
         alt={`Packet Up - ${currColor}`}
-        style={imageStyle}
-        onError={() => handleImageError("packetUp")}
+        style={{ ...imageStyle, zIndex: 3 }}
+       onError={() => handleImageError("packetUp")}
       />
 
       {buttonColor !== null && (

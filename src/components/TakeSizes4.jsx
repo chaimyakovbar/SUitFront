@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import { useAtom } from "jotai";
@@ -10,8 +16,8 @@ import { postProduct, getAllProducts } from "../api/suit";
 import { useSnackbar } from "notistack";
 
 const TakeSizes4 = () => {
-  const [selectedJacketSize, setSelectedJacketSize] = useState(null);
-  const [selectedPantsSize, setSelectedPantsSize] = useState(null);
+  const [selectedJacketSize, setSelectedJacketSize] = useState("");
+  const [selectedPantsSize, setSelectedPantsSize] = useState("");
   const [user] = useAtom(authUserAtom);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -29,10 +35,7 @@ const TakeSizes4 = () => {
 
         // Check for sizes in the profile_chaim object
         if (userData?.sizesTable) {
-          console.log(
-            "Found sizesTable:",
-            userData.sizesTable
-          );
+          console.log("Found sizesTable:", userData.sizesTable);
           const { jacket, pants } = userData.sizesTable;
           console.log("Jacket size:", jacket, "Pants size:", pants);
 
@@ -104,15 +107,44 @@ const TakeSizes4 = () => {
     boxShadow: "0 0 20px rgba(255, 255, 255, 0.05)",
   };
 
-  const buttonStyle = {
+  const selectStyle = {
+    minWidth: "200px",
+    "& .MuiOutlinedInput-root": {
+      color: "#fff",
+      "& fieldset": {
+        borderColor: "#555",
+      },
+      "&:hover fieldset": {
+        borderColor: "#FFD700",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#FFD700",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#fff",
+      "&.Mui-focused": {
+        color: "#FFD700",
+      },
+    },
+    "& .MuiSelect-icon": {
+      color: "#fff",
+    },
+  };
+
+  const menuItemStyle = {
     backgroundColor: "#1a1a1a",
     color: "#fff",
-    border: "1px solid #555",
-    borderRadius: "10px",
-    padding: "1rem",
-    cursor: "pointer",
-    fontWeight: "bold",
-    transition: "all 0.2s ease-in-out",
+    "&:hover": {
+      backgroundColor: "#333",
+    },
+    "&.Mui-selected": {
+      backgroundColor: "#FFD700",
+      color: "#000",
+      "&:hover": {
+        backgroundColor: "#FFC800",
+      },
+    },
   };
 
   const saveButtonStyle = {
@@ -181,100 +213,77 @@ const TakeSizes4 = () => {
           Shopping
         </Button>
       </div>
+
       {/* חליפה */}
       <div style={tableStyle}>
-        <h1 style={{ fontSize: "1.8rem", marginBottom: "1rem", color: "#fff" }}>
-          choose jacket size
+        <h1 style={{ fontSize: "1.8rem", marginBottom: "2rem", color: "#fff" }}>
+          Choose Jacket Size
         </h1>
+        <FormControl sx={selectStyle}>
+          <InputLabel id="jacket-size-label">Jacket Size</InputLabel>
+          <Select
+            labelId="jacket-size-label"
+            id="jacket-size-select"
+            value={selectedJacketSize}
+            label="Jacket Size"
+            onChange={(e) => setSelectedJacketSize(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  backgroundColor: "#1a1a1a",
+                  maxHeight: "300px",
+                },
+              },
+            }}
+          >
+            {sizes.map((size) => (
+              <MenuItem key={`jacket-${size}`} value={size} sx={menuItemStyle}>
+                {size}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         {selectedJacketSize && (
-          <h2 style={{ marginBottom: "1.5rem", color: "#FFD700" }}>
-            chosen size: {selectedJacketSize}
+          <h2 style={{ marginTop: "1rem", color: "#FFD700" }}>
+            Selected: {selectedJacketSize}
           </h2>
         )}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(60px, 1fr))",
-            gap: "1rem",
-            maxWidth: "600px",
-            margin: "0 auto",
-          }}
-        >
-          {sizes.map((size) => (
-            <button
-              key={`jacket-${size}`}
-              onClick={() => setSelectedJacketSize(size)}
-              style={{
-                ...buttonStyle,
-                backgroundColor:
-                  selectedJacketSize === size ? "#FFD700" : "#1a1a1a",
-                color: selectedJacketSize === size ? "#000" : "#fff",
-                border:
-                  selectedJacketSize === size
-                    ? "2px solid #FFD700"
-                    : "1px solid #555",
-              }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  selectedJacketSize === size ? "#FFD700" : "#333")
-              }
-              onMouseOut={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  selectedJacketSize === size ? "#FFD700" : "#1a1a1a")
-              }
-            >
-              {size}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* מכנסיים */}
       <div style={tableStyle}>
-        <h1 style={{ fontSize: "1.8rem", marginBottom: "1rem", color: "#fff" }}>
-          choose pants size
+        <h1 style={{ fontSize: "1.8rem", marginBottom: "2rem", color: "#fff" }}>
+          Choose Pants Size
         </h1>
+        <FormControl sx={selectStyle}>
+          <InputLabel id="pants-size-label">Pants Size</InputLabel>
+          <Select
+            labelId="pants-size-label"
+            id="pants-size-select"
+            value={selectedPantsSize}
+            label="Pants Size"
+            onChange={(e) => setSelectedPantsSize(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  backgroundColor: "#1a1a1a",
+                  maxHeight: "300px",
+                },
+              },
+            }}
+          >
+            {sizes.map((size) => (
+              <MenuItem key={`pants-${size}`} value={size} sx={menuItemStyle}>
+                {size}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         {selectedPantsSize && (
-          <h2 style={{ marginBottom: "1.5rem", color: "#FFD700" }}>
-            chosen size: {selectedPantsSize}
+          <h2 style={{ marginTop: "1rem", color: "#FFD700" }}>
+            Selected: {selectedPantsSize}
           </h2>
         )}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(60px, 1fr))",
-            gap: "1rem",
-            maxWidth: "600px",
-            margin: "0 auto",
-          }}
-        >
-          {sizes.map((size) => (
-            <button
-              key={`pants-${size}`}
-              onClick={() => setSelectedPantsSize(size)}
-              style={{
-                ...buttonStyle,
-                backgroundColor:
-                  selectedPantsSize === size ? "#FFD700" : "#1a1a1a",
-                color: selectedPantsSize === size ? "#000" : "#fff",
-                border:
-                  selectedPantsSize === size
-                    ? "2px solid #FFD700"
-                    : "1px solid #555",
-              }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  selectedPantsSize === size ? "#FFD700" : "#333")
-              }
-              onMouseOut={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  selectedPantsSize === size ? "#FFD700" : "#1a1a1a")
-              }
-            >
-              {size}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Save Button */}

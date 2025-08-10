@@ -44,10 +44,10 @@ function createStyleElement(options) {
   tag.setAttribute("data-s", "");
   return tag;
 }
-var StyleSheet = function() {
+var StyleSheet = function () {
   function StyleSheet2(options) {
     var _this = this;
-    this._insertTag = function(tag) {
+    this._insertTag = function (tag) {
       var before;
       if (_this.tags.length === 0) {
         if (_this.insertionPoint) {
@@ -104,7 +104,7 @@ var StyleSheet = function() {
     this.ctr++;
   };
   _proto.flush = function flush() {
-    this.tags.forEach(function(tag) {
+    this.tags.forEach(function (tag) {
       var _tag$parentNode;
       return (_tag$parentNode = tag.parentNode) == null ? void 0 : _tag$parentNode.removeChild(tag);
     });
@@ -477,12 +477,12 @@ function stringify(element, index, children, callback) {
 }
 
 // node_modules/stylis/src/Middleware.js
-function middleware(collection) {
-  var length2 = sizeof(collection);
-  return function(element, index, children, callback) {
+function middleware(IN PROGRESS) {
+  var length2 = sizeof(IN PROGRESS);
+  return function (element, index, children, callback) {
     var output = "";
     for (var i = 0; i < length2; i++)
-      output += collection[i](element, index, children, callback) || "";
+      output += IN PROGRESS[i](element, index, children, callback) || "";
     return output;
   };
 }
@@ -490,7 +490,7 @@ function middleware(collection) {
 // node_modules/@emotion/weak-memoize/dist/emotion-weak-memoize.esm.js
 var weakMemoize = function weakMemoize2(func) {
   var cache = /* @__PURE__ */ new WeakMap();
-  return function(arg) {
+  return function (arg) {
     if (cache.has(arg)) {
       return cache.get(arg);
     }
@@ -551,8 +551,8 @@ var getRules = function getRules2(value, points) {
 var fixedElements = /* @__PURE__ */ new WeakMap();
 var compat = function compat2(element) {
   if (element.type !== "rule" || !element.parent || // positive .length indicates that this rule contains pseudo
-  // negative .length indicates that this rule has been already prefixed
-  element.length < 1) {
+    // negative .length indicates that this rule has been already prefixed
+    element.length < 1) {
     return;
   }
   var value = element.value;
@@ -596,7 +596,7 @@ var isIgnoringComment = function isIgnoringComment2(element) {
   return element.type === "comm" && element.children.indexOf(ignoreFlag) > -1;
 };
 var createUnsafeSelectorsAlarm = function createUnsafeSelectorsAlarm2(cache) {
-  return function(element, index, children) {
+  return function (element, index, children) {
     if (element.type !== "rule" || cache.compat) return;
     var unsafePseudoClasses = element.value.match(/(:first|:nth|:nth-last)-child/g);
     if (unsafePseudoClasses) {
@@ -617,7 +617,7 @@ var createUnsafeSelectorsAlarm = function createUnsafeSelectorsAlarm2(cache) {
           break;
         }
       }
-      unsafePseudoClasses.forEach(function(unsafePseudoClass) {
+      unsafePseudoClasses.forEach(function (unsafePseudoClass) {
         console.error('The pseudo class "' + unsafePseudoClass + '" is potentially unsafe when doing server-side rendering. Try changing it to "' + unsafePseudoClass.split("-child")[0] + '-of-type".');
       });
     }
@@ -806,7 +806,7 @@ var prefixer = function prefixer2(element, index, children, callback) {
           value: replace(element.value, "@", "@" + WEBKIT)
         })], callback);
       case RULESET:
-        if (element.length) return combine(element.props, function(value) {
+        if (element.length) return combine(element.props, function (value) {
           switch (match(value, /(::plac\w+|:read-\w+)/)) {
             // :read-(only|write)
             case ":read-only":
@@ -847,7 +847,7 @@ var createCache = function createCache2(options) {
   }
   if (key === "css") {
     var ssrStyles = document.querySelectorAll("style[data-emotion]:not([data-s])");
-    Array.prototype.forEach.call(ssrStyles, function(node2) {
+    Array.prototype.forEach.call(ssrStyles, function (node2) {
       var dataEmotionAttribute = node2.getAttribute("data-emotion");
       if (dataEmotionAttribute.indexOf(" ") === -1) {
         return;
@@ -871,7 +871,7 @@ var createCache = function createCache2(options) {
       // this means we will ignore elements which don't have a space in them which
       // means that the style elements we're looking at are only Emotion 11 server-rendered style elements
       document.querySelectorAll('style[data-emotion^="' + key + ' "]'),
-      function(node2) {
+      function (node2) {
         var attrib = node2.getAttribute("data-emotion").split(" ");
         for (var i = 1; i < attrib.length; i++) {
           inserted[attrib[i]] = true;
@@ -891,7 +891,7 @@ var createCache = function createCache2(options) {
   }
   {
     var currentSheet;
-    var finalizingPlugins = [stringify, function(element) {
+    var finalizingPlugins = [stringify, function (element) {
       if (!element.root) {
         if (element["return"]) {
           currentSheet.insert(element["return"]);
@@ -948,7 +948,7 @@ var import_hoist_non_react_statics = __toESM(require_hoist_non_react_statics_cjs
 var isBrowser = true;
 function getRegisteredStyles(registered, registeredStyles, classNames) {
   var rawClassName = "";
-  classNames.split(" ").forEach(function(className) {
+  classNames.split(" ").forEach(function (className) {
     if (registered[className] !== void 0) {
       registeredStyles.push(registered[className] + ";");
     } else if (className) {
@@ -966,10 +966,10 @@ var registerStyles = function registerStyles2(cache, serialized, isStringTag) {
     // so we don't have to add it to registered cache.
     // this improves memory usage since we can avoid storing the whole style string
     (isStringTag === false || // we need to always store it if we're in compat mode and
-    // in node since emotion-server relies on whether a style is in
-    // the registered cache to know whether a style is global or not
-    // also, note that this check will be dead code eliminated in the browser
-    isBrowser === false) && cache.registered[className] === void 0
+      // in node since emotion-server relies on whether a style is in
+      // the registered cache to know whether a style is global or not
+      // also, note that this check will be dead code eliminated in the browser
+      isBrowser === false) && cache.registered[className] === void 0
   ) {
     cache.registered[className] = serialized.styles;
   }
@@ -993,12 +993,12 @@ function murmur2(str) {
   for (; len >= 4; ++i, len -= 4) {
     k = str.charCodeAt(i) & 255 | (str.charCodeAt(++i) & 255) << 8 | (str.charCodeAt(++i) & 255) << 16 | (str.charCodeAt(++i) & 255) << 24;
     k = /* Math.imul(k, m): */
-    (k & 65535) * 1540483477 + ((k >>> 16) * 59797 << 16);
+      (k & 65535) * 1540483477 + ((k >>> 16) * 59797 << 16);
     k ^= /* k >>> r: */
-    k >>> 24;
+      k >>> 24;
     h = /* Math.imul(k, m): */
-    (k & 65535) * 1540483477 + ((k >>> 16) * 59797 << 16) ^ /* Math.imul(h, m): */
-    (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
+      (k & 65535) * 1540483477 + ((k >>> 16) * 59797 << 16) ^ /* Math.imul(h, m): */
+      (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
   }
   switch (len) {
     case 3:
@@ -1008,11 +1008,11 @@ function murmur2(str) {
     case 1:
       h ^= str.charCodeAt(i) & 255;
       h = /* Math.imul(h, m): */
-      (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
+        (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
   }
   h ^= h >>> 13;
   h = /* Math.imul(h, m): */
-  (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
+    (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
   return ((h ^ h >>> 15) >>> 0).toString(36);
 }
 
@@ -1084,7 +1084,7 @@ var isCustomProperty = function isCustomProperty2(property) {
 var isProcessableValue = function isProcessableValue2(value) {
   return value != null && typeof value !== "boolean";
 };
-var processStyleName = memoize(function(styleName) {
+var processStyleName = memoize(function (styleName) {
   return isCustomProperty(styleName) ? styleName : styleName.replace(hyphenateRegex, "-$&").toLowerCase();
 });
 var processStyleValue = function processStyleValue2(key, value) {
@@ -1092,7 +1092,7 @@ var processStyleValue = function processStyleValue2(key, value) {
     case "animation":
     case "animationName": {
       if (typeof value === "string") {
-        return value.replace(animationRegex, function(match2, p1, p2) {
+        return value.replace(animationRegex, function (match2, p1, p2) {
           cursor = {
             name: p1,
             styles: p2,
@@ -1124,7 +1124,7 @@ var processStyleValue = function processStyleValue2(key, value) {
     var processed = oldProcessStyleValue(key, value);
     if (processed !== "" && !isCustomProperty(key) && key.indexOf("-") !== -1 && hyphenatedCache[key] === void 0) {
       hyphenatedCache[key] = true;
-      console.error("Using kebab-case for css properties in objects is not supported. Did you mean " + key.replace(msPattern, "ms-").replace(hyphenPattern, function(str, _char) {
+      console.error("Using kebab-case for css properties in objects is not supported. Did you mean " + key.replace(msPattern, "ms-").replace(hyphenPattern, function (str, _char) {
         return _char.toUpperCase();
       }) + "?");
     }
@@ -1195,7 +1195,7 @@ function handleInterpolation(mergedProps, registered, interpolation) {
     case "string":
       {
         var matched = [];
-        var replaced = interpolation.replace(animationRegex, function(_match, _p1, p2) {
+        var replaced = interpolation.replace(animationRegex, function (_match, _p1, p2) {
           var fakeVarName = "animation" + matched.length;
           matched.push("const " + fakeVarName + " = keyframes`" + p2.replace(/^@keyframes animation-\w+/, "") + "`");
           return "${" + fakeVarName + "}";
@@ -1336,7 +1336,7 @@ var EmotionCacheContext = React2.createContext(
 }
 var CacheProvider = EmotionCacheContext.Provider;
 var withEmotionCache = function withEmotionCache2(func) {
-  return (0, import_react.forwardRef)(function(props, ref) {
+  return (0, import_react.forwardRef)(function (props, ref) {
     var cache = (0, import_react.useContext)(EmotionCacheContext);
     return func(props, cache, ref);
   });
@@ -1358,8 +1358,8 @@ var getTheme = function getTheme2(outerTheme, theme) {
   }
   return _extends({}, outerTheme, theme);
 };
-var createCacheWithTheme = weakMemoize(function(outerTheme) {
-  return weakMemoize(function(theme) {
+var createCacheWithTheme = weakMemoize(function (outerTheme) {
+  return weakMemoize(function (theme) {
     return getTheme(outerTheme, theme);
   });
 });
@@ -1394,7 +1394,7 @@ var typePropName = "__EMOTION_TYPE_PLEASE_DO_NOT_USE__";
 var labelPropName = "__EMOTION_LABEL_PLEASE_DO_NOT_USE__";
 var createEmotionProps = function createEmotionProps2(type, props) {
   if (typeof props.css === "string" && // check if there is a css declaration
-  props.css.indexOf(":") !== -1) {
+    props.css.indexOf(":") !== -1) {
     throw new Error("Strings are not allowed as css prop values, please wrap it in a css template literal from '@emotion/react' like this: css`" + props.css + "`");
   }
   var newProps = {};
@@ -1413,12 +1413,12 @@ var createEmotionProps = function createEmotionProps2(type, props) {
 var Insertion = function Insertion2(_ref) {
   var cache = _ref.cache, serialized = _ref.serialized, isStringTag = _ref.isStringTag;
   registerStyles(cache, serialized, isStringTag);
-  useInsertionEffectAlwaysWithSyncFallback(function() {
+  useInsertionEffectAlwaysWithSyncFallback(function () {
     return insertStyles(cache, serialized, isStringTag);
   });
   return null;
 };
-var Emotion = withEmotionCache(function(props, cache, ref) {
+var Emotion = withEmotionCache(function (props, cache, ref) {
   var cssProp = props.css;
   if (typeof cssProp === "string" && cache.registered[cssProp] !== void 0) {
     cssProp = cache.registered[cssProp];
@@ -1796,25 +1796,25 @@ var jsx = function jsx2(type, props) {
   }
   return React3.createElement.apply(null, createElementArgArray);
 };
-(function(_jsx) {
+(function (_jsx) {
   var JSX;
-  /* @__PURE__ */ (function(_JSX) {
+  /* @__PURE__ */ (function (_JSX) {
   })(JSX || (JSX = _jsx.JSX || (_jsx.JSX = {})));
 })(jsx || (jsx = {}));
 var warnedAboutCssPropForGlobal = false;
-var Global = withEmotionCache(function(props, cache) {
+var Global = withEmotionCache(function (props, cache) {
   if (!warnedAboutCssPropForGlobal && // check for className as well since the user is
-  // probably using the custom createElement which
-  // means it will be turned into a className prop
-  // I don't really want to add it to the type since it shouldn't be used
-  ("className" in props && props.className || "css" in props && props.css)) {
+    // probably using the custom createElement which
+    // means it will be turned into a className prop
+    // I don't really want to add it to the type since it shouldn't be used
+    ("className" in props && props.className || "css" in props && props.css)) {
     console.error("It looks like you're using the css prop on Global, did you mean to use the styles prop instead?");
     warnedAboutCssPropForGlobal = true;
   }
   var styles = props.styles;
   var serialized = serializeStyles([styles], void 0, React3.useContext(ThemeContext));
   var sheetRef = React3.useRef();
-  useInsertionEffectWithLayoutFallback(function() {
+  useInsertionEffectWithLayoutFallback(function () {
     var key = cache.key + "-global";
     var sheet = new cache.sheet.constructor({
       key,
@@ -1833,11 +1833,11 @@ var Global = withEmotionCache(function(props, cache) {
       sheet.hydrate([node2]);
     }
     sheetRef.current = [sheet, rehydrating];
-    return function() {
+    return function () {
       sheet.flush();
     };
   }, [cache]);
-  useInsertionEffectWithLayoutFallback(function() {
+  useInsertionEffectWithLayoutFallback(function () {
     var sheetRefCurrent = sheetRef.current;
     var sheet = sheetRefCurrent[0], rehydrating = sheetRefCurrent[1];
     if (rehydrating) {
@@ -1926,14 +1926,14 @@ function merge(registered, css2, className) {
 }
 var Insertion3 = function Insertion4(_ref) {
   var cache = _ref.cache, serializedArr = _ref.serializedArr;
-  useInsertionEffectAlwaysWithSyncFallback(function() {
+  useInsertionEffectAlwaysWithSyncFallback(function () {
     for (var i = 0; i < serializedArr.length; i++) {
       insertStyles(cache, serializedArr[i], false);
     }
   });
   return null;
 };
-var ClassNames = withEmotionCache(function(props, cache) {
+var ClassNames = withEmotionCache(function (props, cache) {
   var hasRendered = false;
   var serializedArr = [];
   var css2 = function css3() {
@@ -1999,15 +1999,15 @@ var testOmitPropsOnComponent = function testOmitPropsOnComponent2(key) {
 };
 var getDefaultShouldForwardProp = function getDefaultShouldForwardProp2(tag) {
   return typeof tag === "string" && // 96 is one less than the char code
-  // for "a" so this is checking that
-  // it's a lowercase character
-  tag.charCodeAt(0) > 96 ? testOmitPropsOnStringTag : testOmitPropsOnComponent;
+    // for "a" so this is checking that
+    // it's a lowercase character
+    tag.charCodeAt(0) > 96 ? testOmitPropsOnStringTag : testOmitPropsOnComponent;
 };
 var composeShouldForwardProps = function composeShouldForwardProps2(tag, options, isReal) {
   var shouldForwardProp;
   if (options) {
     var optionsShouldForwardProp = options.shouldForwardProp;
-    shouldForwardProp = tag.__emotion_forwardProp && optionsShouldForwardProp ? function(propName) {
+    shouldForwardProp = tag.__emotion_forwardProp && optionsShouldForwardProp ? function (propName) {
       return tag.__emotion_forwardProp(propName) && optionsShouldForwardProp(propName);
     } : optionsShouldForwardProp;
   }
@@ -2023,7 +2023,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_liter
 var Insertion5 = function Insertion6(_ref) {
   var cache = _ref.cache, serialized = _ref.serialized, isStringTag = _ref.isStringTag;
   registerStyles(cache, serialized, isStringTag);
-  useInsertionEffectAlwaysWithSyncFallback(function() {
+  useInsertionEffectAlwaysWithSyncFallback(function () {
     return insertStyles(cache, serialized, isStringTag);
   });
   return null;
@@ -2045,7 +2045,7 @@ var createStyled = function createStyled2(tag, options) {
   var shouldForwardProp = composeShouldForwardProps(tag, options, isReal);
   var defaultShouldForwardProp = shouldForwardProp || getDefaultShouldForwardProp(baseTag);
   var shouldUseAs = !defaultShouldForwardProp("as");
-  return function() {
+  return function () {
     var args = arguments;
     var styles = isReal && tag.__emotion_styles !== void 0 ? tag.__emotion_styles.slice(0) : [];
     if (identifierName !== void 0) {
@@ -2068,7 +2068,7 @@ var createStyled = function createStyled2(tag, options) {
         styles.push(args[i], templateStringsArr[i]);
       }
     }
-    var Styled = withEmotionCache(function(props, cache, ref) {
+    var Styled = withEmotionCache(function (props, cache, ref) {
       var FinalTag = shouldUseAs && props.as || baseTag;
       var className = "";
       var classInterpolations = [];
@@ -2122,7 +2122,7 @@ var createStyled = function createStyled2(tag, options) {
         return "." + targetClassName;
       }
     });
-    Styled.withComponent = function(nextTag, nextOptions) {
+    Styled.withComponent = function (nextTag, nextOptions) {
       var newStyled = createStyled2(nextTag, _extends({}, options, nextOptions, {
         shouldForwardProp: composeShouldForwardProps(Styled, nextOptions, true)
       }));
@@ -2273,7 +2273,7 @@ var tags = [
   "tspan"
 ];
 var styled = createStyled.bind(null);
-tags.forEach(function(tagName) {
+tags.forEach(function (tagName) {
   styled[tagName] = styled(tagName);
 });
 

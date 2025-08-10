@@ -9,6 +9,7 @@ import { useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import imgFor from "../assets/takeSizesM.png";
 import imgFor2 from "../assets/takeSizesR.png";
+import imgFor3 from "../assets/suitMeasur.jpeg";
 
 const IndexSizes = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -73,6 +74,27 @@ const IndexSizes = () => {
             <img
               style={{ width: "40%", height: "70%" }}
               src={imgFor}
+              alt="imgFor"
+            />
+          </button>
+          
+          <button
+            style={{
+              backgroundColor: "transparent",
+              color: "white",
+              borderRadius: "8px",
+              border: "1px solid gray",
+              marginLeft: isMobile ? "0px" : "10px",
+              marginTop: isMobile ? "10px" : "0px",
+            }}
+            onClick={() => navigate("/sizes/suitMeasur")}
+          >
+            <p style={{ fontSize: "26px", borderBottom: "1px solid gray" }}>
+              measure your body
+            </p>
+            <img
+              style={{ width: "40%", height: "70%" }}
+              src={imgFor3}
               alt="imgFor"
             />
           </button>

@@ -287,6 +287,13 @@ const getImagePaths = (item, viewType = "suit") => {
   if (viewType === "suit") {
     // חליפה - כל החלקים
     imagePaths.push(
+      // Base suit image - use stored path if available, otherwise construct it
+      {
+        key: "baseSuit",
+        path:
+          item.baseSuitImagePath ||
+          `/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+      },
       {
         key: "insideUp",
         path: `/assets/ragach/insideUp/${item.insideColor}.png`,
@@ -469,6 +476,19 @@ const getZIndex = (key) => {
     textInside: 1,
     sleeveButtons: 1,
     pants: 1,
+    // חליפה - כל החלקים
+    baseSuit: 2, // התמונה הבסיסית של החליפה - הכי נמוך
+    insideUp: 1,
+    lapelCollar: 2,
+    colar: 3,
+    sleeves: 4,
+    insideBottom: 5,
+    packetUp: 6,
+    bottom: 7,
+    bottomKind3: 7,
+    // חלקים נוספים
+    suitBody: 0, // alias for baseSuit
+    collar: 3, // alias for colar
     default: 1,
   };
 
@@ -571,7 +591,7 @@ const DynamicImage = ({
     [sortedSuits, imagesCache]
   );
 
-  // Load images for all suits on mount
+  // Load images for all suits on mountp
   useEffect(() => {
     sortedSuits.forEach((suit) => {
       const viewType = cardViewTypes[suit._id] || "suit";

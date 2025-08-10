@@ -2,7 +2,7 @@ import { axiosInstance } from "../config/api.js";
 
 export const sendContactMessage = async (messageData) => {
     try {
-        const response = await axiosInstance.post("/contact", messageData);
+        const response = await axiosInstance.post("/contact/send", messageData);
         return response.data;
     } catch (error) {
         console.error("Error sending contact message:", error);

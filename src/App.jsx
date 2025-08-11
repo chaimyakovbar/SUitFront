@@ -29,6 +29,7 @@ import TakeSizes4 from "./components/TakeSizes4";
 import TakeSizes3 from "./components/TakeSize3";
 import Account from "./pages/Account";
 import CheckoutModern from "./pages/CheckoutModern";
+import ARMeasurementDemo from "./pages/ARMeasurementDemo";
 
 const App = () => {
   const user = useAtomValue(authUserAtom);
@@ -87,6 +88,7 @@ const App = () => {
           <Route path="/PolicySupport" element={<PolicySupport />} />
           <Route path="/sizes/regular" element={<TakeSizes4 />} />
           <Route path="/sizes/measure" element={<TakeSizes3 />} />
+          <Route path="/ar-demo" element={<ARMeasurementDemo />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/Payed" element={<Payed />} />

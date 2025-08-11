@@ -18,6 +18,7 @@ import {
   Tooltip,
   Typography,
   Drawer,
+  Chip,
 } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import { bodyPoints, buttons } from "../consts/KindOfColors";
@@ -25,6 +26,8 @@ import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import PersonIcon from "@mui/icons-material/Person";
 import useProduct from "../Hooks/useProduct";
 import { postProduct } from "../api/suit";
 import { useSnackbar } from "notistack";
@@ -32,6 +35,8 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import BodyCaptureCamera from "./BodyCaptureCamera";
+import ARAvatar from "./ARAvatar";
 
 // Create a mapping from button ID to bodyPoint category
 const createButtonCategoryMap = () => {
@@ -87,6 +92,9 @@ const DollDisplay = () => {
   const [sizeProfiles, setSizeProfiles] = useState([]);
   const [newProfileName, setNewProfileName] = useState("");
   const [openNewProfileDialog, setOpenNewProfileDialog] = useState(false);
+  const [isARMode, setIsARMode] = useState(false);
+  const [showCameraCapture, setShowCameraCapture] = useState(false);
+  const [aiMeasurements, setAiMeasurements] = useState(null);
 
   // Initialize profiles from data
   useEffect(() => {
@@ -255,238 +263,272 @@ const DollDisplay = () => {
     );
   };
 
+  // Handle AI measurement extraction
+  const handleMeasurementsExtracted = (extractedMeasurements) => {
+    setAiMeasurements(extractedMeasurements);
+    
+    // Convert AI measurements to match your existing measurement categories
+    const convertedMeasurements = {};
+    Object.entries(extractedMeasurements).forEach(([key, value]) => {
+      // Map AI measurements to your existing categories
+      const categoryMap = {
+        'Chest': 'Chest',
+        'Waist': 'Waist',
+        'Seat': 'Seat',
+        'Jacket Length': 'Jacket Length',
+        'Front Width': 'Front Width',
+        'Rear Width': 'Rear Width',
+        'Armhole': 'Armhole',
+        'Biceps': 'Biceps',
+        'Shoulder': 'Shoulder',
+        'Sleeve Length': 'Sleeve Length',
+        'Trousers Length': 'Trousers Length',
+        'Waistband': 'Waistband',
+        'Stride Length': 'Stride Length',
+        'Thigh': 'Thigh',
+        'Knee': 'Knee',
+        'Ankles': 'Ankles'
+      };
+      
+      if (categoryMap[key]) {
+        convertedMeasurements[categoryMap[key]] = value;
+      }
+    });
+
+    // Update sizes with AI measurements
+    setSizes(prev => ({
+      ...prev,
+      ...convertedMeasurements
+    }));
+
+    setShowCameraCapture(false);
+    enqueueSnackbar('AI measurements extracted and applied successfully!', { variant: 'success' });
+  };
+
+  // Toggle AR mode
+  const toggleARMode = () => {
+    setIsARMode(!isARMode);
+    if (!isARMode) {
+      enqueueSnackbar('AR Avatar mode activated!', { variant: 'info' });
+    }
+  };
+
+  // Handle camera capture request
+  const handleCameraCaptureRequest = () => {
+    setShowCameraCapture(true);
+  };
+
   // Add error boundary for the Canvas
   if (modelError) {
     return (
       <div
         style={{
-          textAlign: "center",
-          padding: "20px",
-          color: "#fff",
-          backgroundColor: "#000",
-          minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          gap: "20px",
         }}
       >
-        <h2>Error loading 3D model</h2>
-        <p>Please try refreshing the page</p>
+        <ErrorOutlineIcon style={{ fontSize: "60px", color: "red" }} />
+        <Typography variant="h5" color="error">
+          Failed to load 3D model
+        </Typography>
         <Button
-          onClick={() => window.location.reload()}
           variant="contained"
-          style={{ marginTop: "20px" }}
+          onClick={() => window.location.reload()}
+          startIcon={<ArrowBackIcon />}
         >
-          Refresh Page
+          Reload Page
         </Button>
       </div>
     );
   }
 
   return (
-    <div>
-      <div
-        style={{
-          position: "absolute",
-          left: "20px",
-          top: "120px",
-          zIndex: 100,
+    <div style={{ backgroundColor: "#F5F5F7", minHeight: "100vh" }}>
+      <style>
+        {`
+          @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+          }
+        `}
+      </style>
+      {/* Header */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          backgroundColor: "white",
+          borderBottom: "1px solid #ddd",
+          padding: isMobile ? "10px" : "20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <div
-          style={{
-            display: isMobile ? "grid" : "flex",
-            gap: isMobile ? "2px" : "10px",
-            width: isMobile ? "130px" : "100%",
-          }}
-        >
+        <Box display="flex" alignItems="center" gap={2}>
           <Button
-            onClick={() => navigate("/indexSizes")}
-            style={{
-              color: "#fff",
-              backgroundColor: "#333",
-              "&:hover": {
-                backgroundColor: "#444",
-              },
-            }}
+            onClick={() => navigate(-1)}
+            startIcon={<ArrowBackIcon />}
+            sx={{ color: "#333" }}
           >
-            <ArrowBackIcon style={{ marginRight: "8px" }} />
             Back
           </Button>
-
-          <Button
-            onClick={toggleSideDrawer}
-            style={{
-              color: "#fff",
-              backgroundColor: "#333",
-              "&:hover": {
-                backgroundColor: "#444",
-              },
-            }}
-          >
-            <ListAltIcon style={{ marginRight: "8px" }} />
-            All Sizes
-          </Button>
-          <Button
-            onClick={() => navigate("/Shopping")}
-            style={{
-              color: "#fff",
-              backgroundColor: "#333",
-              "&:hover": {
-                backgroundColor: "#444",
-              },
-            }}
-          >
-            <ShoppingCartIcon style={{ marginRight: "8px" }} />
-            Shopping
-          </Button>
-        </div>
-        <div>
-          <Typography variant="body2">
-            {completedPoints.length}/{bodyPoints.length} measurements completed
-          </Typography>
-        </div>
-      </div>
-
-      {/* Profile Selection */}
-      <div
-        style={{
-          position: "absolute",
-          right: "20px",
-          top: "120px",
-          zIndex: 100,
-        }}
-      >
-        <Box
-          sx={{
-            display: isMobile ? "grid" : "flex",
-            gap: isMobile ? "2px" : "10px",
-            alignItems: "center",
-            width: isMobile ? "70px" : "100%",
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={() => setOpenNewProfileDialog(true)}
-            style={{
-              backgroundColor: "#333",
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#444",
-              },
-            }}
-          >
-            New Profile
-          </Button>
-          <select
-            value={selectedProfile?.name || ""}
-            onChange={(e) => {
-              const profile = sizeProfiles.find(
-                (p) => p.name === e.target.value
-              );
-              setSelectedProfile(profile);
-            }}
-            style={{
-              backgroundColor: "#333",
-              color: "#fff",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid rgba(255, 255, 255, 0.3)",
-            }}
-          >
-            {sizeProfiles.map((profile) => (
-              <option key={profile.name} value={profile.name}>
-                {profile.name}
-              </option>
-            ))}
-          </select>
-          <Typography variant="body2" sx={{ color: "black" }}>
-            Select Profile:
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Body Measurements
           </Typography>
         </Box>
-      </div>
 
-      {/* New Profile Dialog */}
-      <Dialog
-        open={openNewProfileDialog}
-        onClose={() => setOpenNewProfileDialog(false)}
-        PaperProps={{
-          style: {
-            backgroundColor: "#1e1e1e",
-            color: "#fff",
-          },
+        <Box display="flex" gap={1}>
+          <Button
+            onClick={toggleSideDrawer}
+            startIcon={<ListAltIcon />}
+            sx={{ color: "#333" }}
+          >
+            Measurements
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Camera Capture Dialog */}
+      {showCameraCapture && (
+        <BodyCaptureCamera
+          onMeasurementsExtracted={handleMeasurementsExtracted}
+          onClose={() => setShowCameraCapture(false)}
+        />
+      )}
+
+      {/* Floating AR Control Panel */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: isMobile ? "auto" : "120px",
+          bottom: isMobile ? "20px" : "auto",
+          right: isMobile ? "20px" : "20px",
+          left: isMobile ? "20px" : "auto",
+          zIndex: 999,
+          display: "flex",
+          flexDirection: isMobile ? "row" : "column",
+          gap: 2,
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          borderRadius: 2,
+          padding: 2,
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(0, 0, 0, 0.1)",
         }}
       >
-        <DialogTitle>Create New Size Profile</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Profile Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newProfileName}
-            onChange={(e) => setNewProfileName(e.target.value)}
+        {/* AR Mode Toggle */}
+        <Tooltip title={isARMode ? "Exit AR mode and return to default avatar" : "Switch to AR mode with personalized avatar"} placement="left">
+          <Button
+            variant={isARMode ? "contained" : "outlined"}
+            startIcon={<PersonIcon />}
+            onClick={toggleARMode}
+            size="medium"
             sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "#fff",
-                "& fieldset": {
-                  borderColor: "rgba(255, 255, 255, 0.23)",
-                },
-                "&:hover fieldset": {
-                  borderColor: "rgba(255, 255, 255, 0.5)",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "rgba(255, 255, 255, 0.7)",
+              backgroundColor: isARMode ? "primary.main" : "transparent",
+              color: isARMode ? "white" : "primary.main",
+              minWidth: "120px",
+              "&:hover": {
+                backgroundColor: isARMode ? "primary.dark" : "rgba(25, 118, 210, 0.04)",
               },
             }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setOpenNewProfileDialog(false)}
-            sx={{ color: "#fff" }}
           >
-            Cancel
+            {isARMode ? "Exit AR" : "AR Mode"}
           </Button>
-          <Button
-            onClick={handleCreateNewProfile}
-            variant="contained"
-            sx={{ backgroundColor: "#333" }}
-          >
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </Tooltip>
 
+        {/* Camera Capture Button */}
+        <Tooltip title="Capture photo and extract body measurements using AI" placement="left">
+          <Button
+            variant="contained"
+            startIcon={<CameraAltIcon />}
+            onClick={handleCameraCaptureRequest}
+            size="medium"
+            sx={{
+              backgroundColor: "#2196F3",
+              color: "white",
+              minWidth: "120px",
+              "&:hover": {
+                backgroundColor: "#1976D2",
+              },
+            }}
+          >
+            AI Capture
+          </Button>
+        </Tooltip>
+
+        {/* AR Status Indicator */}
+        {isARMode && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              padding: "8px 12px",
+              backgroundColor: "rgba(76, 175, 80, 0.1)",
+              borderRadius: 1,
+              border: "1px solid rgba(76, 175, 80, 0.3)",
+            }}
+          >
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                backgroundColor: "#4CAF50",
+                animation: "pulse 2s infinite",
+              }}
+            />
+            <Typography variant="caption" sx={{ color: "#4CAF50", fontWeight: "bold" }}>
+              AR Active
+            </Typography>
+          </Box>
+        )}
+      </Box>
+
+      {/* Main Content */}
       <div style={{ marginTop: "100px" }}>
         <div style={{ position: "relative" }}>
           <div style={{ marginTop: "70px", width: "100%", height: "150vh" }}>
-            <Canvas shadows onError={() => setModelError(true)}>
-              <PerspectiveCamera makeDefault position={[10, 20, 20]} />
-              <ambientLight intensity={0.5} />
-              <OrbitControls />
-              <Suspense
-                fallback={
-                  <mesh>
-                    <boxGeometry args={[1, 1, 1]} />
-                    <meshStandardMaterial color="gray" />
-                  </mesh>
-                }
-              >
-                <Doll position={[10, 30, 10]} color="red" />
-              </Suspense>
-              <ButtonArray
-                onButtonClick={handleButtonClick}
-                onPointClick={handlePointClick}
-                activePoints={activePoints}
-                completedPoints={completedPoints}
+            {isARMode ? (
+              <ARAvatar
+                measurements={aiMeasurements}
+                onCaptureRequest={handleCameraCaptureRequest}
+                isARMode={isARMode}
+                showCaptureButton={!aiMeasurements}
               />
-              <gridHelper args={[10, 10]} />
-            </Canvas>
+            ) : (
+              <Canvas shadows onError={() => setModelError(true)}>
+                <PerspectiveCamera makeDefault position={[10, 20, 20]} />
+                <ambientLight intensity={0.5} />
+                <OrbitControls />
+                <Suspense
+                  fallback={
+                    <mesh>
+                      <boxGeometry args={[1, 1, 1]} />
+                      <meshStandardMaterial color="gray" />
+                    </mesh>
+                  }
+                >
+                  <Doll position={[10, 30, 10]} color="red" />
+                </Suspense>
+                <ButtonArray
+                  onButtonClick={handleButtonClick}
+                  onPointClick={handlePointClick}
+                  activePoints={activePoints}
+                  completedPoints={completedPoints}
+                />
+                <gridHelper args={[10, 10]} />
+              </Canvas>
+            )}
           </div>
 
           {/* Dialog for detailed info */}
@@ -496,249 +538,207 @@ const DollDisplay = () => {
             >
               {selectedButton ? selectedButton.label : "Button Info"}
             </DialogTitle>
-
-            <DialogContent
-              sx={{
-                backgroundColor: "#F5F5F7",
-                padding: "30px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minWidth: "300px",
-              }}
-            >
-              {selectedButton ? (
-                <Box
-                  sx={{
-                    padding: "20px",
-                    width: "100%",
-                    maxWidth: "300px",
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                    <TextField
-                      type="number"
-                      label="Enter measurement (cm)"
-                      value={inputValue}
-                      onChange={(e) => {
-                        const newValue = e.target.value;
-                        setInputValue(newValue);
-
-                        const category = buttonCategoryMap[selectedButton.id];
-                        handleSizeChange(category, newValue);
-                      }}
-                      variant="outlined"
-                      fullWidth
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{ mb: 2, display: "flex", justifyContent: "center" }}
+            <DialogContent>
+              <Box sx={{ mt: 2 }}>
+                <TextField
+                  fullWidth
+                  label="Measurement Value (cm)"
+                  type="number"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  sx={{ mb: 2 }}
+                />
+                <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<YouTubeIcon />}
+                    onClick={() =>
+                      handleOpenDialog("video", selectedButton?.videoUrl)
+                    }
                   >
-                    <img
-                      src={selectedButton.img}
-                      alt={selectedButton.title}
-                      style={{
-                        width: "100%",
-                        height: "150px",
-                        objectFit: "contain",
-                      }}
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      boxShadow: 3,
-                      borderRadius: "12px",
-                      width: "70%",
-                      margin: "0 auto",
-                    }}
+                    Watch Tutorial
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<ErrorOutlineIcon />}
+                    onClick={() =>
+                      handleOpenDialog("info", selectedButton?.description)
+                    }
                   >
-                    <Tooltip title="Click to watch" placement="top">
-                      <Button
-                        onClick={() =>
-                          handleOpenDialog("YouTube", selectedButton.video)
-                        }
-                      >
-                        <YouTubeIcon sx={{ color: "red" }} />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip
-                      title="Click for detailed explanation"
-                      placement="top"
-                    >
-                      <Button
-                        onClick={() =>
-                          handleOpenDialog("Error", selectedButton.title)
-                        }
-                      >
-                        <ErrorOutlineIcon />
-                      </Button>
-                    </Tooltip>
-                  </Box>
+                    How to Measure
+                  </Button>
                 </Box>
-              ) : (
-                <p>No button selected</p>
-              )}
+              </Box>
             </DialogContent>
-
-            <DialogActions
-              sx={{ backgroundColor: "#F5F5F7", padding: "10px 24px" }}
-            >
-              <Button onClick={handleSubmit} color="primary" variant="outlined">
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button
+                onClick={() => {
+                  const category = buttonCategoryMap[selectedButton?.id];
+                  if (category) {
+                    handleSizeChange(category, inputValue);
+                  }
+                  handleClose();
+                }}
+                variant="contained"
+              >
                 Save
               </Button>
             </DialogActions>
           </Dialog>
 
-          {/* Secondary dialog for videos and extra content */}
-          <Dialog open={!!dialogType} onClose={handleClose2}>
-            <DialogTitle>{dialogType}</DialogTitle>
+          {/* Info Dialog */}
+          <Dialog open={!!dialogType} onClose={handleClose2} maxWidth="md">
+            <DialogTitle>
+              {dialogType === "video" ? "Measurement Tutorial" : "How to Measure"}
+            </DialogTitle>
             <DialogContent>
-              <Box padding={2}>{dialogContent}</Box>
+              {dialogType === "video" && dialogContent && (
+                <Box sx={{ mt: 2 }}>
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src={dialogContent}
+                    title="Measurement Tutorial"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </Box>
+              )}
+              {dialogType === "info" && (
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  {dialogContent || "No information available."}
+                </Typography>
+              )}
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose2}>Close</Button>
             </DialogActions>
           </Dialog>
+
+          {/* New Profile Dialog */}
+          <Dialog open={openNewProfileDialog} onClose={() => setOpenNewProfileDialog(false)}>
+            <DialogTitle>Create New Profile</DialogTitle>
+            <DialogContent>
+              <TextField
+                fullWidth
+                label="Profile Name"
+                value={newProfileName}
+                onChange={(e) => setNewProfileName(e.target.value)}
+                sx={{ mt: 2 }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenNewProfileDialog(false)}>Cancel</Button>
+              <Button onClick={handleCreateNewProfile} variant="contained">
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
 
+        {/* Side Drawer for Measurements */}
         <Drawer
-          style={{ zIndex: 20001, width: isMobile ? "80%" : "400px" }}
           anchor="right"
           open={sideDrawerOpen}
           onClose={toggleSideDrawer}
+          PaperProps={{
+            sx: {
+              width: isMobile ? "100%" : 400,
+              backgroundColor: "#F5F5F7",
+            },
+          }}
         >
-          <Box
-            sx={{
-              width: isMobile ? "270px" : "400px",
-              p: isMobile ? 1 : 3,
-              backgroundColor: "#f5f5f5",
-            }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                mb: isMobile ? 1 : 3,
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: isMobile ? "1.2rem" : "1.5rem",
-              }}
-            >
-              כל המידות
-            </Typography>
-
+          <Box sx={{ p: isMobile ? 2 : 3 }}>
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: isMobile ? 1 : 2,
-                maxHeight: "80vh",
-                overflowY: "auto",
-                padding: isMobile ? "5px" : "10px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
               }}
             >
-              {bodyPoints.map((point) => {
-                const effectiveValue = sizes?.[point.category] || "";
-                const isCompleted =
-                  effectiveValue &&
-                  effectiveValue.toString().trim() !== "" &&
-                  Number(effectiveValue) > 0;
-
-                return (
-                  <Box
-                    key={point.id}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      p: isMobile ? 1 : 2,
-                      borderRadius: 2,
-                      bgcolor: isCompleted
-                        ? "rgba(76, 175, 80, 0.1)"
-                        : "rgba(255, 235, 235, 0.5)",
-                      border: "1px solid",
-                      borderColor: isCompleted
-                        ? "success.light"
-                        : "error.light",
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        transform: "translateY(-2px)",
-                        boxShadow: 2,
-                      },
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      sx={{
-                        mb: isMobile ? 0.5 : 1,
-                        fontWeight: "bold",
-                        fontSize: isMobile ? "0.9rem" : "1rem",
-                      }}
-                    >
-                      {point.label}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <TextField
-                        type="number"
-                        size="small"
-                        value={effectiveValue}
-                        onChange={(e) =>
-                          handleSizeChange(point.category, e.target.value)
-                        }
-                        sx={{
-                          width: isMobile ? "80px" : "100px",
-                          "& .MuiOutlinedInput-root": {
-                            backgroundColor: "white",
-                            height: isMobile ? "32px" : "40px",
-                          },
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                fontSize: isMobile ? "0.75rem" : "0.875rem",
-                              }}
-                            >
-                              cm
-                            </Typography>
-                          ),
-                        }}
-                      />
-                      {isCompleted && (
-                        <Box sx={{ color: "success.main" }}>✓</Box>
-                      )}
-                    </Box>
-                  </Box>
-                );
-              })}
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                Measurements
+              </Typography>
+              <Button
+                onClick={() => setOpenNewProfileDialog(true)}
+                variant="outlined"
+                size="small"
+              >
+                New Profile
+              </Button>
             </Box>
 
-            <Box
-              sx={{
-                mt: isMobile ? 1 : 3,
-                display: "flex",
-                justifyContent: "center",
-                gap: isMobile ? 1 : 2,
-                borderTop: "1px solid #ddd",
-                paddingTop: isMobile ? 1 : 2,
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleSubmit}
+            {/* Profile Selector */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "bold" }}>
+                Select Profile:
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                {sizeProfiles.map((profile) => (
+                  <Chip
+                    key={profile.name}
+                    label={profile.name}
+                    onClick={() => setSelectedProfile(profile)}
+                    color={selectedProfile?.name === profile.name ? "primary" : "default"}
+                    variant={selectedProfile?.name === profile.name ? "filled" : "outlined"}
+                  />
+                ))}
+              </Box>
+            </Box>
+
+            {/* Measurements Form */}
+            <Box component="form" onSubmit={handleSubmit}>
+              <Box
                 sx={{
-                  py: isMobile ? 1 : 1.5,
-                  fontWeight: "bold",
-                  fontSize: isMobile ? "0.9rem" : "1.1rem",
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+                  gap: 2,
+                  mb: 3,
                 }}
               >
-                שמור את כל המידות
-              </Button>
+                {bodyPoints.map((point) => (
+                  <TextField
+                    key={point.id}
+                    label={point.label}
+                    type="number"
+                    value={sizes[point.category] || ""}
+                    onChange={(e) => handleSizeChange(point.category, e.target.value)}
+                    fullWidth
+                    size="small"
+                    InputProps={{
+                      endAdornment: <Typography variant="caption">cm</Typography>,
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <Box
+                sx={{
+                  mt: isMobile ? 1 : 3,
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: isMobile ? 1 : 2,
+                  borderTop: "1px solid #ddd",
+                  paddingTop: isMobile ? 1 : 2,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleSubmit}
+                  sx={{
+                    py: isMobile ? 1 : 1.5,
+                    fontWeight: "bold",
+                    fontSize: isMobile ? "0.9rem" : "1.1rem",
+                  }}
+                >
+                  שמור את כל המידות
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Drawer>

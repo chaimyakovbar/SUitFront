@@ -160,7 +160,6 @@ const CheckoutModern = ({
   const checkLocalOrders = () => {
     const orders = getLocalOrders();
     setLocalOrders(orders);
-    console.log("Local orders:", orders);
     alert(`נמצאו ${orders.length} הזמנות ב-localStorage`);
   };
 
@@ -788,8 +787,6 @@ const CheckoutModern = ({
                         sizeProfile={selectedProfile?.name || null}
                         sizeMeasurements={selectedProfile?.sizes || {}}
                         onPaymentSuccess={(paymentDetails, userData) => {
-                          console.log("Payment success:", paymentDetails);
-                          console.log("User data saved:", userData);
                           // You can add additional logic here, like redirecting to success page
                           // or updating the UI state
                         }}

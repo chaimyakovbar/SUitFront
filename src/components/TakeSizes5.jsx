@@ -169,7 +169,6 @@ const TakeSizes5 = () => {
       };
 
       // TODO: Add new database connection here
-      console.log("Creating new profile:", updatedSizes);
 
       setSizeProfiles([...sizeProfiles, newProfile]);
       setSelectedProfile(newProfile);
@@ -208,7 +207,6 @@ const TakeSizes5 = () => {
       };
 
       // TODO: Add new database connection here
-      console.log("Saving measurements:", updatedSizes);
 
       setDialogOpen(false);
       setSelectedButton(null);

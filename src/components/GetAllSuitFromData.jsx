@@ -727,7 +727,7 @@ const DynamicImage = ({
             .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
             .map(([key, src]) => (
               <img
-                key={key}
+                key={`${item._id}-${key}`}
                 src={src}
                 alt={`Suit part: ${key}`}
                 className={photoClass}

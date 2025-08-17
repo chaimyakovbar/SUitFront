@@ -402,7 +402,6 @@ const Payed = () => {
       }
 
       const orderResult = await response.json();
-      console.log("Order created with pending status:", orderResult);
 
       // Clear the cart
       localStorage.removeItem("selectedSuits");

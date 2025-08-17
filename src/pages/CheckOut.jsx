@@ -22,8 +22,6 @@ const Checkout = ({
       const userId =
         user?.uid || user?.id || user?.email || `user_${Date.now()}`;
 
-      console.log("User object:", user);
-      console.log("Generated userId:", userId);
 
       // Build full suit objects array
       let fullSuits = [];
@@ -52,14 +50,12 @@ const Checkout = ({
         // Add any other relevant user data you want to store
       };
 
-      console.log("Sending userData to server:", userData);
 
       // Try to save to server first, fallback to localStorage
       let savedOrder = null;
       try {
         const response = await saveOrder(userData);
         savedOrder = response.order;
-        console.log("User data saved to server successfully");
 
         // Remove purchased suits from database
         try {
@@ -67,7 +63,6 @@ const Checkout = ({
             savedOrder.orderId,
             Array.from(selectedSuits)
           );
-          console.log("Purchased suits removed from database successfully");
         } catch (removeError) {
           console.warn("Failed to remove suits from database:", removeError);
           // Continue with the process even if suit removal fails
@@ -89,7 +84,6 @@ const Checkout = ({
         };
         existingOrders.push(savedOrder);
         localStorage.setItem("orders", JSON.stringify(existingOrders));
-        console.log("User data saved to localStorage successfully");
       }
 
       // Call the success callback if provided
@@ -152,7 +146,7 @@ const Checkout = ({
           }}
           onApprove={(data, actions) => {
             return actions.order.capture().then((details) => {
-              console.log("Payment completed successfully:", details);
+             
 
               // Save user data to database (excluding payment info)
               saveUserDataToDatabase(details);

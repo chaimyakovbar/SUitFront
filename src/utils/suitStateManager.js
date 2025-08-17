@@ -11,9 +11,6 @@ export const restoreSuitStateFromData = (suitData, setters) => {
         return;
     }
 
-    console.log('🔄 Restoring suit state from data:', suitData);
-    console.log('Available setters:', Object.keys(setters));
-
     // Basic suit properties
     if (suitData.color && typeof setters.setCurrColor === 'function') setters.setCurrColor(suitData.color);
     if (suitData.kind && typeof setters.setSelectedKind === 'function') setters.setSelectedKind(suitData.kind);
@@ -42,8 +39,6 @@ export const restoreSuitStateFromData = (suitData, setters) => {
     if (suitData.textInsideText !== undefined && typeof setters.setTextInsideText === 'function') setters.setTextInsideText(suitData.textInsideText);
     if (suitData.textInsideFont !== undefined && typeof setters.setTextInsideFont === 'function') setters.setTextInsideFont(suitData.textInsideFont);
     if (suitData.textInsideColor !== undefined && typeof setters.setTextInsideColor === 'function') setters.setTextInsideColor(suitData.textInsideColor);
-
-    console.log('✅ Suit state restored successfully');
 };
 
 /**
@@ -55,9 +50,6 @@ export const resetSuitState = (setters) => {
         console.warn('Missing setters for state reset');
         return;
     }
-
-    console.log('🔄 Resetting suit state to defaults');
-    console.log('Available setters:', Object.keys(setters));
 
     // Reset basic suit properties
     if (typeof setters.setCurrColor === 'function') {
@@ -158,8 +150,6 @@ export const resetSuitState = (setters) => {
     } else {
         console.error('setTextInsideColor is not a function:', setters.setTextInsideColor);
     }
-
-    console.log('✅ Suit state reset successfully');
 };
 
 /**

@@ -14,7 +14,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import IndexCustomSuit from "./customSuite/IndexCustomSuit";
+import SuitCustomizer from "./components/suit-customizer/SuitCustomizer";
 // import ImageFilterComponent from './components/ImageCollector'
 import IndexSizes from "./sizes/IndexSizes";
 import HomePage2 from "./homePage/HomePage2";
@@ -64,7 +64,7 @@ const App = () => {
             <Route path="/" element={<HomePage2 />} />
             <Route path="/login" element={<LoginWithGoogle />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            {/* <Route path="/customSuit" element={<IndexCustomSuit />} /> */}
+            {/* <Route path="/customSuit" element={<SuitCustomizer />} /> */}
             <Route
               path="/Shopping"
               element={
@@ -96,7 +96,7 @@ const App = () => {
               path="/customSuit"
               element={
                 user ? (
-                  <IndexCustomSuit />
+                  <SuitCustomizer />
                 ) : (
                   <Navigate
                     to="/login"

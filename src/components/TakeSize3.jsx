@@ -501,22 +501,28 @@ const DollDisplay = () => {
             <DialogContent
               sx={{
                 backgroundColor: "#F5F5F7",
-                padding: "30px",
+                padding: isMobile ? "15px" : "30px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                minWidth: "300px",
+                minWidth: isMobile ? "250px" : "300px",
               }}
             >
               {selectedButton ? (
                 <Box
                   sx={{
-                    padding: "20px",
+                    padding: isMobile ? "10px" : "20px",
                     width: "100%",
-                    maxWidth: "300px",
+                    maxWidth: isMobile ? "250px" : "300px",
                   }}
                 >
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mb: isMobile ? 2 : 3,
+                    }}
+                  >
                     <TextField
                       type="number"
                       label="Enter measurement (cm)"
@@ -530,18 +536,23 @@ const DollDisplay = () => {
                       }}
                       variant="outlined"
                       fullWidth
+                      size={isMobile ? "small" : "medium"}
                     />
                   </Box>
 
                   <Box
-                    sx={{ mb: 2, display: "flex", justifyContent: "center" }}
+                    sx={{
+                      mb: isMobile ? 1 : 2,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
                   >
                     <img
                       src={selectedButton.img}
                       alt={selectedButton.title}
                       style={{
                         width: "100%",
-                        height: "150px",
+                        height: isMobile ? "100px" : "150px",
                         objectFit: "contain",
                       }}
                     />
@@ -555,64 +566,88 @@ const DollDisplay = () => {
                       boxShadow: 3,
                       borderRadius: "12px",
                       width: "90%",
+                      height: isMobile ? "80px" : "100px",
                       margin: "0 auto",
                     }}
                   >
                     <div style={{ textAlign: "center" }}>
                       <Typography
-                        variant="subtitle1"
+                        variant={isMobile ? "body2" : "subtitle1"}
                         sx={{
-                          fontWeight: "bold",
-                          marginBottom: "8px",
-                          color: "#1a73e8",
+                          marginBottom: isMobile ? "4px" : "8px",
+                          color: "black",
+                          fontSize: isMobile ? "0.8rem" : "inherit",
                         }}
                       >
-                        סרטון הדרכה
+                        Video
+                        <br />
+                        Explanation
                       </Typography>
-                      <Tooltip title="לחץ לצפייה בסרטון" placement="top">
+                      <Tooltip title="Click to watch video" placement="top">
                         <Button
                           variant="outlined"
                           onClick={() =>
                             handleOpenDialog("YouTube", selectedButton.video)
                           }
+                          size={isMobile ? "small" : "medium"}
                           sx={{
                             borderColor: "#ff0000",
+                            minWidth: isMobile ? "40px" : "auto",
+                            height: isMobile ? "32px" : "auto",
                             "&:hover": {
                               borderColor: "#cc0000",
                               backgroundColor: "rgba(255, 0, 0, 0.04)",
                             },
                           }}
                         >
-                          <YouTubeIcon sx={{ color: "red" }} />
+                          <YouTubeIcon
+                            sx={{
+                              color: "red",
+                              fontSize: isMobile ? "1.2rem" : "inherit",
+                            }}
+                          />
                         </Button>
                       </Tooltip>
                     </div>
                     <div style={{ textAlign: "center" }}>
                       <Typography
-                        variant="subtitle1"
+                        variant={isMobile ? "body2" : "subtitle1"}
                         sx={{
-                          fontWeight: "bold",
-                          marginBottom: "8px",
-                          color: "#1a73e8",
+                          marginBottom: isMobile ? "4px" : "8px",
+                          color: "black",
+                          fontSize: isMobile ? "0.8rem" : "inherit",
                         }}
                       >
-                        הוראות מדידה
+                        Text
+                        <br />
+                        Explanation
                       </Typography>
-                      <Tooltip title="לחץ לקריאת ההוראות" placement="top">
+                      <Tooltip
+                        title="Click to read instructions"
+                        placement="top"
+                      >
                         <Button
                           variant="outlined"
                           onClick={() =>
                             handleOpenDialog("Text", selectedButton.explain)
                           }
+                          size={isMobile ? "small" : "medium"}
                           sx={{
-                            borderColor: "#1a73e8",
+                            // borderColor: "#1a73e8",
+                            minWidth: isMobile ? "40px" : "auto",
+                            height: isMobile ? "32px" : "auto",
                             "&:hover": {
                               borderColor: "#1557b0",
                               backgroundColor: "rgba(26, 115, 232, 0.04)",
                             },
                           }}
                         >
-                          <ErrorOutlineIcon sx={{ color: "#1a73e8" }} />
+                          <ErrorOutlineIcon
+                            sx={{
+                              color: "#1a73e8",
+                              fontSize: isMobile ? "1.2rem" : "inherit",
+                            }}
+                          />
                         </Button>
                       </Tooltip>
                     </div>
@@ -636,30 +671,32 @@ const DollDisplay = () => {
           <Dialog
             open={!!dialogType}
             onClose={handleClose2}
-            maxWidth="md"
+            maxWidth={isMobile ? "xs" : "md"}
             fullWidth
             PaperProps={{
               sx: {
-                minHeight: "50vh",
+                minHeight: isMobile ? "40vh" : "50vh",
                 maxHeight: "90vh",
                 backgroundColor: "#f5f5f7",
+                margin: isMobile ? "16px" : "auto",
               },
             }}
           >
             <DialogTitle
               sx={{
                 textAlign: "center",
-                fontSize: "1.5rem",
+                fontSize: isMobile ? "1.2rem" : "1.5rem",
                 fontWeight: "bold",
                 borderBottom: "1px solid #e0e0e0",
                 backgroundColor: "#fff",
+                padding: isMobile ? "16px" : "24px",
               }}
             >
               {dialogType === "YouTube"
-                ? "הדרכת וידאו"
+                ? "Video Tutorial"
                 : selectedButton?.label
-                ? `הוראות מדידה - ${selectedButton.label}`
-                : "הוראות מדידה"}
+                ? `Measurement Instructions - ${selectedButton.label}`
+                : "Measurement Instructions"}
             </DialogTitle>
             <DialogContent>
               {dialogType === "YouTube" ? (
@@ -674,17 +711,22 @@ const DollDisplay = () => {
                   }}
                 >
                   <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", color: "#333" }}
+                    variant={isMobile ? "subtitle1" : "h6"}
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: isMobile ? "1rem" : "inherit",
+                      textAlign: "center",
+                    }}
                   >
-                    צפה בסרטון ההדרכה
+                    Watch the tutorial video
                   </Typography>
                   <video
                     controls
                     autoPlay
                     style={{
                       width: "100%",
-                      maxHeight: "70vh",
+                      maxHeight: isMobile ? "50vh" : "70vh",
                       objectFit: "contain",
                       borderRadius: "8px",
                       boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
@@ -697,52 +739,54 @@ const DollDisplay = () => {
               ) : (
                 <Box
                   sx={{
-                    padding: 3,
+                    padding: isMobile ? 2 : 3,
                     "& p": {
-                      marginBottom: 2,
-                      fontSize: "1.1rem",
+                      marginBottom: isMobile ? 1 : 2,
+                      fontSize: isMobile ? "0.9rem" : "1.1rem",
                       lineHeight: 1.6,
                     },
                     "& ul": {
-                      marginBottom: 2,
-                      paddingLeft: 3,
+                      marginBottom: isMobile ? 1 : 2,
+                      paddingLeft: isMobile ? 2 : 3,
                     },
                     "& li": {
-                      marginBottom: 1,
-                      fontSize: "1.1rem",
+                      marginBottom: isMobile ? 0.5 : 1,
+                      fontSize: isMobile ? "0.9rem" : "1.1rem",
                       lineHeight: 1.6,
                     },
                   }}
                 >
                   {dialogContent?.split("\n")?.map((line, index) => {
-                    // אם השורה מתחילה עם "שלב" או מספר, נוסיף כותרת
+                    // If the line starts with "step" or a number, add a heading
                     if (
-                      line.trim().startsWith("שלב") ||
+                      line.trim().startsWith("step") ||
                       /^\d+\./.test(line.trim())
                     ) {
                       return (
                         <Typography
                           key={`step-${index}-${line.trim().substring(0, 10)}`}
-                          variant="h6"
+                          variant={isMobile ? "subtitle1" : "h6"}
                           sx={{
                             fontWeight: "bold",
                             color: "#1a73e8",
-                            marginTop: 2,
-                            marginBottom: 1,
+                            marginTop: isMobile ? 1 : 2,
+                            marginBottom: isMobile ? 0.5 : 1,
+                            fontSize: isMobile ? "1rem" : "inherit",
                           }}
                         >
                           {line.trim()}
                         </Typography>
                       );
                     }
-                    // אחרת, נציג כטקסט רגיל
+                    // Otherwise, display as regular text
                     if (line.trim()) {
                       return (
                         <Typography
                           key={`text-${index}-${line.trim().substring(0, 10)}`}
                           sx={{
-                            marginBottom: 1,
+                            marginBottom: isMobile ? 0.5 : 1,
                             color: "#333",
+                            fontSize: isMobile ? "0.9rem" : "inherit",
                           }}
                         >
                           {line.trim()}
@@ -757,22 +801,24 @@ const DollDisplay = () => {
             <DialogActions
               sx={{
                 borderTop: "1px solid #e0e0e0",
-                padding: 2,
+                padding: isMobile ? 1 : 2,
                 backgroundColor: "#fff",
               }}
             >
               <Button
                 onClick={handleClose2}
                 variant="contained"
+                size={isMobile ? "small" : "medium"}
                 sx={{
                   backgroundColor: "#1a73e8",
                   color: "#fff",
+                  fontSize: isMobile ? "0.9rem" : "inherit",
                   "&:hover": {
                     backgroundColor: "#1557b0",
                   },
                 }}
               >
-                סגור
+                Close
               </Button>
             </DialogActions>
           </Dialog>
@@ -800,7 +846,7 @@ const DollDisplay = () => {
                 fontSize: isMobile ? "1.2rem" : "1.5rem",
               }}
             >
-              כל המידות
+              All Measurements
             </Typography>
 
             <Box
@@ -910,7 +956,7 @@ const DollDisplay = () => {
                   fontSize: isMobile ? "0.9rem" : "1.1rem",
                 }}
               >
-                שמור את כל המידות
+                Save All Measurements
               </Button>
             </Box>
           </Box>

@@ -53,7 +53,7 @@ const TakeSizes2 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (Object.keys(sizes).length < 16) {
+    if (Object.keys(sizes).length < 15) {
       enqueueSnackbar("אנא מלא את השדות שלפניך ");
       return;
     }

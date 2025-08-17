@@ -69,11 +69,6 @@ const TextInsideModal = () => {
       setTextInsideColor(tempColor);
       setShowTextInside(false);
 
-      console.log("✅ Text inside settings updated locally");
-      console.log("📝 Text:", tempText);
-      console.log("🔤 Font:", tempFont);
-      console.log("🎨 Color:", tempColor);
-
       // Show success message to user using snackbar
       enqueueSnackbar(
         "הטקסט נשמר בהצלחה! הוא יישמר עם החליפה כשתסיים את היצירה.",

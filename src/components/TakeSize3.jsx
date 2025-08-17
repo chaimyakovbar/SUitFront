@@ -344,7 +344,8 @@ const DollDisplay = () => {
         </div>
         <div>
           <Typography variant="body2">
-            {completedPoints.length}/{bodyPoints.length} measurements completed
+            {/* {completedPoints.length}/{bodyPoints.length} measurements completed */}
+            {completedPoints.length}/{"15"} measurements completed
           </Typography>
         </div>
       </div>
@@ -548,35 +549,73 @@ const DollDisplay = () => {
 
                   <Box
                     sx={{
+                      gap: "10px",
                       display: "flex",
                       justifyContent: "center",
                       boxShadow: 3,
                       borderRadius: "12px",
-                      width: "70%",
+                      width: "90%",
                       margin: "0 auto",
                     }}
                   >
-                    <Tooltip title="Click to watch" placement="top">
-                      <Button
-                        onClick={() =>
-                          handleOpenDialog("YouTube", selectedButton.video)
-                        }
+                    <div style={{ textAlign: "center" }}>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: "bold",
+                          marginBottom: "8px",
+                          color: "#1a73e8",
+                        }}
                       >
-                        <YouTubeIcon sx={{ color: "red" }} />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip
-                      title="Click for detailed explanation"
-                      placement="top"
-                    >
-                      <Button
-                        onClick={() =>
-                          handleOpenDialog("Error", selectedButton.title)
-                        }
+                        סרטון הדרכה
+                      </Typography>
+                      <Tooltip title="לחץ לצפייה בסרטון" placement="top">
+                        <Button
+                          variant="outlined"
+                          onClick={() =>
+                            handleOpenDialog("YouTube", selectedButton.video)
+                          }
+                          sx={{
+                            borderColor: "#ff0000",
+                            "&:hover": {
+                              borderColor: "#cc0000",
+                              backgroundColor: "rgba(255, 0, 0, 0.04)",
+                            },
+                          }}
+                        >
+                          <YouTubeIcon sx={{ color: "red" }} />
+                        </Button>
+                      </Tooltip>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: "bold",
+                          marginBottom: "8px",
+                          color: "#1a73e8",
+                        }}
                       >
-                        <ErrorOutlineIcon />
-                      </Button>
-                    </Tooltip>
+                        הוראות מדידה
+                      </Typography>
+                      <Tooltip title="לחץ לקריאת ההוראות" placement="top">
+                        <Button
+                          variant="outlined"
+                          onClick={() =>
+                            handleOpenDialog("Text", selectedButton.explain)
+                          }
+                          sx={{
+                            borderColor: "#1a73e8",
+                            "&:hover": {
+                              borderColor: "#1557b0",
+                              backgroundColor: "rgba(26, 115, 232, 0.04)",
+                            },
+                          }}
+                        >
+                          <ErrorOutlineIcon sx={{ color: "#1a73e8" }} />
+                        </Button>
+                      </Tooltip>
+                    </div>
                   </Box>
                 </Box>
               ) : (
@@ -594,13 +633,147 @@ const DollDisplay = () => {
           </Dialog>
 
           {/* Secondary dialog for videos and extra content */}
-          <Dialog open={!!dialogType} onClose={handleClose2}>
-            <DialogTitle>{dialogType}</DialogTitle>
+          <Dialog
+            open={!!dialogType}
+            onClose={handleClose2}
+            maxWidth="md"
+            fullWidth
+            PaperProps={{
+              sx: {
+                minHeight: "50vh",
+                maxHeight: "90vh",
+                backgroundColor: "#f5f5f7",
+              },
+            }}
+          >
+            <DialogTitle
+              sx={{
+                textAlign: "center",
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                borderBottom: "1px solid #e0e0e0",
+                backgroundColor: "#fff",
+              }}
+            >
+              {dialogType === "YouTube"
+                ? "הדרכת וידאו"
+                : selectedButton?.label
+                ? `הוראות מדידה - ${selectedButton.label}`
+                : "הוראות מדידה"}
+            </DialogTitle>
             <DialogContent>
-              <Box padding={2}>{dialogContent}</Box>
+              {dialogType === "YouTube" ? (
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                    py: 2,
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", color: "#333" }}
+                  >
+                    צפה בסרטון ההדרכה
+                  </Typography>
+                  <video
+                    controls
+                    autoPlay
+                    style={{
+                      width: "100%",
+                      maxHeight: "70vh",
+                      objectFit: "contain",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    }}
+                    src={dialogContent}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    padding: 3,
+                    "& p": {
+                      marginBottom: 2,
+                      fontSize: "1.1rem",
+                      lineHeight: 1.6,
+                    },
+                    "& ul": {
+                      marginBottom: 2,
+                      paddingLeft: 3,
+                    },
+                    "& li": {
+                      marginBottom: 1,
+                      fontSize: "1.1rem",
+                      lineHeight: 1.6,
+                    },
+                  }}
+                >
+                  {dialogContent?.split("\n")?.map((line, index) => {
+                    // אם השורה מתחילה עם "שלב" או מספר, נוסיף כותרת
+                    if (
+                      line.trim().startsWith("שלב") ||
+                      /^\d+\./.test(line.trim())
+                    ) {
+                      return (
+                        <Typography
+                          key={`step-${index}-${line.trim().substring(0, 10)}`}
+                          variant="h6"
+                          sx={{
+                            fontWeight: "bold",
+                            color: "#1a73e8",
+                            marginTop: 2,
+                            marginBottom: 1,
+                          }}
+                        >
+                          {line.trim()}
+                        </Typography>
+                      );
+                    }
+                    // אחרת, נציג כטקסט רגיל
+                    if (line.trim()) {
+                      return (
+                        <Typography
+                          key={`text-${index}-${line.trim().substring(0, 10)}`}
+                          sx={{
+                            marginBottom: 1,
+                            color: "#333",
+                          }}
+                        >
+                          {line.trim()}
+                        </Typography>
+                      );
+                    }
+                    return null;
+                  })}
+                </Box>
+              )}
             </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose2}>Close</Button>
+            <DialogActions
+              sx={{
+                borderTop: "1px solid #e0e0e0",
+                padding: 2,
+                backgroundColor: "#fff",
+              }}
+            >
+              <Button
+                onClick={handleClose2}
+                variant="contained"
+                sx={{
+                  backgroundColor: "#1a73e8",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#1557b0",
+                  },
+                }}
+              >
+                סגור
+              </Button>
             </DialogActions>
           </Dialog>
         </div>
@@ -758,18 +931,21 @@ const ButtonArray = ({
 
   return (
     <>
-      {buttons.map((button) => (
-        <Tooltip key={button.id} title={button.label}>
-          <RedButton
-            button={button}
-            camera={camera}
-            onClick={() => onButtonClick(button)}
-            onPointClick={() => onPointClick(button.id)}
-            isActive={activePoints.includes(button.id)}
-            isCompleted={completedPoints.includes(button.id)}
-          />
-        </Tooltip>
-      ))}
+      {buttons.map((button) => {
+        const buttonKey = `button-${button.id}`;
+        return (
+          <Tooltip key={buttonKey} title={button.label}>
+            <RedButton
+              button={button}
+              camera={camera}
+              onClick={() => onButtonClick(button)}
+              onPointClick={() => onPointClick(button.id)}
+              isActive={activePoints.includes(button.id)}
+              isCompleted={completedPoints.includes(button.id)}
+            />
+          </Tooltip>
+        );
+      })}
     </>
   );
 };

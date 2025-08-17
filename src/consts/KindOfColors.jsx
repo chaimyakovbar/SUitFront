@@ -95,6 +95,24 @@ import size14 from "../assets/sizes/14.jpg";
 import size15 from "../assets/sizes/15.jpg";
 import size16 from "../assets/sizes/16.jpg";
 
+import Chest from "../assets/videoExplaine/Chest.mp4";
+import Waist from "../assets/videoExplaine/Waist.mp4";
+import Seat from "../assets/videoExplaine/Seat.mp4";
+import JacketLength from "../assets/videoExplaine/Jacket Length.mp4";
+import FrontWidth from "../assets/videoExplaine/Front Width.mp4";
+import RearWidth from "../assets/videoExplaine/Rear Width.mp4";
+// import Armhole from '../assets/videoExplaine/Armhole.mp4'
+import Biceps from "../assets/videoExplaine/Biceps.mp4";
+import Shoulder from "../assets/videoExplaine/Shoulder.mp4";
+import SleeveLengthFront from "../assets/videoExplaine/Sleeve Length.mp4";
+import TrousersLengthBack from "../assets/videoExplaine/Trousers Length back.mp4";
+import TrousersLengthFront from "../assets/videoExplaine/Trousers Length front.mp4";
+import Waistband from "../assets/videoExplaine/Waistband.mp4";
+import StrideLength from "../assets/videoExplaine/Stride Length.mp4";
+import Thigh from "../assets/videoExplaine/Thigh.mp4";
+// import Knee from "../assets/videoExplaine/Knee.mp4";
+import Ankles from "../assets/videoExplaine/Ankles.mp4";
+
 // ===== מדידות גוף - שמות באנגלית =====
 export const userSizes = [
   "Chest",
@@ -397,9 +415,22 @@ export const buttons = [
     size: 0.2,
     tooltip: "חזה עליון",
     label: "חזה עליון",
-    explain: "מדידת היקף החזה - מסביב לחלק הרחב ביותר של החזה",
+    explain: `
+      שלב 1:
+      קח את סרט המדידה והנח אותו על החזה העליון
+      (באזור שנמצא מעט מתחת לבית השחי, מעל החזה עצמו)
+
+      שלב 2:
+      סגור את המטר סביב החזה
+      הכנס אצבע אחת מתחת לסרט המדידה
+      כך תבטיח שיש מספיק מרווח לנשימה
+
+      שלב 3:
+      וודא שהמדידה נעשית בחלק העליון ביותר של החזה
+      לא באמצע החזה ולא בחלקו התחתון
+    `,
     img: size1,
-    video: "",
+    video: Chest,
   },
   {
     id: 2,
@@ -408,9 +439,23 @@ export const buttons = [
     size: 0.15,
     tooltip: "היקף מותניים",
     label: "היקף מותניים",
-    explain: "מדידת היקף המותניים - מסביב לחלק הצר ביותר של המותניים",
+    explain: `
+      שלב 1:
+      קח את סרט המדידה
+      מקם אותו בדיוק בגובה הטבור
+      לא גבוה מדי ולא נמוך מדי
+
+      שלב 2:
+      הקף את הגוף עם סרט המדידה
+      כמו שאתה חוגר חגורה
+      וודא שהסרט מונח בצורה ישרה
+
+      שלב 3:
+      קרא את המספר שמופיע על הסרט
+      זוהי מידת היקף המותניים שלך
+    `,
     img: size2,
-    video: "",
+    video: Waist,
   },
   {
     id: 3,
@@ -419,9 +464,22 @@ export const buttons = [
     size: 0.15,
     tooltip: "היקף ירכיים",
     label: "היקף ירכיים",
-    explain: "מדידת היקף הירכיים - מסביב לחלק הרחב ביותר של הירכיים",
+    explain: `
+      שלב 1:
+      קח את סרט המדידה
+      עמוד בצורה ישרה וטבעית
+
+      שלב 2:
+      הנח את הסרט מסביב לישבן
+      מקם אותו בחלק הרחב ביותר
+      
+      שלב 3:
+      וודא שהסרט מונח בדיוק על האזור הרחב ביותר
+      כך תקבל מידה מדויקת שתהיה נוחה בישיבה
+      ותאפשר תחושה טובה בלבישה
+    `,
     img: size3,
-    video: "",
+    video: Seat,
   },
   {
     id: 4,
@@ -430,9 +488,24 @@ export const buttons = [
     size: 0.15,
     tooltip: "אורך ז'קט",
     label: "אורך ז'קט",
-    explain: "מדידת אורך הז'קט - מהכתף עד לקצה הז'קט",
+    explain: `
+      שלב 1:
+      קח את סרט המדידה
+      עמוד זקוף עם ידיים משוחררות לצדדים
+
+      שלב 2:
+      מצא את הנקודה הגבוהה ביותר בכתף
+      זו הנקודה שקרובה לצוואר
+      הנח שם את תחילת סרט המדידה
+
+      שלב 3:
+      העבר את הסרט לאורך היד
+      שמור על קו ישר
+      המשך עד לנקודת העצם הבולטת
+      ליד האגודל בפרק כף היד
+    `,
     img: size4,
-    video: "",
+    video: JacketLength,
   },
   {
     id: 5,
@@ -441,9 +514,26 @@ export const buttons = [
     size: 0.15,
     tooltip: "רוחב חזית",
     label: "רוחב חזית",
-    explain: "מדידת רוחב חזית הז'קט",
+    explain: `
+      שלב 1:
+      עמוד בצורה זקופה וטבעית
+      הורד את הידיים בנוחות לצדי הגוף
+
+      שלב 2:
+      אתר את החלק העליון של בית השחי
+      זהו המקום בו היד מתחברת לגוף
+      
+      שלב 3:
+      הנח את סרט המדידה בנקודה זו
+      העבר אותו בקו ישר לצד השני
+      עד לנקודה המקבילה בצד השני
+      
+      שלב 4:
+      וודא שהסרט מונח בצורה ישרה
+      ושהמדידה נעשית באותו גובה משני הצדדים
+    `,
     img: size5,
-    video: "",
+    video: FrontWidth,
   },
   {
     id: 6,
@@ -452,20 +542,14 @@ export const buttons = [
     size: 0.1,
     tooltip: "רוחב גב",
     label: "רוחב גב",
-    explain: "מדידת רוחב גב הז'קט",
+    explain: `
+      1. עמוד ישר.
+      2. ידיים כלפי מטה לצדדים.
+      3. קח את המטר והנח אותו בגובה החלק העליון של בית השחי מאחור, בדיוק במקום שבו היד מתחברת לגוף.
+      4. סובב את המטר לצד השני, עד לנקודה זהה בחיבור של היד עם הגוף בצד השני.
+    `,
     img: size6,
-    video: "",
-  },
-  {
-    id: 7,
-    name: "Armhole",
-    position: [1, 7.2, -0.8],
-    size: 0.1,
-    tooltip: "היקף בית שחי",
-    label: "היקף בית שחי",
-    explain: "מדידת היקף בית השחי של הז'קט",
-    img: size7,
-    video: "",
+    video: RearWidth,
   },
   {
     id: 8,
@@ -474,9 +558,13 @@ export const buttons = [
     size: 0.1,
     tooltip: "היקף זרוע",
     label: "היקף זרוע",
-    explain: "מדידת היקף הזרוע - בחלק הרחב ביותר",
+    explain: `
+      1. עמוד זקוף עם ידיים כלפי מטה.
+      2. קח את המטר והנח אותו על החלק הגדול ביותר בשריר של היד.
+      3. שים אצבע אחת בין המטר ליד – כך שהמדידה תהיה רופפת וקלה, לא הדוקה מדי.
+    `,
     img: size8,
-    video: "",
+    video: Biceps,
   },
   {
     id: 9,
@@ -485,9 +573,15 @@ export const buttons = [
     size: 0.1,
     tooltip: "רוחב כתף",
     label: "רוחב כתף",
-    explain: "מדידת רוחב הכתף - מכתף לכתף",
+    explain: `
+      1. עמוד זקוף עם ידיים כלפי מטה בצדדים.
+      2. מצא את חלק הכתף העליון, הנקודה העגולה שבה העצם מתחברת לגוף.
+      3. הנח את קצה המטר בנקודה הזו בצד אחד.
+      4. סובב את המטר בצורת קשת עגולה מעל הכתף, כך שהוא עוקף את הקימור הטבעי של הכתף ולא שוקע ישר על הגב.
+      5. המשך את המטר עד לנקודת החיבור המקבילה בצד השני של הכתף.
+    `,
     img: size9,
-    video: "",
+    video: Shoulder,
   },
   {
     id: 10,
@@ -496,64 +590,100 @@ export const buttons = [
     size: 0.1,
     tooltip: "אורך שרוול",
     label: "אורך שרוול",
-    explain: "מדידת אורך השרוול - מהכתף עד לקצה השרוול",
+    explain: `
+      1. עמוד זקוף עם ידיים כלפי מטה בצדדים.
+      2. מצא את נקודת החיבור של הכתף עם היד – זהו נקודת ההתחלה של המדידה.
+      3. חלק ראשון:
+         - הנח את המטר מהכתף ועד למרפק.
+         - תן לאצבע לסמן את נקודת המרפק על המטר.
+      4. חלק שני:
+         - המשך את המטר מהאצבע ועד לסוף היד.
+         - זהו המקום שבו תרצה שהשרוול של החליפה יגיע.
+    `,
     img: size10,
-    video: "",
+    video: SleeveLengthFront,
   },
   {
     id: 11,
-    name: "Trousers Length",
-    position: [1, 0.4, 0],
+    name: "Trousers Length back",
+    position: [0.7, 0.2, 1],
     size: 0.1,
-    tooltip: "אורך מכנסיים",
-    label: "אורך מכנסיים",
-    explain: "מדידת אורך המכנסיים - מהמותניים עד לקצה המכנסיים",
+    tooltip: "אחורי אורך מכנסיים",
+    label: "אחורי אורך מכנסיים",
+    explain: `
+      1. עמוד זקוף עם מכנסי חליפה עדיפים, כשהמכנס יושב בנוחות על המותן והירך.
+      2. קח את המטר והנח אותו על החלק העליון של המכנס מקדימה, מול הרגל, במקום שבו המכנס מתחיל מהמותן או המפשעה.
+      3. מתח את המטר כלפי מטה לאורך הרגל עד העקב, כך שהמטר עוקב אחרי הרגל בצורה חלקה.
+    `,
     img: size11,
-    video: "",
+    video: TrousersLengthFront,
   },
   {
     id: 12,
+    name: "Trousers Length front",
+    position: [0.6, 0.2, -0.6],
+    size: 0.1,
+    tooltip: "אורך מכנסים קדמי",
+    label: "היקף ברך",
+    explain: `
+      1. עמוד זקוף עם מכנסי חליפה עדיפים, כשהמכנס יושב בנוחות על המותן והירך.
+      2. קח את המטר והנח אותו בחלק העליון של המכנס מקדימה, מול הרגל – כלומר, במקום שבו המכנס מתחיל מהמותן או המפשעה קדימה.
+      3. מתח את המטר כלפי מטה לאורך הרגל, עד סוף הבוהן.
+    `,
+    img: size15,
+    video: TrousersLengthBack,
+  },
+  {
+    id: 13,
     name: "Waistband",
     position: [0, 4.8, 1],
     size: 0.1,
     tooltip: "היקף חגורה",
     label: "היקף חגורה",
-    explain: "מדידת היקף החגורה של המכנסיים",
+    explain: `
+      1. עמוד זקוף עם מכנסי חליפה עדיפים.
+      2. קח את המטר והנח אותו בדיוק מעל הסיומת של המכנס, על החלק שאתה רוצה למדוד (למשל המותן או הירך).
+      3. המטר צריך להיות בגובה שבו המכנס מסתיים על הגוף, לא למטה ולא למעלה.
+      4. ודא שהמטר מגע קל עם הגוף, אבל לא הדוק מדי – הוא צריך להיות בול רופף, מספיק מקום לתנועה.
+    `,
     img: size12,
-    video: "",
+    video: Waistband,
   },
   {
-    id: 13,
+    id: 14,
     name: "Stride Length",
     position: [0, 4.4, 1],
     size: 0.1,
     tooltip: "אורך צעד",
     label: "אורך צעד",
-    explain: "מדידת אורך הצעד - מהמותניים עד לרצפה דרך המפשעה",
+    explain: `
+      1. עמוד זקוף עם מכנסי חליפה עדיפים.
+      2. קח את המטר והנח אותו בנקודת ההתחלה של המכנס בצד אחד של הישבן.
+      3. עבר עם המטר מתחת לישבן והבא אותו לנקודת ההתחלה בצד השני של המכנס.
+      4. חלק ראשון – הדוק:
+         - חבר את המטר בדיוק לנקודת ההתחלה משני הצדדים.
+         - רשום את המידה בס"מ.
+      5. חלק שני – רופף:
+         - שחרר את המטר ב-1 אינץ' (2.5 ס"מ) כדי שיהיה רופף ונוח.
+         - רשום את המידה הזו בס"מ.
+    `,
     img: size13,
-    video: "",
+    video: StrideLength,
   },
   {
-    id: 14,
+    id: 15,
     name: "Thigh",
     position: [0.5, 3.5, 1],
     size: 0.1,
     tooltip: "היקף ירך",
     label: "היקף ירך",
-    explain: "מדידת היקף הירך - בחלק הרחב ביותר",
+    explain: `
+      1. עמוד זקוף עם מכנסי חליפה עדיפים.
+      2. קח את המטר והנח אותו בחלק העליון ביותר של הרגל, ממש מתחת לישבן, באזור המפשעה.
+      3. שים שלוש אצבעות בין המטר לגוף – כדי שיהיה רופף ויש מקום לתנועה.
+    `,
     img: size14,
-    video: "",
-  },
-  {
-    id: 15,
-    name: "Knee",
-    position: [0.5, 3, 1],
-    size: 0.1,
-    tooltip: "היקף ברך",
-    label: "היקף ברך",
-    explain: "מדידת היקף הברך",
-    img: size15,
-    video: "",
+    video: Thigh,
   },
   {
     id: 16,
@@ -562,9 +692,16 @@ export const buttons = [
     size: 0.1,
     tooltip: "היקף קרסול",
     label: "היקף קרסול",
-    explain: "מדידת היקף הקרסול",
+    explain: `
+      1. עמוד זקוף עם מכנסי חליפה עדיפים.
+      2. קח את המטר והנח אותו בסוף הרגל, ממש באזור הקרסול.
+      3. צור לולאה מסודרת עם המטר סביב הרגל – כמו עיגול קטן, כדי שהמכנס יירד יפה ולא יהיה הדוק מדי.
+      4. התאמת המידה:
+         - אם רוצים שהמכנס יהיה צמוד יותר – קח את המטר קצת יותר קרוב לרגל.
+         - אם רוצים שהמכנס יהיה רחב יותר – תן למטר קצת יותר מקום סביב הרגל.
+    `,
     img: size16,
-    video: "",
+    video: Ankles,
   },
 ];
 
@@ -579,7 +716,7 @@ export const buttonsSuit = [
     label: "היקף חזה",
     explain: "מדידת היקף החזה של החליפה - מסביב לחלק הרחב ביותר של החזה בחליפה",
     img: size1,
-    video: "",
+    video: Chest,
   },
   {
     id: 2,
@@ -596,7 +733,7 @@ export const buttonsSuit = [
   {
     id: 3,
     name: "Seat",
-    position: [-1.3, 6.6,  1.5],
+    position: [-1.3, 6.6, 1.5],
     size: 0.15,
     tooltip: "היקף ירכיים",
     label: "היקף ירכיים",
@@ -630,7 +767,7 @@ export const buttonsSuit = [
   {
     id: 6,
     name: "Rear Width",
-    position: [-0.7, 2.1,  1.5],
+    position: [-0.7, 2.1, 1.5],
     size: 0.15,
     tooltip: "רוחב גב",
     label: "רוחב גב",
@@ -663,7 +800,7 @@ export const buttonsSuit = [
   {
     id: 9,
     name: "Shoulder",
-    position: [5, 5,  0.5],
+    position: [5, 5, 0.5],
     size: 0.15,
     tooltip: "רוחב כתף",
     label: "רוחב כתף",

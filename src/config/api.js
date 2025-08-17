@@ -21,7 +21,6 @@ const axiosInstance = axios.create({
 // Add request interceptor for debugging
 axiosInstance.interceptors.request.use(
     (config) => {
-        console.log('Making request to:', config.baseURL + config.url);
         return config;
     },
     (error) => {
@@ -33,7 +32,6 @@ axiosInstance.interceptors.request.use(
 // Add response interceptor for debugging
 axiosInstance.interceptors.response.use(
     (response) => {
-        console.log('Response received:', response.status);
         return response;
     },
     (error) => {
@@ -118,7 +116,6 @@ export const userAPI = {
             const response = await axiosInstance.post("/user/login", values, {
                 withCredentials: true,
             });
-            console.log("Login successful:", response.data);
             return response.data;
         } catch (error) {
             console.error("Login failed:", error.response?.data || error.message);
@@ -206,8 +203,6 @@ export const userAPI = {
 };
 
 // Log current configuration
-console.log(`🌐 API Configuration: ${USE_LOCAL ? 'LOCAL' : 'REMOTE'}`);
-console.log(`📍 Base URL: ${baseURL}`);
 
 export { axiosInstance, baseURL };
 export default baseURL; 

@@ -95,44 +95,30 @@ const ImageFilterComponent = () => {
   // Calculate total price
   const calculateTotalPrice = useMemo(() => {
     let total = suitPricing.basePrices[selectedKind] || 0;
-    console.log("Base price:", total);
-
     // Add lapel type cost
     const lapelCost =
       suitPricing.additionalCosts.lapelTypes[selectedLapelType] || 0;
     total += lapelCost;
-    console.log("Lapel cost:", lapelCost);
 
     // Add collar type cost
     const collarCost =
       suitPricing.additionalCosts.collarTypes[selectedCollar] || 0;
     total += collarCost;
-    console.log("Collar cost:", collarCost);
 
     // Add packet type cost
     const packetCost =
       suitPricing.additionalCosts.packetTypes[selectedPacketType] || 0;
     total += packetCost;
-    console.log("Packet cost:", packetCost);
 
     // Add special features costs
     if (poshetColor) {
       total += suitPricing.additionalCosts.features.poshet;
-      console.log("Poshet cost:", suitPricing.additionalCosts.features.poshet);
     }
     if (holeButtonColor) {
       total += suitPricing.additionalCosts.features.holesButton;
-      console.log(
-        "Hole button cost:",
-        suitPricing.additionalCosts.features.holesButton
-      );
     }
     if (holeButtonUpColor) {
       total += suitPricing.additionalCosts.features.holesButtonUp;
-      console.log(
-        "Hole button up cost:",
-        suitPricing.additionalCosts.features.holesButtonUp
-      );
     }
 
     // Add color costs based on their specific categories
@@ -142,7 +128,6 @@ const ImageFilterComponent = () => {
         const mainColorCost =
           suitPricing.additionalCosts.MainSuitColors[currColor];
         total += mainColorCost;
-        console.log(`Main suit color cost for ${currColor}:`, mainColorCost);
       }
     }
 
@@ -152,7 +137,6 @@ const ImageFilterComponent = () => {
         const insideColorCost =
           suitPricing.additionalCosts.InsideColors[insideColor];
         total += insideColorCost;
-        console.log(`Inside color cost for ${insideColor}:`, insideColorCost);
       }
     }
 
@@ -162,14 +146,9 @@ const ImageFilterComponent = () => {
         suitPricing.additionalCosts.ButtonColors[selectedButton];
       if (buttonColorCost !== undefined) {
         total += buttonColorCost;
-        console.log(
-          `Button color cost for ${selectedButton}:`,
-          buttonColorCost
-        );
       }
     }
 
-    // console.log("Final total:", total);
     return total;
   }, [
     selectedKind,
@@ -255,7 +234,8 @@ const ImageFilterComponent = () => {
       <img
         src={`/assets/ragach/Kinds/${selectedKind}/${currColor}.png`}
         alt={`Suit Body - ${selectedKind} ${currColor}`}
-              style={{ ...imageStyle, zIndex: 2 }}   onError={() => handleImageError("suitBody")}
+        style={{ ...imageStyle, zIndex: 2 }}
+        onError={() => handleImageError("suitBody")}
       />
 
       <img
@@ -289,14 +269,16 @@ const ImageFilterComponent = () => {
       <img
         src={`/assets/ragach/${bottomPart}/${currColor}.png`}
         alt={`Bottom - ${currColor}`}
-              style={{ ...imageStyle, zIndex: 2 }}   onError={() => handleImageError("bottom")}
+        style={{ ...imageStyle, zIndex: 2 }}
+        onError={() => handleImageError("bottom")}
       />
 
       {/* Fixed Lapel/Collar path */}
       <img
         src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
         alt={`Lapel Collar - ${currColor}`}
-        style={{ ...imageStyle, zIndex: 200 }}      onError={() =>
+        style={{ ...imageStyle, zIndex: 200 }}
+        onError={() =>
           handleImageError(
             `lapelCollar: ${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}`
           )
@@ -346,7 +328,7 @@ const ImageFilterComponent = () => {
         src={`/assets/ragach/packetUp/${currColor}.png`}
         alt={`Packet Up - ${currColor}`}
         style={{ ...imageStyle, zIndex: 3 }}
-       onError={() => handleImageError("packetUp")}
+        onError={() => handleImageError("packetUp")}
       />
 
       {buttonColor !== null && (

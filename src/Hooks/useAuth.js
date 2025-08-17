@@ -21,7 +21,6 @@ export const useAuth = () => {
         },
         onSuccess: async (firebaseUser) => {
             try {
-                console.log('Firebase auth successful, user:', firebaseUser.email);
                 // Send email to our webhook
                 const response = await userAPI.authWebhook({
                     email: firebaseUser.email,
@@ -29,7 +28,6 @@ export const useAuth = () => {
                     firebaseUid: firebaseUser.uid,
                     photoURL: firebaseUser.photoURL
                 });
-                console.log('Webhook response:', response);
 
                 if (!response.success) {
                     throw new Error(response.message || 'Authentication failed');
@@ -237,11 +235,9 @@ export const useAuth = () => {
     // Mutation for password reset
     const resetPassword = useMutation({
         mutationFn: async ({ email }) => {
-            console.log('🔐 Attempting to send password reset email to:', email);
             try {
                 // Use our server to send beautiful password reset email
                 const response = await userAPI.resetPassword(email);
-                console.log('✅ Password reset email sent successfully:', response);
                 return response;
             } catch (error) {
                 console.error('❌ Password reset error details:', {
@@ -255,7 +251,6 @@ export const useAuth = () => {
             }
         },
         onSuccess: () => {
-            console.log('🎉 Password reset email sent successfully');
         },
         onError: (error) => {
             console.error('💥 Password reset mutation error:', error);

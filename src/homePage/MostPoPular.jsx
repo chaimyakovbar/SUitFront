@@ -390,14 +390,18 @@ const MostPoPular = () => {
     // לקיחת 3 הראשונות
     const top3Suits = sortedSuits.slice(0, 3);
 
-    // יצירת אובייקטים בפורמט הנדרש
+    // יצירת אובייקטים בפורמט הנדרש עם מפתחות ייחודיים
     return top3Suits.map((suit, index) => {
       const suitId = suit._id || suit.orderId;
       const images = suitImages[suitId] || {};
       const mainImage = Object.values(images)[0] || sec; // תמונה ראשונה או ברירת מחדל
 
+      // יצירת מפתח ייחודי על ידי שילוב של suitId ו-index
+      const uniqueId = suitId ? `${suitId}_${index}` : `suit_${index}`;
+
       return {
-        id: suitId || index + 1,
+        id: uniqueId,
+        originalId: suitId,
         image: mainImage,
         title: `${suit.color || "חליפה"} ${suit.kind || "קלאסית"}`,
         description: `חליפה מותאמת אישית עם ${
@@ -416,16 +420,28 @@ const MostPoPular = () => {
 
     try {
       // נסה לטעון מהשרת לפי הקונפיגורציה
-      const response = await fetch(`${baseURL}/orders/suits`);
+      const response = await fetch(`${baseURL}/orders/all-suits`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include'
+      });
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Response data:', data);
         if (data.success) {
           setSuits(data.suits || []);
         } else {
+          console.log('Server returned success: false, falling back to localStorage');
           // נסה לטעון מ-localStorage
           loadFromLocalStorage();
         }
       } else {
+        console.log('Server returned error status:', response.status);
         // נסה לטעון מ-localStorage
         loadFromLocalStorage();
       }
@@ -695,12 +711,12 @@ const MostPoPular = () => {
             // מציאת החליפה המקורית לפי ID
             const originalSuit = suits.find((suit) => {
               const suitId = suit._id || suit.orderId;
-              return suitId === item.id;
+              return suitId === item.originalId;
             });
 
             // קבלת התמונות של החליפה
             const suitImagesForItem = originalSuit
-              ? suitImages[item.id] || {}
+              ? suitImages[item.originalId] || {}
               : {};
 
             return (
@@ -836,13 +852,16 @@ const MostPoPular = () => {
                   const images = suitImages[suitId] || {};
 
                   return (
-                    <Box key={suitId || index} className={classes.carouselItem}>
+                    <Box
+                      key={`carousel-${suitId}-${index}`}
+                      className={classes.carouselItem}
+                    >
                       <Box className={classes.suitImageContainer}>
                         {Object.entries(images)
                           .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
                           .map(([key, src]) => (
                             <img
-                              key={key}
+                              key={`${suitId}-${key}`}
                               src={src}
                               alt={`Suit part: ${key}`}
                               className={classes.suitImage}

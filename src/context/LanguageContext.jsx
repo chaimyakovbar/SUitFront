@@ -155,9 +155,7 @@ export const LanguageProvider = ({ children }) => {
   };
 
   const t = (key) => {
-    console.log(`Translating key: ${key}, language: ${language}`);
     const translation = translations[language][key];
-    console.log(`Translation result:`, translation);
     if (!translation) {
       console.warn(
         `Missing translation for key: ${key} in language: ${language}`

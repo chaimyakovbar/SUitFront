@@ -30,32 +30,20 @@ const TakeSizes4 = () => {
 
       try {
         const response = await getAllProducts(user.email);
-        console.log("Response data:", response.data);
         const userData = response.data;
 
         // Check for sizes in the profile_chaim object
         if (userData?.sizesTable) {
-          console.log("Found sizesTable:", userData.sizesTable);
           const { jacket, pants } = userData.sizesTable;
-          console.log("Jacket size:", jacket, "Pants size:", pants);
 
           // Convert to numbers and set the states
           const jacketSize = parseInt(jacket);
           const pantsSize = parseInt(pants);
 
-          console.log(
-            "Setting sizes - Jacket:",
-            jacketSize,
-            "Pants:",
-            pantsSize
-          );
-
           setSelectedJacketSize(jacketSize);
           setSelectedPantsSize(pantsSize);
 
           enqueueSnackbar("Loaded your saved sizes", { variant: "info" });
-        } else {
-          console.log("No sizesTable found in data");
         }
       } catch (error) {
         console.error("Error loading sizes:", error);

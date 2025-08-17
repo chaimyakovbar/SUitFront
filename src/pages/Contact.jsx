@@ -160,8 +160,6 @@ const Contact = () => {
   const { t, language } = useLanguage();
   const { enqueueSnackbar } = useSnackbar();
 
-  console.log("Current language:", language);
-  console.log("Contact Us translation:", t("contactUs"));
   const [formData, setFormData] = useState({
     name: "",
     email: "",

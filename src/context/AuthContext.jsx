@@ -27,15 +27,12 @@ export const AuthProvider = ({ children }) => {
             photoURL: firebaseUser.photoURL,
           });
 
-          console.log("🔍 Auth webhook response:", response);
 
           if (response.success) {
             // Use the user data from our database (includes phoneNumber, address, etc.)
-            console.log("✅ Using user data from database:", response.user);
             setUser(response.user);
           } else {
             // Fallback to Firebase data if webhook fails
-            console.log("⚠️ Webhook failed, using Firebase data");
             setUser({
               uid: firebaseUser.uid,
               email: firebaseUser.email,

@@ -78,7 +78,7 @@ const IndexSizes = () => {
             />
           </button>
           
-          <button
+          {/* <button
             style={{
               backgroundColor: "transparent",
               color: "white",
@@ -97,7 +97,7 @@ const IndexSizes = () => {
               src={imgFor3}
               alt="imgFor"
             />
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

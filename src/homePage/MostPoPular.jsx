@@ -421,27 +421,29 @@ const MostPoPular = () => {
     try {
       // נסה לטעון מהשרת לפי הקונפיגורציה
       const response = await fetch(`${baseURL}/orders/all-suits`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        credentials: 'include'
+        credentials: "include",
       });
-      console.log('Response status:', response.status);
-      
+      console.log("Response status:", response.status);
+
       if (response.ok) {
         const data = await response.json();
-        console.log('Response data:', data);
+        console.log("Response data:", data);
         if (data.success) {
           setSuits(data.suits || []);
         } else {
-          console.log('Server returned success: false, falling back to localStorage');
+          console.log(
+            "Server returned success: false, falling back to localStorage"
+          );
           // נסה לטעון מ-localStorage
           loadFromLocalStorage();
         }
       } else {
-        console.log('Server returned error status:', response.status);
+        console.log("Server returned error status:", response.status);
         // נסה לטעון מ-localStorage
         loadFromLocalStorage();
       }

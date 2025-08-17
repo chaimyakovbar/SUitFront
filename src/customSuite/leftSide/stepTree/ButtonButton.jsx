@@ -1,92 +1,14 @@
 import React from "react";
 import { Button, Box, Typography, Grid } from "@mui/material";
 import { motion } from "framer-motion";
-import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
 import { selectedButtonAtom } from "../../../Utils";
 import { imageButton } from "../../../consts/KindOfColors";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const useStyles = makeStyles({
-  container: {
-    width: "100%",
-  },
-  buttonGrid: {
-    display: "flex",
-    flexDirection: "row",
-    overflowX: "auto",
-    gap: "15px",
-    alignItems: "center",
-    width: "100%",
-  },
-  buttonItem: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    marginBottom: "15px",
-  },
-  button: {
-    width: "70px",
-    height: "70px",
-    borderRadius: "50%",
-    padding: 0,
-    position: "relative",
-    overflow: "hidden",
-    border: "1px solid rgba(192, 211, 202, 0.2)",
-    backgroundColor: "rgba(30, 30, 30, 0.6)",
-    transition: "all 0.3s ease",
-    "&:hover": {
-      transform: "scale(1.05)",
-      boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    },
-  },
-  selectedButton: {
-    border: "1px solid rgba(192, 211, 202, 0.5)",
-    boxShadow: "0 5px 15px rgba(192, 211, 202, 0.2)",
-  },
-  buttonImage: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-  },
-  buttonName: {
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.8rem !important",
-    fontWeight: "300 !important",
-    color: "#e0e0e0 !important",
-    marginTop: "8px !important",
-    textAlign: "center",
-  },
-  checkIcon: {
-    position: "absolute",
-    top: "-8px",
-    right: "-8px",
-    color: "#C0D3CA",
-    backgroundColor: "#0a0a0a",
-    borderRadius: "50%",
-    padding: "2px",
-    fontSize: "20px",
-  },
-  resetButton: {
-    backgroundColor: "transparent !important",
-    color: "#C0D3CA !important",
-    border: "1px solid #C0D3CA !important",
-    padding: "8px 16px !important",
-    borderRadius: "0 !important",
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.8rem !important",
-    letterSpacing: "0.1em !important",
-    marginTop: "20px !important",
-    transition: "all 0.3s ease !important",
-    "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-      transform: "translateY(-2px) !important",
-    },
-  },
-});
+
 
 const ButtonButton = ({ handleCloseDrawer }) => {
-  const classes = useStyles();
   const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom);
 
   const handleClick = (name) => {
@@ -100,51 +22,148 @@ const ButtonButton = ({ handleCloseDrawer }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={classes.container}
-    >
-      <Grid container spacing={2} className={classes.buttonGrid}>
+    <Box sx={{ width: "100%" }}>
+
+      {/* Enhanced Grid */}
+      <Grid container spacing={3} sx={{ justifyContent: "center" }}>
         {imageButton.map((item, index) => (
-          <Grid item key={item.name} xs={4}>
+          <Grid item key={item.name} xs={6} sm={4} md={3}>
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              className={classes.buttonItem}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Box
-                className={`${classes.button} ${
-                  selectedButton === item.name ? classes.selectedButton : ""
-                }`}
-                onClick={() => handleClick(item.name)}
-                position="relative"
-              >
-                <img
-                  src={item.img}
-                  alt={item.name}
-                  className={classes.buttonImage}
-                />
-                {selectedButton === item.name && (
-                  <CheckCircleIcon className={classes.checkIcon} />
-                )}
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Enhanced Button Container */}
+                <Box
+                  sx={{
+                    width: { xs: 70, md: 80 },
+                    height: { xs: 70, md: 80 },
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    border: selectedButton === item.name
+                      ? '3px solid rgba(192, 211, 202, 0.8)'
+                      : '2px solid rgba(192, 211, 202, 0.2)',
+                    background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)',
+                    transition: 'all 0.3s ease',
+                    boxShadow: selectedButton === item.name
+                      ? '0 8px 24px rgba(192, 211, 202, 0.3)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 12px 32px rgba(192, 211, 202, 0.2)',
+                      border: '3px solid rgba(192, 211, 202, 0.6)'
+                    }
+                  }}
+                  onClick={() => handleClick(item.name)}
+                >
+                  {/* Image with lighter background for better visibility */}
+                  <Box
+                    sx={{
+                      width: '85%',
+                      height: '85%',
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      background: 'linear-gradient(135deg, rgba(60, 60, 60, 0.8) 0%, rgba(50, 50, 50, 0.9) 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px solid rgba(192, 211, 202, 0.1)'
+                    }}
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        filter: 'brightness(1.3) contrast(1.2)',
+                        mixBlendMode: 'normal'
+                      }}
+                    />
+                  </Box>
+                  
+                  {/* Selection Check Icon */}
+                  {selectedButton === item.name && (
+                    <CheckCircleIcon 
+                      sx={{
+                        position: 'absolute',
+                        top: '-6px',
+                        right: '-6px',
+                        color: '#C0D3CA',
+                        backgroundColor: 'rgba(10, 10, 10, 0.95)',
+                        borderRadius: '50%',
+                        padding: '3px',
+                        fontSize: '18px',
+                        border: '2px solid rgba(192, 211, 202, 0.4)',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                      }}
+                    />
+                  )}
+                </Box>
+                
+                {/* Button Name */}
+                <Typography 
+                  sx={{
+                    color: '#C0D3CA',
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    textAlign: 'center',
+                    mt: 1.5,
+                    mb: 0.5,
+                    letterSpacing: '0.3px',
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  {item.name}
+                </Typography>
               </Box>
-              <Typography className={classes.buttonName}>
-                {item.name}
-              </Typography>
             </motion.div>
           </Grid>
         ))}
       </Grid>
 
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <Button className={classes.resetButton} onClick={handleReset}>
+      {/* Enhanced Reset Button */}
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <Button 
+          onClick={handleReset}
+          component={motion.button}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          sx={{
+            background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(192, 211, 202, 0.05) 100%)',
+            color: '#C0D3CA',
+            border: '1px solid rgba(192, 211, 202, 0.3)',
+            padding: '10px 24px',
+            borderRadius: '8px',
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '0.85rem',
+            fontWeight: 500,
+            letterSpacing: '0.5px',
+            transition: 'all 0.3s ease',
+            backdropFilter: 'blur(10px)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(192, 211, 202, 0.1) 100%)',
+              border: '1px solid rgba(192, 211, 202, 0.5)',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 8px 24px rgba(192, 211, 202, 0.2)'
+            }
+          }}
+        >
           Reset Selection
         </Button>
       </Box>
-    </motion.div>
+    </Box>
   );
 };
 

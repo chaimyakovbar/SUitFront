@@ -95,44 +95,44 @@ const ImageFilterComponent = () => {
   // Calculate total price
   const calculateTotalPrice = useMemo(() => {
     let total = suitPricing.basePrices[selectedKind] || 0;
-    console.log("Base price:", total);
+    // console.log("Base price:", total);
 
     // Add lapel type cost
     const lapelCost =
       suitPricing.additionalCosts.lapelTypes[selectedLapelType] || 0;
     total += lapelCost;
-    console.log("Lapel cost:", lapelCost);
+    // console.log("Lapel cost:", lapelCost);
 
     // Add collar type cost
     const collarCost =
       suitPricing.additionalCosts.collarTypes[selectedCollar] || 0;
     total += collarCost;
-    console.log("Collar cost:", collarCost);
+    // console.log("Collar cost:", collarCost);
 
     // Add packet type cost
     const packetCost =
       suitPricing.additionalCosts.packetTypes[selectedPacketType] || 0;
     total += packetCost;
-    console.log("Packet cost:", packetCost);
+    // console.log("Packet cost:", packetCost);
 
     // Add special features costs
     if (poshetColor) {
       total += suitPricing.additionalCosts.features.poshet;
-      console.log("Poshet cost:", suitPricing.additionalCosts.features.poshet);
+      // console.log("Poshet cost:", suitPricing.additionalCosts.features.poshet);
     }
     if (holeButtonColor) {
       total += suitPricing.additionalCosts.features.holesButton;
-      console.log(
-        "Hole button cost:",
-        suitPricing.additionalCosts.features.holesButton
-      );
+      // console.log(
+      //   "Hole button cost:",
+      //   suitPricing.additionalCosts.features.holesButton
+      // );
     }
     if (holeButtonUpColor) {
       total += suitPricing.additionalCosts.features.holesButtonUp;
-      console.log(
-        "Hole button up cost:",
-        suitPricing.additionalCosts.features.holesButtonUp
-      );
+      // console.log(
+      //   "Hole button up cost:",
+      //   suitPricing.additionalCosts.features.holesButtonUp
+      // );
     }
 
     // Add color costs based on their specific categories
@@ -142,7 +142,7 @@ const ImageFilterComponent = () => {
         const mainColorCost =
           suitPricing.additionalCosts.MainSuitColors[currColor];
         total += mainColorCost;
-        console.log(`Main suit color cost for ${currColor}:`, mainColorCost);
+        // console.log(`Main suit color cost for ${currColor}:`, mainColorCost);
       }
     }
 
@@ -152,7 +152,7 @@ const ImageFilterComponent = () => {
         const insideColorCost =
           suitPricing.additionalCosts.InsideColors[insideColor];
         total += insideColorCost;
-        console.log(`Inside color cost for ${insideColor}:`, insideColorCost);
+        // console.log(`Inside color cost for ${insideColor}:`, insideColorCost);
       }
     }
 
@@ -162,10 +162,10 @@ const ImageFilterComponent = () => {
         suitPricing.additionalCosts.ButtonColors[selectedButton];
       if (buttonColorCost !== undefined) {
         total += buttonColorCost;
-        console.log(
-          `Button color cost for ${selectedButton}:`,
-          buttonColorCost
-        );
+        // console.log(
+        //   `Button color cost for ${selectedButton}:`,
+        //   buttonColorCost
+        // );
       }
     }
 
@@ -197,6 +197,22 @@ const ImageFilterComponent = () => {
         height: isMobile ? "450px" : "500px",
       }}
     >
+      {/* <div
+        style={{
+          position: "absolute",
+          right: 10,
+          top: 65,
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          color: "white",
+          padding: "8px 16px",
+          borderRadius: "4px",
+          zIndex: 1001,
+          fontSize: isMobile ? "14px" : "18px",
+          fontWeight: "bold",
+        }}
+      >
+        ${calculateTotalPrice}
+      </div>{" "}
       <div
         style={{
           position: "absolute",
@@ -212,8 +228,7 @@ const ImageFilterComponent = () => {
         }}
       >
         ${calculateTotalPrice}
-      </div>
-
+      </div> */}
       {/* Simple Loader */}
       {loading && (
         <div
@@ -250,59 +265,54 @@ const ImageFilterComponent = () => {
           <p style={{ marginTop: "10px", color: "white" }}>Loading suit... </p>
         </div>
       )}
-
       {/* Base parts */}
       <img
         src={`/assets/ragach/Kinds/${selectedKind}/${currColor}.png`}
         alt={`Suit Body - ${selectedKind} ${currColor}`}
-              style={{ ...imageStyle, zIndex: 2 }}   onError={() => handleImageError("suitBody")}
+        style={{ ...imageStyle, zIndex: 2 }}
+        onError={() => handleImageError("suitBody")}
       />
-
       <img
         src={`/assets/ragach/colar/${currColor}.png`}
         alt={`Collar - ${currColor}`}
         style={{ ...imageStyle, zIndex: 200 }}
         onError={() => handleImageError("collar")}
       />
-
       <img
         src={`/assets/ragach/sleeves/${currColor}.png`}
         alt={`Sleeves - ${currColor}`}
         style={imageStyle}
         onError={() => handleImageError("sleeves")}
       />
-
       <img
         src={`/assets/ragach/insideUp/${insideColor}.png`}
         alt={`Inside Up - ${insideColor}`}
         style={imageStyle}
         onError={() => handleImageError("insideUp")}
       />
-
       <img
         src={`/assets/ragach/insideBottom/${currColor}.png`}
         alt={`Inside Bottom - ${insideColor}`}
         style={imageStyle}
         onError={() => handleImageError("insideBottom")}
       />
-
       <img
         src={`/assets/ragach/${bottomPart}/${currColor}.png`}
         alt={`Bottom - ${currColor}`}
-              style={{ ...imageStyle, zIndex: 2 }}   onError={() => handleImageError("bottom")}
+        style={{ ...imageStyle, zIndex: 2 }}
+        onError={() => handleImageError("bottom")}
       />
-
       {/* Fixed Lapel/Collar path */}
       <img
         src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
         alt={`Lapel Collar - ${currColor}`}
-        style={{ ...imageStyle, zIndex: 200 }}      onError={() =>
+        style={{ ...imageStyle, zIndex: 200 }}
+        onError={() =>
           handleImageError(
             `lapelCollar: ${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}`
           )
         }
       />
-
       {/* Packet Bottom with specific type */}
       {selectedPacketType === "packet4" && (
         <img
@@ -332,7 +342,6 @@ const ImageFilterComponent = () => {
           handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
         }
       />
-
       {poshetColor && (
         <img
           src={`/assets/adds/poshet/${poshetColor}.png`}
@@ -341,14 +350,12 @@ const ImageFilterComponent = () => {
           onError={() => handleImageError(`poshet: ${poshetColor}`)}
         />
       )}
-
       <img
         src={`/assets/ragach/packetUp/${currColor}.png`}
         alt={`Packet Up - ${currColor}`}
         style={{ ...imageStyle, zIndex: 3 }}
-       onError={() => handleImageError("packetUp")}
+        onError={() => handleImageError("packetUp")}
       />
-
       {buttonColor !== null && (
         <img
           src={`/assets/ragach/button/${selectedKind}/${buttonColor}.png`}
@@ -359,7 +366,6 @@ const ImageFilterComponent = () => {
           }
         />
       )}
-
       {holeButtonColor && (
         <img
           src={`/assets/adds/holesButton/${selectedKind}/${holeButtonColor}.png`}
@@ -370,7 +376,6 @@ const ImageFilterComponent = () => {
           }
         />
       )}
-
       {holeButtonUpColor && (
         <img
           src={`/assets/adds/holesButtonUp/${holeButtonUpColor}.png`}
@@ -379,7 +384,6 @@ const ImageFilterComponent = () => {
           onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
         />
       )}
-
       {/* Sleeve buttons overlay - only show if selected */}
       {/* {selectedSleeveButtons !== "none" && (
         <img
@@ -393,7 +397,6 @@ const ImageFilterComponent = () => {
           }
         />
       )} */}
-
       {/* TextInside overlay - REMOVED: Text is saved to database but not displayed on suit */}
       {/* {textInsideText && (
         <div style={{ ...overlayStyle, zIndex: 200 }}>

@@ -116,8 +116,9 @@ const useStyles = makeStyles({
   },
 });
 
-const PantsControls = () => {
-  const isMobile = useMediaQuery("(max-width:600px)");
+const PantsControls = ({ isMobile: mobileProp }) => {
+  const isMobileQuery = useMediaQuery("(max-width:600px)");
+  const isMobile = mobileProp !== undefined ? mobileProp : isMobileQuery;
   const classes = useStyles();
 
   const [selectedPantsHoleButton, setSelectedPantsHoleButton] = useAtom(
@@ -167,6 +168,292 @@ const PantsControls = () => {
     handleCloseDrawer();
   };
 
+  // Mobile horizontal layout
+  if (isMobile) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          gap: 3,
+          minWidth: "fit-content",
+        }}
+      >
+        {/* Lines Selection */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: "#C0D3CA",
+              textAlign: "center",
+              mb: 1,
+            }}
+          >
+            Lines
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1.5 }}>
+            {linesOptions.map((option) => (
+              <Box
+                key={option.value}
+                onClick={() => setSelectedPantsLines(option.value)}
+                sx={{
+                  cursor: "pointer",
+                  borderRadius: "16px",
+                  border:
+                    selectedPantsLines === option.value
+                      ? "2px solid #C0D3CA"
+                      : "1px solid rgba(192, 211, 202, 0.2)",
+                  background:
+                    selectedPantsLines === option.value
+                      ? "rgba(192, 211, 202, 0.1)"
+                      : "rgba(30, 30, 30, 0.6)",
+                  transition: "all 0.3s ease",
+                  overflow: "hidden",
+                  position: "relative",
+                  width: "70px",
+                  height: "70px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  pt: 1.5,
+                  flexShrink: 0,
+                  "&:hover": {
+                    border: "2px solid rgba(192, 211, 202, 0.5)",
+                    background: "rgba(192, 211, 202, 0.1)",
+                  },
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "0.65rem",
+                    fontWeight: 500,
+                    color: "#C0D3CA",
+                    textAlign: "center",
+                    letterSpacing: "0.5px",
+                    lineHeight: 1.1,
+                    px: 0.5,
+                  }}
+                >
+                  {option.label}
+                </Typography>
+                {selectedPantsLines === option.value && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      background: "#C0D3CA",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Hole and Button Selection */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: "#C0D3CA",
+              textAlign: "center",
+              mb: 1,
+            }}
+          >
+            Hole & Button
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1.5 }}>
+            {holeButtonOptions.slice(0, 3).map((option) => (
+              <Box
+                key={option.value}
+                onClick={() => setSelectedPantsHoleButton(option.value)}
+                sx={{
+                  cursor: "pointer",
+                  borderRadius: "16px",
+                  border:
+                    selectedPantsHoleButton === option.value
+                      ? "2px solid #C0D3CA"
+                      : "1px solid rgba(192, 211, 202, 0.2)",
+                  background:
+                    selectedPantsHoleButton === option.value
+                      ? "rgba(192, 211, 202, 0.1)"
+                      : "rgba(30, 30, 30, 0.6)",
+                  transition: "all 0.3s ease",
+                  overflow: "hidden",
+                  position: "relative",
+                  width: "70px",
+                  height: "70px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  pt: 1.5,
+                  flexShrink: 0,
+                  "&:hover": {
+                    border: "2px solid rgba(192, 211, 202, 0.5)",
+                    background: "rgba(192, 211, 202, 0.1)",
+                  },
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "0.65rem",
+                    fontWeight: 500,
+                    color: "#C0D3CA",
+                    textAlign: "center",
+                    letterSpacing: "0.5px",
+                    lineHeight: 1.1,
+                    px: 0.5,
+                  }}
+                >
+                  {option.label}
+                </Typography>
+                {selectedPantsHoleButton === option.value && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      background: "#C0D3CA",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Hem Selection */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: "#C0D3CA",
+              textAlign: "center",
+              mb: 1,
+            }}
+          >
+            Hem
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1.5 }}>
+            {hemOptions.map((option) => (
+              <Box
+                key={option.value}
+                onClick={() => setSelectedPantsHem(option.value)}
+                sx={{
+                  cursor: "pointer",
+                  borderRadius: "16px",
+                  border:
+                    selectedPantsHem === option.value
+                      ? "2px solid #C0D3CA"
+                      : "1px solid rgba(192, 211, 202, 0.2)",
+                  background:
+                    selectedPantsHem === option.value
+                      ? "rgba(192, 211, 202, 0.1)"
+                      : "rgba(30, 30, 30, 0.6)",
+                  transition: "all 0.3s ease",
+                  overflow: "hidden",
+                  position: "relative",
+                  width: "70px",
+                  height: "70px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  pt: 1.5,
+                  flexShrink: 0,
+                  "&:hover": {
+                    border: "2px solid rgba(192, 211, 202, 0.5)",
+                    background: "rgba(192, 211, 202, 0.1)",
+                  },
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "0.65rem",
+                    fontWeight: 500,
+                    color: "#C0D3CA",
+                    textAlign: "center",
+                    letterSpacing: "0.5px",
+                    lineHeight: 1.1,
+                    px: 0.5,
+                  }}
+                >
+                  {option.label}
+                </Typography>
+                {selectedPantsHem === option.value && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      background: "#C0D3CA",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
+
+  // Desktop layout
   return (
     <Box className={classes.root}>
       <Typography className={classes.title}>התאמת מכנסיים</Typography>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Box, Typography, Grid, Tabs, Tab } from "@mui/material";
 import { motion } from "framer-motion";
-import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
 import {
   selectedHolesButtonAtom,
@@ -12,105 +11,9 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import holes from "/assets/kinds/AllSuit.png";
 import JustUp from "/assets/kinds/JustUp.png";
 
-const useStyles = makeStyles({
-  container: {
-    width: "100%",
-  },
-  tabsContainer: {
-    marginBottom: "20px",
-    borderBottom: "1px solid rgba(192, 211, 202, 0.2)",
-  },
-  tab: {
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.8rem !important",
-    fontWeight: "300 !important",
-    color: "#e0e0e0 !important",
-    letterSpacing: "0.05em !important",
-    textTransform: "none !important",
-    minWidth: "120px !important",
-  },
-  tabSelected: {
-    color: "#C0D3CA !important",
-  },
-  tabIndicator: {
-    backgroundColor: "#C0D3CA !important",
-  },
-  tabPanel: {
-    padding: "15px 0",
-  },
-  tabImage: {
-    width: "80px",
-    height: "120px",
-    objectFit: "contain",
-    marginBottom: "10px",
-  },
-  colorGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "15px",
-    justifyContent: "center",
-  },
-  colorItem: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    marginBottom: "10px",
-  },
-  colorButton: {
-    width: "20px",
-    height: "60px",
-    borderRadius: "10px",
-    padding: 0,
-    position: "relative",
-    border: "1px solid rgba(192, 211, 202, 0.2)",
-    transition: "all 0.3s ease",
-    "&:hover": {
-      transform: "scale(1.05)",
-      boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    },
-  },
-  selectedColor: {
-    border: "1px solid rgba(192, 211, 202, 0.5)",
-    boxShadow: "0 5px 15px rgba(192, 211, 202, 0.2)",
-  },
-  colorName: {
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.8rem !important",
-    fontWeight: "300 !important",
-    color: "#e0e0e0 !important",
-    marginTop: "8px !important",
-    textAlign: "center",
-  },
-  checkIcon: {
-    position: "absolute",
-    top: "-8px",
-    right: "-8px",
-    color: "#C0D3CA",
-    backgroundColor: "#0a0a0a",
-    borderRadius: "50%",
-    padding: "2px",
-    fontSize: "20px",
-  },
-  resetButton: {
-    backgroundColor: "transparent !important",
-    color: "#C0D3CA !important",
-    border: "1px solid #C0D3CA !important",
-    padding: "8px 16px !important",
-    borderRadius: "0 !important",
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.8rem !important",
-    letterSpacing: "0.1em !important",
-    marginTop: "20px !important",
-    transition: "all 0.3s ease !important",
-    "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-      transform: "translateY(-2px) !important",
-    },
-  },
-});
+
 
 const ButtonHoles = ({ handleCloseDrawer }) => {
-  const classes = useStyles();
   const [selectedHolesButton, setSelectedHolesButton] = useAtom(
     selectedHolesButtonAtom
   );
@@ -142,84 +45,226 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={classes.container}
-    >
-      <Box className={classes.tabsContainer}>
+    <Box sx={{ width: "100%" }}>
+
+      {/* Enhanced Tabs */}
+      <Box sx={{ 
+        mb: 3,
+        borderBottom: '1px solid rgba(192, 211, 202, 0.2)',
+        background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.05) 0%, rgba(192, 211, 202, 0.02) 100%)',
+        borderRadius: '12px',
+        p: 1
+      }}>
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
-          classes={{ indicator: classes.tabIndicator }}
+          sx={{
+            '& .MuiTab-root': {
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: '0.9rem',
+              fontWeight: 400,
+              color: 'rgba(192, 211, 202, 0.7)',
+              letterSpacing: '0.5px',
+              textTransform: 'none',
+              minWidth: '120px',
+              transition: 'all 0.3s ease',
+              '&.Mui-selected': {
+                color: '#C0D3CA',
+                fontWeight: 600
+              }
+            },
+            '& .MuiTabs-indicator': {
+              backgroundColor: '#C0D3CA',
+              height: '2px',
+              borderRadius: '1px'
+            }
+          }}
           centered
         >
-          <Tab
-            label="All Suit"
-            className={classes.tab}
-            classes={{ selected: classes.tabSelected }}
-          />
-          <Tab
-            label="Just Upper"
-            className={classes.tab}
-            classes={{ selected: classes.tabSelected }}
-          />
+          <Tab label="All Suit" />
+          <Tab label="Just Upper" />
         </Tabs>
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+      {/* Enhanced Preview Image */}
+      <Box 
+        component={motion.div}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+        sx={{ 
+          display: "flex", 
+          justifyContent: "center", 
+          mb: 4,
+          p: 2,
+          background: 'linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.9) 100%)',
+          borderRadius: '16px',
+          border: '1px solid rgba(192, 211, 202, 0.15)',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
         <img
           src={tabValue === 0 ? holes : JustUp}
           alt={tabValue === 0 ? "All Suit" : "Just Upper"}
-          className={classes.tabImage}
+          style={{
+            width: '100px',
+            height: '150px',
+            objectFit: 'contain',
+            filter: 'brightness(1.1) contrast(1.1)'
+          }}
         />
       </Box>
 
-      <Grid container spacing={1} className={classes.colorGrid}>
+      {/* Enhanced Color Grid */}
+      <Grid container spacing={3} sx={{ justifyContent: "center" }}>
         {imagesHoles.map((item, index) => (
-          <Grid item key={item.name} xs={3}>
+          <Grid item key={item.name} xs={6} sm={4} md={3}>
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              className={classes.colorItem}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Box
-                className={`${classes.colorButton} ${
-                  tabValue === 0
-                    ? selectedHolesButton === item.name
-                      ? classes.selectedColor
-                      : ""
-                    : selectedHolesButtonUp === item.name
-                    ? classes.selectedColor
-                    : ""
-                }`}
-                style={{ backgroundColor: item.color }}
-                onClick={() =>
-                  tabValue === 0
-                    ? handleClick(item.name)
-                    : handleClick2(item.name)
-                }
-                position="relative"
-              >
-                {((tabValue === 0 && selectedHolesButton === item.name) ||
-                  (tabValue === 1 && selectedHolesButtonUp === item.name)) && (
-                  <CheckCircleIcon className={classes.checkIcon} />
-                )}
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Main Color Circle */}
+                <Box
+                  sx={{
+                    width: { xs: 60, md: 70 },
+                    height: { xs: 60, md: 70 },
+                    backgroundColor: item.color,
+                    border: (tabValue === 0
+                      ? selectedHolesButton === item.name
+                      : selectedHolesButtonUp === item.name)
+                      ? '3px solid rgba(192, 211, 202, 0.8)'
+                      : '2px solid rgba(192, 211, 202, 0.2)',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    transition: 'all 0.3s ease',
+                    boxShadow: (tabValue === 0
+                      ? selectedHolesButton === item.name
+                      : selectedHolesButtonUp === item.name)
+                      ? '0 8px 24px rgba(192, 211, 202, 0.3)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    '&:hover': {
+                      transform: 'translateY(-4px) scale(1.05)',
+                      boxShadow: '0 12px 32px rgba(192, 211, 202, 0.2)',
+                      border: '3px solid rgba(192, 211, 202, 0.6)'
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: '-2px',
+                      left: '-2px',
+                      right: '-2px',
+                      bottom: '-2px',
+                      background: `linear-gradient(45deg, ${item.color}, ${item.color}dd)`,
+                      borderRadius: '50%',
+                      zIndex: -1,
+                      opacity: 0,
+                      transition: 'opacity 0.3s ease'
+                    },
+                    '&:hover::before': {
+                      opacity: 0.3
+                    }
+                  }}
+                  onClick={() =>
+                    tabValue === 0
+                      ? handleClick(item.name)
+                      : handleClick2(item.name)
+                  }
+                >
+                  {/* Inner Circle for Depth */}
+                  <Box
+                    sx={{
+                      width: '70%',
+                      height: '70%',
+                      backgroundColor: item.color,
+                      borderRadius: '50%',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+                      position: 'relative'
+                    }}
+                  />
+                  
+                  {/* Selection Check Icon */}
+                  {((tabValue === 0 && selectedHolesButton === item.name) ||
+                    (tabValue === 1 && selectedHolesButtonUp === item.name)) && (
+                    <CheckCircleIcon 
+                      sx={{
+                        position: 'absolute',
+                        top: '-6px',
+                        right: '-6px',
+                        color: '#C0D3CA',
+                        backgroundColor: 'rgba(10, 10, 10, 0.95)',
+                        borderRadius: '50%',
+                        padding: '3px',
+                        fontSize: '18px',
+                        border: '2px solid rgba(192, 211, 202, 0.4)',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                      }}
+                    />
+                  )}
+                </Box>
+                
+                {/* Color Name */}
+                <Typography 
+                  sx={{
+                    color: '#C0D3CA',
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    textAlign: 'center',
+                    mt: 1.5,
+                    mb: 0.5,
+                    letterSpacing: '0.3px',
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  {item.name}
+                </Typography>
               </Box>
-              <Typography className={classes.colorName}>{item.name}</Typography>
             </motion.div>
           </Grid>
         ))}
       </Grid>
 
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-        <Button className={classes.resetButton} onClick={handleReset}>
+      {/* Enhanced Reset Button */}
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <Button 
+          onClick={handleReset}
+          component={motion.button}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          sx={{
+            background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(192, 211, 202, 0.05) 100%)',
+            color: '#C0D3CA',
+            border: '1px solid rgba(192, 211, 202, 0.3)',
+            padding: '10px 24px',
+            borderRadius: '8px',
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '0.85rem',
+            fontWeight: 500,
+            letterSpacing: '0.5px',
+            transition: 'all 0.3s ease',
+            backdropFilter: 'blur(10px)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(192, 211, 202, 0.1) 100%)',
+              border: '1px solid rgba(192, 211, 202, 0.5)',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 8px 24px rgba(192, 211, 202, 0.2)'
+            }
+          }}
+        >
           Reset Selection
         </Button>
       </Box>
-    </motion.div>
+    </Box>
   );
 };
 

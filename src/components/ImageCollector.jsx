@@ -176,6 +176,22 @@ const ImageFilterComponent = () => {
         height: isMobile ? "450px" : "500px",
       }}
     >
+      {/* <div
+        style={{
+          position: "absolute",
+          right: 10,
+          top: 65,
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          color: "white",
+          padding: "8px 16px",
+          borderRadius: "4px",
+          zIndex: 1001,
+          fontSize: isMobile ? "14px" : "18px",
+          fontWeight: "bold",
+        }}
+      >
+        ${calculateTotalPrice}
+      </div>{" "}
       <div
         style={{
           position: "absolute",
@@ -191,8 +207,7 @@ const ImageFilterComponent = () => {
         }}
       >
         ${calculateTotalPrice}
-      </div>
-
+      </div> */}
       {/* Simple Loader */}
       {loading && (
         <div
@@ -229,7 +244,6 @@ const ImageFilterComponent = () => {
           <p style={{ marginTop: "10px", color: "white" }}>Loading suit... </p>
         </div>
       )}
-
       {/* Base parts */}
       <img
         src={`/assets/ragach/Kinds/${selectedKind}/${currColor}.png`}
@@ -237,42 +251,36 @@ const ImageFilterComponent = () => {
         style={{ ...imageStyle, zIndex: 2 }}
         onError={() => handleImageError("suitBody")}
       />
-
       <img
         src={`/assets/ragach/colar/${currColor}.png`}
         alt={`Collar - ${currColor}`}
         style={{ ...imageStyle, zIndex: 200 }}
         onError={() => handleImageError("collar")}
       />
-
       <img
         src={`/assets/ragach/sleeves/${currColor}.png`}
         alt={`Sleeves - ${currColor}`}
         style={imageStyle}
         onError={() => handleImageError("sleeves")}
       />
-
       <img
         src={`/assets/ragach/insideUp/${insideColor}.png`}
         alt={`Inside Up - ${insideColor}`}
         style={imageStyle}
         onError={() => handleImageError("insideUp")}
       />
-
       <img
         src={`/assets/ragach/insideBottom/${currColor}.png`}
         alt={`Inside Bottom - ${insideColor}`}
         style={imageStyle}
         onError={() => handleImageError("insideBottom")}
       />
-
       <img
         src={`/assets/ragach/${bottomPart}/${currColor}.png`}
         alt={`Bottom - ${currColor}`}
         style={{ ...imageStyle, zIndex: 2 }}
         onError={() => handleImageError("bottom")}
       />
-
       {/* Fixed Lapel/Collar path */}
       <img
         src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
@@ -284,7 +292,6 @@ const ImageFilterComponent = () => {
           )
         }
       />
-
       {/* Packet Bottom with specific type */}
       {selectedPacketType === "packet4" && (
         <img
@@ -314,7 +321,6 @@ const ImageFilterComponent = () => {
           handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
         }
       />
-
       {poshetColor && (
         <img
           src={`/assets/adds/poshet/${poshetColor}.png`}
@@ -323,14 +329,12 @@ const ImageFilterComponent = () => {
           onError={() => handleImageError(`poshet: ${poshetColor}`)}
         />
       )}
-
       <img
         src={`/assets/ragach/packetUp/${currColor}.png`}
         alt={`Packet Up - ${currColor}`}
         style={{ ...imageStyle, zIndex: 3 }}
         onError={() => handleImageError("packetUp")}
       />
-
       {buttonColor !== null && (
         <img
           src={`/assets/ragach/button/${selectedKind}/${buttonColor}.png`}
@@ -341,7 +345,6 @@ const ImageFilterComponent = () => {
           }
         />
       )}
-
       {holeButtonColor && (
         <img
           src={`/assets/adds/holesButton/${selectedKind}/${holeButtonColor}.png`}
@@ -352,7 +355,6 @@ const ImageFilterComponent = () => {
           }
         />
       )}
-
       {holeButtonUpColor && (
         <img
           src={`/assets/adds/holesButtonUp/${holeButtonUpColor}.png`}
@@ -361,7 +363,6 @@ const ImageFilterComponent = () => {
           onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
         />
       )}
-
       {/* Sleeve buttons overlay - only show if selected */}
       {/* {selectedSleeveButtons !== "none" && (
         <img
@@ -375,7 +376,6 @@ const ImageFilterComponent = () => {
           }
         />
       )} */}
-
       {/* TextInside overlay - REMOVED: Text is saved to database but not displayed on suit */}
       {/* {textInsideText && (
         <div style={{ ...overlayStyle, zIndex: 200 }}>

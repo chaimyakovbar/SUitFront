@@ -10,13 +10,32 @@ const queryClient = new QueryClient();
 
 axios.defaults.withCredentials = true;
 
+// Add global styles to fix black overlay issue
+const globalStyles = `
+  body, html {
+    background-color: black !important;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
+  #root {
+    background-color: black !important;
+    min-height: 100vh;
+  }
+`;
+
+// Inject global styles
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = globalStyles;
+document.head.appendChild(styleSheet);
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider maxSnack={3}>
-        <div style={{ backgroundColor: "#F5F5F7" }}>
-          <App /> {/* Already contains <Router> */}
-        </div>
+        <App /> {/* Already contains <Router> */}
       </SnackbarProvider>
     </QueryClientProvider>
   </StrictMode>

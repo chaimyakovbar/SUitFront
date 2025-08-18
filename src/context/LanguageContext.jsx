@@ -19,14 +19,14 @@ export const LanguageProvider = ({ children }) => {
 
   const translations = {
     he: {
-      heroTitle: "חליפות יוקרה מעוצבות",
+      heroTitle: "חליפות יוקרה מותאמות",
       heroSubtitle:
-        "גלה את הקולקציה האקסקלוסיבית שלנו של חליפות מעוצבות בקפידה, שם מלאכת יד מסורתית פוגשת עיצוב עכשווי. כל חליפה נתפרת לשלמות, מבטיחה התאמה מושלמת ותחכום חסר תחרות.",
-      designButton: "עצב חליפה מותאמת",
+        "נוצרות בדיוק, מעוצבות להבדלה. חווה חליפות מותאמות שמשלבות מורשת איטלקית עם תחכום מודרני.",
+      designButton: "צור חליפה שלך",
       scrollDown: "גלול למטה",
-      mostPopular: "הכי פופולרי",
+      mostPopular: "הכי נמכר",
       mostPopularSubtitle:
-        "הבחירה המשובחת שלנו של חליפות שהפכו למועדפות על הלקוחות בזכות האיכות יוצאת הדופן והסגנון הנצחי שלהן.",
+        "העיצובים האהובים ביותר שלנו, נבחרו על ידי לקוחות מפוכחים בזכות האיכות יוצאת הדופן והקסם הנצחי שלהם.",
       orderSuitsTitle: "חליפות מהזמנות שלך",
       orderSuitsSubtitle:
         "גלריית חליפות מהזמנות - תוכל לעשות לייק לחליפות האהובות עליך",
@@ -38,11 +38,11 @@ export const LanguageProvider = ({ children }) => {
       stopRotation: "עצור רוטציה",
       startRotation: "התחל רוטציה",
       artOfTailoringText:
-        "החייטים המומחים שלנו מביאים עשרות שנים של ניסיון לכל חליפה, משלבים טכניקות מסורתיות עם דיוק מודרני. כל בגד נוצר עם תשומת לב קפדנית לפרטים, מבחירת בדים יוקרתיים ועד הגימורים הנתפרים ביד.",
-      ourProcess: "התהליך שלנו",
-      ourCollections: "הקולקציות שלנו",
+        "כל חליפה היא יצירת מופת של חייטות איטלקית, שם עשרות שנים של מומחיות פוגשות דיוק עכשווי. מבחירת בדים יוקרתיים ועד פרטי גימור ידניים, אנו יוצרים בגדים שמגדירים מצוינות.",
+      ourProcess: "המלאכה שלנו",
+      ourCollections: "קולקציות",
       collectionsSubtitle:
-        "עיין בקולקציות המעוצבות בקפידה שלנו, שתוכננו לכל אירוע וסגנון אישי.",
+        "גלה את הטווח המעוצב שלנו של חליפות שתוכננו לכל אירוע וסגנון אישי.",
       languageButton: "EN",
       // NavBar translations
       home: "בית",
@@ -86,14 +86,14 @@ export const LanguageProvider = ({ children }) => {
       returnToMainPage: "חזור לדף הראשי",
     },
     en: {
-      heroTitle: "Timeless Elegance",
+      heroTitle: "Luxury Tailored Suits",
       heroSubtitle:
-        "Discover our exclusive collection of meticulously crafted suits, where traditional craftsmanship meets contemporary design. Each piece is tailored to perfection, ensuring an impeccable fit and unparalleled sophistication.",
-      designButton: "Design Your Suit",
+        "Crafted with precision, designed for distinction. Experience bespoke suits that blend Italian heritage with modern sophistication.",
+      designButton: "Create Your Suit",
       scrollDown: "SCROLL DOWN",
-      mostPopular: "Most Popular",
+      mostPopular: "Bestsellers",
       mostPopularSubtitle:
-        "Our finest selection of suits that have become customer favorites for their exceptional quality and timeless style.",
+        "Our most loved designs, chosen by discerning clients for their exceptional quality and timeless appeal.",
       orderSuitsTitle: "Your Order Suits",
       orderSuitsSubtitle:
         "Gallery of suits from your orders - you can like your favorite suits",
@@ -104,13 +104,13 @@ export const LanguageProvider = ({ children }) => {
       noSuitsMessage: "Order a suit to see it here",
       stopRotation: "Stop Rotation",
       startRotation: "Start Rotation",
-      artOfTailoring: "The Art of Tailoring",
+      artOfTailoring: "Master Craftsmanship",
       artOfTailoringText:
-        "Our master tailors bring decades of experience to every suit, combining traditional techniques with modern precision. Each garment is crafted with meticulous attention to detail, from the selection of premium fabrics to the final hand-stitched finishes.",
-      ourProcess: "Our Process",
-      ourCollections: "Our Collections",
+        "Every suit is a masterpiece of Italian tailoring, where decades of expertise meet contemporary precision. From premium fabric selection to hand-finished details, we create garments that define excellence.",
+      ourProcess: "Our Craft",
+      ourCollections: "Collections",
       collectionsSubtitle:
-        "Browse through our carefully curated collections designed for every occasion and personal style.",
+        "Discover our curated range of suits designed for every occasion and personal style.",
       languageButton: "עב",
       // NavBar translations
       home: "Home",

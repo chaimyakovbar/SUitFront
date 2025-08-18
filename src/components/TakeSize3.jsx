@@ -673,29 +673,69 @@ const DollDisplay = () => {
             sx={{
               width: isMobile ? "270px" : "400px",
               p: isMobile ? 1 : 3,
-              backgroundColor: "#f5f5f5",
+              background: "linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(20, 20, 20, 0.99) 100%)",
+              backdropFilter: "blur(25px)",
+              borderLeft: "1px solid rgba(192, 211, 202, 0.15)",
+              color: "#fff",
+              minHeight: "100vh",
+              position: "relative",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: `
+                  radial-gradient(circle at 20% 20%, rgba(192, 211, 202, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(192, 211, 202, 0.03) 0%, transparent 50%)
+                `,
+                pointerEvents: "none",
+              },
             }}
           >
             <Typography
               variant="h5"
               sx={{
-                mb: isMobile ? 1 : 3,
+                mb: isMobile ? 2 : 3,
                 textAlign: "center",
-                fontWeight: "bold",
-                fontSize: isMobile ? "1.2rem" : "1.5rem",
+                fontWeight: "300",
+                fontSize: isMobile ? "1.4rem" : "1.8rem",
+                fontFamily: "'Cormorant Garamond', serif",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#C0D3CA",
+                position: "relative",
+                zIndex: 1,
               }}
             >
-              כל המידות
+              All Measurements
             </Typography>
 
             <Box
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, 1fr)",
-                gap: isMobile ? 1 : 2,
-                maxHeight: "80vh",
+                gap: isMobile ? 1.5 : 2,
+                maxHeight: "70vh",
                 overflowY: "auto",
-                padding: isMobile ? "5px" : "10px",
+                padding: isMobile ? "10px" : "15px",
+                position: "relative",
+                zIndex: 1,
+                "&::-webkit-scrollbar": {
+                  width: "6px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  background: "rgba(192, 211, 202, 0.1)",
+                  borderRadius: "3px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  background: "rgba(192, 211, 202, 0.3)",
+                  borderRadius: "3px",
+                  "&:hover": {
+                    background: "rgba(192, 211, 202, 0.5)",
+                  },
+                },
               }}
             >
               {bodyPoints.map((point) => {
@@ -711,28 +751,36 @@ const DollDisplay = () => {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      p: isMobile ? 1 : 2,
-                      borderRadius: 2,
-                      bgcolor: isCompleted
-                        ? "rgba(76, 175, 80, 0.1)"
-                        : "rgba(255, 235, 235, 0.5)",
+                      p: isMobile ? 1.5 : 2,
+                      borderRadius: "12px",
+                      background: isCompleted
+                        ? "linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(168, 195, 184, 0.1) 100%)"
+                        : "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)",
                       border: "1px solid",
                       borderColor: isCompleted
-                        ? "success.light"
-                        : "error.light",
+                        ? "rgba(192, 211, 202, 0.3)"
+                        : "rgba(255, 255, 255, 0.1)",
                       transition: "all 0.3s ease",
+                      backdropFilter: "blur(10px)",
                       "&:hover": {
-                        transform: "translateY(-2px)",
-                        boxShadow: 2,
+                        transform: "translateY(-3px)",
+                        boxShadow: "0 8px 25px rgba(0, 0, 0, 0.2)",
+                        borderColor: isCompleted
+                          ? "rgba(192, 211, 202, 0.5)"
+                          : "rgba(255, 255, 255, 0.2)",
                       },
                     }}
                   >
                     <Typography
                       variant="subtitle1"
                       sx={{
-                        mb: isMobile ? 0.5 : 1,
-                        fontWeight: "bold",
-                        fontSize: isMobile ? "0.9rem" : "1rem",
+                        mb: isMobile ? 1 : 1.5,
+                        fontWeight: "500",
+                        fontSize: isMobile ? "0.85rem" : "0.95rem",
+                        color: isCompleted ? "#C0D3CA" : "rgba(255, 255, 255, 0.9)",
+                        fontFamily: "'Montserrat', sans-serif",
+                        letterSpacing: "0.02em",
+                        textTransform: "uppercase",
                       }}
                     >
                       {point.label}
@@ -748,8 +796,31 @@ const DollDisplay = () => {
                         sx={{
                           width: isMobile ? "80px" : "100px",
                           "& .MuiOutlinedInput-root": {
-                            backgroundColor: "white",
-                            height: isMobile ? "32px" : "40px",
+                            backgroundColor: "rgba(255, 255, 255, 0.1)",
+                            backdropFilter: "blur(10px)",
+                            border: "1px solid rgba(192, 211, 202, 0.2)",
+                            borderRadius: "8px",
+                            height: isMobile ? "36px" : "40px",
+                            color: "#fff",
+                            "&:hover": {
+                              borderColor: "rgba(192, 211, 202, 0.4)",
+                            },
+                            "&.Mui-focused": {
+                              borderColor: "#C0D3CA",
+                              boxShadow: "0 0 0 2px rgba(192, 211, 202, 0.2)",
+                            },
+                            "& fieldset": {
+                              border: "none",
+                            },
+                          },
+                          "& .MuiInputBase-input": {
+                            color: "#fff",
+                            fontSize: isMobile ? "0.8rem" : "0.9rem",
+                            fontWeight: "500",
+                            textAlign: "center",
+                            "&::placeholder": {
+                              color: "rgba(255, 255, 255, 0.5)",
+                            },
                           },
                         }}
                         InputProps={{
@@ -757,7 +828,10 @@ const DollDisplay = () => {
                             <Typography
                               variant="body2"
                               sx={{
-                                fontSize: isMobile ? "0.75rem" : "0.875rem",
+                                fontSize: isMobile ? "0.7rem" : "0.8rem",
+                                color: "rgba(255, 255, 255, 0.7)",
+                                fontWeight: "500",
+                                mr: 1,
                               }}
                             >
                               cm
@@ -766,7 +840,21 @@ const DollDisplay = () => {
                         }}
                       />
                       {isCompleted && (
-                        <Box sx={{ color: "success.main" }}>✓</Box>
+                        <Box 
+                          sx={{ 
+                            color: "#C0D3CA",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "20px",
+                            height: "20px",
+                            borderRadius: "50%",
+                            background: "rgba(192, 211, 202, 0.2)",
+                            border: "1px solid rgba(192, 211, 202, 0.4)",
+                          }}
+                        >
+                          ✓
+                        </Box>
                       )}
                     </Box>
                   </Box>
@@ -776,26 +864,43 @@ const DollDisplay = () => {
 
             <Box
               sx={{
-                mt: isMobile ? 1 : 3,
+                mt: isMobile ? 2 : 3,
                 display: "flex",
                 justifyContent: "center",
                 gap: isMobile ? 1 : 2,
-                borderTop: "1px solid #ddd",
-                paddingTop: isMobile ? 1 : 2,
+                borderTop: "1px solid rgba(192, 211, 202, 0.2)",
+                paddingTop: isMobile ? 2 : 3,
+                position: "relative",
+                zIndex: 1,
               }}
             >
               <Button
                 variant="contained"
-                color="primary"
                 fullWidth
                 onClick={handleSubmit}
                 sx={{
-                  py: isMobile ? 1 : 1.5,
-                  fontWeight: "bold",
-                  fontSize: isMobile ? "0.9rem" : "1.1rem",
+                  py: isMobile ? 1.5 : 2,
+                  px: isMobile ? 2 : 3,
+                  fontWeight: "500",
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                  fontFamily: "'Montserrat', sans-serif",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  background: "linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(168, 195, 184, 0.1) 100%)",
+                  border: "1px solid rgba(192, 211, 202, 0.3)",
+                  color: "#C0D3CA",
+                  borderRadius: "10px",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(168, 195, 184, 0.2) 100%)",
+                    border: "1px solid rgba(192, 211, 202, 0.5)",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 8px 25px rgba(192, 211, 202, 0.2)",
+                  },
                 }}
               >
-                שמור את כל המידות
+                Save All Measurements
               </Button>
             </Box>
           </Box>

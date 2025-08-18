@@ -25,6 +25,8 @@ import {
   IconButton,
   Badge,
   Divider,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   Email as EmailIcon,
@@ -59,6 +61,7 @@ import { useNavigate } from "react-router-dom";
 import { updateUser, deleteSizeProfile } from "../api/user";
 import { useSnackbar } from "notistack";
 import { getUserOrders } from "../api/orders";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Button color mapping extracted and expanded
 const buttonColorMap = {
@@ -307,213 +310,234 @@ const SuitImage = ({ suit }) => {
 
 const useStyles = makeStyles({
   root: {
-    backgroundColor: "#0a0a0a",
-    color: "#fff",
     minHeight: "100vh",
-    paddingTop: "120px",
-    paddingBottom: "80px",
-    "@media (max-width: 768px)": {
-      paddingTop: "100px",
-      paddingBottom: "120px",
-    },
-  },
-  sidebar: {
-    width: 320,
-    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-    borderRight: "1px solid rgba(192, 211, 202, 0.2) !important",
-    height: "calc(100vh - 200px)",
-    position: "sticky",
-    top: 120,
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-    borderRadius: "4px",
-    marginRight: "2rem",
-    "@media (max-width: 768px)": {
-      width: "100% !important",
-      height: "auto !important",
-      position: "static !important",
-      marginRight: "0 !important",
-      marginBottom: "2rem !important",
-      borderRadius: "4px !important",
-    },
-  },
-  mobileBottomNav: {
-    display: "none",
-    "@media (max-width: 768px)": {
-      display: "flex !important",
-      position: "fixed !important",
-      bottom: 0,
+    background:
+      "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
+    color: "#fff",
+    position: "relative",
+    overflow: "hidden",
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
       left: 0,
       right: 0,
-      backgroundColor: "rgba(30, 30, 30, 0.95) !important",
-      backdropFilter: "blur(20px)",
-      borderTop: "1px solid rgba(192, 211, 202, 0.2) !important",
-      zIndex: 1000,
-      padding: "0.5rem 0",
+      bottom: 0,
+      background: `
+        radial-gradient(circle at 20% 20%, rgba(192, 211, 202, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(192, 211, 202, 0.03) 0%, transparent 50%)
+      `,
+      pointerEvents: "none",
     },
   },
-  mobileTabItem: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "0.5rem",
-    color: "rgba(255, 255, 255, 0.6) !important",
-    textDecoration: "none",
-    transition: "all 0.3s ease",
-    borderRadius: "8px",
-    margin: "0 0.25rem",
+  container: {
+    position: "relative",
+    zIndex: 1,
+    paddingTop: "80px",
+    paddingBottom: "60px",
     "@media (max-width: 768px)": {
-      "&.active": {
-        color: "#C0D3CA !important",
-        backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-        border: "1px solid rgba(192, 211, 202, 0.3) !important",
-        transform: "translateY(-2px)",
-        boxShadow: "0 4px 12px rgba(192, 211, 202, 0.2)",
-      },
-      "&:hover": {
-        backgroundColor: "rgba(255, 255, 255, 0.05)",
-        transform: "translateY(-1px)",
-      },
+      paddingTop: "70px",
+      paddingBottom: "80px",
     },
   },
-  mobileTabIcon: {
-    fontSize: "1.5rem !important",
-    marginBottom: "0.25rem",
-    transition: "all 0.3s ease",
+  header: {
+    textAlign: "center",
+    marginBottom: "2rem",
     "@media (max-width: 768px)": {
-      fontSize: "1.2rem !important",
-      "&.active": {
-        transform: "scale(1.1)",
-      },
-    },
-  },
-  mobileTabLabel: {
-    fontSize: "0.7rem !important",
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontWeight: "400 !important",
-    letterSpacing: "0.05em !important",
-    textTransform: "uppercase",
-    transition: "all 0.3s ease",
-    "@media (max-width: 768px)": {
-      fontSize: "0.65rem !important",
-      "&.active": {
-        fontWeight: "600 !important",
-        transform: "scale(1.05)",
-      },
-    },
-  },
-  mainContent: {
-    flex: 1,
-    paddingLeft: "2.5rem",
-    "@media (max-width: 768px)": {
-      paddingLeft: "0 !important",
+      marginBottom: "1.5rem",
     },
   },
   heading: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "3.5rem !important",
+    fontSize: "2.8rem !important",
     fontWeight: "300 !important",
-    marginBottom: "3rem !important",
     letterSpacing: "0.15em !important",
     color: "#fff !important",
-    textAlign: "center",
+    textTransform: "uppercase",
+    marginBottom: "0.5rem",
+    "@media (max-width: 768px)": {
+      fontSize: "2rem !important",
+    },
+  },
+  stepperContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background:
+      "linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%)",
+    backdropFilter: "blur(20px)",
+    border: "1px solid rgba(192, 211, 202, 0.15)",
+    borderRadius: "16px",
+    padding: "1rem 1.5rem",
+    marginBottom: "2rem",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+    "@media (max-width: 768px)": {
+      margin: "0 1rem 1.5rem 1rem",
+      padding: "0.75rem 1rem",
+      flexDirection: "column",
+      gap: "0.75rem",
+    },
+  },
+  stepperStep: {
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    padding: "0.4rem 0.8rem",
+    borderRadius: "10px",
+    margin: "0 0.4rem",
+    "@media (max-width: 768px)": {
+      margin: "0.2rem",
+      padding: "0.3rem 0.6rem",
+    },
+  },
+  stepperStepActive: {
+    background:
+      "linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(168, 195, 184, 0.1) 100%)",
+    border: "1px solid rgba(192, 211, 202, 0.3)",
+    transform: "scale(1.05)",
+  },
+  stepperStepInactive: {
+    background: "rgba(192, 211, 202, 0.05)",
+    border: "1px solid rgba(192, 211, 202, 0.1)",
+    "&:hover": {
+      background: "rgba(192, 211, 202, 0.1)",
+      transform: "scale(1.02)",
+    },
+  },
+  stepperNumber: {
+    width: "28px",
+    height: "28px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "0.8rem",
+    fontWeight: 600,
+    marginRight: "0.6rem",
+    "@media (max-width: 768px)": {
+      width: "24px",
+      height: "24px",
+      fontSize: "0.7rem",
+      marginRight: "0.4rem",
+    },
+  },
+  stepperNumberActive: {
+    background: "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)",
+    color: "#000",
+  },
+  stepperNumberInactive: {
+    background: "rgba(192, 211, 202, 0.2)",
+    color: "#C0D3CA",
+  },
+  stepperLabel: {
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontSize: "0.8rem !important",
+    fontWeight: "500 !important",
+    color: "#C0D3CA !important",
+    letterSpacing: "0.05em !important",
     textTransform: "uppercase",
     "@media (max-width: 768px)": {
-      fontSize: "2.5rem !important",
-      marginBottom: "2rem !important",
+      fontSize: "0.7rem !important",
+    },
+  },
+  stepperLabelActive: {
+    color: "#fff !important",
+    fontWeight: "600 !important",
+  },
+  contentContainer: {
+    background:
+      "linear-gradient(135deg, rgba(20, 20, 20, 0.85) 0%, rgba(30, 30, 30, 0.9) 100%)",
+    backdropFilter: "blur(15px)",
+    border: "1px solid rgba(192, 211, 202, 0.12)",
+    borderRadius: "12px",
+    padding: "1.5rem",
+    boxShadow:
+      "0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(192, 211, 202, 0.1)",
+    minHeight: "50vh",
+    "@media (max-width: 768px)": {
+      margin: "0 1rem",
+      padding: "1rem",
+      minHeight: "40vh",
     },
   },
   sectionTitle: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "2.2rem !important",
+    fontSize: "1.8rem !important",
     fontWeight: "300 !important",
-    marginBottom: "2rem !important",
+    marginBottom: "1.5rem !important",
     letterSpacing: "0.1em !important",
     color: "#C0D3CA !important",
     display: "flex",
     alignItems: "center",
-    gap: "1rem",
+    gap: "0.75rem",
     textTransform: "uppercase",
     "@media (max-width: 768px)": {
-      fontSize: "1.8rem !important",
-      marginBottom: "1.5rem !important",
+      fontSize: "1.5rem !important",
+      marginBottom: "1rem !important",
       flexDirection: "column",
       alignItems: "flex-start",
-      gap: "0.5rem",
+      gap: "0.4rem",
     },
   },
   card: {
     backgroundColor: "rgba(30, 30, 30, 0.6) !important",
     border: "1px solid rgba(192, 211, 202, 0.2) !important",
-    borderRadius: "4px !important",
-    marginBottom: "2rem",
+    borderRadius: "10px !important",
+    marginBottom: "1.5rem",
     transition: "all 0.4s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      // transform: "translateY(-4px)",
       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
       border: "1px solid rgba(192, 211, 202, 0.3) !important",
+      transform: "translateY(-2px)",
     },
     "@media (max-width: 768px)": {
-      marginBottom: "1.5rem !important",
-      "& .MuiCardContent-root": {
-        padding: "1rem !important",
-      },
-    },
-    "@media (max-width: 480px)": {
       marginBottom: "1rem !important",
       "& .MuiCardContent-root": {
         padding: "0.75rem !important",
       },
     },
   },
-  avatar: {
-    width: 100,
-    height: 100,
-    border: "3px solid rgba(192, 211, 202, 0.3)",
-    backgroundColor: "rgba(192, 211, 202, 0.05)",
-    backdropFilter: "blur(10px)",
-    "@media (max-width: 768px)": {
-      width: 80,
-      height: 80,
-      border: "2px solid rgba(192, 211, 202, 0.3)",
-    },
-    "@media (max-width: 480px)": {
-      width: 70,
-      height: 70,
-    },
-  },
   userInfo: {
     display: "flex",
     alignItems: "center",
-    gap: "1.5rem",
-    marginBottom: "2rem",
-    padding: "1.5rem",
+    gap: "1.2rem",
+    marginBottom: "1.5rem",
+    padding: "1.2rem",
     backgroundColor: "rgba(192, 211, 202, 0.02)",
-    borderRadius: "4px",
+    borderRadius: "10px",
     border: "1px solid rgba(192, 211, 202, 0.1)",
     "@media (max-width: 768px)": {
       flexDirection: "column !important",
       alignItems: "center !important",
       textAlign: "center !important",
-      gap: "1rem !important",
-      padding: "1rem !important",
-      marginBottom: "1.5rem !important",
+      gap: "0.8rem !important",
+      padding: "0.8rem !important",
+      marginBottom: "1rem !important",
+    },
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    border: "2px solid rgba(192, 211, 202, 0.3)",
+    backgroundColor: "rgba(192, 211, 202, 0.05)",
+    backdropFilter: "blur(10px)",
+    "@media (max-width: 768px)": {
+      width: 70,
+      height: 70,
+      border: "2px solid rgba(192, 211, 202, 0.3)",
     },
   },
   userName: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "2.5rem !important",
+    fontSize: "2rem !important",
     fontWeight: "300 !important",
     letterSpacing: "0.1em !important",
     color: "#fff !important",
     "@media (max-width: 768px)": {
-      fontSize: "2rem !important",
+      fontSize: "1.6rem !important",
       textAlign: "center !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "1.8rem !important",
     },
   },
   userEmail: {
@@ -526,15 +550,12 @@ const useStyles = makeStyles({
       fontSize: "0.9rem !important",
       textAlign: "center !important",
     },
-    "@media (max-width: 480px)": {
-      fontSize: "0.85rem !important",
-    },
   },
   infoItem: {
     display: "flex",
     alignItems: "center",
-    gap: "1.5rem",
-    padding: "1.2rem 0",
+    gap: "1.2rem",
+    padding: "1rem 0",
     borderBottom: "1px solid rgba(192, 211, 202, 0.1)",
     "&:last-child": {
       borderBottom: "none",
@@ -542,8 +563,8 @@ const useStyles = makeStyles({
     "@media (max-width: 768px)": {
       flexDirection: "column !important",
       alignItems: "flex-start !important",
-      gap: "0.5rem !important",
-      padding: "1rem 0 !important",
+      gap: "0.4rem !important",
+      padding: "0.8rem 0 !important",
     },
   },
   infoLabel: {
@@ -559,9 +580,6 @@ const useStyles = makeStyles({
       fontSize: "0.85rem !important",
       fontWeight: "600 !important",
     },
-    "@media (max-width: 480px)": {
-      fontSize: "0.8rem !important",
-    },
   },
   infoValue: {
     fontFamily: "'Montserrat', sans-serif !important",
@@ -575,9 +593,6 @@ const useStyles = makeStyles({
       width: "100% !important",
       textAlign: "left !important",
     },
-    "@media (max-width: 480px)": {
-      fontSize: "0.85rem !important",
-    },
   },
   missingInfo: {
     color: "#ef5350 !important",
@@ -588,7 +603,7 @@ const useStyles = makeStyles({
     backgroundColor: "rgba(192, 211, 202, 0.1) !important",
     border: "1px solid rgba(192, 211, 202, 0.3) !important",
     padding: "0.6rem 1.2rem",
-    borderRadius: "0",
+    borderRadius: "8px",
     textTransform: "none",
     fontSize: "0.85rem",
     fontWeight: "500",
@@ -606,47 +621,33 @@ const useStyles = makeStyles({
       width: "100% !important",
       marginTop: "0.5rem !important",
     },
-    "@media (max-width: 480px)": {
-      fontSize: "0.75rem !important",
-      padding: "0.4rem 0.8rem !important",
-    },
   },
   measurementsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "1.5rem",
-    marginTop: "1.5rem",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+    gap: "1rem",
+    marginTop: "1rem",
     "@media (max-width: 768px)": {
       gridTemplateColumns: "repeat(2, 1fr) !important",
-      gap: "0.75rem !important",
-      marginTop: "1rem !important",
-    },
-    "@media (max-width: 480px)": {
-      gridTemplateColumns: "repeat(2, 1fr) !important",
       gap: "0.5rem !important",
+      marginTop: "0.8rem !important",
     },
   },
   measurementCard: {
     backgroundColor: "rgba(192, 211, 202, 0.02)",
-    padding: "1.5rem",
-    borderRadius: "4px",
+    padding: "1rem",
+    borderRadius: "10px",
     border: "1px solid rgba(192, 211, 202, 0.1)",
     textAlign: "center",
     transition: "all 0.3s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      // transform: "translateY(-2px)",
       boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
       border: "1px solid rgba(192, 211, 202, 0.2)",
+      transform: "translateY(-2px)",
     },
     "@media (max-width: 768px)": {
-      padding: "0.75rem !important",
-      "&:hover": {
-        transform: "none",
-      },
-    },
-    "@media (max-width: 480px)": {
-      padding: "0.5rem !important",
+      padding: "0.6rem !important",
     },
   },
   measurementValue: {
@@ -660,10 +661,6 @@ const useStyles = makeStyles({
       fontSize: "1.2rem !important",
       marginBottom: "0.3rem !important",
     },
-    "@media (max-width: 480px)": {
-      fontSize: "1rem !important",
-      marginBottom: "0.2rem !important",
-    },
   },
   measurementLabel: {
     fontSize: "0.85rem",
@@ -676,29 +673,22 @@ const useStyles = makeStyles({
       fontSize: "0.65rem !important",
       letterSpacing: "0.05em !important",
     },
-    "@media (max-width: 480px)": {
-      fontSize: "0.6rem !important",
-      letterSpacing: "0.02em !important",
-    },
   },
   orderCard: {
     backgroundColor: "rgba(30, 30, 30, 0.6) !important",
     marginBottom: "1.5rem",
-    borderRadius: "4px !important",
+    borderRadius: "12px !important",
     border: "1px solid rgba(192, 211, 202, 0.2) !important",
     overflow: "hidden",
     transition: "all 0.4s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      // transform: "translateY(-4px)",
       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
       border: "1px solid rgba(192, 211, 202, 0.3) !important",
+      transform: "translateY(-2px)",
     },
     "@media (max-width: 768px)": {
       marginBottom: "1rem !important",
-      "&:hover": {
-        transform: "none",
-      },
     },
   },
   orderHeader: {
@@ -781,7 +771,7 @@ const useStyles = makeStyles({
     backgroundColor: "rgba(192, 211, 202, 0.1) !important",
     border: "1px solid rgba(192, 211, 202, 0.3) !important",
     padding: "1rem 2rem !important",
-    borderRadius: "0 !important",
+    borderRadius: "8px !important",
     textTransform: "none !important",
     fontSize: "0.9rem !important",
     fontWeight: "500 !important",
@@ -791,46 +781,8 @@ const useStyles = makeStyles({
     width: "100% !important",
     "&:hover": {
       backgroundColor: "rgba(192, 211, 202, 0.2) !important",
-      // transform: "translateY(-2px) !important",
       boxShadow: "0 8px 25px rgba(192, 211, 202, 0.2) !important",
     },
-  },
-  sidebarItem: {
-    color: "rgba(255, 255, 255, 0.7) !important",
-    borderBottom: "1px solid rgba(192, 211, 202, 0.1) !important",
-    padding: "1.2rem 1.5rem !important",
-    transition: "all 0.3s ease !important",
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.9rem !important",
-    fontWeight: "400 !important",
-    letterSpacing: "0.05em !important",
-    textTransform: "uppercase !important",
-    "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.05) !important",
-      color: "#fff !important",
-      paddingLeft: "2rem !important",
-      // transform: "translateX(4px)",
-    },
-    "&.active": {
-      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-      color: "#fff !important",
-      borderLeft: "4px solid #C0D3CA !important",
-      paddingLeft: "2rem !important",
-      fontWeight: "500 !important",
-    },
-  },
-  sidebarIcon: {
-    color: "inherit !important",
-    marginRight: "1rem !important",
-    fontSize: "1.2rem !important",
-  },
-  sidebarText: {
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.9rem !important",
-    fontWeight: "400 !important",
-    letterSpacing: "0.05em !important",
-    textTransform: "uppercase !important",
-    color: "inherit !important",
   },
   notLoggedIn: {
     fontFamily: "'Montserrat', sans-serif !important",
@@ -855,7 +807,7 @@ const useStyles = makeStyles({
     margin: "1rem 0 !important",
     padding: "1rem !important",
     backgroundColor: "rgba(192, 211, 202, 0.02) !important",
-    borderRadius: "4px !important",
+    borderRadius: "12px !important",
     border: "1px solid rgba(192, 211, 202, 0.1) !important",
   },
   productItem: {
@@ -876,7 +828,7 @@ const useStyles = makeStyles({
     marginTop: "1rem !important",
     padding: "1rem !important",
     backgroundColor: "rgba(192, 211, 202, 0.02) !important",
-    borderRadius: "4px !important",
+    borderRadius: "12px !important",
     border: "1px solid rgba(192, 211, 202, 0.1) !important",
   },
   deliveryText: {
@@ -891,36 +843,27 @@ const useStyles = makeStyles({
     "@media (max-width: 768px)": {
       marginBottom: "2rem !important",
     },
-    "@media (max-width: 480px)": {
-      marginBottom: "1.5rem !important",
-    },
   },
   recommendedSizesContainer: {
     marginBottom: "3rem",
     "@media (max-width: 768px)": {
       marginBottom: "2rem !important",
     },
-    "@media (max-width: 480px)": {
-      marginBottom: "1.5rem !important",
-    },
   },
   suitSpecCard: {
     backgroundColor: "rgba(192, 211, 202, 0.02) !important",
     border: "1px solid rgba(192, 211, 202, 0.1) !important",
-    borderRadius: "4px !important",
+    borderRadius: "12px !important",
     padding: "1rem",
     transition: "all 0.3s ease",
     backdropFilter: "blur(10px)",
     "&:hover": {
       border: "1px solid rgba(192, 211, 202, 0.2) !important",
-      // transform: "translateY(-2px)",
       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      transform: "translateY(-2px)",
     },
     "@media (max-width: 768px)": {
       padding: "0.75rem !important",
-      "&:hover": {
-        transform: "none",
-      },
     },
   },
   suitSpecLabel: {
@@ -943,10 +886,43 @@ const useStyles = makeStyles({
     alignItems: "center !important",
     padding: "0.25rem 0 !important",
   },
+  sortContainer: {
+    display: "flex",
+    gap: 1,
+    flexDirection: { xs: "column", sm: "row" },
+    alignItems: { xs: "flex-start", sm: "center" },
+    marginBottom: "2rem",
+  },
+  sortSelect: {
+    backgroundColor: "rgba(30, 30, 30, 0.8)",
+    color: "#fff",
+    border: "1px solid rgba(192, 211, 202, 0.3)",
+    borderRadius: "8px",
+    padding: "0.5rem 1rem",
+    fontSize: "0.85rem",
+    fontFamily: "'Montserrat', sans-serif",
+    cursor: "pointer",
+    outline: "none",
+    minWidth: "150px",
+  },
+  orderSummary: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "2rem",
+    padding: "1.5rem",
+    backgroundColor: "rgba(192, 211, 202, 0.02)",
+    border: "1px solid rgba(192, 211, 202, 0.1)",
+    borderRadius: "12px",
+    flexDirection: { xs: "column", sm: "row" },
+    gap: { xs: 1, sm: 0 },
+  },
 });
 
 function Account() {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [user, setUser] = useAtom(authUserAtom);
   const { data } = useProduct();
   const navigate = useNavigate();
@@ -1558,6 +1534,8 @@ function Account() {
             justifyContent: "space-between",
             alignItems: "center",
             mb: 3,
+            flexDirection: { xs: "column", sm: "row" },
+            gap: { xs: 2, sm: 0 },
           }}
         >
           <Typography className={classes.sectionTitle}>
@@ -1565,14 +1543,7 @@ function Account() {
           </Typography>
 
           {/* Sort Dropdown */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: 1,
-              flexDirection: { xs: "column", sm: "row" },
-              alignItems: { xs: "flex-start", sm: "center" },
-            }}
-          >
+          <Box className={classes.sortContainer}>
             <Typography
               sx={{
                 color: "rgba(255, 255, 255, 0.7)",
@@ -1586,18 +1557,7 @@ function Account() {
             <select
               value={orderSortBy}
               onChange={(e) => setOrderSortBy(e.target.value)}
-              style={{
-                backgroundColor: "rgba(30, 30, 30, 0.8)",
-                color: "#fff",
-                border: "1px solid rgba(192, 211, 202, 0.3)",
-                borderRadius: "4px",
-                padding: "0.5rem 1rem",
-                fontSize: "0.85rem",
-                fontFamily: "'Montserrat', sans-serif",
-                cursor: "pointer",
-                outline: "none",
-                minWidth: "150px",
-              }}
+              className={classes.sortSelect}
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -1609,20 +1569,7 @@ function Account() {
 
         {/* Order Summary */}
         {!ordersLoading && orders.length > 0 && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 3,
-              p: 2,
-              backgroundColor: "rgba(192, 211, 202, 0.02)",
-              border: "1px solid rgba(192, 211, 202, 0.1)",
-              borderRadius: "4px",
-              flexDirection: { xs: "column", sm: "row" },
-              gap: { xs: 1, sm: 0 },
-            }}
-          >
+          <Box className={classes.orderSummary}>
             <Typography
               sx={{
                 color: "#C0D3CA",
@@ -1930,10 +1877,45 @@ function Account() {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, delay: 0.2 },
+    },
+  };
+
+  const stepperSteps = [
+    { key: "profile", label: "Profile", icon: <PersonIcon /> },
+    { key: "measurements", label: "Measurements", icon: <HeightIcon /> },
+    { key: "orders", label: "Orders", icon: <ShoppingBagIcon /> },
+  ];
+
   if (!user) {
     return (
       <Box className={classes.root}>
-        <Container maxWidth="md">
+        <Container maxWidth="lg" className={classes.container}>
           <Typography className={classes.notLoggedIn}>
             Please log in to view your account details
           </Typography>
@@ -1943,182 +1925,81 @@ function Account() {
   }
 
   return (
-    <Box className={classes.root}>
-      <Container maxWidth="lg">
-        <Typography className={classes.heading}>User Profile</Typography>
+    <Box
+      component={motion.div}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className={classes.root}
+    >
+      <Container maxWidth="lg" className={classes.container}>
 
-        <Grid container spacing={3}>
-          {/* Sidebar - Hidden on Mobile */}
-          <Grid
-            item
-            xs={12}
-            md={3}
-            sx={{ display: { xs: "none", md: "block" } }}
-          >
-            <Paper
-              className={classes.sidebar}
-              elevation={0}
-              sx={{
-                backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-                border: "1px solid rgba(192, 211, 202, 0.2) !important",
-                borderRadius: "4px !important",
-              }}
+        {/* Stepper Navigation */}
+        <Box
+          component={motion.div}
+          variants={contentVariants}
+          className={classes.stepperContainer}
+        >
+          {stepperSteps.map((step, index) => (
+            <Box
+              key={step.key}
+              className={`${classes.stepperStep} ${
+                activeSection === step.key
+                  ? classes.stepperStepActive
+                  : classes.stepperStepInactive
+              }`}
+              onClick={() => setActiveSection(step.key)}
             >
-              <List sx={{ p: 0 }}>
-                <ListItem
-                  className={`${classes.sidebarItem} ${
-                    activeSection === "profile" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveSection("profile")}
-                  sx={{
-                    borderBottom:
-                      "1px solid rgba(192, 211, 202, 0.1) !important",
-                    cursor: "pointer",
-                  }}
-                >
-                  <ListItemIcon className={classes.sidebarIcon}>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Personal Information"
-                    primaryTypographyProps={{ className: classes.sidebarText }}
-                  />
-                </ListItem>
-
-                <ListItem
-                  className={`${classes.sidebarItem} ${
-                    activeSection === "measurements" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveSection("measurements")}
-                  sx={{
-                    borderBottom:
-                      "1px solid rgba(192, 211, 202, 0.1) !important",
-                    cursor: "pointer",
-                  }}
-                >
-                  <ListItemIcon className={classes.sidebarIcon}>
-                    <HeightIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Measurements"
-                    primaryTypographyProps={{ className: classes.sidebarText }}
-                  />
-                </ListItem>
-
-                <ListItem
-                  className={`${classes.sidebarItem} ${
-                    activeSection === "orders" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveSection("orders")}
-                  sx={{
-                    cursor: "pointer",
-                  }}
-                >
-                  <ListItemIcon className={classes.sidebarIcon}>
-                    <Badge badgeContent={orders.length} color="error">
-                      <ShoppingBagIcon />
-                    </Badge>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Order History"
-                    primaryTypographyProps={{ className: classes.sidebarText }}
-                  />
-                </ListItem>
-              </List>
-
-              <Box
-                sx={{
-                  p: 2,
-                  borderTop: "1px solid rgba(192, 211, 202, 0.1)",
-                  backgroundColor: "rgba(192, 211, 202, 0.02)",
-                }}
-              >
-                <Button
-                  fullWidth
-                  className={classes.logoutButton}
-                  startIcon={<LogoutIcon />}
-                  onClick={() => setOpenLogoutDialog(true)}
-                >
-                  Log Out
-                </Button>
-              </Box>
-            </Paper>
-          </Grid>
-
-          {/* Main Content */}
-          <Grid item xs={12} md={9}>
-            <Box className={classes.mainContent}>{renderContent()}</Box>
-          </Grid>
-        </Grid>
-
-        {/* Mobile Bottom Navigation */}
-        <Box className={classes.mobileBottomNav}>
-          <Box
-            className={`${classes.mobileTabItem} ${
-              activeSection === "profile" ? "active" : ""
-            }`}
-            onClick={() => setActiveSection("profile")}
-          >
-            <PersonIcon
-              className={`${classes.mobileTabIcon} ${
-                activeSection === "profile" ? "active" : ""
-              }`}
-            />
-            <Typography
-              className={`${classes.mobileTabLabel} ${
-                activeSection === "profile" ? "active" : ""
-              }`}
-            >
-              Profile
-            </Typography>
-          </Box>
-          <Box
-            className={`${classes.mobileTabItem} ${
-              activeSection === "measurements" ? "active" : ""
-            }`}
-            onClick={() => setActiveSection("measurements")}
-          >
-            <HeightIcon
-              className={`${classes.mobileTabIcon} ${
-                activeSection === "measurements" ? "active" : ""
-              }`}
-            />
-            <Typography
-              className={`${classes.mobileTabLabel} ${
-                activeSection === "measurements" ? "active" : ""
-              }`}
-            >
-              Measurements
-            </Typography>
-          </Box>
-          <Box
-            className={`${classes.mobileTabItem} ${
-              activeSection === "orders" ? "active" : ""
-            }`}
-            onClick={() => setActiveSection("orders")}
-          >
-            <Badge badgeContent={orders.length} color="error">
-              <ShoppingBagIcon
-                className={`${classes.mobileTabIcon} ${
-                  activeSection === "orders" ? "active" : ""
+              <Typography
+                className={`${classes.stepperLabel} ${
+                  activeSection === step.key ? classes.stepperLabelActive : ""
                 }`}
-              />
-            </Badge>
-            <Typography
-              className={`${classes.mobileTabLabel} ${
-                activeSection === "orders" ? "active" : ""
-              }`}
-            >
-              Orders
-            </Typography>
-          </Box>
+              >
+                {step.label}
+              </Typography>
+            </Box>
+          ))}
+
+          {/* Logout Button */}
           <Box
-            className={classes.mobileTabItem}
+            className={`${classes.stepperStep} ${classes.stepperStepInactive}`}
             onClick={() => setOpenLogoutDialog(true)}
+            sx={{
+              marginLeft: "auto",
+              "@media (max-width: 768px)": {
+                marginLeft: "0",
+                marginTop: "0.5rem",
+              },
+            }}
           >
-            <LogoutIcon className={classes.mobileTabIcon} />
-            <Typography className={classes.mobileTabLabel}>Logout</Typography>
+            <LogoutIcon
+              sx={{
+                color: "#C0D3CA",
+                fontSize: "1.2rem",
+                marginRight: "0.5rem",
+              }}
+            />
+            <Typography className={classes.stepperLabel}>Logout</Typography>
           </Box>
+        </Box>
+
+        {/* Content Container */}
+        <Box
+          component={motion.div}
+          variants={contentVariants}
+          className={classes.contentContainer}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSection}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
         </Box>
       </Container>
 

@@ -519,7 +519,7 @@ const PantsControls = ({ isMobile: mobileProp }) => {
         PaperProps={{
           className: classes.drawerPaper,
           sx: {
-            width: isMobile ? "80%" : "400px",
+            width: '50vw',
           },
         }}
       >

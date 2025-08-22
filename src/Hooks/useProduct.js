@@ -14,14 +14,19 @@ const useProduct = () => {
   const [user] = useAtom(authUserAtom)
 
   const { data, isLoading: productLoading, error: productError, refetch } = useQuery({
-    queryKey: ["useProduct", user],  // משתמשים במידע שהבאנו על היוזר
+    queryKey: ["useProduct", user?.email], // רק email במקום כל user object
     queryFn: () => getProduct(user),
-    enabled: !!user, // רק אם יש יוזר, הבקשה תתבצע
+    enabled: !!user?.email, // בדיקה מדויקת יותר
+    staleTime: 5 * 60 * 1000, // 5 דקות
+    cacheTime: 10 * 60 * 1000, // 10 דקות
+    refetchOnWindowFocus: false, // לא לרענן כשהחלון מקבל focus
+    refetchOnMount: false, // לא לרענן בכל mount
+    retry: 2, // רק 2 ניסיונות
   });
 
   if (productLoading) return { data: arr, isLoading: true, error: null };
 
-  if (productError) return { data: arr, isLoading: false };
+  if (productError) return { data: arr, isLoading: false, error: productError };
 
   return { data: data || arr, isLoading: false, error: null, refetch };
 };

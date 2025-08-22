@@ -119,10 +119,21 @@ const CheckoutModern = ({
     }
   }, [products]);
 
-  // Save to localStorage whenever selectedSuits or totalPrice changes
+  // Save to localStorage whenever selectedSuits or totalPrice changes - עם דבונסינג
   useEffect(() => {
-    localStorage.setItem("selectedSuits", JSON.stringify([...selectedSuits]));
-    localStorage.setItem("totalPrice", totalPrice.toString());
+    const timeoutId = setTimeout(() => {
+      try {
+        localStorage.setItem(
+          "selectedSuits",
+          JSON.stringify([...selectedSuits])
+        );
+        localStorage.setItem("totalPrice", totalPrice.toString());
+      } catch (error) {
+        console.warn("Failed to save to localStorage:", error);
+      }
+    }, 300); // דבונס של 300ms
+
+    return () => clearTimeout(timeoutId);
   }, [selectedSuits, totalPrice]);
 
   // Handle suit selection and price calculation
@@ -166,7 +177,12 @@ const CheckoutModern = ({
   return (
     <Fade in timeout={600}>
       <Box
-        sx={{ marginTop: '100px', minHeight: "100vh", background: darkBg, py: { xs: 2, md: 6 } }}
+        sx={{
+          marginTop: "100px",
+          minHeight: "100vh",
+          background: darkBg,
+          py: { xs: 2, md: 6 },
+        }}
       >
         <Container maxWidth="lg">
           {/* Debug button for checking local orders */}

@@ -6,22 +6,36 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
     rollupOptions: {
       output: {
-        manualChunks: undefined
-      }
-    }
+        manualChunks: {
+          // Split vendor libraries
+          vendor: ['react', 'react-dom'],
+          mui: ['@mui/material', '@mui/icons-material', '@mui/styles'],
+          three: ['@react-three/fiber', '@react-three/drei', 'three'],
+          animations: ['framer-motion'],
+          utils: ['jotai', 'axios', 'react-router-dom'],
+        },
+      },
+    },
+    // Enable source maps for debugging
+    sourcemap: false,
+    // Optimize chunk size
+    chunkSizeWarningLimit: 1000,
   },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      '@mui/material',
+      '@mui/icons-material',
+      'framer-motion',
+      'jotai',
+      'axios',
+    ],
+  },
+  // Enable compression
   server: {
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3020',
-        changeOrigin: true,
-        secure: false
-      }
-    }
-  }
+    compress: true,
+  },
 })

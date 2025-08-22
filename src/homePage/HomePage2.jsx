@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import { Link, useLocation } from "react-router-dom";
+import "./HomePage2.css";
 import {
   Box,
   Typography,
@@ -12,8 +13,10 @@ import {
   IconButton,
 } from "@mui/material";
 import ButtonReactBits from "../reactBits/Button";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import MostPoPular from "./MostPoPular";
 import AllCollection from "./AllCollection";
 import NavBar from "./NavBar";
@@ -81,26 +84,31 @@ const useStyles = makeStyles({
     lineHeight: "1.8 !important",
   }),
   ctaButton: {
-    backgroundColor: "rgba(255,255,255,0.95) !important",
-    color: "#000 !important",
-    border: "2px solid #fff !important",
-    padding: "16px 45px !important",
-    fontSize: "0.9rem !important",
-    borderRadius: "3px !important",
+    color: "#fff !important",
+    padding: "14px 32px !important",
+    border: "none !important",
+    borderRadius: "6px !important",
+    fontSize: "16px !important",
     fontWeight: "600 !important",
-    letterSpacing: "0.15em !important",
-    textTransform: "uppercase !important",
-    transition: "all 0.4s ease !important",
+    cursor: "pointer !important",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    boxShadow: "0 4px 15px rgba(255,255,255,0.3) !important",
-    backdropFilter: "blur(10px) !important",
+    "& .shiny-text": {
+      color: "#fff !important",
+      fontWeight: "600 !important",
+      fontSize: "16px !important",
+    },
     "&:hover": {
-      backgroundColor: "#fff !important",
-      color: "#000 !important",
-      transform: "translateY(-2px) !important",
-      boxShadow: "0 8px 25px rgba(255,255,255,0.4) !important",
+      transform: "scale(1.05) !important",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4) !important",
     },
   },
+  "@keyframes sweep": {
+    "0%": { transform: "translateX(-150%) skewX(-20deg)" },
+    "18%": { transform: "translateX(260%) skewX(-20deg)" },
+    "100%": { transform: "translateX(260%) skewX(-20deg)" },
+  },
+
   scrollDown: {
     position: "absolute",
     bottom: "30px",
@@ -240,10 +248,10 @@ const HomePage2 = () => {
 
       {/* Hero Section */}
       <section className={classes.heroSection}>
-        <motion.img
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, ease: "easeOut" }}
+        <img
+          // initial={{ scale: 1.1 }}
+          // animate={{ scale: 1 }}
+          // transition={{ duration: 10, ease: "easeOut" }}
           className={classes.videoBackground}
           src="/assets/photoBackGround3.jpg"
           alt="Background"
@@ -254,7 +262,12 @@ const HomePage2 = () => {
           className={classes.heroContent}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          transition={{
+            duration: 0.8,
+            delay: 0.2,
+            ease: "easeOut",
+          }}
+          style={{ willChange: "transform, opacity" }}
         >
           <Typography variant="h1" className={classes.heroTitle}>
             {t("heroTitle")}
@@ -262,39 +275,40 @@ const HomePage2 = () => {
           <Typography variant="body1" className={classes.heroSubtitle}>
             {t("heroSubtitle")}
           </Typography>
-
           <Button
-            className={classes.ctaButton}
+            variant="contained"
             component={Link}
             to="/customSuit"
+            className={`${classes.ctaButton} gradient-animation`}
           >
             <ButtonReactBits
               text={t("designButton")}
               disabled={false}
               speed={3}
-              className="custom-class"
             />
           </Button>
-          {/* </motion.div> */}
         </motion.div>
 
-        <motion.div
+        {/* החלפת אנימציה אינסופית ב-CSS */}
+        <div
           className={classes.scrollDown}
           onClick={() => scrollToSection(popularSectionRef)}
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
+          style={{
+            animation: "bounce 1.5s ease-in-out infinite",
+            willChange: "transform",
+          }}
         >
           <Typography variant="body2" className={classes.scrollText}>
             {t("scrollDown")}
           </Typography>
           <KeyboardArrowDownIcon fontSize="small" />
-        </motion.div>
+        </div>
       </section>
 
       <Divider className={classes.divider} />
 
       {/* Popular Section */}
-      <Box
+      {/* <Box
         component="section"
         className={`${classes.section} ${classes.sectionLight}`}
         ref={popularSectionRef}
@@ -316,7 +330,7 @@ const HomePage2 = () => {
 
           <MostPoPular />
         </Container>
-      </Box>
+      </Box> */}
 
       <Divider className={classes.divider} />
 

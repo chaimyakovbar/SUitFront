@@ -70,7 +70,7 @@ const ShowSizes = ({ data, onClose }) => {
   };
 
   return (
-    <Box sx={{ width: 300, p: 3 }}>
+    <Box sx={{ width: '100%', p: 3 }}>
       <Typography variant="h6" sx={{ mb: 3 }}>
         כל המידות
       </Typography>

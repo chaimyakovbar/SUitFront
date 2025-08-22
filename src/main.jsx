@@ -10,6 +10,19 @@ const queryClient = new QueryClient();
 
 axios.defaults.withCredentials = true;
 
+// Register Service Worker for offline caching
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
+
 // Add global styles to fix black overlay issue
 const globalStyles = `
   body, html {

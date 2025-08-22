@@ -436,8 +436,8 @@ const TakeSizes = () => {
         </Dialog>
       )}
 
-      <Drawer anchor="right" open={sideDrawerOpen} onClose={toggleSideDrawer}>
-        <Box sx={{ width: 300, p: 3 }}>
+      <Drawer anchor="right" open={sideDrawerOpen} onClose={toggleSideDrawer} PaperProps={{ sx: { width: '50vw' } }}>
+        <Box sx={{ width: '100%', p: 3 }}>
           <Typography variant="h6" sx={{ mb: 3 }}>
             כל המידות
           </Typography>

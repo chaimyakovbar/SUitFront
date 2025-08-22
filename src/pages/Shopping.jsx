@@ -372,7 +372,7 @@ const Shopping = () => {
           className={classes.drawer}
           PaperProps={{
             sx: {
-              width: { xs: "100%", sm: "400px" },
+              width: '50vw',
             },
           }}
         >

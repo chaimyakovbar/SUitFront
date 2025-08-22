@@ -89,7 +89,7 @@ export const LanguageProvider = ({ children }) => {
       heroTitle: "Timeless Elegance",
       heroSubtitle:
         "Discover our exclusive collection of meticulously crafted suits, where traditional craftsmanship meets contemporary design. Each piece is tailored to perfection, ensuring an impeccable fit and unparalleled sophistication.",
-      designButton: "Design Your Suit",
+      designButton: "Start Designing Your Suit",
       scrollDown: "SCROLL DOWN",
       mostPopular: "Most Popular",
       mostPopularSubtitle:

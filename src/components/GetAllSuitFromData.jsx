@@ -6,6 +6,29 @@ import { makeStyles } from "@mui/styles";
 import { Typography, CircularProgress } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+// Virtual scrolling hook
+const useVirtualScrolling = (
+  items,
+  itemHeight = 300,
+  containerHeight = 600
+) => {
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const visibleCount = Math.ceil(containerHeight / itemHeight);
+  const startIndex = Math.floor(scrollTop / itemHeight);
+  const endIndex = Math.min(startIndex + visibleCount + 1, items.length);
+
+  const visibleItems = items.slice(startIndex, endIndex);
+  const offsetY = startIndex * itemHeight;
+
+  return {
+    visibleItems,
+    offsetY,
+    totalHeight: items.length * itemHeight,
+    onScroll: (e) => setScrollTop(e.target.scrollTop),
+  };
+};
+
 const useStyles = makeStyles({
   container: {
     display: "flex",
@@ -246,32 +269,44 @@ const useStyles = makeStyles({
 
 // Extracted to separate function with added caching mechanism
 const loadImage = async (key, path) => {
-  // Use URL cache to avoid redundant HEAD requests
-  if (!loadImage.cache) loadImage.cache = new Map();
-  const cacheKey = `${key}-${path}`;
-
-  if (loadImage.cache.has(cacheKey)) {
-    return loadImage.cache.get(cacheKey);
+  // Check if already in cache
+  if (imagePathCache.has(path)) {
+    return imagePathCache.get(path);
   }
 
   try {
-    const imageUrl = path;
-    const response = await fetch(imageUrl, { method: "HEAD" });
+    // Try WebP first, fallback to original
+    const webpPath = path.replace(/\.(png|jpg|jpeg)$/i, ".webp");
 
-    const result = response.ok ? { key, src: imageUrl } : { key, src: null };
+    // Check if WebP is supported
+    const supportsWebP = await checkWebPSupport();
 
-    if (!response.ok) {
-      console.warn(`⚠️ Missing image for ${key} at path: ${path}`);
-    }
+    const finalPath = supportsWebP ? webpPath : path;
 
-    loadImage.cache.set(cacheKey, result);
+    const response = await fetch(finalPath, { method: "HEAD" });
+    const result = response.ok ? { key, src: finalPath } : { key, src: path };
+
+    // Save to cache
+    imagePathCache.set(path, result);
     return result;
   } catch (error) {
     console.warn(`⚠️ Error loading image for ${key} at path: ${path}:`, error);
     const result = { key, src: null };
-    loadImage.cache.set(cacheKey, result);
+    imagePathCache.set(path, result);
     return result;
   }
+};
+
+// Check WebP support
+const checkWebPSupport = () => {
+  return new Promise((resolve) => {
+    const webP = new Image();
+    webP.onload = webP.onerror = () => {
+      resolve(webP.height === 2);
+    };
+    webP.src =
+      "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
+  });
 };
 
 // Button color mapping extracted and expanded
@@ -461,40 +496,6 @@ const fetchImages = async (item, viewType = "suit") => {
   }, {});
 };
 
-// Get z-index for image layers
-const getZIndex = (key) => {
-  const zIndexMap = {
-    packetBottom: 20, // הכי גבוה - הכיסים התחתונים
-    packetSide: 15, // גבוה - הכיסים הצדדיים
-    button: 8,
-    holeButton: 7,
-    holeButtonUp: 6,
-    poshetColor: 5,
-    pantsHem: 4,
-    pantsHoleButton: 3,
-    pantsLines: 2,
-    textInside: 1,
-    sleeveButtons: 1,
-    pants: 1,
-    // חליפה - כל החלקים
-    baseSuit: 2, // התמונה הבסיסית של החליפה - הכי נמוך
-    insideUp: 1,
-    lapelCollar: 2,
-    colar: 3,
-    sleeves: 4,
-    insideBottom: 5,
-    packetUp: 6,
-    bottom: 7,
-    bottomKind3: 7,
-    // חלקים נוספים
-    suitBody: 0, // alias for baseSuit
-    collar: 3, // alias for colar
-    default: 1,
-  };
-
-  return zIndexMap[key] || zIndexMap.default;
-};
-
 // Main component
 const DynamicImage = ({
   onSelect,
@@ -508,6 +509,55 @@ const DynamicImage = ({
   const [deletingSuitId, setDeletingSuitId] = useState(null);
   const [cardViewTypes, setCardViewTypes] = useState({}); // Store view type for each card
   console.log("Received suits data:", allSuits); // Debug log
+
+  // Get z-index for image layers - מועבר ל-memoized function
+  const getZIndex = useCallback((key) => {
+    const zIndexMap = {
+      packetBottom: 20,
+      packetSide: 15,
+      button: 8,
+      holeButton: 7,
+      holeButtonUp: 6,
+      poshetColor: 5,
+      pantsHem: 4,
+      pantsHoleButton: 3,
+      pantsLines: 2,
+      textInside: 1,
+      sleeveButtons: 1,
+      pants: 1,
+      baseSuit: 0,
+      insideUp: 1,
+      lapelCollar: 2,
+      colar: 3,
+      sleeves: 4,
+      insideBottom: 5,
+      packetUp: 6,
+      bottom: 7,
+      bottomKind3: 7,
+      suitBody: 0,
+      collar: 3,
+      default: 1,
+    };
+
+    return zIndexMap[key] || zIndexMap.default;
+  }, []);
+
+  // Memoized sorted images for each suit
+  const getSortedImages = useCallback(
+    (images) => {
+      if (!images) return [];
+
+      return Object.entries(images)
+        .filter(([key]) => key !== "textInside")
+        .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
+        .map(([key, src]) => ({
+          key,
+          src,
+          zIndex: getZIndex(key),
+        }));
+    },
+    [getZIndex]
+  );
 
   // Sort suits based on sortBy prop
   const sortedSuits = useMemo(() => {
@@ -591,13 +641,68 @@ const DynamicImage = ({
     [sortedSuits, imagesCache]
   );
 
-  // Load images for all suits on mountp
+  // Lazy loading with Intersection Observer - רק טוען תמונות כשהכרטיס נראה
+  const [visibleSuits, setVisibleSuits] = useState(new Set());
+
   useEffect(() => {
-    sortedSuits.forEach((suit) => {
-      const viewType = cardViewTypes[suit._id] || "suit";
-      loadImagesForSuit(suit._id, viewType);
-    });
-  }, [sortedSuits, loadImagesForSuit]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const suitId = entry.target.dataset.suitId;
+          if (entry.isIntersecting && suitId) {
+            setVisibleSuits((prev) => new Set([...prev, suitId]));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "100px" }
+    );
+
+    // Observe all suit cards
+    const cards = document.querySelectorAll("[data-suit-id]");
+    cards.forEach((card) => observer.observe(card));
+
+    return () => observer.disconnect();
+  }, [sortedSuits]);
+
+  // Load images only for visible suits
+  useEffect(() => {
+    const loadVisibleImages = async () => {
+      const promises = [];
+
+      visibleSuits.forEach((suitId) => {
+        const suit = sortedSuits.find((s) => s._id === suitId);
+        if (suit) {
+          const viewType = cardViewTypes[suitId] || "suit";
+          const cacheKey = `${suitId}-${viewType}`;
+
+          if (!imagesCache[cacheKey] && !loadingStates[cacheKey]) {
+            promises.push(loadImagesForSuit(suitId, viewType));
+          }
+        }
+      });
+
+      // Load in batches of 3 to avoid overwhelming the browser
+      for (let i = 0; i < promises.length; i += 3) {
+        const batch = promises.slice(i, i + 3);
+        await Promise.all(batch);
+        // Small delay between batches
+        if (i + 3 < promises.length) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      }
+    };
+
+    if (visibleSuits.size > 0) {
+      loadVisibleImages();
+    }
+  }, [
+    visibleSuits,
+    sortedSuits,
+    cardViewTypes,
+    imagesCache,
+    loadingStates,
+    loadImagesForSuit,
+  ]);
 
   // Get images data for display
   const imagesData = sortedSuits.map((suit) => {
@@ -709,7 +814,11 @@ const DynamicImage = ({
     };
 
     return (
-      <div key={`suit-${item._id}`} className={cardClass}>
+      <div
+        key={`suit-${item._id}`}
+        className={cardClass}
+        data-suit-id={item._id}
+      >
         {deletingSuitId === item._id && (
           <div className={classes.deleteLoadingOverlay}>
             <CircularProgress
@@ -721,20 +830,30 @@ const DynamicImage = ({
           </div>
         )}
 
-        {imagesData?.[index] &&
-          Object.entries(imagesData[index])
-            .filter(([key]) => key !== "textInside") // Remove textInside from display
-            .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
-            .map(([key, src]) => (
+        {imagesData?.[index] && (
+          <>
+            {getSortedImages(imagesData[index]).map(({ key, src, zIndex }) => (
               <img
                 key={`${item._id}-${key}`}
                 src={src}
+                srcSet={`
+                  ${src.replace(/\.(png|jpg|jpeg|webp)$/i, "@1x.$1")} 1x,
+                  ${src.replace(/\.(png|jpg|jpeg|webp)$/i, "@2x.$1")} 2x,
+                  ${src.replace(/\.(png|jpg|jpeg|webp)$/i, "@3x.$1")} 3x
+                `}
+                sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={`Suit part: ${key}`}
                 className={photoClass}
-                style={{ zIndex: getZIndex(key) }}
+                style={{ zIndex }}
                 loading="lazy"
+                decoding="async"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
               />
             ))}
+          </>
+        )}
 
         {/* {isListView && (
           <div className={classes.cardInfo}>
@@ -787,6 +906,9 @@ const DynamicImage = ({
     );
   };
 
+  const virtualScroll = useVirtualScrolling(sortedSuits, 300, 600);
+  const startIndex = Math.floor(virtualScroll.offsetY / 300);
+
   return (
     <div className={classes.container}>
       <div
@@ -795,8 +917,27 @@ const DynamicImage = ({
             ? classes.cardsContainerList
             : classes.cardsContainer
         }
+        style={{
+          height: viewMode === "list" ? "600px" : "auto",
+          overflow: viewMode === "list" ? "auto" : "visible",
+        }}
+        onScroll={viewMode === "list" ? virtualScroll.onScroll : undefined}
       >
-        {sortedSuits.map((item, index) => renderCard(item, index))}
+        {viewMode === "list" ? (
+          <div
+            style={{ height: virtualScroll.totalHeight, position: "relative" }}
+          >
+            <div
+              style={{ transform: `translateY(${virtualScroll.offsetY}px)` }}
+            >
+              {virtualScroll.visibleItems.map((item, index) =>
+                renderCard(item, startIndex + index)
+              )}
+            </div>
+          </div>
+        ) : (
+          sortedSuits.map((item, index) => renderCard(item, index))
+        )}
       </div>
     </div>
   );

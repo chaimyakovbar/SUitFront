@@ -1018,7 +1018,7 @@ export const suitsColors = [
   {
     color: photo2,
     colorId: 2,
-    colorName: "blue",
+    colorName: "VCE400-29",
     name: "Midnight Black",
     price: "250$",
   },

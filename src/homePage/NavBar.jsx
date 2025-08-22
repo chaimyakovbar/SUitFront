@@ -294,6 +294,7 @@ const NavBar = () => {
         open={mobileMenuOpen}
         onClose={toggleMobileMenu}
         classes={{ paper: classes.mobileMenu }}
+        PaperProps={{ sx: { width: '50vw' } }}
       >
         <div className={classes.mobileMenuHeader}>
           <Typography variant="h6" className={classes.mobileMenuLogo}>

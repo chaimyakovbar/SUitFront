@@ -323,33 +323,31 @@ const MostPoPular = () => {
     return () => clearInterval(interval);
   }, [suits.length]);
 
-  // טעינת תמונות רק לחליפות הנראות - Lazy Loading
+  // טעינת תמונות רק לחליפות הנראות - Lazy Loading משופר
   useEffect(() => {
     let isMounted = true;
 
     const loadVisibleSuitImages = async () => {
-      const imagesMap = {};
+      // טען רק את החליפה הנוכחית + הבאה (לא 3 בבת אחת)
+      const visibleSuits = suits.slice(currentIndex, currentIndex + 2);
 
-      // טען רק את החליפה הנוכחית בקרוסלה + 2 הבאות
-      const visibleSuits = suits.slice(currentIndex, currentIndex + 3);
+      // טען תמונות אחת אחת במקום Promise.all
+      for (const suit of visibleSuits) {
+        if (!isMounted) break;
 
-      await Promise.all(
-        visibleSuits.map(async (suit) => {
-          if (!isMounted) return;
-
-          const suitId = suit._id || suit.orderId;
-          if (suitId && !suitImages[suitId]) {
-            try {
-              imagesMap[suitId] = await fetchSuitImages(suit);
-            } catch (error) {
-              console.warn(`Failed to load images for suit ${suitId}:`, error);
+        const suitId = suit._id || suit.orderId;
+        if (suitId && !suitImages[suitId]) {
+          try {
+            const images = await fetchSuitImages(suit);
+            if (isMounted) {
+              setSuitImages((prev) => ({ ...prev, [suitId]: images }));
             }
+            // הפסקה קצרה בין טעינות
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          } catch (error) {
+            console.warn(`Failed to load images for suit ${suitId}:`, error);
           }
-        })
-      );
-
-      if (isMounted) {
-        setSuitImages((prev) => ({ ...prev, ...imagesMap }));
+        }
       }
     };
 
@@ -360,7 +358,7 @@ const MostPoPular = () => {
     return () => {
       isMounted = false;
     };
-  }, [suits, currentIndex]); // תלוי ב-currentIndex במקום ב-suits
+  }, [currentIndex]); // רק תלוי ב-currentIndex, לא ב-suits
 
   // יצירת רשימת חליפות פופולריות לפי לייקים - עם useMemo לשיפור ביצועים
   const popularItems = useMemo(() => {

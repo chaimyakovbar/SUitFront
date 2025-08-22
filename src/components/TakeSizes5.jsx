@@ -45,48 +45,51 @@ const createButtonCategoryMap = () => {
 // Precompute the mapping
 const buttonCategoryMap = createButtonCategoryMap();
 
-// The Doll component with the model
-const Doll = (props) => {
-  const modelRef = useRef();
-  const { scene } = useGLTF("/models/suit_jacket.glb", true);
+// Lazy load 3D models
+const Doll = React.lazy(() => import('./Doll3D').then(module => ({ default: module.Doll })));
+const Doll2 = React.lazy(() => import('./Doll3D').then(module => ({ default: module.Doll2 })));
 
-  // Set the scale on first render without useEffect
-  const clonedScene = React.useMemo(() => {
-    const clone = scene.clone();
-    return clone;
-  }, [scene]);
+// 3D Model Loading Component
+const ModelLoader = ({ modelType, ...props }) => {
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [modelError, setModelError] = useState(false);
 
-  return (
-    <primitive
-      ref={modelRef}
-      object={clonedScene}
-      dispose={null}
-      scale={[5, 5, 5]}
-      {...props}
-    />
-  );
-};
+  useEffect(() => {
+    // Preload model when component mounts
+    const preloadModel = async () => {
+      try {
+        if (modelType === 'suit') {
+          await import('./Doll3D');
+        }
+        setModelLoaded(true);
+      } catch (error) {
+        console.error('Failed to load 3D model:', error);
+        setModelError(true);
+      }
+    };
 
-// The second Doll component with a different model
-const Doll2 = (props) => {
-  const modelRef = useRef();
-  const { scene } = useGLTF("/models/allSuit.glb", true); // שנה את הנתיב למודל השני שלך
+    preloadModel();
+  }, [modelType]);
 
-  // Set the scale on first render without useEffect
-  const clonedScene = React.useMemo(() => {
-    const clone = scene.clone();
-    return clone;
-  }, [scene]);
+  if (modelError) {
+    return (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="red" />
+      </mesh>
+    );
+  }
 
-  return (
-    <primitive
-      ref={modelRef}
-      object={clonedScene}
-      dispose={null}
-      scale={[5, 5, 5]}
-      {...props}
-    />
-  );
+  if (!modelLoaded) {
+    return (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="gray" />
+      </mesh>
+    );
+  }
+
+  return modelType === 'suit' ? <Doll {...props} /> : <Doll2 {...props} />;
 };
 
 const TakeSizes5 = () => {
@@ -495,8 +498,8 @@ const TakeSizes5 = () => {
                   </mesh>
                 }
               >
-                <Doll position={[0, 5, 0]} color="red" />
-                <Doll2 position={[10, 5, 0]} color="blue" />
+                <ModelLoader modelType="suit" position={[0, 5, 0]} color="red" />
+                <ModelLoader modelType="allSuit" position={[10, 5, 0]} color="blue" />
               </Suspense>
               <ButtonArray
                 onButtonClick={handleButtonClick}
@@ -625,7 +628,7 @@ const TakeSizes5 = () => {
         </div>
 
         <Drawer
-          style={{ zIndex: 20001, width: isMobile ? "80%" : "400px" }}
+          style={{ zIndex: 20001, width: '50vw' }}
           anchor="right"
           open={sideDrawerOpen}
           onClose={toggleSideDrawer}

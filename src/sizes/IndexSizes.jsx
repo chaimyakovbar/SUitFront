@@ -1,15 +1,22 @@
 import React from "react";
-import { useMediaQuery, Box, Typography, Container, useTheme } from "@mui/material";
-import { motion } from "framer-motion";
+import {
+  useMediaQuery,
+  Box,
+  Typography,
+  Container,
+  useTheme,
+} from "@mui/material";
+import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import imgFor from "../assets/takeSizesM.png";
 import imgFor2 from "../assets/takeSizesR.png";
-import imgFor3 from "../assets/suitMeasur.jpeg";
+// import imgFor3 from "../assets/suitMeasur.jpeg";
 
 const IndexSizes = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
+  const prefersReducedMotion = useReducedMotion();
 
   const measurementOptions = [
     {
@@ -19,7 +26,7 @@ const IndexSizes = () => {
       description: "Perfect if you know your standard suit size",
       image: imgFor2,
       path: "/sizes/regular",
-      color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     },
     {
       id: "measure",
@@ -28,17 +35,17 @@ const IndexSizes = () => {
       description: "Get precise measurements for a perfect fit",
       image: imgFor,
       path: "/sizes/measure",
-      color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+      color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
     },
-    {
-      id: "suitMeasure",
-      title: "Suit Measurement",
-      subtitle: "Professional fitting",
-      description: "Advanced measurement system for optimal fit",
-      image: imgFor3,
-      path: "/sizes/suitMeasur",
-      color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
-    }
+    // {
+    //   id: "suitMeasure",
+    //   title: "Suit Measurement",
+    //   subtitle: "Professional fitting",
+    //   description: "Advanced measurement system for optimal fit",
+    //   image: imgFor3,
+    //   path: "/sizes/suitMeasur",
+    //   color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+    // }
   ];
 
   const containerVariants = {
@@ -46,38 +53,42 @@ const IndexSizes = () => {
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.6,
-        staggerChildren: 0.2
-      }
-    }
+        duration: prefersReducedMotion ? 0 : 0.6,
+        staggerChildren: prefersReducedMotion ? 0 : 0.2,
+      },
+    },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    hidden: {
+      opacity: 0,
+      y: prefersReducedMotion ? 0 : 24,
+      scale: prefersReducedMotion ? 1 : 0.97,
+    },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : { duration: 0.4, ease: "easeOut" },
+    },
   };
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
+        background:
+          "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
         pt: { xs: 12, md: 16 },
-        pb: 8
+        pb: 8,
       }}
     >
       <Container maxWidth="lg">
         <motion.div
           variants={containerVariants}
-          initial="hidden"
+          initial={prefersReducedMotion ? false : "hidden"}
           animate="visible"
         >
           {/* Header */}
@@ -86,7 +97,7 @@ const IndexSizes = () => {
             variants={cardVariants}
             sx={{
               textAlign: "center",
-              mb: { xs: 4, md: 6 }
+              mb: { xs: 4, md: 6 },
             }}
           >
             <Typography
@@ -97,7 +108,7 @@ const IndexSizes = () => {
                 color: "#C0D3CA",
                 fontFamily: "'Cormorant Garamond', serif",
                 mb: 2,
-                textShadow: "0 4px 20px rgba(192, 211, 202, 0.3)"
+                textShadow: "0 4px 20px rgba(192, 211, 202, 0.3)",
               }}
             >
               Choose Your Measurement Method
@@ -110,11 +121,11 @@ const IndexSizes = () => {
                 fontWeight: 300,
                 maxWidth: "600px",
                 mx: "auto",
-                lineHeight: 1.6
+                lineHeight: 1.6,
               }}
             >
-              Select the measurement approach that works best for you. 
-              Each method ensures a perfect fit for your custom suit.
+              Select the measurement approach that works best for you. Each
+              method ensures a perfect fit for your custom suit.
             </Typography>
           </Box>
 
@@ -124,29 +135,32 @@ const IndexSizes = () => {
               display: "grid",
               gridTemplateColumns: {
                 xs: "1fr",
-                md: "repeat(3, 1fr)"
+                sm: "repeat(2, minmax(0, 1fr))",
+                md: "repeat(2, minmax(0, 1fr))",
               },
               gap: { xs: 3, md: 4 },
-              maxWidth: "1200px",
-              mx: "auto"
+              maxWidth: "1100px",
+              mx: "auto",
+              justifyContent: "center",
             }}
           >
-            {measurementOptions.map((option, index) => (
+            {measurementOptions.map((option) => (
               <motion.div
                 key={option.id}
                 variants={cardVariants}
-                whileHover={{ 
-                  scale: 1.02,
-                  transition: { duration: 0.2 }
-                }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={
+                  isMobile || prefersReducedMotion
+                    ? undefined
+                    : { scale: 1.02, transition: { duration: 0.2 } }
+                }
+                whileTap={isMobile ? undefined : { scale: 0.985 }}
               >
                 <Box
                   onClick={() => navigate(option.path)}
                   sx={{
                     cursor: "pointer",
-                    background: "linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.95) 100%)",
-                    backdropFilter: "blur(20px)",
+                    background:
+                      "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
                     border: "1px solid rgba(192, 211, 202, 0.15)",
                     borderRadius: "24px",
                     p: { xs: 3, md: 4 },
@@ -155,8 +169,10 @@ const IndexSizes = () => {
                     flexDirection: "column",
                     position: "relative",
                     overflow: "hidden",
-                    transition: "all 0.3s ease",
+                    transition:
+                      "transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease",
                     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                    willChange: "transform",
                     "&::before": {
                       content: '""',
                       position: "absolute",
@@ -165,13 +181,13 @@ const IndexSizes = () => {
                       right: 0,
                       height: "4px",
                       background: option.color,
-                      borderRadius: "24px 24px 0 0"
+                      borderRadius: "24px 24px 0 0",
                     },
                     "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.4)",
-                      border: "1px solid rgba(192, 211, 202, 0.3)"
-                    }
+                      transform: isMobile ? "none" : "translateY(-6px)",
+                      boxShadow: "0 18px 48px rgba(0, 0, 0, 0.38)",
+                      border: "1px solid rgba(192, 211, 202, 0.3)",
+                    },
                   }}
                 >
                   {/* Image */}
@@ -183,29 +199,26 @@ const IndexSizes = () => {
                       overflow: "hidden",
                       mb: 3,
                       position: "relative",
-                      background: "rgba(0, 0, 0, 0.2)"
+                      background: "rgba(0, 0, 0, 0.2)",
                     }}
                   >
                     <img
                       src={option.image}
                       alt={option.title}
+                      loading="lazy"
+                      decoding="async"
                       style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
-                        transition: "transform 0.3s ease"
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.transform = "scale(1.05)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.transform = "scale(1)";
                       }}
                     />
                   </Box>
 
                   {/* Content */}
-                  <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                  <Box
+                    sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+                  >
                     <Typography
                       variant="h5"
                       sx={{
@@ -213,24 +226,24 @@ const IndexSizes = () => {
                         fontWeight: 600,
                         color: "#C0D3CA",
                         mb: 1,
-                        fontFamily: "'Cormorant Garamond', serif"
+                        fontFamily: "'Cormorant Garamond', serif",
                       }}
                     >
                       {option.title}
                     </Typography>
-                    
+
                     <Typography
                       variant="subtitle1"
                       sx={{
                         fontSize: { xs: "1rem", md: "1.1rem" },
                         fontWeight: 500,
                         color: "rgba(192, 211, 202, 0.9)",
-                        mb: 2
+                        mb: 2,
                       }}
                     >
                       {option.subtitle}
                     </Typography>
-                    
+
                     <Typography
                       variant="body1"
                       sx={{
@@ -238,7 +251,7 @@ const IndexSizes = () => {
                         color: "rgba(192, 211, 202, 0.7)",
                         lineHeight: 1.6,
                         mb: 3,
-                        flex: 1
+                        flex: 1,
                       }}
                     >
                       {option.description}
@@ -249,7 +262,7 @@ const IndexSizes = () => {
                       sx={{
                         mt: "auto",
                         pt: 2,
-                        borderTop: "1px solid rgba(192, 211, 202, 0.1)"
+                        borderTop: "1px solid rgba(192, 211, 202, 0.1)",
                       }}
                     >
                       <Box
@@ -263,8 +276,8 @@ const IndexSizes = () => {
                           transition: "all 0.2s ease",
                           "&:hover": {
                             color: "#fff",
-                            gap: 2
-                          }
+                            gap: 2,
+                          },
                         }}
                       >
                         Get Started
@@ -272,7 +285,7 @@ const IndexSizes = () => {
                           component="span"
                           sx={{
                             fontSize: "1.2em",
-                            transition: "transform 0.2s ease"
+                            transition: "transform 0.2s ease",
                           }}
                         >
                           →
@@ -290,4 +303,4 @@ const IndexSizes = () => {
   );
 };
 
-export default IndexSizes;
+export default React.memo(IndexSizes);

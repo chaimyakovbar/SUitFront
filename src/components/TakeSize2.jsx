@@ -74,7 +74,7 @@ const TakeSizes2 = () => {
 
   return (
     <Box style={{ display: "flex" }}>
-      <Drawer variant="persistent" anchor="left" open={open}>
+      <Drawer variant="persistent" anchor="left" open={open} PaperProps={{ sx: { width: '50vw' } }}>
         <button
           onClick={() => navigate("/Shopping")}
           onMouseOver={(e) => (e.target.style.backgroundColor = "#5E3C1B")}

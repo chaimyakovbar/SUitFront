@@ -749,7 +749,7 @@ const StepTree = ({ isPants }) => {
             PaperProps={{
               className: classes.drawerPaper,
               sx: {
-                width: isMobile ? "80%" : "450px",
+                width: '50vw',
               },
             }}
           >

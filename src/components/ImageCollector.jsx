@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, memo } from "react";
 import {
   currentKindAtom,
   currentColorAtom,
@@ -24,7 +24,6 @@ import TextInside from "../../public/assets/adds/TextInside.png";
 
 const ImageFilterComponent = () => {
   // const previousConfigRef = useRef(null);
-  const [loading, setLoading] = useState(true);
 
   const currColor = useAtomValue(currentColorAtom);
   const selectedKind = useAtomValue(currentKindAtom);
@@ -49,6 +48,8 @@ const ImageFilterComponent = () => {
   const holeButtonUpColor = selectedHolesButtonUp;
   const buttonColor = selectedButton;
   const poshetColor = selectedPoshet;
+  // Some asset folders are named 'Slime' instead of 'Slim'
+  const lapelDir = selectedLapelType === "Slim" ? "Slime" : selectedLapelType;
 
   const bottomPart =
     selectedKind === "kind2"
@@ -57,13 +58,9 @@ const ImageFilterComponent = () => {
       ? "bottom"
       : "bottomKind3";
 
+  // Remove artificial loading delay to avoid jank on every small change
   useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 200);
-
-    return () => clearTimeout(timer);
+    // No-op: keep effect so dependencies are explicit for future optimizations
   }, [
     selectedKind,
     selectedSleeveButtons,
@@ -208,87 +205,66 @@ const ImageFilterComponent = () => {
       >
         ${calculateTotalPrice}
       </div> */}
-      {/* Simple Loader */}
-      {loading && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            // backgroundColor: "rgba(255, 255, 255, 0.8)",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              border: "5px solid #f3f3f3",
-              borderTop: "5px solid #3498db",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-            }}
-          ></div>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
-          <p style={{ marginTop: "10px", color: "white" }}>Loading suit... </p>
-        </div>
-      )}
+      {/* Loader removed to reduce constant reflow/paint on minor state changes */}
       {/* Base parts */}
       <img
         src={`/assets/ragach/Kinds/${selectedKind}/${currColor}.png`}
         alt={`Suit Body - ${selectedKind} ${currColor}`}
         style={{ ...imageStyle, zIndex: 2 }}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("suitBody")}
       />
       <img
         src={`/assets/ragach/colar/${currColor}.png`}
         alt={`Collar - ${currColor}`}
         style={{ ...imageStyle, zIndex: 200 }}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("collar")}
       />
       <img
         src={`/assets/ragach/sleeves/${currColor}.png`}
         alt={`Sleeves - ${currColor}`}
         style={imageStyle}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("sleeves")}
       />
       <img
         src={`/assets/ragach/insideUp/${insideColor}.png`}
         alt={`Inside Up - ${insideColor}`}
         style={imageStyle}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("insideUp")}
       />
       <img
         src={`/assets/ragach/insideBottom/${currColor}.png`}
         alt={`Inside Bottom - ${insideColor}`}
         style={imageStyle}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("insideBottom")}
       />
       <img
         src={`/assets/ragach/${bottomPart}/${currColor}.png`}
         alt={`Bottom - ${currColor}`}
         style={{ ...imageStyle, zIndex: 2 }}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("bottom")}
       />
       {/* Fixed Lapel/Collar path */}
       <img
-        src={`/assets/ragach/${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}.png`}
+        src={`/assets/ragach/${selectedCollar}/${lapelDir}/${selectedKind}/${currColor}.png`}
         alt={`Lapel Collar - ${currColor}`}
         style={{ ...imageStyle, zIndex: 200 }}
+        loading="lazy"
+        decoding="async"
         onError={() =>
           handleImageError(
-            `lapelCollar: ${selectedCollar}/${selectedLapelType}/${selectedKind}/${currColor}`
+            `lapelCollar: ${selectedCollar}/${lapelDir}/${selectedKind}/${currColor}`
           )
         }
       />
@@ -298,6 +274,8 @@ const ImageFilterComponent = () => {
           src={`/assets/ragach/packet/${packetKind}/packet1/${currColor}.png`}
           alt={`Packet Bottom - ${currColor}`}
           style={overlayStyle}
+          loading="lazy"
+          decoding="async"
           onError={() =>
             handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
           }
@@ -308,6 +286,8 @@ const ImageFilterComponent = () => {
           src={`/assets/ragach/packet/${packetKind}/packet2/${currColor}.png`}
           alt={`Packet Bottom - ${currColor}`}
           style={overlayStyle}
+          loading="lazy"
+          decoding="async"
           onError={() =>
             handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
           }
@@ -317,6 +297,8 @@ const ImageFilterComponent = () => {
         src={`/assets/ragach/packet/${packetKind}/${selectedPacketType}/${currColor}.png`}
         alt={`Packet Bottom - ${currColor}`}
         style={overlayStyle}
+        loading="lazy"
+        decoding="async"
         onError={() =>
           handleImageError(`packetBottom: ${selectedPacketType}/${currColor}`)
         }
@@ -326,6 +308,8 @@ const ImageFilterComponent = () => {
           src={`/assets/adds/poshet/${poshetColor}.png`}
           alt={`Poshet - ${poshetColor}`}
           style={overlayStyle}
+          loading="lazy"
+          decoding="async"
           onError={() => handleImageError(`poshet: ${poshetColor}`)}
         />
       )}
@@ -333,6 +317,8 @@ const ImageFilterComponent = () => {
         src={`/assets/ragach/packetUp/${currColor}.png`}
         alt={`Packet Up - ${currColor}`}
         style={{ ...imageStyle, zIndex: 3 }}
+        loading="lazy"
+        decoding="async"
         onError={() => handleImageError("packetUp")}
       />
       {buttonColor !== null && (
@@ -340,6 +326,8 @@ const ImageFilterComponent = () => {
           src={`/assets/ragach/button/${selectedKind}/${buttonColor}.png`}
           alt={`Button - ${buttonColor}`}
           style={overlayStyle}
+          loading="lazy"
+          decoding="async"
           onError={() =>
             handleImageError(`button: ${selectedKind}/${buttonColor}`)
           }
@@ -350,6 +338,8 @@ const ImageFilterComponent = () => {
           src={`/assets/adds/holesButton/${selectedKind}/${holeButtonColor}.png`}
           alt={`Hole Button - ${holeButtonColor}`}
           style={overlayStyle}
+          loading="lazy"
+          decoding="async"
           onError={() =>
             handleImageError(`holeButton: ${selectedKind}/${holeButtonColor}`)
           }
@@ -360,6 +350,8 @@ const ImageFilterComponent = () => {
           src={`/assets/adds/holesButtonUp/${holeButtonUpColor}.png`}
           alt={`Hole Button Up - ${holeButtonUpColor}`}
           style={overlayStyle}
+          loading="lazy"
+          decoding="async"
           onError={() => handleImageError(`holeButtonUp: ${holeButtonUpColor}`)}
         />
       )}
@@ -410,4 +402,4 @@ const ImageFilterComponent = () => {
   );
 };
 
-export default ImageFilterComponent;
+export default memo(ImageFilterComponent);

@@ -155,6 +155,7 @@ const Drawer2 = ({ scrollToTargetSection }) => {
         onClose={toggleDrawer("top", false)}
         PaperProps={{
           sx: {
+            height: '50vh',
             backgroundColor: "#121212",
             borderBottom: "1px solid #333",
           },

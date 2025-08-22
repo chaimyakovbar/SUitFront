@@ -54,12 +54,12 @@ const Doll = (props) => {
   // Set the scale on first render without useEffect
   const clonedScene = React.useMemo(() => {
     const clone = scene.clone();
-    
+
     // Make all materials soft white
     clone.traverse((child) => {
       if (child.isMesh && child.material) {
         if (Array.isArray(child.material)) {
-          child.material.forEach(mat => {
+          child.material.forEach((mat) => {
             mat.color.setHex(0xcccccc);
             mat.emissive.setHex(0x000000);
           });
@@ -69,7 +69,7 @@ const Doll = (props) => {
         }
       }
     });
-    
+
     return clone;
   }, [scene]);
 
@@ -304,8 +304,9 @@ const DollDisplay = () => {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
-        color: "#C0D3CA"
+        background:
+          "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
+        color: "#C0D3CA",
       }}
     >
       <div
@@ -490,43 +491,43 @@ const DollDisplay = () => {
           <div style={{ marginTop: "70px", width: "100%", height: "150vh" }}>
             <Canvas shadows onError={() => setModelError(true)}>
               <PerspectiveCamera makeDefault position={[10, 20, 20]} />
-              
+
               {/* Super Bright Lighting Setup */}
               <ambientLight intensity={3.0} />
-              <directionalLight 
-                position={[10, 10, 5]} 
-                intensity={4.0} 
-                castShadow 
+              <directionalLight
+                position={[10, 10, 5]}
+                intensity={4.0}
+                castShadow
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
               />
-              <directionalLight 
-                position={[-10, 10, -5]} 
-                intensity={3.0} 
+              <directionalLight
+                position={[-10, 10, -5]}
+                intensity={3.0}
                 color="#ffffff"
               />
-              <pointLight 
-                position={[0, 15, 0]} 
-                intensity={2.5} 
+              <pointLight
+                position={[0, 15, 0]}
+                intensity={2.5}
                 color="#ffffff"
               />
-              <pointLight 
-                position={[0, 0, 10]} 
-                intensity={2.0} 
+              <pointLight
+                position={[0, 0, 10]}
+                intensity={2.0}
                 color="#ffffff"
               />
-              <pointLight 
-                position={[0, 0, -10]} 
-                intensity={2.0} 
+              <pointLight
+                position={[0, 0, -10]}
+                intensity={2.0}
                 color="#ffffff"
               />
-              
+
               {/* Debug: Add a bright sphere to test lighting */}
               <mesh position={[0, 0, 0]}>
                 <sphereGeometry args={[0.5, 16, 16]} />
                 <meshStandardMaterial color="red" />
               </mesh>
-              
+
               <OrbitControls />
               <Suspense
                 fallback={
@@ -883,10 +884,11 @@ const DollDisplay = () => {
         </div>
 
         <Drawer
-          style={{ zIndex: 20001, width: isMobile ? "80%" : "400px" }}
+          style={{ zIndex: 20001 }}
           anchor="right"
           open={sideDrawerOpen}
           onClose={toggleSideDrawer}
+          PaperProps={{ sx: { width: "50vw" } }}
         >
           <Box
             sx={{

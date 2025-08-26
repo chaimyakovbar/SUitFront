@@ -55,17 +55,21 @@ const Doll = (props) => {
   const clonedScene = React.useMemo(() => {
     const clone = scene.clone();
 
-    // Make all materials soft white
+    // Make all materials with custom color
     clone.traverse((child) => {
       if (child.isMesh && child.material) {
         if (Array.isArray(child.material)) {
           child.material.forEach((mat) => {
-            mat.color.setHex(0xcccccc);
+            mat.color.setHex(0x525650); // Custom color #E2EBDD
             mat.emissive.setHex(0x000000);
+            mat.roughness = 0.9; // Make it less shiny
+            mat.metalness = 0.05; // Reduce metallic appearance
           });
         } else {
-          child.material.color.setHex(0xcccccc);
+          child.material.color.setHex(0x525650); // Custom color #E2EBDD
           child.material.emissive.setHex(0x000000);
+          child.material.roughness = 0.9; // Make it less shiny
+          child.material.metalness = 0.05; // Reduce metallic appearance
         }
       }
     });
@@ -103,6 +107,11 @@ const DollDisplay = () => {
   const [sizeProfiles, setSizeProfiles] = useState([]);
   const [newProfileName, setNewProfileName] = useState("");
   const [openNewProfileDialog, setOpenNewProfileDialog] = useState(false);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Initialize profiles from data
   useEffect(() => {
@@ -303,7 +312,8 @@ const DollDisplay = () => {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        maxHeight: "100vh",
+        overflow: "hidden",
         background:
           "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
         color: "#C0D3CA",
@@ -425,7 +435,7 @@ const DollDisplay = () => {
               </option>
             ))}
           </select>
-          <Typography variant="body2" sx={{ color: "black" }}>
+          <Typography variant="body5" sx={{ color: "white" }}>
             Select Profile:
           </Typography>
         </Box>
@@ -489,7 +499,11 @@ const DollDisplay = () => {
       <div style={{ marginTop: "100px" }}>
         <div style={{ position: "relative" }}>
           <div style={{ marginTop: "70px", width: "100%", height: "150vh" }}>
-            <Canvas shadows onError={() => setModelError(true)}>
+            <Canvas
+              shadows
+              onError={() => setModelError(true)}
+              style={{ background: "#000000" }}
+            >
               <PerspectiveCamera makeDefault position={[10, 20, 20]} />
 
               {/* Super Bright Lighting Setup */}
@@ -528,7 +542,15 @@ const DollDisplay = () => {
                 <meshStandardMaterial color="red" />
               </mesh>
 
-              <OrbitControls />
+              <OrbitControls
+                enableZoom={false}
+                enablePan={false}
+                enableRotate={true}
+                minDistance={1}
+                maxDistance={100}
+                minPolarAngle={0}
+                maxPolarAngle={Math.PI}
+              />
               <Suspense
                 fallback={
                   <mesh>
@@ -545,7 +567,6 @@ const DollDisplay = () => {
                 activePoints={activePoints}
                 completedPoints={completedPoints}
               />
-              <gridHelper args={[10, 10]} />
             </Canvas>
           </div>
 
@@ -888,7 +909,7 @@ const DollDisplay = () => {
           anchor="right"
           open={sideDrawerOpen}
           onClose={toggleSideDrawer}
-          PaperProps={{ sx: { width: "50vw" } }}
+          PaperProps={{ sx: { width: "75vw" } }}
         >
           <Box
             sx={{
@@ -1004,21 +1025,7 @@ const DollDisplay = () => {
                 borderTop: "1px solid #ddd",
                 paddingTop: isMobile ? 1 : 2,
               }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleSubmit}
-                sx={{
-                  py: isMobile ? 1 : 1.5,
-                  fontWeight: "bold",
-                  fontSize: isMobile ? "0.9rem" : "1.1rem",
-                }}
-              >
-                Save All Measurements
-              </Button>
-            </Box>
+            ></Box>
           </Box>
         </Drawer>
       </div>
@@ -1078,12 +1085,15 @@ const RedButton = ({
 
   // Determine button color based on state
   const buttonColor = isCompleted
-    ? "#66FF66" // Green if completed
+    ? "#0d930d" // Dark green if completed
     : isActive
     ? "#3399FF" // Blue if active
     : hovered
     ? "#FF6666" // Light red if hovered
     : "#FF4C4C"; // Default red
+
+  // Increase size by 50% for better touch interaction
+  const buttonSize = size * 1.5;
 
   return (
     <mesh
@@ -1095,8 +1105,16 @@ const RedButton = ({
       }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerUp={(e) => {
+        e.stopPropagation();
+        setHovered(false);
+      }}
     >
-      <circleGeometry args={[size, 32]} />
+      <circleGeometry args={[buttonSize, 32]} />
       <meshStandardMaterial color={buttonColor} />
     </mesh>
   );

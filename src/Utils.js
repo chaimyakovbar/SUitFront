@@ -13,7 +13,7 @@ export const authLoadingAtom = atom(true);
 
 export const currentIndexAtom = atom(0);
 
-export const currentColorAtom = atom('blackGrey');
+export const currentColorAtom = atom('greyLight');
 
 export const currentKindAtom = atom('kind1');
 

@@ -294,7 +294,7 @@ const NavBar = () => {
         open={mobileMenuOpen}
         onClose={toggleMobileMenu}
         classes={{ paper: classes.mobileMenu }}
-        PaperProps={{ sx: { width: '50vw' } }}
+        PaperProps={{ sx: { width: "70vw" } }}
       >
         <div className={classes.mobileMenuHeader}>
           <Typography variant="h6" className={classes.mobileMenuLogo}>
@@ -364,6 +364,7 @@ const NavBar = () => {
               {item.icon}
             </IconButton>
           ))}
+          <LanguageToggle />
         </Box>
       </Drawer>
     </>

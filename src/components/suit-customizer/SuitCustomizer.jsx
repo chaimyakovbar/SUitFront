@@ -29,21 +29,21 @@ const SuitCustomizer = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   // Prevent scrolling on mobile
-  React.useEffect(() => {
-    if (isMobile) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-      document.documentElement.style.overflow = "auto";
-    }
+  // React.useEffect(() => {
+  //   if (isMobile) {
+  //     document.body.style.overflow = "hidden";
+  //     document.documentElement.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "auto";
+  //     document.documentElement.style.overflow = "auto";
+  //   }
 
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = "auto";
-      document.documentElement.style.overflow = "auto";
-    };
-  }, [isMobile]);
+  //   // Cleanup on unmount
+  //   return () => {
+  //     document.body.style.overflow = "auto";
+  //     document.documentElement.style.overflow = "auto";
+  //   };
+  // }, [isMobile]);
 
   const handleToggle = () => {
     setIsPantsMode((prev) => !prev);
@@ -51,22 +51,22 @@ const SuitCustomizer = () => {
 
   const handleFinish = async () => {
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
     try {
       // Navigate to sizes page
-      navigate('/indexSizes');
-      
+      navigate("/indexSizes");
+
       // Show success message
-      enqueueSnackbar('Suit configuration saved successfully!', { 
-        variant: 'success',
-        autoHideDuration: 3000
+      enqueueSnackbar("Suit configuration saved successfully!", {
+        variant: "success",
+        autoHideDuration: 3000,
       });
     } catch (error) {
-      console.error('Error completing suit:', error);
-      enqueueSnackbar('Error saving suit configuration', { 
-        variant: 'error',
-        autoHideDuration: 3000
+      console.error("Error completing suit:", error);
+      enqueueSnackbar("Error saving suit configuration", {
+        variant: "error",
+        autoHideDuration: 3000,
       });
     } finally {
       setIsSubmitting(false);
@@ -161,121 +161,132 @@ const SuitCustomizer = () => {
                 flexDirection: "column",
               }}
             >
-                              {/* Numbers Navigation with Expandable Title */}
-                <Box
-                  component={motion.div}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    background:
-                      "linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%)",
-                    backdropFilter: "blur(20px)",
-                    border: "1px solid rgba(192, 211, 202, 0.15)",
-                    borderRadius: "20px",
-                    mx: 1, // Reduced side margins to give more space
-                    mt: 1, // Reduced top margin
-                    mb: 1, // Added small bottom margin
-                    p: 2,
-                    gap: 2,
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                    flexShrink: 0,
-                  }}
-                >
-                                  {/* Step Numbers */}
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    {[0, 1, 2].map((step) => (
-                      <Box
-                        key={step}
-                        onClick={() => setCurrentStep(step)}
-                        sx={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          background: currentStep === step
+              {/* Numbers Navigation with Expandable Title */}
+              <Box
+                component={motion.div}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                sx={{
+                  position: "fixed",
+                  top: 60,
+                  left: 0,
+                  right: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  background:
+                    "linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(192, 211, 202, 0.15)",
+                  borderRadius: "20px",
+                  mx: 1,
+                  mt: 1,
+                  mb: 1,
+                  p: 2,
+                  gap: 2,
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  flexShrink: 0,
+                  zIndex: 1200, // חשוב כדי שיישב מעל אלמנטים אחרים
+                }}
+              >
+                {/* Step Numbers */}
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  {[0, 1, 2].map((step) => (
+                    <Box
+                      key={step}
+                      onClick={() => setCurrentStep(step)}
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background:
+                          currentStep === step
                             ? "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)"
                             : "rgba(192, 211, 202, 0.1)",
-                          color: currentStep === step ? "#000" : "#C0D3CA",
-                          fontSize: "0.9rem",
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          transition: "all 0.3s ease",
-                          border: currentStep === step
+                        color: currentStep === step ? "#000" : "#C0D3CA",
+                        fontSize: "0.9rem",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        border:
+                          currentStep === step
                             ? "2px solid rgba(192, 211, 202, 0.5)"
                             : "1px solid rgba(192, 211, 202, 0.2)",
-                          "&:hover": {
-                            background: currentStep === step
+                        "&:hover": {
+                          background:
+                            currentStep === step
                               ? "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)"
                               : "rgba(192, 211, 202, 0.2)",
-                            transform: "scale(1.05)",
-                          },
-                        }}
-                      >
-                        {step + 1}
-                      </Box>
-                    ))}
-                    {/* Complete Suit Step - Only show on last step */}
-                    {currentStep === 2 && (
-                      <Box
-                        onClick={handleFinish}
-                        sx={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          background: isSubmitting 
-                            ? "linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(168, 195, 184, 0.1) 100%)"
-                            : "linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(168, 195, 184, 0.2) 100%)",
-                          color: "#C0D3CA",
-                          fontSize: "0.9rem",
-                          fontWeight: 600,
-                          cursor: isSubmitting ? "default" : "pointer",
-                          transition: "all 0.3s ease",
-                          border: "2px solid rgba(192, 211, 202, 0.3)",
-                          opacity: isSubmitting ? 0.6 : 1,
-                          "&:hover": isSubmitting ? {} : {
-                            background: "linear-gradient(135deg, rgba(192, 211, 202, 0.3) 0%, rgba(168, 195, 184, 0.3) 100%)",
-                            transform: "scale(1.05)",
-                          },
-                        }}
-                      >
-                        {isSubmitting ? "⏳" : "✨"}
-                      </Box>
-                    )}
-                  </Box>
-
-                                  {/* Expandable Title */}
-                  <Box sx={{ flex: 1, overflow: "hidden", minWidth: 0 }}>
-                    <Typography
-                      component={motion.div}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      key={currentStep}
-                      sx={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: currentStep === 2 ? "0.9rem" : "1rem",
-                        fontWeight: 400,
-                        color: "#C0D3CA",
-                        letterSpacing: "0.5px",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
+                          transform: "scale(1.05)",
+                        },
                       }}
                     >
-                      {currentStep === 0
-                        ? "Choose Fabric"
-                        : currentStep === 1
-                        ? "Design Style"
-                        : "Perfect Details"}
-                    </Typography>
-                  </Box>
+                      {step + 1}
+                    </Box>
+                  ))}
+                  {/* Complete Suit Step - Only show on last step */}
+                  {currentStep === 2 && (
+                    <Box
+                      onClick={handleFinish}
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: isSubmitting
+                          ? "linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(168, 195, 184, 0.1) 100%)"
+                          : "linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(168, 195, 184, 0.2) 100%)",
+                        color: "#C0D3CA",
+                        fontSize: "0.9rem",
+                        fontWeight: 600,
+                        cursor: isSubmitting ? "default" : "pointer",
+                        transition: "all 0.3s ease",
+                        border: "2px solid rgba(192, 211, 202, 0.3)",
+                        opacity: isSubmitting ? 0.6 : 1,
+                        "&:hover": isSubmitting
+                          ? {}
+                          : {
+                              background:
+                                "linear-gradient(135deg, rgba(192, 211, 202, 0.3) 0%, rgba(168, 195, 184, 0.3) 100%)",
+                              transform: "scale(1.05)",
+                            },
+                      }}
+                    >
+                      {isSubmitting ? "⏳" : "✨"}
+                    </Box>
+                  )}
+                </Box>
+
+                {/* Expandable Title */}
+                <Box sx={{ flex: 1, overflow: "hidden", minWidth: 0 }}>
+                  <Typography
+                    component={motion.div}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    key={currentStep}
+                    sx={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: currentStep === 2 ? "0.9rem" : "1rem",
+                      fontWeight: 400,
+                      color: "#C0D3CA",
+                      letterSpacing: "0.5px",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {currentStep === 0
+                      ? "Choose Fabric"
+                      : currentStep === 1
+                      ? "Design Style"
+                      : "Perfect Details"}
+                  </Typography>
+                </Box>
               </Box>
 
               {/* Suit Preview - Smaller Size */}

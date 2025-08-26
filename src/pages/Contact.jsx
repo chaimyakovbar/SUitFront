@@ -207,10 +207,7 @@ const Contact = () => {
   return (
     <div className={classes.root}>
       <Container maxWidth="lg" className={classes.container}>
-        <Link to="/" className={classes.returnButton}>
-          <ArrowBackIcon className={classes.returnIcon} />
-          {t("returnToMainPage")}
-        </Link>
+
 
         <div>
           <Typography variant="h1" className={classes.heading}>

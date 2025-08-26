@@ -360,7 +360,7 @@ const SuitDesign = ({ isMobile }) => {
           onClose={() => setIsTypeDrawerOpen(false)}
           PaperProps={{
             sx: {
-              height: "50vh",
+              height: "30vh",
               backgroundColor: "#0a0a0a",
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
@@ -399,7 +399,7 @@ const SuitDesign = ({ isMobile }) => {
           onClose={() => setIsPocketDrawerOpen(false)}
           PaperProps={{
             sx: {
-              height: "50vh",
+              height: "30vh",
               backgroundColor: "#0a0a0a",
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
@@ -489,7 +489,7 @@ const SuitDesign = ({ isMobile }) => {
           onClose={() => setIsCollarDrawerOpen(false)}
           PaperProps={{
             sx: {
-              height: "50vh",
+              height: "30vh",
               backgroundColor: "#0a0a0a",
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
@@ -517,16 +517,6 @@ const SuitDesign = ({ isMobile }) => {
             ))}
           </Grid>
 
-          <Divider
-            sx={{ backgroundColor: "rgba(192, 211, 202, 0.2)", my: 2 }}
-          />
-
-          <Typography
-            variant="subtitle1"
-            sx={{ color: "#C0D3CA", textAlign: "center", mb: 1 }}
-          >
-            Lapel Width
-          </Typography>
           <Box sx={{ px: 2 }}>
             <Slider
               defaultValue={2}

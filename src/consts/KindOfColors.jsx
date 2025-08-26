@@ -412,7 +412,7 @@ export const buttons = [
     id: 1,
     name: "Chest",
     position: [0, 6.2, 1],
-    size: 0.2,
+    size: 0.15,
     tooltip: "חזה עליון",
     label: "חזה עליון",
     explain: `
@@ -435,7 +435,7 @@ export const buttons = [
   {
     id: 2,
     name: "Waist",
-    position: [0, 5.3, 1],
+    position: [0, 5.5, 1],
     size: 0.15,
     tooltip: "היקף מותניים",
     label: "היקף מותניים",
@@ -539,7 +539,7 @@ export const buttons = [
     id: 6,
     name: "Rear Width",
     position: [0, 6.5, -1],
-    size: 0.1,
+    size: 0.15,
     tooltip: "רוחב גב",
     label: "רוחב גב",
     explain: `
@@ -555,7 +555,7 @@ export const buttons = [
     id: 8,
     name: "Biceps",
     position: [1.3, 6.3, -0.2],
-    size: 0.1,
+    size: 0.15,
     tooltip: "היקף זרוע",
     label: "היקף זרוע",
     explain: `
@@ -570,7 +570,7 @@ export const buttons = [
     id: 9,
     name: "Shoulder",
     position: [0, 7.5, -1],
-    size: 0.1,
+    size: 0.15,
     tooltip: "רוחב כתף",
     label: "רוחב כתף",
     explain: `
@@ -587,7 +587,7 @@ export const buttons = [
     id: 10,
     name: "Sleeve Length",
     position: [1.8, 4.8, 0],
-    size: 0.1,
+    size: 0.15,
     tooltip: "אורך שרוול",
     label: "אורך שרוול",
     explain: `
@@ -607,7 +607,7 @@ export const buttons = [
     id: 11,
     name: "Trousers Length back",
     position: [0.7, 0.2, 1],
-    size: 0.1,
+    size: 0.15,
     tooltip: "אחורי אורך מכנסיים",
     label: "אחורי אורך מכנסיים",
     explain: `
@@ -622,7 +622,7 @@ export const buttons = [
     id: 12,
     name: "Trousers Length front",
     position: [0.6, 0.2, -0.6],
-    size: 0.1,
+    size: 0.15,
     tooltip: "אורך מכנסים קדמי",
     label: "היקף ברך",
     explain: `
@@ -636,8 +636,8 @@ export const buttons = [
   {
     id: 13,
     name: "Waistband",
-    position: [0, 4.8, 1],
-    size: 0.1,
+    position: [0, 4.95, 1],
+    size: 0.15,
     tooltip: "היקף חגורה",
     label: "היקף חגורה",
     explain: `
@@ -653,7 +653,7 @@ export const buttons = [
     id: 14,
     name: "Stride Length",
     position: [0, 4.4, 1],
-    size: 0.1,
+    size: 0.15,
     tooltip: "אורך צעד",
     label: "אורך צעד",
     explain: `
@@ -674,7 +674,7 @@ export const buttons = [
     id: 15,
     name: "Thigh",
     position: [0.5, 3.5, 1],
-    size: 0.1,
+    size: 0.15,
     tooltip: "היקף ירך",
     label: "היקף ירך",
     explain: `
@@ -688,8 +688,8 @@ export const buttons = [
   {
     id: 16,
     name: "Ankles",
-    position: [0.7, 0.4, 0.4],
-    size: 0.1,
+    position: [0.7, 0.5, 0.4],
+    size: 0.15,
     tooltip: "היקף קרסול",
     label: "היקף קרסול",
     explain: `

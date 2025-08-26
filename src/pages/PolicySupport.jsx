@@ -213,11 +213,6 @@ const PolicySupport = () => {
       className={classes.root}
     >
       <Container maxWidth="lg" className={classes.container}>
-        <Link to="/" className={classes.returnButton}>
-          <ArrowBackIcon className={classes.returnIcon} />
-          Return to Main Page
-        </Link>
-
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

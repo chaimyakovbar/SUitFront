@@ -1,4 +1,4 @@
-const CACHE_NAME = 'suit-app-v1';
+const CACHE_NAME = 'suit-app-v2';
 const urlsToCache = [
   '/',
   '/assets/photoBackGround3.jpg',
@@ -20,6 +20,12 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - serve from cache when offline
 self.addEventListener('fetch', (event) => {
+  // Skip caching for JavaScript files to ensure fresh versions
+  if (event.request.url.includes('.js')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {

@@ -2,26 +2,26 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
     },
     {
-      "src": "/models/(.*)",
-      "dest": "/models/$1"
+      "source": "/models/(.*)",
+      "destination": "/models/$1"
     },
     {
-      "src": "/vite.svg",
-      "dest": "/vite.svg"
+      "source": "/vite.svg",
+      "destination": "/vite.svg"
     },
     {
-      "src": "/_redirects",
-      "dest": "/_redirects"
+      "source": "/_redirects",
+      "destination": "/_redirects"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [

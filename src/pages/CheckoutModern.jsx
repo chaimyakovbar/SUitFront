@@ -49,15 +49,14 @@ const CheckoutModern = ({
   onEditCart,
   loading = false,
 }) => {
-  // Color palette
-  const highlight = "#FFD600"; // yellow
-  const accent = "#00E676"; // green
+  // Color palette - matching site theme
+  const highlight = "#C0D3CA"; // site's primary color
+  const accent = "#f093fb"; // site's accent color
   const error = "#FF5252";
-  const darkBg = "#181A20";
-  const cardBg = "#23242B";
-  const border = "#333";
+  const cardBg = "rgba(20, 20, 20, 0.92)"; // site's card background
+  const border = "rgba(192, 211, 202, 0.15)"; // site's border color
   const text = "#fff";
-  const muted = "#aaa";
+  const muted = "rgba(192, 211, 202, 0.7)"; // site's muted text
 
   const { data: products } = useProduct();
   const [user] = useAtom(authUserAtom);
@@ -180,11 +179,26 @@ const CheckoutModern = ({
         sx={{
           marginTop: "100px",
           minHeight: "100vh",
-          background: darkBg,
+          background:
+            "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #0f0f0f 70%, #0a0a0a 100%)",
           py: { xs: 2, md: 6 },
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `
+              radial-gradient(circle at 20% 20%, rgba(192, 211, 202, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(192, 211, 202, 0.03) 0%, transparent 50%)
+            `,
+            pointerEvents: "none",
+          },
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
           {/* Debug button for checking local orders */}
 
           <Grid container spacing={4}>
@@ -192,8 +206,30 @@ const CheckoutModern = ({
             <Grid item xs={12} md={7}>
               {/* Order Summary */}
               <Paper
-                elevation={3}
-                sx={{ background: cardBg, p: 3, mb: 4, borderRadius: 3 }}
+                elevation={0}
+                sx={{
+                  background:
+                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(192, 211, 202, 0.15)",
+                  p: 3,
+                  mb: 4,
+                  borderRadius: "24px",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "4px",
+                    background:
+                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                    borderRadius: "24px 24px 0 0",
+                  },
+                }}
               >
                 {/* Toggle view mode button */}
 
@@ -203,7 +239,13 @@ const CheckoutModern = ({
                   />
                   <Typography
                     variant="h5"
-                    sx={{ color: text, fontWeight: 600, letterSpacing: 1 }}
+                    sx={{
+                      color: highlight,
+                      fontWeight: 600,
+                      letterSpacing: 1,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: "1.8rem",
+                    }}
                   >
                     Order Summary
                   </Typography>
@@ -211,12 +253,20 @@ const CheckoutModern = ({
                   <Button
                     onClick={onEditCart}
                     size="small"
-                    sx={{ color: highlight, fontWeight: 500 }}
+                    sx={{
+                      color: highlight,
+                      fontWeight: 500,
+                      borderRadius: "8px",
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        background: "rgba(192, 211, 202, 0.1)",
+                      },
+                    }}
                   >
                     Edit
                   </Button>
                 </Box>
-                <Divider sx={{ borderColor: border, mb: 2 }} />
+                <Divider sx={{ borderColor: border, mb: 2, opacity: 0.3 }} />
                 <Button
                   variant="outlined"
                   onClick={() =>
@@ -225,6 +275,14 @@ const CheckoutModern = ({
                   sx={{
                     width: { xs: "100%", sm: "auto" },
                     mb: 2,
+                    borderColor: border,
+                    color: text,
+                    borderRadius: "12px",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      borderColor: highlight,
+                      background: "rgba(192, 211, 202, 0.05)",
+                    },
                   }}
                 >
                   {viewMode === "grid" ? "הצג כרשימה" : "הצג ככרטיסים"}
@@ -238,14 +296,14 @@ const CheckoutModern = ({
                       width: "8px",
                     },
                     "&::-webkit-scrollbar-track": {
-                      background: "rgba(255,255,255,0.1)",
+                      background: "rgba(192, 211, 202, 0.1)",
                       borderRadius: "4px",
                     },
                     "&::-webkit-scrollbar-thumb": {
                       background: highlight,
                       borderRadius: "4px",
                       "&:hover": {
-                        background: "rgba(255,214,0,0.8)",
+                        background: "rgba(192, 211, 202, 0.8)",
                       },
                     },
                   }}
@@ -260,12 +318,40 @@ const CheckoutModern = ({
 
               {/* Size Selection */}
               <Paper
-                elevation={3}
-                sx={{ background: cardBg, p: 3, mb: 4, borderRadius: 3 }}
+                elevation={0}
+                sx={{
+                  background:
+                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(192, 211, 202, 0.15)",
+                  p: 3,
+                  mb: 4,
+                  borderRadius: "24px",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "4px",
+                    background:
+                      "linear-gradient(135deg, #C0D3CA 0%, #a8c4b8 100%)",
+                    borderRadius: "24px 24px 0 0",
+                  },
+                }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ color: text, fontWeight: 600, mb: 2 }}
+                  sx={{
+                    color: highlight,
+                    fontWeight: 600,
+                    mb: 2,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.4rem",
+                  }}
                 >
                   Size Selection
                 </Typography>
@@ -281,18 +367,18 @@ const CheckoutModern = ({
                     onClick={() => setProfileType("regular")}
                     sx={{
                       p: 2,
-                      borderRadius: 3,
+                      borderRadius: "16px",
                       border:
                         profileType === "regular"
                           ? `2.5px solid ${highlight}`
                           : `1.5px solid ${border}`,
                       background:
                         profileType === "regular"
-                          ? "rgba(255,214,0,0.08)"
+                          ? "rgba(192, 211, 202, 0.08)"
                           : cardBg,
                       boxShadow:
                         profileType === "regular"
-                          ? `0 0 0 2px ${highlight}55`
+                          ? `0 0 0 2px rgba(192, 211, 202, 0.3)`
                           : "none",
                       color: profileType === "regular" ? highlight : text,
                       fontWeight: 600,
@@ -301,8 +387,15 @@ const CheckoutModern = ({
                       display: "flex",
                       alignItems: "center",
                       gap: 1,
-                      transition: "all 0.2s",
+                      transition: "all 0.3s ease",
                       minWidth: { xs: "100%", sm: 160 },
+                      "&:hover": {
+                        transform: "translateY(-2px)",
+                        boxShadow:
+                          profileType === "regular"
+                            ? `0 4px 20px rgba(192, 211, 202, 0.4)`
+                            : `0 4px 20px rgba(0, 0, 0, 0.2)`,
+                      },
                     }}
                     startIcon={
                       <CheckCircleIcon
@@ -319,18 +412,18 @@ const CheckoutModern = ({
                       onClick={() => setProfileType("sizesTable")}
                       sx={{
                         p: 2,
-                        borderRadius: 3,
+                        borderRadius: "16px",
                         border:
                           profileType === "sizesTable"
                             ? `2.5px solid ${accent}`
                             : `1.5px solid ${border}`,
                         background:
                           profileType === "sizesTable"
-                            ? "rgba(0,230,118,0.08)"
+                            ? "rgba(240, 147, 251, 0.08)"
                             : cardBg,
                         boxShadow:
                           profileType === "sizesTable"
-                            ? `0 0 0 2px ${accent}55`
+                            ? `0 0 0 2px rgba(240, 147, 251, 0.3)`
                             : "none",
                         color: profileType === "sizesTable" ? accent : text,
                         fontWeight: 600,
@@ -339,8 +432,15 @@ const CheckoutModern = ({
                         display: "flex",
                         alignItems: "center",
                         gap: 1,
-                        transition: "all 0.2s",
+                        transition: "all 0.3s ease",
                         minWidth: { xs: "100%", sm: 160 },
+                        "&:hover": {
+                          transform: "translateY(-2px)",
+                          boxShadow:
+                            profileType === "sizesTable"
+                              ? `0 4px 20px rgba(240, 147, 251, 0.4)`
+                              : `0 4px 20px rgba(0, 0, 0, 0.2)`,
+                        },
                       }}
                       startIcon={
                         <CheckCircleIcon
@@ -368,27 +468,52 @@ const CheckoutModern = ({
                       sx={{
                         color: text,
                         background: cardBg,
-                        borderRadius: 2,
+                        borderRadius: "12px",
                         fontWeight: 600,
                         fontSize: 16,
                         ".MuiOutlinedInput-notchedOutline": {
-                          borderColor: accent,
+                          borderColor: highlight,
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline": {
-                          borderColor: highlight,
+                          borderColor: accent,
                         },
                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: highlight,
+                          borderColor: accent,
+                        },
+                      }}
+                      MenuProps={{
+                        PaperProps: {
+                          sx: {
+                            background: "#0a0a0a",
+                            border: "1px solid rgba(192, 211, 202, 0.15)",
+                            borderRadius: "12px",
+                            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
+                            "& .MuiMenuItem-root": {
+                              color: text,
+                              fontFamily: "'Montserrat', sans-serif",
+                              "&:hover": {
+                                background: "rgba(192, 211, 202, 0.1)",
+                              },
+                              "&.Mui-selected": {
+                                background: "rgba(192, 211, 202, 0.2)",
+                                color: highlight,
+                              },
+                            },
+                          },
                         },
                       }}
                     >
                       {sizeProfiles.length === 0 ? (
-                        <MenuItem disabled>
+                        <MenuItem disabled sx={{ color: muted }}>
                           אין לך פרופילי מידות שמורים. צור אחד בפרופיל שלך.
                         </MenuItem>
                       ) : (
                         sizeProfiles.map((profile) => (
-                          <MenuItem key={profile.name} value={profile.name}>
+                          <MenuItem
+                            key={profile.name}
+                            value={profile.name}
+                            sx={{ color: text }}
+                          >
                             {profile.name}
                           </MenuItem>
                         ))
@@ -398,10 +523,22 @@ const CheckoutModern = ({
                 )}
                 {profileType === "sizesTable" && products?.sizesTable && (
                   <Box sx={{ mb: 2 }}>
-                    <Typography>
+                    <Typography
+                      sx={{
+                        color: text,
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "0.9rem",
+                      }}
+                    >
                       Jacket Size: {products.sizesTable.jacket}
                     </Typography>
-                    <Typography>
+                    <Typography
+                      sx={{
+                        color: text,
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "0.9rem",
+                      }}
+                    >
                       Pants Size: {products.sizesTable.pants}
                     </Typography>
                   </Box>
@@ -410,12 +547,40 @@ const CheckoutModern = ({
 
               {/* Delivery Options */}
               <Paper
-                elevation={3}
-                sx={{ background: cardBg, p: 3, mb: 4, borderRadius: 3 }}
+                elevation={0}
+                sx={{
+                  background:
+                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(192, 211, 202, 0.15)",
+                  p: 3,
+                  mb: 4,
+                  borderRadius: "24px",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "4px",
+                    background:
+                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                    borderRadius: "24px 24px 0 0",
+                  },
+                }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ color: text, fontWeight: 600, mb: 2 }}
+                  sx={{
+                    color: highlight,
+                    fontWeight: 600,
+                    mb: 2,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.4rem",
+                  }}
                 >
                   Delivery Options
                 </Typography>
@@ -432,8 +597,8 @@ const CheckoutModern = ({
                             : `1.5px solid ${border}`,
                         background:
                           shippingCost === 0
-                            ? "rgba(0,230,118,0.08)"
-                            : "#23242B",
+                            ? "rgba(240, 147, 251, 0.08)"
+                            : "rgba(20, 20, 20, 0.92)",
                         boxShadow:
                           shippingCost === 0 ? `0 0 0 2px ${accent}55` : "none",
                         cursor: "pointer",
@@ -450,16 +615,30 @@ const CheckoutModern = ({
                       <Box>
                         <Typography
                           variant="subtitle1"
-                          sx={{ color: text, fontWeight: 600 }}
+                          sx={{
+                            color: text,
+                            fontWeight: 600,
+                            fontFamily: "'Montserrat', sans-serif",
+                          }}
                         >
                           Standard Delivery
                         </Typography>
-                        <Typography variant="body2" sx={{ color: muted }}>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: muted,
+                            fontFamily: "'Montserrat', sans-serif",
+                          }}
+                        >
                           3-5 business days
                         </Typography>
                         <Typography
                           variant="subtitle2"
-                          sx={{ color: accent, fontWeight: 700 }}
+                          sx={{
+                            color: accent,
+                            fontWeight: 700,
+                            fontFamily: "'Cormorant Garamond', serif",
+                          }}
                         >
                           Free
                         </Typography>
@@ -478,8 +657,8 @@ const CheckoutModern = ({
                             : `1.5px solid ${border}`,
                         background:
                           shippingCost === 15
-                            ? "rgba(255,214,0,0.08)"
-                            : "#23242B",
+                            ? "rgba(192, 211, 202, 0.08)"
+                            : "rgba(20, 20, 20, 0.92)",
                         boxShadow:
                           shippingCost === 15
                             ? `0 0 0 2px ${highlight}55`
@@ -498,16 +677,30 @@ const CheckoutModern = ({
                       <Box>
                         <Typography
                           variant="subtitle1"
-                          sx={{ color: text, fontWeight: 600 }}
+                          sx={{
+                            color: text,
+                            fontWeight: 600,
+                            fontFamily: "'Montserrat', sans-serif",
+                          }}
                         >
                           Express Delivery
                         </Typography>
-                        <Typography variant="body2" sx={{ color: muted }}>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: muted,
+                            fontFamily: "'Montserrat', sans-serif",
+                          }}
+                        >
                           1-2 business days
                         </Typography>
                         <Typography
                           variant="subtitle2"
-                          sx={{ color: highlight, fontWeight: 700 }}
+                          sx={{
+                            color: highlight,
+                            fontWeight: 700,
+                            fontFamily: "'Cormorant Garamond', serif",
+                          }}
                         >
                           $15
                         </Typography>
@@ -526,8 +719,8 @@ const CheckoutModern = ({
                             : `1.5px solid ${border}`,
                         background:
                           shippingCost === 35
-                            ? "rgba(64,196,255,0.08)"
-                            : "#23242B",
+                            ? "rgba(64, 196, 255, 0.08)"
+                            : "rgba(20, 20, 20, 0.92)",
                         boxShadow:
                           shippingCost === 35 ? `0 0 0 2px #40C4FF55` : "none",
                         cursor: "pointer",
@@ -544,16 +737,30 @@ const CheckoutModern = ({
                       <Box>
                         <Typography
                           variant="subtitle1"
-                          sx={{ color: text, fontWeight: 600 }}
+                          sx={{
+                            color: text,
+                            fontWeight: 600,
+                            fontFamily: "'Montserrat', sans-serif",
+                          }}
                         >
                           Same Day Delivery
                         </Typography>
-                        <Typography variant="body2" sx={{ color: muted }}>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: muted,
+                            fontFamily: "'Montserrat', sans-serif",
+                          }}
+                        >
                           Within 6 hours
                         </Typography>
                         <Typography
                           variant="subtitle2"
-                          sx={{ color: "#40C4FF", fontWeight: 700 }}
+                          sx={{
+                            color: "#40C4FF",
+                            fontWeight: 700,
+                            fontFamily: "'Cormorant Garamond', serif",
+                          }}
                         >
                           $35
                         </Typography>
@@ -565,20 +772,49 @@ const CheckoutModern = ({
 
               {/* Contact Information */}
               <Paper
-                elevation={3}
-                sx={{ background: cardBg, p: 3, mb: 4, borderRadius: 3 }}
+                elevation={0}
+                sx={{
+                  background:
+                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(192, 211, 202, 0.15)",
+                  p: 3,
+                  mb: 4,
+                  borderRadius: "24px",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "4px",
+                    background:
+                      "linear-gradient(135deg, #C0D3CA 0%, #a8c4b8 100%)",
+                    borderRadius: "24px 24px 0 0",
+                  },
+                }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ color: text, fontWeight: 600, mb: 2 }}
+                  sx={{
+                    color: highlight,
+                    fontWeight: 600,
+                    mb: 2,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.4rem",
+                  }}
                 >
                   Contact Information
                 </Typography>
                 <Box
                   sx={{
-                    background: "rgba(255,255,255,0.03)",
+                    background: "rgba(192, 211, 202, 0.05)",
                     p: 2,
-                    borderRadius: 2,
+                    borderRadius: "12px",
+                    border: "1px solid rgba(192, 211, 202, 0.1)",
                   }}
                 >
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
@@ -591,6 +827,7 @@ const CheckoutModern = ({
                               fontWeight: 500,
                               fontSize: { xs: 13, sm: 15 },
                               wordBreak: "break-word",
+                              fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
                             Address:
@@ -600,6 +837,7 @@ const CheckoutModern = ({
                               color: muted,
                               fontSize: { xs: 13, sm: 15 },
                               wordBreak: "break-word",
+                              fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
                             {user.address}
@@ -612,6 +850,7 @@ const CheckoutModern = ({
                               color: error,
                               fontWeight: 500,
                               fontSize: { xs: 13, sm: 15 },
+                              fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
                             Missing address, please add your address in your
@@ -629,6 +868,7 @@ const CheckoutModern = ({
                               fontWeight: 500,
                               fontSize: { xs: 13, sm: 15 },
                               wordBreak: "break-word",
+                              fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
                             Phone:
@@ -638,6 +878,7 @@ const CheckoutModern = ({
                               color: muted,
                               fontSize: { xs: 13, sm: 15 },
                               wordBreak: "break-word",
+                              fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
                             {user.phoneNumber}
@@ -650,6 +891,7 @@ const CheckoutModern = ({
                               color: error,
                               fontWeight: 500,
                               fontSize: { xs: 13, sm: 15 },
+                              fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
                             Missing phone number, please add your phone in your
@@ -666,6 +908,8 @@ const CheckoutModern = ({
                         color: highlight,
                         fontWeight: 500,
                         textDecoration: "underline",
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "0.9rem",
                       }}
                     >
                       Edit Contact Information
@@ -678,16 +922,44 @@ const CheckoutModern = ({
             {/* Right: Payment Summary */}
             <Grid item xs={12} md={5}>
               <Paper
-                elevation={4}
-                sx={{ background: cardBg, p: 3, borderRadius: 3, mb: 4 }}
+                elevation={0}
+                sx={{
+                  background:
+                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(192, 211, 202, 0.15)",
+                  p: 3,
+                  borderRadius: "24px",
+                  mb: 4,
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "4px",
+                    background:
+                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                    borderRadius: "24px 24px 0 0",
+                  },
+                }}
               >
                 <Typography
                   variant="h5"
-                  sx={{ color: accent, fontWeight: 700, mb: 2 }}
+                  sx={{
+                    color: highlight,
+                    fontWeight: 700,
+                    mb: 2,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.8rem",
+                  }}
                 >
                   Payment Summary
                 </Typography>
-                <Divider sx={{ borderColor: border, mb: 2 }} />
+                <Divider sx={{ borderColor: border, mb: 2, opacity: 0.3 }} />
                 <Stack spacing={1}>
                   <Box
                     sx={{
@@ -696,8 +968,22 @@ const CheckoutModern = ({
                       alignItems: "center",
                     }}
                   >
-                    <Typography sx={{ color: muted }}>Subtotal</Typography>
-                    <Typography sx={{ color: text, fontWeight: 600 }}>
+                    <Typography
+                      sx={{
+                        color: muted,
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      Subtotal
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: highlight,
+                        fontWeight: 600,
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
+                    >
                       ${totalPrice}
                     </Typography>
                   </Box>
@@ -708,7 +994,15 @@ const CheckoutModern = ({
                       alignItems: "center",
                     }}
                   >
-                    <Typography sx={{ color: muted }}>Shipping</Typography>
+                    <Typography
+                      sx={{
+                        color: muted,
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      Shipping
+                    </Typography>
                     <Typography
                       sx={{
                         color:
@@ -718,12 +1012,13 @@ const CheckoutModern = ({
                             ? highlight
                             : "#40C4FF",
                         fontWeight: 600,
+                        fontFamily: "'Cormorant Garamond', serif",
                       }}
                     >
                       {shippingCost === 0 ? "Free" : `$${shippingCost}`}
                     </Typography>
                   </Box>
-                  <Divider sx={{ borderColor: border, my: 1 }} />
+                  <Divider sx={{ borderColor: border, my: 1, opacity: 0.3 }} />
                   <Box
                     sx={{
                       display: "flex",
@@ -732,12 +1027,22 @@ const CheckoutModern = ({
                     }}
                   >
                     <Typography
-                      sx={{ color: text, fontWeight: 700, fontSize: 18 }}
+                      sx={{
+                        color: text,
+                        fontWeight: 700,
+                        fontSize: 18,
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
                     >
                       Total
                     </Typography>
                     <Typography
-                      sx={{ color: highlight, fontWeight: 800, fontSize: 22 }}
+                      sx={{
+                        color: highlight,
+                        fontWeight: 800,
+                        fontSize: 22,
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
                     >
                       ${totalPrice + shippingCost}
                     </Typography>
@@ -748,9 +1053,10 @@ const CheckoutModern = ({
                     icon={<LockIcon fontSize="inherit" />}
                     severity="success"
                     sx={{
-                      background: "rgba(0,230,118,0.08)",
-                      color: accent,
-                      border: `1.5px solid ${accent}`,
+                      background: "rgba(192, 211, 202, 0.08)",
+                      color: highlight,
+                      border: `1.5px solid ${highlight}`,
+                      borderRadius: "12px",
                     }}
                   >
                     Secure Payment — 256-bit SSL encryption protects your data
@@ -765,6 +1071,7 @@ const CheckoutModern = ({
                       color: error,
                       border: `1.5px solid ${error}`,
                       mb: 2,
+                      borderRadius: "12px",
                     }}
                   >
                     {paymentWarning}
@@ -777,10 +1084,12 @@ const CheckoutModern = ({
                     <Typography
                       variant="h6"
                       sx={{
-                        color: text,
+                        color: highlight,
                         fontWeight: 600,
                         mb: 2,
                         textAlign: "center",
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: "1.4rem",
                       }}
                     >
                       בחר אמצעי תשלום
@@ -809,7 +1118,7 @@ const CheckoutModern = ({
                       />
                     </Box>
 
-                    <Divider sx={{ borderColor: border, my: 2 }}>
+                    <Divider sx={{ borderColor: border, my: 2, opacity: 0.3 }}>
                       <Typography sx={{ color: muted, fontSize: 12 }}>
                         או
                       </Typography>
@@ -823,15 +1132,21 @@ const CheckoutModern = ({
                       fullWidth
                       sx={{
                         background: canUserPay ? highlight : border,
-                        color: canUserPay ? "#181A20" : muted,
+                        color: canUserPay ? "#0a0a0a" : muted,
                         fontWeight: 700,
                         fontSize: 18,
-                        borderRadius: 2,
+                        borderRadius: "12px",
                         boxShadow: canUserPay
-                          ? `0 2px 12px ${highlight}33`
+                          ? `0 4px 20px rgba(192, 211, 202, 0.3)`
                           : "none",
                         py: 1.5,
-                        transition: "all 0.2s",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: canUserPay ? "translateY(-2px)" : "none",
+                          boxShadow: canUserPay
+                            ? `0 6px 25px rgba(192, 211, 202, 0.4)`
+                            : "none",
+                        },
                       }}
                       disabled={!canUserPay || loading}
                       onClick={onPay}
@@ -855,11 +1170,11 @@ const CheckoutModern = ({
                       color: muted,
                       fontWeight: 700,
                       fontSize: 18,
-                      borderRadius: 2,
+                      borderRadius: "12px",
                       py: 1.5,
                       mt: 1,
                       mb: 1,
-                      transition: "all 0.2s",
+                      transition: "all 0.3s ease",
                     }}
                     disabled={true}
                   >
@@ -873,6 +1188,7 @@ const CheckoutModern = ({
                     fontSize: 13,
                     textAlign: "center",
                     mt: 1,
+                    fontFamily: "'Montserrat', sans-serif",
                   }}
                 >
                   We accept major credit cards and PayPal

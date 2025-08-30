@@ -22,15 +22,6 @@ const IndexSizes = () => {
 
   const measurementOptions = [
     {
-      id: "regular",
-      title: "Regular Sizes",
-      subtitle: "Choose from standard sizes",
-      description: "Perfect if you know your standard suit size",
-      image: imgFor2,
-      path: "/sizes/regular",
-      color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    },
-    {
       id: "measure",
       title: "Measure Your Body",
       subtitle: "Custom measurements",
@@ -38,6 +29,15 @@ const IndexSizes = () => {
       image: imgFor,
       path: "/sizes/measure",
       color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    },
+    {
+      id: "regular",
+      title: "Regular Sizes",
+      subtitle: "Choose from standard sizes",
+      description: "Perfect if you know your standard suit size",
+      image: imgFor2,
+      path: "/sizes/regular",
+      color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     },
     // {
     //   id: "suitMeasure",

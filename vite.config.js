@@ -3,10 +3,47 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    {
+export default defineConfig(({ command }) => {
+  const config = {
+    plugins: [react()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Split vendor libraries
+            vendor: ['react', 'react-dom'],
+            mui: ['@mui/material', '@mui/icons-material', '@mui/styles'],
+            three: ['@react-three/fiber', '@react-three/drei', 'three'],
+            animations: ['framer-motion'],
+            utils: ['jotai', 'axios', 'react-router-dom'],
+          },
+        },
+      },
+      // Enable source maps for debugging
+      sourcemap: false,
+      // Optimize chunk size
+      chunkSizeWarningLimit: 1000,
+    },
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        '@mui/material',
+        '@mui/icons-material',
+        'framer-motion',
+        'jotai',
+        'axios',
+      ],
+    },
+    // Enable compression
+    server: {
+      compress: true,
+    },
+  }
+
+  // Only add S3 proxy in development mode
+  if (command === 'serve') {
+    config.plugins.push({
       name: 's3-assets-proxy',
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
@@ -31,39 +68,8 @@ export default defineConfig({
           next()
         })
       },
-    },
-  ],
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Split vendor libraries
-          vendor: ['react', 'react-dom'],
-          mui: ['@mui/material', '@mui/icons-material', '@mui/styles'],
-          three: ['@react-three/fiber', '@react-three/drei', 'three'],
-          animations: ['framer-motion'],
-          utils: ['jotai', 'axios', 'react-router-dom'],
-        },
-      },
-    },
-    // Enable source maps for debugging
-    sourcemap: false,
-    // Optimize chunk size
-    chunkSizeWarningLimit: 1000,
-  },
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      '@mui/material',
-      '@mui/icons-material',
-      'framer-motion',
-      'jotai',
-      'axios',
-    ],
-  },
-  // Enable compression
-  server: {
-    compress: true,
-  },
+    })
+  }
+
+  return config
 })

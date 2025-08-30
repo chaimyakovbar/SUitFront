@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import doll1 from "../assets/suits/dollSuitGrey.webp";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const doll1 = `${S3_BASE_URL}/assets/suits/dollSuitGrey.webp`;
 import { makeStyles } from "@mui/styles";
 import Slider from "react-slick";
 import { Box, useMediaQuery, Typography } from "@mui/material";

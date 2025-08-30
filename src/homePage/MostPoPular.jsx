@@ -19,7 +19,9 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
 } from "@mui/icons-material";
-import sec from "../assets/places/sec.png";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const sec = `${S3_BASE_URL}/assets/places/sec.png`;
 
 const useStyles = makeStyles({
   container: {
@@ -489,23 +491,29 @@ const MostPoPular = () => {
         key: "baseSuit",
         path:
           suit.baseSuitImagePath ||
-          `/assets/ragach/Kinds/${suit.kind || "kind1"}/${
+          `${S3_BASE_URL}/assets/ragach/Kinds/${suit.kind || "kind1"}/${
             suit.color || "blackGrey"
           }.png`,
       },
       {
         key: "lapelCollar",
-        path: `/assets/ragach/${suit.lapelKind || "collarTight"}/${
-          suit.lapelType || "Standard"
-        }/${suit.kind || "kind1"}/${suit.color || "blackGrey"}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/${
+          suit.lapelKind || "collarTight"
+        }/${suit.lapelType || "Standard"}/${suit.kind || "kind1"}/${
+          suit.color || "blackGrey"
+        }.png`,
       },
       {
         key: "colar",
-        path: `/assets/ragach/colar/${suit.color || "blackGrey"}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/colar/${
+          suit.color || "blackGrey"
+        }.png`,
       },
       {
         key: "sleeves",
-        path: `/assets/ragach/sleeves/${suit.color || "blackGrey"}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/sleeves/${
+          suit.color || "blackGrey"
+        }.png`,
       }
     );
 
@@ -516,7 +524,7 @@ const MostPoPular = () => {
 
       imagePaths.push({
         key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
-        path: `/assets/ragach/packet/${packetKind}/${packetType}/${
+        path: `${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${packetType}/${
           suit.color || "blackGrey"
         }.png`,
       });
@@ -526,21 +534,25 @@ const MostPoPular = () => {
     if (suit?.bottomPart === "bottom") {
       imagePaths.push({
         key: "bottom",
-        path: `/assets/ragach/bottom/${suit.color || "blackGrey"}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/bottom/${
+          suit.color || "blackGrey"
+        }.png`,
       });
     }
 
     if (suit?.bottomPart === "bottomKind3") {
       imagePaths.push({
         key: "bottomKind3",
-        path: `/assets/ragach/bottomKind3/${suit.color || "blackGrey"}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${
+          suit.color || "blackGrey"
+        }.png`,
       });
     }
 
     if (suit?.holeButtonColor) {
       imagePaths.push({
         key: "holeButton",
-        path: `/assets/adds/holesButton/${suit.kind || "kind1"}/${
+        path: `${S3_BASE_URL}/assets/adds/holesButton/${suit.kind || "kind1"}/${
           suit.holeButtonColor
         }.png`,
       });
@@ -549,14 +561,14 @@ const MostPoPular = () => {
     if (suit?.holeButtonUpColor) {
       imagePaths.push({
         key: "holeButtonUp",
-        path: `/assets/adds/holesButtonUp/${suit.holeButtonUpColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${suit.holeButtonUpColor}.png`,
       });
     }
 
     if (suit.poshetColor) {
       imagePaths.push({
         key: "poshetColor",
-        path: `/assets/adds/poshet/${suit.poshetColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/poshet/${suit.poshetColor}.png`,
       });
     }
 
@@ -568,7 +580,7 @@ const MostPoPular = () => {
       const actualColor = buttonColorMap[suit.buttonColor] || suit.buttonColor;
       imagePaths.push({
         key: "button",
-        path: `/assets/ragach/button/${
+        path: `${S3_BASE_URL}/assets/ragach/button/${
           suit.kind || "kind1"
         }/${actualColor}.png`,
       });

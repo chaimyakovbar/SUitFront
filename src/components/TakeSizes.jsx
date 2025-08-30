@@ -24,14 +24,16 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import useProduct from "../Hooks/useProduct";
-import tai from "../assets/sizes/humen/tai.png";
-import suit from "../assets/sizes/humen/suit.png";
-import head from "../assets/sizes/humen/head.png";
-import pants from "../assets/sizes/humen/pants.png";
-import shirt from "../assets/sizes/humen/shirt.png";
-import shoose from "../assets/sizes/humen/shoose.png";
-import sleevs from "../assets/sizes/humen/sleevs.png";
-import bottomSuit from "../assets/sizes/humen/bottomSuit.png";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const tai = `${S3_BASE_URL}/assets/sizes/humen/tai.png`;
+const suit = `${S3_BASE_URL}/assets/sizes/humen/suit.png`;
+const head = `${S3_BASE_URL}/assets/sizes/humen/head.png`;
+const pants = `${S3_BASE_URL}/assets/sizes/humen/pants.png`;
+const shirt = `${S3_BASE_URL}/assets/sizes/humen/shirt.png`;
+const shoose = `${S3_BASE_URL}/assets/sizes/humen/shoose.png`;
+const sleevs = `${S3_BASE_URL}/assets/sizes/humen/sleevs.png`;
+const bottomSuit = `${S3_BASE_URL}/assets/sizes/humen/bottomSuit.png`;
 import { postProduct } from "../api/suit";
 
 const arrayOfImg = [shirt, tai, bottomSuit, sleevs, suit];
@@ -436,8 +438,13 @@ const TakeSizes = () => {
         </Dialog>
       )}
 
-      <Drawer anchor="right" open={sideDrawerOpen} onClose={toggleSideDrawer} PaperProps={{ sx: { width: '50vw' } }}>
-        <Box sx={{ width: '100%', p: 3 }}>
+      <Drawer
+        anchor="right"
+        open={sideDrawerOpen}
+        onClose={toggleSideDrawer}
+        PaperProps={{ sx: { width: "50vw" } }}
+      >
+        <Box sx={{ width: "100%", p: 3 }}>
           <Typography variant="h6" sx={{ mb: 3 }}>
             כל המידות
           </Typography>

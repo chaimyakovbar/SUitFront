@@ -5,10 +5,12 @@ import { useAtom } from "jotai";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { currentIndexAtom } from "../../Utils";
 
-import inside from "/assets/kinds/insid.svg";
-import poshet from "/assets/kinds/poshet.svg";
-import button from "/assets/kinds/button.svg";
-import holes from "/assets/kinds/AllSuit2.png";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const inside = `${S3_BASE_URL}/assets/kinds/insid.svg`;
+const poshet = `${S3_BASE_URL}/assets/kinds/poshet.svg`;
+const button = `${S3_BASE_URL}/assets/kinds/button.svg`;
+const holes = `${S3_BASE_URL}/assets/kinds/AllSuit2.png`;
 
 import ButtonInside from "./ButtonInside";
 import ButtonHoles from "./ButtonHoles";

@@ -26,10 +26,11 @@ import ButtonButton from "../../../customSuite/leftSide/stepTree/ButtonButton";
 import PantsControls from "../../PantsControls";
 import TextInsideModal from "../../TextInsideModal";
 
-// Import icons
-import inside from "/assets/kinds/insid.svg";
-import button from "/assets/kinds/button.svg";
-import holes from "/assets/kinds/AllSuit2.png";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const inside = `${S3_BASE_URL}/assets/kinds/insid.svg`;
+const button = `${S3_BASE_URL}/assets/kinds/button.svg`;
+const holes = `${S3_BASE_URL}/assets/kinds/AllSuit2.png`;
 
 const FinishingDetails = ({ isPantsMode, isMobile }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);

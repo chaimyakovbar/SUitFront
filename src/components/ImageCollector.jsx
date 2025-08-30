@@ -20,7 +20,10 @@ import {
 import { useAtomValue, useAtom } from "jotai";
 import { useMediaQuery } from "@mui/material";
 import { suitPricing } from "../config/suitPricing";
-import TextInside from "../../public/assets/adds/TextInside.png";
+
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const TextInside = `${S3_BASE_URL}/assets/adds/TextInside.png`;
 
 const ImageFilterComponent = () => {
   // const previousConfigRef = useRef(null);

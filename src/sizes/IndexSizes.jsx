@@ -8,9 +8,11 @@ import {
 } from "@mui/material";
 import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import imgFor from "../assets/takeSizesM.png";
-import imgFor2 from "../assets/takeSizesR.png";
-// import imgFor3 from "../assets/suitMeasur.jpeg";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const imgFor = `${S3_BASE_URL}/assets/takeSizesM.png`;
+const imgFor2 = `${S3_BASE_URL}/assets/takeSizesR.png`;
+// const imgFor3 = `${S3_BASE_URL}/assets/suitMeasur.jpeg`;
 
 const IndexSizes = () => {
   const theme = useTheme();

@@ -21,16 +21,23 @@ import {
   counterAtom,
 } from "../../../Utils";
 
-// Import images
-import kind1Img from "/assets/kinds/kind1.png";
-import kind2Img from "/assets/kinds/kind2.png";
-import kind3Img from "/assets/kinds/kind3.png";
-import kind4Img from "/assets/kinds/kind4.png";
-import collarTight from "/assets/kinds/collarTight.png";
-import collarDistant from "/assets/kinds/collarDistant.png";
-import packet1 from "/assets/kinds/1.png";
-import packet2 from "/assets/kinds/2.png";
-import packet3 from "/assets/kinds/3.png";
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+
+// Kind images
+const kind1Img = `${S3_BASE_URL}/assets/kinds/kind1.png`;
+const kind2Img = `${S3_BASE_URL}/assets/kinds/kind2.png`;
+const kind3Img = `${S3_BASE_URL}/assets/kinds/kind3.png`;
+const kind4Img = `${S3_BASE_URL}/assets/kinds/kind4.png`;
+
+// Collar images
+const collarTight = `${S3_BASE_URL}/assets/kinds/collarTight.png`;
+const collarDistant = `${S3_BASE_URL}/assets/kinds/collarDistant.png`;
+
+// Packet images
+const packet1 = `${S3_BASE_URL}/assets/kinds/1.png`;
+const packet2 = `${S3_BASE_URL}/assets/kinds/2.png`;
+const packet3 = `${S3_BASE_URL}/assets/kinds/3.png`;
 
 const SuitDesign = ({ isMobile }) => {
   const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);

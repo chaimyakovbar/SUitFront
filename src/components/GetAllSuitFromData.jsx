@@ -317,6 +317,8 @@ const buttonColorMap = {
 };
 
 const getImagePaths = (item, viewType = "suit") => {
+  const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+
   const imagePaths = [];
 
   if (viewType === "suit") {
@@ -327,23 +329,32 @@ const getImagePaths = (item, viewType = "suit") => {
         key: "baseSuit",
         path:
           item.baseSuitImagePath ||
-          `/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+          `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
       },
       {
         key: "insideUp",
-        path: `/assets/ragach/insideUp/${item.insideColor}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/insideUp/${item.insideColor}.png`,
       },
       {
         key: "lapelCollar",
-        path: `/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
       },
-      { key: "colar", path: `/assets/ragach/colar/${item.color}.png` },
-      { key: "sleeves", path: `/assets/ragach/sleeves/${item.color}.png` },
+      {
+        key: "colar",
+        path: `${S3_BASE_URL}/assets/ragach/colar/${item.color}.png`,
+      },
+      {
+        key: "sleeves",
+        path: `${S3_BASE_URL}/assets/ragach/sleeves/${item.color}.png`,
+      },
       {
         key: "insideBottom",
-        path: `/assets/ragach/insideBottom/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/insideBottom/${item.color}.png`,
       },
-      { key: "packetUp", path: `/assets/ragach/packetUp/${item.color}.png` }
+      {
+        key: "packetUp",
+        path: `${S3_BASE_URL}/assets/ragach/packetUp/${item.color}.png`,
+      }
     );
 
     // Add packet based on packet type and kind - only what user selected
@@ -355,7 +366,7 @@ const getImagePaths = (item, viewType = "suit") => {
 
       imagePaths.push({
         key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
-        path: `/assets/ragach/packet/${packetKind}/${packetType}/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${packetType}/${item.color}.png`,
       });
     } else {
       console.warn("⚠️ Missing packetType for suit:", item._id);
@@ -366,35 +377,35 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item?.bottomPart === "bottom") {
       imagePaths.push({
         key: "bottom",
-        path: `/assets/ragach/bottom/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/bottom/${item.color}.png`,
       });
     }
 
     if (item?.bottomPart === "bottomKind3") {
       imagePaths.push({
         key: "bottomKind3",
-        path: `/assets/ragach/bottomKind3/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${item.color}.png`,
       });
     }
 
     if (item?.holeButtonColor) {
       imagePaths.push({
         key: "holeButton",
-        path: `/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
       });
     }
 
     if (item?.holeButtonUpColor) {
       imagePaths.push({
         key: "holeButtonUp",
-        path: `/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
       });
     }
 
     if (item.poshetColor) {
       imagePaths.push({
         key: "poshetColor",
-        path: `/assets/adds/poshet/${item.poshetColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
       });
     }
 
@@ -402,7 +413,7 @@ const getImagePaths = (item, viewType = "suit") => {
       const actualColor = buttonColorMap[item.buttonColor] || item.buttonColor;
       imagePaths.push({
         key: "button",
-        path: `/assets/ragach/button/${item.kind}/${actualColor}.png`,
+        path: `${S3_BASE_URL}/assets/ragach/button/${item.kind}/${actualColor}.png`,
       });
     }
 

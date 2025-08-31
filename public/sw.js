@@ -1,4 +1,4 @@
-const CACHE_NAME = 'suit-app-v3';
+const CACHE_NAME = 'suit-app-v5';
 const urlsToCache = [
   '/',
   '/assets/photoBackGround3.jpg',
@@ -9,11 +9,11 @@ const urlsToCache = [
 
 // Install event - cache critical resources
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installing...');
+  console.log('Service Worker installing... v5');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache');
+        console.log('Opened cache v5');
         return cache.addAll(urlsToCache);
       })
   );
@@ -52,7 +52,7 @@ self.addEventListener('fetch', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating...');
+  console.log('Service Worker activating... v5');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(

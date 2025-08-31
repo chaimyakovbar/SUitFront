@@ -359,7 +359,7 @@ const ImageFilterComponent = () => {
       {/* {textInsideText && (
         <div style={{ ...overlayStyle, zIndex: 200 }}>
           <img
-            src="/assets/adds/TextInside.png"
+            src={`${S3_BASE_URL}/assets/adds/TextInside.png`}
             alt="TextInside"
             style={imageStyle}
             onError={() => handleImageError("TextInside")}

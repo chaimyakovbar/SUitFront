@@ -1,4 +1,4 @@
-const CACHE_NAME = 'suit-app-v2';
+const CACHE_NAME = 'suit-app-v3';
 const urlsToCache = [
   '/',
   '/assets/photoBackGround3.jpg',
@@ -9,6 +9,7 @@ const urlsToCache = [
 
 // Install event - cache critical resources
 self.addEventListener('install', (event) => {
+  console.log('Service Worker installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -16,13 +17,21 @@ self.addEventListener('install', (event) => {
         return cache.addAll(urlsToCache);
       })
   );
+  // Force activation
+  self.skipWaiting();
 });
 
 // Fetch event - serve from cache when offline
 self.addEventListener('fetch', (event) => {
-  // Skip caching for JavaScript files to ensure fresh versions
+  // Force fresh JavaScript files
   if (event.request.url.includes('.js')) {
-    event.respondWith(fetch(event.request));
+    event.respondWith(
+      fetch(event.request, { cache: 'no-cache' })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(event.request);
+        })
+    );
     return;
   }
 
@@ -43,6 +52,7 @@ self.addEventListener('fetch', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
+  console.log('Service Worker activating...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -55,6 +65,8 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+  // Take control immediately
+  event.waitUntil(self.clients.claim());
 });
 
 // Cache images dynamically

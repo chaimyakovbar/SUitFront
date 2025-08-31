@@ -2,6 +2,9 @@ import React, { useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import { Link, useLocation } from "react-router-dom";
 import "./HomePage2.css";
+
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 import {
   Box,
   Typography,
@@ -253,7 +256,7 @@ const HomePage2 = () => {
           // animate={{ scale: 1 }}
           // transition={{ duration: 10, ease: "easeOut" }}
           className={classes.videoBackground}
-          src="/assets/photoBackGround3.jpg"
+          src={`${S3_BASE_URL}/assets/photoBackGround3.jpg`}
           alt="Background"
         />
         <div className={classes.heroOverlay}></div>
@@ -349,7 +352,7 @@ const HomePage2 = () => {
                 transition={{ duration: 0.8 }}
               >
                 <img
-                  src="/assets/photoBackGround4.webp"
+                  src={`${S3_BASE_URL}/assets/photoBackGround4.webp`}
                   alt="Featured Collection"
                   className={classes.featuredImage}
                 />

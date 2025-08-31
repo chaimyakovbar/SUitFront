@@ -81,7 +81,7 @@ const App = () => {
           <NavBarWrapper />
           {/* <Whatchap /> */}
           <AccessibilityMenu />
-          <Suspense fallback={<LoadingSpinner />}>
+          {/* <Suspense fallback={<LoadingSpinner />}> */}
             <Routes>
               <Route path="/" element={<HomePage2 />} />
               <Route path="/login" element={<LoginWithGoogle />} />
@@ -136,7 +136,7 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/Payed" element={<Payed />} />
             </Routes>
-          </Suspense>
+          {/* </Suspense> */}
         </Router>
       </LanguageProvider>
     </AuthProvider>

@@ -509,7 +509,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
           minWidth: "fit-content",
         }}
       >
-        {detailCategories.map((category, index) => (
+        {detailCategories.map((category) => (
           <motion.div
             key={category.key}
             variants={itemVariants}
@@ -712,7 +712,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
 
       {/* Details Grid */}
       <Grid container spacing={2.5}>
-        {detailCategories.map((category, index) => (
+        {detailCategories.map((category) => (
           <Grid item xs={6} sm={4} md={6} key={category.key}>
             <motion.div
               variants={itemVariants}

@@ -22,6 +22,9 @@ import {
   showTextInsideAtom,
 } from "../Utils";
 
+// S3 Assets URLs
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+
 const TextInsideModal = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [showTextInside, setShowTextInside] = useAtom(showTextInsideAtom);

@@ -437,31 +437,112 @@ const getImagePaths = (item, viewType = "suit") => {
     // Use pantsColor if exists, otherwise use suit color
     const pantsColor = item.pantsColor || item.color;
 
+    // Base pants layer - always active
     imagePaths.push({
       key: "pants",
-      path: `/assets/pants/AllPants/${pantsColor}.png`,
+      path: `/assets/pants/allPants/${pantsColor}.png`,
     });
 
-    // Add lines if exists
-    if (item.pantsLines && item.pantsLines !== "none") {
+    // Add kind layer if exists (not regularBase)
+    if (item.pantsKind && item.pantsKind !== "regularBase") {
       imagePaths.push({
-        key: "pantsLines",
-        path: `/assets/pants/lines/${item.pantsLines}/${pantsColor}.png`,
+        key: "pantsKind",
+        path: `/assets/pants/kind/${item.pantsKind}/${pantsColor}.png`,
       });
     }
 
-    // Add hole and button - always show (default is Regular)
-    const holeButtonType = item.pantsHoleButton || "Regular"; // ברירת מחדל
-    imagePaths.push({
-      key: "pantsHoleButton",
-      path: `/assets/pants/HoleAndButton/${holeButtonType}/${pantsColor}.png`,
-    });
+    // Add button layer if exists
+    if (item.pantsButtonKind && item.pantsButtonKind !== "none") {
+      let buttonPath = null;
+      switch (item.pantsKind || "regularBase") {
+        case "regularBase":
+          buttonPath =
+            item.pantsButtonKind === "regularButton" ? "regularButton" : null;
+          break;
+        case "longRegular":
+          buttonPath =
+            item.pantsButtonKind === "longMidleButton"
+              ? "longMidleButton"
+              : null;
+          break;
+        case "longWide":
+          if (item.pantsButtonKind === "longWideButton")
+            buttonPath = "longWideButton";
+          else if (item.pantsButtonKind === "longWideTwoButton")
+            buttonPath = "longWideTwoButton";
+          break;
+        case "wide":
+          if (item.pantsButtonKind === "wideButton") buttonPath = "wideButton";
+          else if (item.pantsButtonKind === "wideTowButton")
+            buttonPath = "wideTowButton";
+          break;
+        case "MiddleWide":
+          if (item.pantsButtonKind === "middleWideButton")
+            buttonPath = "longWideButton";
+          else if (item.pantsButtonKind === "middleWideTwoButton")
+            buttonPath = "longWideTwoButton";
+          break;
+      }
+      if (buttonPath) {
+        imagePaths.push({
+          key: "pantsButton",
+          path: `/assets/pants/button/${buttonPath}/${pantsColor}.png`,
+        });
+      }
+    }
 
-    // Add hem if exists
+    // Add loops layer if exists
+    if (item.pantsLoops && item.pantsLoops !== "none") {
+      let loopsPath = null;
+      const kind = item.pantsKind || "regularBase";
+      if (kind === "regularBase" || kind === "longRegular") {
+        if (item.pantsLoops === "loop") loopsPath = "loop";
+        else if (item.pantsLoops === "twoLoop") loopsPath = "twoLoop";
+      } else if (kind === "longWide" || kind === "wide") {
+        if (item.pantsLoops === "wideOneIoop") loopsPath = "wideOneIoop";
+        else if (item.pantsLoops === "wideTwoLoop") loopsPath = "wideTwoLoop";
+      } else if (kind === "MiddleWide") {
+        if (item.pantsLoops === "wideMiddleLoop") loopsPath = "wideMiddleLoop";
+        else if (item.pantsLoops === "wideMiddleTowLoop")
+          loopsPath = "wideMiddleTowLoop";
+      }
+      if (loopsPath) {
+        imagePaths.push({
+          key: "pantsLoops",
+          path: `/assets/pants/loops/${loopsPath}/${pantsColor}.png`,
+        });
+      }
+    }
+
+    // Add iron layer if exists
+    if (item.pantsIron && item.pantsIron !== "none") {
+      let ironPath = null;
+      const kind = item.pantsKind || "regularBase";
+      if (kind === "regularBase" || kind === "longRegular") {
+        if (item.pantsIron === "regularIron") ironPath = "regularIron";
+        else if (item.pantsIron === "oneIron") ironPath = "oneIron";
+        else if (item.pantsIron === "oneIronTwoButton")
+          ironPath = "oneIronTwoButton";
+      } else if (
+        kind === "longWide" ||
+        kind === "wide" ||
+        kind === "MiddleWide"
+      ) {
+        ironPath = item.pantsIron === "wideIron" ? "wideIron" : null;
+      }
+      if (ironPath) {
+        imagePaths.push({
+          key: "pantsIron",
+          path: `/assets/pants/iron/${ironPath}/${pantsColor}.png`,
+        });
+      }
+    }
+
+    // Add hem layer if exists
     if (item.pantsHem && item.pantsHem !== "none") {
       imagePaths.push({
         key: "pantsHem",
-        path: `/assets/pants/Hem/${pantsColor}.png`,
+        path: `/assets/pants/hem/hem/${pantsColor}.png`,
       });
     }
 

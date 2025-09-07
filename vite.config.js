@@ -19,16 +19,18 @@ export default defineConfig(({ command }) => {
             animations: ['framer-motion'],
             utils: ['jotai', 'axios', 'react-router-dom'],
           },
-          // Add cache busting with timestamp
-          entryFileNames: `assets/[name]-${timestamp}.js`,
-          chunkFileNames: `assets/[name]-${timestamp}.js`,
-          assetFileNames: `assets/[name]-${timestamp}.[ext]`
+          // Add cache busting with timestamp and hash
+          entryFileNames: `assets/[name]-${timestamp}-[hash].js`,
+          chunkFileNames: `assets/[name]-${timestamp}-[hash].js`,
+          assetFileNames: `assets/[name]-${timestamp}-[hash].[ext]`
         },
       },
       // Enable source maps for debugging
       sourcemap: false,
       // Optimize chunk size
       chunkSizeWarningLimit: 1000,
+      // Add build timestamp to manifest
+      manifest: true,
     },
     optimizeDeps: {
       include: [

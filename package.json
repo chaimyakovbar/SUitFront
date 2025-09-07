@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/update-service-worker.js && vite build",
+    "build:prod": "node scripts/update-service-worker.js && vite build && echo '✅ Build completed with cache busting'",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "update-cache": "node scripts/update-service-worker.js"
   },
   "engines": {
     "node": "20.x"

@@ -49,6 +49,19 @@ export const selectedPantsLinesAtom = atom('none'); // none, OneLinesInTheTop, t
 export const selectedPantsHoleButtonAtom = atom('Regular'); // Regular, behindLeftSide, behindRegular, LeftSide
 export const selectedPantsHemAtom = atom('none'); // none, Hem
 
+// New pants5 model atoms (logic only, no UI changes)
+// Kind: regularBase | longRegular | longWide | wide | MiddleWide
+export const selectedPantsKindAtom = atom('regularBase');
+
+// Button within kind; values per rules (or 'none')
+export const selectedPantsButtonKindAtom = atom('none');
+
+// Loops within kind; values: none | loop | twoLoop | wideOneIoop | wideTwoLoop | wideMiddleLoop | wideMiddleTowLoop
+export const selectedPantsLoopsAtom = atom('none');
+
+// Iron within kind; values: none | regularIron | oneIron | oneIronTwoButton | wideIron
+export const selectedPantsIronAtom = atom('none');
+
 // TextInside functionality
 export const textInsideTextAtom = atom(''); // Free text for TextInside
 export const textInsideFontAtom = atom('Arial'); // Font family for TextInside

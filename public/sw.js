@@ -1,5 +1,5 @@
 // Generate cache name with timestamp for automatic cache busting
-const CACHE_VERSION = Date.now();
+const CACHE_VERSION = 1757249846845;
 const CACHE_NAME = `suit-app-v${CACHE_VERSION}`;
 
 const urlsToCache = [

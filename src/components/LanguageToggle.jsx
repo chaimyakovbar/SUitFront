@@ -23,6 +23,7 @@ const useStyles = makeStyles({
   //   },
   // },
   languageIcon: {
+    width: "45px !important",
     fontSize: "1.5rem !important",
     color: "#fff !important",
   },

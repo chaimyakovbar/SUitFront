@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Box,
   Container,
@@ -23,6 +23,7 @@ import {
   FormControl,
   InputLabel,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -35,12 +36,14 @@ import PersonIcon from "@mui/icons-material/Person";
 import PhoneIcon from "@mui/icons-material/Phone";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
-import GetAllSuitFromData from "../components/GetAllSuitFromData";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteSuit } from "../api/suit";
 import useProduct from "../Hooks/useProduct";
 import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 import Checkout from "./CheckOut";
-import { getLocalOrders } from "../api/orders";
+// import { getLocalOrders } from "../api/orders";
 
 // Props: all logic/state/handlers/data should be passed in from parent (see Payed.jsx)
 const CheckoutModern = ({
@@ -61,6 +64,12 @@ const CheckoutModern = ({
   const { data: products } = useProduct();
   const [user] = useAtom(authUserAtom);
 
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteSuit,
+  });
+
   // State for selected suits and total price
   const [selectedSuits, setSelectedSuits] = useState(() => {
     const saved = localStorage.getItem("selectedSuits");
@@ -77,7 +86,7 @@ const CheckoutModern = ({
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [hasSizesTable, setHasSizesTable] = useState(false);
   const [viewMode, setViewMode] = useState("grid");
-  const [localOrders, setLocalOrders] = useState([]);
+  // const [localOrders, setLocalOrders] = useState([]);
 
   // Initialize profiles from data
   useEffect(() => {
@@ -102,7 +111,7 @@ const CheckoutModern = ({
         setSelectedProfile(profiles[0]);
       }
     }
-  }, [products]);
+  }, [products, selectedProfile]);
 
   // Automatically select all suits when entering the payment page
   useEffect(() => {
@@ -157,6 +166,297 @@ const CheckoutModern = ({
     }
   };
 
+  // -------- Suit images (like Account) --------
+  const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+
+  const buttonColorMap = useMemo(
+    () => ({
+      black: "blackGrey",
+      grey: "greyLight",
+    }),
+    []
+  );
+
+  const loadImage = useCallback(async (key, path) => {
+    if (!loadImage.cache) loadImage.cache = new Map();
+    const cacheKey = `${key}-${path}`;
+    if (loadImage.cache.has(cacheKey)) return loadImage.cache.get(cacheKey);
+    const imageUrl = path;
+    const result = await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ key, src: imageUrl });
+      img.onerror = () => resolve({ key, src: null });
+      img.src = imageUrl;
+    });
+    loadImage.cache.set(cacheKey, result);
+    return result;
+  }, []);
+
+  const getZIndex = useCallback((key) => {
+    const zIndexMap = {
+      // Base layers
+      baseSuit: 2,
+      insideUp: 0,
+      insideBottom: 0,
+      sleeves: 3,
+      bottom: 4,
+      bottomKind3: 4,
+      // Details (middle)
+      button: 50,
+      holeButton: 55,
+      holeButtonUp: 56,
+      poshetColor: 57,
+      packetUp: 60,
+      // Collar and pockets should be highest
+      lapelCollar: 100,
+      colar: 99,
+      packetSide: 102,
+      packetBottom: 102,
+      default: 1,
+    };
+    return zIndexMap[key] || zIndexMap.default;
+  }, []);
+
+  const getImagePaths = useCallback(
+    (item) => {
+      const imagePaths = [
+        {
+          key: "baseSuit",
+          path:
+            item.baseSuitImagePath ||
+            `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+        },
+        {
+          key: "insideUp",
+          path: `${S3_BASE_URL}/assets/ragach/insideUp/${item.insideColor}.png`,
+        },
+        {
+          key: "lapelCollar",
+          path: `${S3_BASE_URL}/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
+        },
+        {
+          key: "colar",
+          path: `${S3_BASE_URL}/assets/ragach/colar/${item.color}.png`,
+        },
+        {
+          key: "sleeves",
+          path: `${S3_BASE_URL}/assets/ragach/sleeves/${item.color}.png`,
+        },
+        {
+          key: "insideBottom",
+          path: `${S3_BASE_URL}/assets/ragach/insideBottom/${item.color}.png`,
+        },
+        {
+          key: "packetUp",
+          path: `${S3_BASE_URL}/assets/ragach/packetUp/${item.color}.png`,
+        },
+      ];
+
+      if (item?.bottomPart === "bottom") {
+        imagePaths.push({
+          key: "bottom",
+          path: `${S3_BASE_URL}/assets/ragach/bottom/${item.color}.png`,
+        });
+      }
+      if (item?.bottomPart === "bottomKind3") {
+        imagePaths.push({
+          key: "bottomKind3",
+          path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${item.color}.png`,
+        });
+      }
+      if (item?.holeButtonColor) {
+        imagePaths.push({
+          key: "holeButton",
+          path: `${S3_BASE_URL}/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
+        });
+      }
+      if (item?.holeButtonUpColor) {
+        imagePaths.push({
+          key: "holeButtonUp",
+          path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
+        });
+      }
+      if (item.poshetColor) {
+        imagePaths.push({
+          key: "poshetColor",
+          path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
+        });
+      }
+      if (item.buttonColor) {
+        const actualColor =
+          buttonColorMap[item.buttonColor] || item.buttonColor;
+        imagePaths.push({
+          key: "button",
+          path: `${S3_BASE_URL}/assets/ragach/button/${item.kind}/${actualColor}.png`,
+        });
+      }
+      // Add packet based on selected kind/type (bottom pockets or side)
+      if (item.packetType) {
+        const packetKind = item.packetKind || "packetBottom";
+        imagePaths.push({
+          key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
+          path: `${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${item.packetType}/${item.color}.png`,
+        });
+      }
+      return imagePaths;
+    },
+    [buttonColorMap]
+  );
+
+  const fetchImages = useCallback(
+    async (item) => {
+      if (!item) return {};
+      const imagePaths = getImagePaths(item);
+      const images = await Promise.all(
+        imagePaths.map(({ key, path }) => loadImage(key, path))
+      );
+      return images.reduce((acc, { key, src }) => {
+        if (src) acc[key] = src;
+        return acc;
+      }, {});
+    },
+    [getImagePaths, loadImage]
+  );
+
+  const SuitCard = ({ suit }) => {
+    const [images, setImages] = useState(null);
+    const [imgLoading, setImgLoading] = useState(true);
+
+    useEffect(() => {
+      let mounted = true;
+      (async () => {
+        try {
+          const res = await fetchImages(suit);
+          if (mounted) setImages(res);
+        } finally {
+          if (mounted) setImgLoading(false);
+        }
+      })();
+      return () => {
+        mounted = false;
+      };
+    }, [suit]);
+
+    return (
+      <Box
+        key={`suit-${suit._id}`}
+        sx={{
+          position: "relative",
+          zIndex: 10000,
+          width: "100%",
+          height: viewMode === "list" ? 120 : 300,
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "12px",
+          overflow: "hidden",
+          backgroundColor: "#202020",
+          mb: viewMode === "list" ? 1 : 2,
+        }}
+      >
+        {imgLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <CircularProgress size={24} />
+          </Box>
+        ) : images && Object.keys(images).length > 0 ? (
+          Object.entries(images)
+            .sort((a, b) => getZIndex(a[0]) - getZIndex(b[0]))
+            .map(([key, src]) => (
+              <img
+                key={`${suit._id}-${key}`}
+                src={src}
+                alt={`Suit part: ${key}`}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "80%",
+                  height: "80%",
+                  objectFit: "contain",
+                  zIndex: getZIndex(key),
+                }}
+                loading="lazy"
+              />
+            ))
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              color: "rgba(255,255,255,0.5)",
+            }}
+          >
+            No image
+          </Box>
+        )}
+
+        <Box
+          sx={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            p: 1.5,
+            backgroundColor: "#222222",
+            borderTop: "1px solid rgba(255,255,255,0.1)",
+          }}
+        >
+          <Typography
+            sx={{ color: "#fff", fontFamily: "'Montserrat', sans-serif" }}
+          >
+            ${suit.totalPrice}
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <input
+              type="checkbox"
+              checked={selectedSuits.has(suit._id)}
+              onChange={() => handleSelect(suit._id)}
+              style={{ width: 20, height: 20, cursor: "pointer" }}
+            />
+            <IconButton
+              onClick={async () => {
+                try {
+                  await deleteMutation.mutateAsync(suit._id);
+                  if (selectedSuits.has(suit._id)) {
+                    const newSet = new Set(selectedSuits);
+                    newSet.delete(suit._id);
+                    setSelectedSuits(newSet);
+                    setTotalPrice((prev) =>
+                      Math.max(0, prev - (suit.totalPrice || 0))
+                    );
+                  }
+                  queryClient.invalidateQueries(["useProduct"]);
+                } catch (e) {
+                  console.error("Failed to delete suit", e);
+                }
+              }}
+              disabled={deleteMutation.isLoading}
+              sx={{ color: "#fff", border: "1px solid rgba(255,255,255,0.3)" }}
+              size="small"
+            >
+              {deleteMutation.isLoading ? (
+                <CircularProgress size={18} />
+              ) : (
+                <DeleteIcon />
+              )}
+            </IconButton>
+          </Box>
+        </Box>
+      </Box>
+    );
+  };
+
   // Handle shipping cost change
   const handleShippingChange = (newShippingCost) => {
     setShippingCost(newShippingCost);
@@ -166,12 +466,11 @@ const CheckoutModern = ({
   const canUserPay =
     user?.address && user?.phoneNumber && selectedSuits.size > 0;
 
-  // Function to check local orders
-  const checkLocalOrders = () => {
-    const orders = getLocalOrders();
-    setLocalOrders(orders);
-    alert(`נמצאו ${orders.length} הזמנות ב-localStorage`);
-  };
+  // const checkLocalOrders = () => {
+  //   const orders = getLocalOrders();
+  //   setLocalOrders(orders);
+  //   alert(`נמצאו ${orders.length} הזמנות ב-localStorage`);
+  // };
 
   return (
     <Fade in timeout={600}>
@@ -287,32 +586,21 @@ const CheckoutModern = ({
                 >
                   {viewMode === "grid" ? "הצג כרשימה" : "הצג ככרטיסים"}
                 </Button>
-                <Box
-                  sx={{
-                    maxHeight: "400px",
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    "&::-webkit-scrollbar": {
-                      width: "8px",
-                    },
-                    "&::-webkit-scrollbar-track": {
-                      background: "rgba(192, 211, 202, 0.1)",
-                      borderRadius: "4px",
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                      background: highlight,
-                      borderRadius: "4px",
-                      "&:hover": {
-                        background: "rgba(192, 211, 202, 0.8)",
-                      },
-                    },
-                  }}
-                >
-                  <GetAllSuitFromData
-                    viewMode={viewMode}
-                    selectedSuits={selectedSuits}
-                    onSelect={handleSelect}
-                  />
+                <Box sx={{ mt: 1 }}>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        viewMode === "grid"
+                          ? "repeat(auto-fill, minmax(300px, 1fr))"
+                          : "1fr",
+                      gap: viewMode === "grid" ? 2 : 1,
+                    }}
+                  >
+                    {(products?.allSuitPart || []).map((suit) => (
+                      <SuitCard key={suit._id} suit={suit} />
+                    ))}
+                  </Box>
                 </Box>
               </Paper>
 
@@ -1111,7 +1399,7 @@ const CheckoutModern = ({
                         }
                         sizeProfile={selectedProfile?.name || null}
                         sizeMeasurements={selectedProfile?.sizes || {}}
-                        onPaymentSuccess={(paymentDetails, userData) => {
+                        onPaymentSuccess={() => {
                           // You can add additional logic here, like redirecting to success page
                           // or updating the UI state
                         }}

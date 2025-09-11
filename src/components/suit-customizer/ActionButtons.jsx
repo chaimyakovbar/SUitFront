@@ -85,6 +85,27 @@ const ActionButtons = ({ isMobile }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Setters for reset after save
+  const [, setCurrColor] = useAtom(currentColorAtom);
+  const [, setSelectedKind] = useAtom(currentKindAtom);
+  const [, setSelectedCollar] = useAtom(selectedCollarAtom);
+  const [, setSelectedLapelType] = useAtom(selectedLapelTypeAtom);
+  const [, setSelectedPacketType] = useAtom(selectedPacketTypeAtom);
+  const [, setSelectedKindType] = useAtom(selectedKindTypeAtom);
+  const [, setSelectedButton] = useAtom(selectedButtonAtom);
+  const [, setSelectedPoshet] = useAtom(selectedPoshetAtom);
+  const [, setSelectedHolesButton] = useAtom(selectedHolesButtonAtom);
+  const [, setSelectedHolesButtonUp] = useAtom(selectedHolesButtonUpAtom);
+  const [, setSelectedInsideType] = useAtom(selectedInsideTypeAtom);
+  const [, setSelectedPantsColor] = useAtom(selectedPantsColorAtom);
+  const [, setSelectedPantsLines] = useAtom(selectedPantsLinesAtom);
+  const [, setSelectedPantsHoleButton] = useAtom(selectedPantsHoleButtonAtom);
+  const [, setSelectedPantsHem] = useAtom(selectedPantsHemAtom);
+  const [, setSelectedSleeveButtons] = useAtom(selectedSleeveButtonsAtom);
+  const [, setTextInsideText] = useAtom(textInsideTextAtom);
+  const [, setTextInsideFont] = useAtom(textInsideFontAtom);
+  const [, setTextInsideColor] = useAtom(textInsideColorAtom);
+
   const isStepValid = () => {
     if (currentStep === 1) return !!currentKind;
     return counterArray[currentStep]?.[steps[currentStep].validate];
@@ -160,6 +181,28 @@ const ActionButtons = ({ isMobile }) => {
         enqueueSnackbar("Your custom suit has been saved successfully!", {
           variant: "success",
         });
+        // Reset all customization state to defaults after successful save
+        resetSuitState({
+          setCurrColor,
+          setSelectedKind,
+          setSelectedCollar,
+          setSelectedLapelType,
+          setSelectedPacketType,
+          setSelectedButton,
+          setSelectedPoshet,
+          setSelectedHolesButton,
+          setSelectedHolesButtonUp,
+          setSelectedInsideType,
+          setSelectedPantsColor,
+          setSelectedPantsLines,
+          setSelectedPantsHoleButton,
+          setSelectedPantsHem,
+          setSelectedSleeveButtons,
+          setTextInsideText,
+          setTextInsideFont,
+          setTextInsideColor,
+        });
+        setCurrentStep(0);
         // Navigate only after successful save
         navigate("/indexSizes");
       } else {

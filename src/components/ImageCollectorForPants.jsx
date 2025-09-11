@@ -13,6 +13,11 @@ import {
 import { useAtomValue } from "jotai";
 import { useMediaQuery } from "@mui/material";
 
+// Configurable base for pants assets. Use empty string to load from local /public.
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+const PANTS_BASE =
+  (import.meta?.env?.VITE_PANTS_ASSETS_BASE ?? S3_BASE_URL) || "";
+
 const ImageCollectorForPants = () => {
   // Remove artificial loading state to prevent re-render jank on small changes
 
@@ -158,7 +163,7 @@ const ImageCollectorForPants = () => {
 
       {/* Base pants - allPants (always active) */}
       <img
-        src={`/assets/pants/allPants/${effectivePantsColor}.png`}
+        src={`${PANTS_BASE}/assets/pants/allPants/${effectivePantsColor}.png`}
         alt={`All Pants - ${effectivePantsColor}`}
         style={imageStyle}
         loading="lazy"
@@ -171,7 +176,7 @@ const ImageCollectorForPants = () => {
       {/* Kind layer - only show if not regularBase */}
       {selectedPantsKind !== "regularBase" && (
         <img
-          src={`/assets/pants/kind/${selectedPantsKind}/${effectivePantsColor}.png`}
+          src={`${PANTS_BASE}/assets/pants/kind/${selectedPantsKind}/${effectivePantsColor}.png`}
           alt={`Kind - ${selectedPantsKind}`}
           style={overlayStyle}
           loading="lazy"
@@ -189,7 +194,7 @@ const ImageCollectorForPants = () => {
         const buttonPath = getButtonImagePath();
         return buttonPath ? (
           <img
-            src={`/assets/pants/button/${buttonPath}/${effectivePantsColor}.png`}
+            src={`${PANTS_BASE}/assets/pants/button/${buttonPath}/${effectivePantsColor}.png`}
             alt={`Button - ${buttonPath}`}
             style={overlayStyle}
             loading="lazy"
@@ -208,7 +213,7 @@ const ImageCollectorForPants = () => {
         const loopsPath = getLoopsImagePath();
         return loopsPath ? (
           <img
-            src={`/assets/pants/loops/${loopsPath}/${effectivePantsColor}.png`}
+            src={`${PANTS_BASE}/assets/pants/loops/${loopsPath}/${effectivePantsColor}.png`}
             alt={`Loops - ${loopsPath}`}
             style={overlayStyle}
             loading="lazy"
@@ -227,7 +232,7 @@ const ImageCollectorForPants = () => {
         const ironPath = getIronImagePath();
         return ironPath ? (
           <img
-            src={`/assets/pants/iron/${ironPath}/${effectivePantsColor}.png`}
+            src={`${PANTS_BASE}/assets/pants/iron/${ironPath}/${effectivePantsColor}.png`}
             alt={`Iron - ${ironPath}`}
             style={overlayStyle}
             loading="lazy"
@@ -244,7 +249,7 @@ const ImageCollectorForPants = () => {
       {/* Hem layer - only show if hem is selected */}
       {selectedPantsHem !== "none" && (
         <img
-          src={`/assets/pants/hem/hem/${effectivePantsColor}.png`}
+          src={`${PANTS_BASE}/assets/pants/hem/hem/${effectivePantsColor}.png`}
           alt={`Hem - ${effectivePantsColor}`}
           style={overlayStyle}
           loading="lazy"

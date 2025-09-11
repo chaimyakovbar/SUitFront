@@ -25,19 +25,19 @@ import {
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
 // Kind images
-const kind1Img = `/assets/kinds/kind1.png`;
-const kind2Img = `/assets/kinds/kind2.png`;
-const kind3Img = `/assets/kinds/kind3.png`;
-const kind4Img = `/assets/kinds/kind4.png`;
+const kind1Img = '../assets/kinds/kind1.png';
+const kind2Img = '../assets/kinds/kind2.png';
+const kind3Img = '../assets/kinds/kind3.png';
+const kind4Img = '../assets/kinds/kind4.png';
 
 // Collar images
-const collarTight = `/assets/kinds/collarTight.png`;
-const collarDistant = `/assets/kinds/collarDistant.png`;
+const collarTight = '../assets/kinds/collarTight.png';
+const collarDistant = '../assets/kinds/collarDistant.png';
 
 // Packet images
-const packet1 = `/assets/kinds/1.png`;
-const packet2 = `/assets/kinds/2.png`;
-const packet3 = `/assets/kinds/3.png`;
+const packet1 = '../assets/kinds/1.png';
+const packet2 = '../assets/kinds/2.png';
+const packet3 = '../assets/kinds/3.png';
 
 const SuitDesign = ({ isMobile }) => {
   const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);

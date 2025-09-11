@@ -224,7 +224,8 @@ const CheckoutModern = ({
           key: "baseSuit",
           path:
             item.baseSuitImagePath ||
-            `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+            `${S3_BASE_URL}/assets/ragach/kinds/${item.kind}/${item.color}.png`,
+          fallbackPath: `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
         },
         {
           key: "insideUp",
@@ -308,7 +309,13 @@ const CheckoutModern = ({
       if (!item) return {};
       const imagePaths = getImagePaths(item);
       const images = await Promise.all(
-        imagePaths.map(({ key, path }) => loadImage(key, path))
+        imagePaths.map(async ({ key, path, fallbackPath }) => {
+          const res = await loadImage(key, path);
+          if (!res?.src && fallbackPath) {
+            return loadImage(key, fallbackPath);
+          }
+          return res;
+        })
       );
       return images.reduce((acc, { key, src }) => {
         if (src) acc[key] = src;
@@ -595,6 +602,18 @@ const CheckoutModern = ({
                           ? "repeat(auto-fill, minmax(300px, 1fr))"
                           : "1fr",
                       gap: viewMode === "grid" ? 2 : 1,
+                      maxHeight: { xs: 360, sm: 480, md: 560 },
+                      overflowY: "auto",
+                      pr: 1,
+                      "&::-webkit-scrollbar": { width: 8 },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "rgba(192, 211, 202, 0.3)",
+                        borderRadius: 8,
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        backgroundColor: "rgba(255,255,255,0.05)",
+                        borderRadius: 8,
+                      },
                     }}
                   >
                     {(products?.allSuitPart || []).map((suit) => (

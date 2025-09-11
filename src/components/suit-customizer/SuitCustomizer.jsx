@@ -7,8 +7,38 @@ import {
   Typography,
 } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAtom } from "jotai";
-import { currentIndexAtom } from "../../Utils";
+import { useAtom, useAtomValue } from "jotai";
+import {
+  currentIndexAtom,
+  currentKindAtom,
+  allSuitPartAtom,
+  authUserAtom,
+  currentColorAtom,
+  selectedCollarAtom,
+  selectedLapelTypeAtom,
+  selectedPacketTypeAtom,
+  selectedInsideTypeAtom,
+  selectedButtonAtom,
+  selectedPoshetAtom,
+  selectedHolesButtonAtom,
+  selectedHolesButtonUpAtom,
+  priceAllSuitAtom,
+  selectedPantsColorAtom,
+  selectedPantsLinesAtom,
+  selectedPantsHoleButtonAtom,
+  selectedPantsHemAtom,
+  selectedSleeveButtonsAtom,
+  textInsideTextAtom,
+  textInsideFontAtom,
+  textInsideColorAtom,
+  selectedKindTypeAtom,
+  selectedTopCollarColorAtom,
+} from "../../Utils";
+import {
+  createCompleteSuitObject,
+  resetSuitState,
+} from "../../utils/suitStateManager";
+import { postSuitProduct } from "../../api/suit";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
@@ -27,6 +57,50 @@ const SuitCustomizer = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  // State required to build and save the suit
+  const [allSuitPart, setAllSuitPart] = useAtom(allSuitPartAtom);
+  const user = useAtomValue(authUserAtom);
+
+  const [currColor, setCurrColor] = useAtom(currentColorAtom);
+  const selectedKind = useAtomValue(currentKindAtom);
+  const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
+  const [selectedLapelType, setSelectedLapelType] = useAtom(
+    selectedLapelTypeAtom
+  );
+  const [selectedPacketType, setSelectedPacketType] = useAtom(
+    selectedPacketTypeAtom
+  );
+  const [selectedKindType] = useAtom(selectedKindTypeAtom);
+  const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom);
+  const [selectedPoshet, setSelectedPoshet] = useAtom(selectedPoshetAtom);
+  const [selectedHolesButton, setSelectedHolesButton] = useAtom(
+    selectedHolesButtonAtom
+  );
+  const [selectedHolesButtonUp, setSelectedHolesButtonUp] = useAtom(
+    selectedHolesButtonUpAtom
+  );
+  const [selectedInsideType, setSelectedInsideType] = useAtom(
+    selectedInsideTypeAtom
+  );
+  const [selectedPantsColor, setSelectedPantsColor] = useAtom(
+    selectedPantsColorAtom
+  );
+  const [selectedPantsLines, setSelectedPantsLines] = useAtom(
+    selectedPantsLinesAtom
+  );
+  const [selectedPantsHoleButton, setSelectedPantsHoleButton] = useAtom(
+    selectedPantsHoleButtonAtom
+  );
+  const [selectedPantsHem, setSelectedPantsHem] = useAtom(selectedPantsHemAtom);
+  const [selectedSleeveButtons, setSelectedSleeveButtons] = useAtom(
+    selectedSleeveButtonsAtom
+  );
+  const [textInsideText, setTextInsideText] = useAtom(textInsideTextAtom);
+  const [textInsideFont, setTextInsideFont] = useAtom(textInsideFontAtom);
+  const [textInsideColor, setTextInsideColor] = useAtom(textInsideColorAtom);
+  const [priceAllSuit] = useAtom(priceAllSuitAtom);
+  const [topCollarColor] = useAtom(selectedTopCollarColorAtom);
 
   // Prevent scrolling on mobile
   // React.useEffect(() => {
@@ -54,19 +128,82 @@ const SuitCustomizer = () => {
 
     setIsSubmitting(true);
     try {
-      // Navigate to sizes page
-      navigate("/indexSizes");
-
-      // Show success message
-      enqueueSnackbar("Suit configuration saved successfully!", {
-        variant: "success",
-        autoHideDuration: 3000,
+      const newSuit = createCompleteSuitObject({
+        currentColor: currColor,
+        selectedKind,
+        selectedCollar,
+        selectedLapelType,
+        selectedPacketType,
+        selectedKindType,
+        selectedButton,
+        selectedPoshet,
+        selectedHolesButton,
+        selectedHolesButtonUp,
+        selectedInsideType,
+        selectedPantsColor,
+        selectedPantsLines,
+        selectedPantsHoleButton,
+        selectedPantsHem,
+        selectedSleeveButtons,
+        textInsideText,
+        textInsideFont,
+        textInsideColor,
+        priceAllSuit,
+        topCollarColor,
       });
+
+      const currentSuits = [...allSuitPart];
+      const isDuplicate = currentSuits.some(
+        (suit) => JSON.stringify(suit) === JSON.stringify(newSuit)
+      );
+
+      if (!isDuplicate) {
+        currentSuits.push(newSuit);
+        setAllSuitPart(currentSuits);
+
+        if (user?.email) {
+          await postSuitProduct({
+            email: user.email,
+            allSuitPart: newSuit,
+          });
+        }
+      }
+
+      enqueueSnackbar(
+        isDuplicate
+          ? "This suit configuration already exists!"
+          : "Your custom suit has been saved successfully!",
+        { variant: isDuplicate ? "warning" : "success" }
+      );
+
+      // Reset all customization state to defaults after successful save
+      resetSuitState({
+        setCurrColor,
+        setSelectedKind: (v) => setCurrentStep(0) || v, // step reset handled separately
+        setSelectedCollar,
+        setSelectedLapelType,
+        setSelectedPacketType,
+        setSelectedButton,
+        setSelectedPoshet,
+        setSelectedHolesButton,
+        setSelectedHolesButtonUp,
+        setSelectedInsideType,
+        setSelectedPantsColor,
+        setSelectedPantsLines,
+        setSelectedPantsHoleButton,
+        setSelectedPantsHem,
+        setSelectedSleeveButtons,
+        setTextInsideText,
+        setTextInsideFont,
+        setTextInsideColor,
+      });
+      setCurrentStep(0);
+
+      navigate("/indexSizes");
     } catch (error) {
-      console.error("Error completing suit:", error);
-      enqueueSnackbar("Error saving suit configuration", {
+      console.error("Error saving suit:", error);
+      enqueueSnackbar("Error saving your suit configuration", {
         variant: "error",
-        autoHideDuration: 3000,
       });
     } finally {
       setIsSubmitting(false);

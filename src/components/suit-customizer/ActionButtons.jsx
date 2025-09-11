@@ -114,9 +114,6 @@ const ActionButtons = ({ isMobile }) => {
     setIsSubmitting(true);
 
     try {
-      // Navigate to sizes page
-      navigate("/indexSizes");
-
       // Create complete suit object
       const newSuit = createCompleteSuitObject({
         currentColor: currColor,
@@ -153,6 +150,7 @@ const ActionButtons = ({ isMobile }) => {
         setAllSuitPart(currentSuits);
 
         if (user) {
+          // Save to server BEFORE navigating to avoid unmount canceling the request on mobile
           await postSuitProduct({
             email: user.email,
             allSuitPart: newSuit,
@@ -162,10 +160,14 @@ const ActionButtons = ({ isMobile }) => {
         enqueueSnackbar("Your custom suit has been saved successfully!", {
           variant: "success",
         });
+        // Navigate only after successful save
+        navigate("/indexSizes");
       } else {
         enqueueSnackbar("This suit configuration already exists!", {
           variant: "warning",
         });
+        // For duplicates, still navigate to sizes for user flow consistency
+        navigate("/indexSizes");
       }
 
       // Reset state (optional - uncomment if you want to reset after finish)
@@ -257,68 +259,81 @@ const ActionButtons = ({ isMobile }) => {
         disabled={isLastStep ? isSubmitting : !isStepValid() || isSubmitting}
         endIcon={isLastStep ? <CheckCircleIcon /> : <ArrowForwardIcon />}
         component={motion.button}
-        whileHover={isLastStep ? (!isSubmitting ? { scale: 1.02 } : {}) : (isStepValid() && !isSubmitting ? { scale: 1.02 } : {})}
-        whileTap={isLastStep ? (!isSubmitting ? { scale: 0.98 } : {}) : (isStepValid() && !isSubmitting ? { scale: 0.98 } : {})}
+        whileHover={
+          isLastStep
+            ? !isSubmitting
+              ? { scale: 1.02 }
+              : {}
+            : isStepValid() && !isSubmitting
+            ? { scale: 1.02 }
+            : {}
+        }
+        whileTap={
+          isLastStep
+            ? !isSubmitting
+              ? { scale: 0.98 }
+              : {}
+            : isStepValid() && !isSubmitting
+            ? { scale: 0.98 }
+            : {}
+        }
         sx={{
           flex: 1,
           minHeight: { xs: 44, md: 48 },
           borderRadius: "12px",
-          background:
-            isLastStep
-              ? !isSubmitting
-                ? "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)"
-                : "rgba(40, 40, 40, 0.6)"
-              : isStepValid() && !isSubmitting
-              ? "linear-gradient(135deg, rgba(192, 211, 202, 0.9) 0%, rgba(168, 195, 184, 0.9) 100%)"
-              : "rgba(40, 40, 40, 0.6)",
-          color:
-            isLastStep
-              ? !isSubmitting
-                ? "#fff"
-                : "rgba(192, 211, 202, 0.3)"
-              : isStepValid() && !isSubmitting
-              ? "#000"
-              : "rgba(192, 211, 202, 0.3)",
-          border:
-            isLastStep
-              ? !isSubmitting
-                ? "1px solid rgba(76, 175, 80, 0.5)"
-                : "1px solid rgba(192, 211, 202, 0.1)"
-              : isStepValid() && !isSubmitting
-              ? "1px solid rgba(192, 211, 202, 0.4)"
-              : "1px solid rgba(192, 211, 202, 0.1)",
+          background: isLastStep
+            ? !isSubmitting
+              ? "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)"
+              : "rgba(40, 40, 40, 0.6)"
+            : isStepValid() && !isSubmitting
+            ? "linear-gradient(135deg, rgba(192, 211, 202, 0.9) 0%, rgba(168, 195, 184, 0.9) 100%)"
+            : "rgba(40, 40, 40, 0.6)",
+          color: isLastStep
+            ? !isSubmitting
+              ? "#fff"
+              : "rgba(192, 211, 202, 0.3)"
+            : isStepValid() && !isSubmitting
+            ? "#000"
+            : "rgba(192, 211, 202, 0.3)",
+          border: isLastStep
+            ? !isSubmitting
+              ? "1px solid rgba(76, 175, 80, 0.5)"
+              : "1px solid rgba(192, 211, 202, 0.1)"
+            : isStepValid() && !isSubmitting
+            ? "1px solid rgba(192, 211, 202, 0.4)"
+            : "1px solid rgba(192, 211, 202, 0.1)",
           fontSize: { xs: "0.85rem", md: "0.9rem" },
           fontWeight: 500,
           textTransform: "none",
           letterSpacing: "0.02em",
-          boxShadow:
-            isLastStep
-              ? !isSubmitting
-                ? "0 4px 16px rgba(76, 175, 80, 0.3)"
-                : "none"
-              : isStepValid() && !isSubmitting
-              ? "0 4px 16px rgba(192, 211, 202, 0.2)"
-              : "none",
+          boxShadow: isLastStep
+            ? !isSubmitting
+              ? "0 4px 16px rgba(76, 175, 80, 0.3)"
+              : "none"
+            : isStepValid() && !isSubmitting
+            ? "0 4px 16px rgba(192, 211, 202, 0.2)"
+            : "none",
           transition: "all 0.3s ease",
           backdropFilter: "blur(10px)",
-          "&:hover":
-            isLastStep
-              ? !isSubmitting
-                ? {
-                    background: "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
-                    boxShadow: "0 6px 20px rgba(76, 175, 80, 0.4)",
-                    transform: "translateY(-1px)",
-                    border: "1px solid rgba(76, 175, 80, 0.7)",
-                  }
-                : {}
-              : isStepValid() && !isSubmitting
+          "&:hover": isLastStep
+            ? !isSubmitting
               ? {
-                  background: "linear-gradient(135deg, rgba(208, 227, 218, 0.95) 0%, rgba(184, 211, 200, 0.95) 100%)",
-                  boxShadow: "0 6px 20px rgba(192, 211, 202, 0.3)",
+                  background:
+                    "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
+                  boxShadow: "0 6px 20px rgba(76, 175, 80, 0.4)",
                   transform: "translateY(-1px)",
-                  border: "1px solid rgba(192, 211, 202, 0.6)",
+                  border: "1px solid rgba(76, 175, 80, 0.7)",
                 }
-              : {},
+              : {}
+            : isStepValid() && !isSubmitting
+            ? {
+                background:
+                  "linear-gradient(135deg, rgba(208, 227, 218, 0.95) 0%, rgba(184, 211, 200, 0.95) 100%)",
+                boxShadow: "0 6px 20px rgba(192, 211, 202, 0.3)",
+                transform: "translateY(-1px)",
+                border: "1px solid rgba(192, 211, 202, 0.6)",
+              }
+            : {},
           "&:disabled": {
             cursor: "not-allowed",
             opacity: 0.5,

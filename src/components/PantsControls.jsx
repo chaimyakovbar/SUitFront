@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   selectedPantsHoleButtonAtom,
-  selectedPantsLinesAtom,
   selectedPantsHemAtom,
   selectedPantsKindAtom,
   selectedPantsButtonKindAtom,
@@ -128,9 +127,6 @@ const PantsControls = ({ isMobile: mobileProp }) => {
   const [selectedPantsHoleButton, setSelectedPantsHoleButton] = useAtom(
     selectedPantsHoleButtonAtom
   );
-  const [selectedPantsLines, setSelectedPantsLines] = useAtom(
-    selectedPantsLinesAtom
-  );
   const [selectedPantsHem, setSelectedPantsHem] = useAtom(selectedPantsHemAtom);
 
   // New pants5 atoms
@@ -153,110 +149,106 @@ const PantsControls = ({ isMobile: mobileProp }) => {
 
   // New pants5 options
   const kindOptions = [
-    { value: "regularBase", label: "רגיל" },
-    { value: "longRegular", label: "ארוך רגיל" },
-    { value: "longWide", label: "ארוך רחב" },
-    { value: "wide", label: "רחב" },
-    { value: "MiddleWide", label: "בינוני רחב" },
+    { value: "regularBase", label: "Regular" },
+    { value: "longRegular", label: "Long Regular" },
+    { value: "longWide", label: "Long Wide" },
+    { value: "wide", label: "Wide" },
+    { value: "MiddleWide", label: "Medium Wide" },
   ];
 
   const buttonOptions = {
     regularBase: [
-      { value: "none", label: "ללא כפתור" },
-      { value: "regularButton", label: "כפתור רגיל" },
+      { value: "none", label: "No Button" },
+      { value: "regularButton", label: "Regular Button" },
     ],
     longRegular: [
-      { value: "none", label: "ללא כפתור" },
-      { value: "longMidleButton", label: "כפתור אמצעי" },
+      { value: "none", label: "No Button" },
+      { value: "longMidleButton", label: "Middle Button" },
     ],
     longWide: [
-      { value: "none", label: "ללא כפתור" },
-      { value: "longWideButton", label: "כפתור אחד" },
-      { value: "longWideTwoButton", label: "שני כפתורים" },
+      { value: "none", label: "No Button" },
+      { value: "longWideButton", label: "One Button" },
+      { value: "longWideTwoButton", label: "Two Buttons" },
     ],
     wide: [
-      { value: "none", label: "ללא כפתור" },
-      { value: "wideButton", label: "כפתור אחד" },
-      { value: "wideTowButton", label: "שני כפתורים" },
+      { value: "none", label: "No Button" },
+      { value: "wideButton", label: "One Button" },
+      { value: "wideTowButton", label: "Two Buttons" },
     ],
     MiddleWide: [
-      { value: "none", label: "ללא כפתור" },
-      { value: "middleWideButton", label: "כפתור אחד" },
-      { value: "middleWideTwoButton", label: "שני כפתורים" },
+      { value: "none", label: "No Button" },
+      { value: "middleWideButton", label: "One Button" },
+      { value: "middleWideTwoButton", label: "Two Buttons" },
     ],
   };
 
   const loopsOptions = {
     regularBase: [
-      { value: "none", label: "ללא לולאות" },
-      { value: "loop", label: "לולאה אחת" },
-      { value: "twoLoop", label: "שתי לולאות" },
+      { value: "none", label: "No Loops" },
+      { value: "loop", label: "One Loop" },
+      { value: "twoLoop", label: "Two Loops" },
     ],
     longRegular: [
-      { value: "none", label: "ללא לולאות" },
-      { value: "loop", label: "לולאה אחת" },
-      { value: "twoLoop", label: "שתי לולאות" },
+      { value: "none", label: "No Loops" },
+      { value: "loop", label: "One Loop" },
+      { value: "twoLoop", label: "Two Loops" },
     ],
     longWide: [
-      { value: "none", label: "ללא לולאות" },
-      { value: "wideOneIoop", label: "לולאה אחת" },
-      { value: "wideTwoLoop", label: "שתי לולאות" },
+      { value: "none", label: "No Loops" },
+      { value: "wideOneIoop", label: "One Loop" },
+      { value: "wideTwoLoop", label: "Two Loops" },
     ],
     wide: [
-      { value: "none", label: "ללא לולאות" },
-      { value: "wideOneIoop", label: "לולאה אחת" },
-      { value: "wideTwoLoop", label: "שתי לולאות" },
+      { value: "none", label: "No Loops" },
+      { value: "wideOneIoop", label: "One Loop" },
+      { value: "wideTwoLoop", label: "Two Loops" },
     ],
     MiddleWide: [
-      { value: "none", label: "ללא לולאות" },
-      { value: "wideMiddleLoop", label: "לולאה אחת" },
-      { value: "wideMiddleTowLoop", label: "שתי לולאות" },
+      { value: "none", label: "No Loops" },
+      { value: "wideMiddleLoop", label: "One Loop" },
+      { value: "wideMiddleTowLoop", label: "Two Loops" },
     ],
   };
 
   const ironOptions = {
     regularBase: [
-      { value: "none", label: "ללא ברזל" },
-      { value: "regularIron", label: "ברזל רגיל" },
-      { value: "oneIron", label: "ברזל אחד" },
-      { value: "oneIronTwoButton", label: "ברזל אחד עם שני כפתורים" },
+      { value: "none", label: "No Iron" },
+      { value: "regularIron", label: "Regular Iron" },
+      { value: "oneIron", label: "One Iron" },
+      { value: "oneIronTwoButton", label: "One Iron + Two Buttons" },
     ],
     longRegular: [
-      { value: "none", label: "ללא ברזל" },
-      { value: "regularIron", label: "ברזל רגיל" },
-      { value: "oneIron", label: "ברזל אחד" },
-      { value: "oneIronTwoButton", label: "ברזל אחד עם שני כפתורים" },
+      { value: "none", label: "No Iron" },
+      { value: "regularIron", label: "Regular Iron" },
+      { value: "oneIron", label: "One Iron" },
+      { value: "oneIronTwoButton", label: "One Iron + Two Buttons" },
     ],
     longWide: [
-      { value: "none", label: "ללא ברזל" },
-      { value: "wideIron", label: "ברזל רחב" },
+      { value: "none", label: "No Iron" },
+      { value: "wideIron", label: "Wide Iron" },
     ],
     wide: [
-      { value: "none", label: "ללא ברזל" },
-      { value: "wideIron", label: "ברזל רחב" },
+      { value: "none", label: "No Iron" },
+      { value: "wideIron", label: "Wide Iron" },
     ],
     MiddleWide: [
-      { value: "none", label: "ללא ברזל" },
-      { value: "wideIron", label: "ברזל רחב" },
+      { value: "none", label: "No Iron" },
+      { value: "wideIron", label: "Wide Iron" },
     ],
   };
 
-  const linesOptions = [
-    { value: "none", label: "ללא פסים" },
-    { value: "OneLinesInTheTop", label: "פס אחד בחלק העליון" },
-    { value: "twoLinesInTheTop", label: "שני פסים בחלק העליון" },
-  ];
+  // Removed lines options (unused)
 
-  const holeButtonOptions = [
-    { value: "Regular", label: "רגיל" },
-    { value: "behindLeftSide", label: "מאחורי הצד השמאלי" },
-    { value: "behindRegular", label: "מאחורי רגיל" },
-    { value: "LeftSide", label: "הצד השמאלי" },
-  ];
+  // const holeButtonOptions = [
+  //   { value: "Regular", label: "Regular" },
+  //   { value: "behindLeftSide", label: "Behind Left Side" },
+  //   { value: "behindRegular", label: "Behind Regular" },
+  //   { value: "LeftSide", label: "Left Side" },
+  // ];
 
   const hemOptions = [
-    { value: "none", label: "ללא מכפלת" },
-    { value: "Hem", label: "עם מכפלת" },
+    { value: "none", label: "No Hem" },
+    { value: "Hem", label: "With Hem" },
   ];
 
   const handleOpenDrawer = (title, options, currentValue, setValue) => {
@@ -292,11 +284,11 @@ const PantsControls = ({ isMobile: mobileProp }) => {
           display: "flex",
           alignItems: "center",
           height: "100%",
-          gap: 3,
+          gap: 4,
           minWidth: "fit-content",
         }}
       >
-        {/* Kind Selection */}
+        {/* Pants Type Section */}
         <Box
           sx={{
             display: "flex",
@@ -315,78 +307,32 @@ const PantsControls = ({ isMobile: mobileProp }) => {
               mb: 1,
             }}
           >
-            סוג מכנסיים
+            Pants Type
           </Typography>
-          <Box sx={{ display: "flex", gap: 1.5 }}>
-            {kindOptions.map((option) => (
-              <Box
-                key={option.value}
-                onClick={() => handleKindChange(option.value)}
-                sx={{
-                  cursor: "pointer",
-                  borderRadius: "16px",
-                  border:
-                    selectedPantsKind === option.value
-                      ? "2px solid #C0D3CA"
-                      : "1px solid rgba(192, 211, 202, 0.2)",
-                  background:
-                    selectedPantsKind === option.value
-                      ? "rgba(192, 211, 202, 0.1)"
-                      : "rgba(30, 30, 30, 0.6)",
-                  transition: "all 0.3s ease",
-                  overflow: "hidden",
-                  position: "relative",
-                  width: "70px",
-                  height: "70px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  pt: 1.5,
-                  flexShrink: 0,
-                  "&:hover": {
-                    border: "2px solid rgba(192, 211, 202, 0.5)",
-                    background: "rgba(192, 211, 202, 0.1)",
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.65rem",
-                    fontWeight: 500,
-                    color: "#C0D3CA",
-                    textAlign: "center",
-                    letterSpacing: "0.5px",
-                    lineHeight: 1.1,
-                    px: 0.5,
-                  }}
-                >
-                  {option.label}
-                </Typography>
-                {selectedPantsKind === option.value && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "#C0D3CA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
-                  </Box>
-                )}
-              </Box>
-            ))}
-          </Box>
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                "Pants Type",
+                kindOptions,
+                selectedPantsKind,
+                handleKindChange
+              )
+            }
+            sx={{
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+            }}
+          >
+            Choose Type
+          </Button>
         </Box>
 
-        {/* Button Selection */}
+        {/* Buttons Section */}
         <Box
           sx={{
             display: "flex",
@@ -405,78 +351,32 @@ const PantsControls = ({ isMobile: mobileProp }) => {
               mb: 1,
             }}
           >
-            כפתורים
+            Buttons
           </Typography>
-          <Box sx={{ display: "flex", gap: 1.5 }}>
-            {buttonOptions[selectedPantsKind]?.map((option) => (
-              <Box
-                key={option.value}
-                onClick={() => setSelectedPantsButtonKind(option.value)}
-                sx={{
-                  cursor: "pointer",
-                  borderRadius: "16px",
-                  border:
-                    selectedPantsButtonKind === option.value
-                      ? "2px solid #C0D3CA"
-                      : "1px solid rgba(192, 211, 202, 0.2)",
-                  background:
-                    selectedPantsButtonKind === option.value
-                      ? "rgba(192, 211, 202, 0.1)"
-                      : "rgba(30, 30, 30, 0.6)",
-                  transition: "all 0.3s ease",
-                  overflow: "hidden",
-                  position: "relative",
-                  width: "70px",
-                  height: "70px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  pt: 1.5,
-                  flexShrink: 0,
-                  "&:hover": {
-                    border: "2px solid rgba(192, 211, 202, 0.5)",
-                    background: "rgba(192, 211, 202, 0.1)",
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.65rem",
-                    fontWeight: 500,
-                    color: "#C0D3CA",
-                    textAlign: "center",
-                    letterSpacing: "0.5px",
-                    lineHeight: 1.1,
-                    px: 0.5,
-                  }}
-                >
-                  {option.label}
-                </Typography>
-                {selectedPantsButtonKind === option.value && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "#C0D3CA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
-                  </Box>
-                )}
-              </Box>
-            ))}
-          </Box>
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                "Buttons",
+                buttonOptions[selectedPantsKind] || [],
+                selectedPantsButtonKind,
+                setSelectedPantsButtonKind
+              )
+            }
+            sx={{
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+            }}
+          >
+            Choose Buttons
+          </Button>
         </Box>
 
-        {/* Iron Selection */}
+        {/* Iron Section */}
         <Box
           sx={{
             display: "flex",
@@ -495,78 +395,33 @@ const PantsControls = ({ isMobile: mobileProp }) => {
               mb: 1,
             }}
           >
-            ברזלים
+            Iron
           </Typography>
-          <Box sx={{ display: "flex", gap: 1.5 }}>
-            {ironOptions[selectedPantsKind]?.map((option) => (
-              <Box
-                key={option.value}
-                onClick={() => setSelectedPantsIron(option.value)}
-                sx={{
-                  cursor: "pointer",
-                  borderRadius: "16px",
-                  border:
-                    selectedPantsIron === option.value
-                      ? "2px solid #C0D3CA"
-                      : "1px solid rgba(192, 211, 202, 0.2)",
-                  background:
-                    selectedPantsIron === option.value
-                      ? "rgba(192, 211, 202, 0.1)"
-                      : "rgba(30, 30, 30, 0.6)",
-                  transition: "all 0.3s ease",
-                  overflow: "hidden",
-                  position: "relative",
-                  width: "70px",
-                  height: "70px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  pt: 1.5,
-                  flexShrink: 0,
-                  "&:hover": {
-                    border: "2px solid rgba(192, 211, 202, 0.5)",
-                    background: "rgba(192, 211, 202, 0.1)",
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.65rem",
-                    fontWeight: 500,
-                    color: "#C0D3CA",
-                    textAlign: "center",
-                    letterSpacing: "0.5px",
-                    lineHeight: 1.1,
-                    px: 0.5,
-                  }}
-                >
-                  {option.label}
-                </Typography>
-                {selectedPantsIron === option.value && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "#C0D3CA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
-                  </Box>
-                )}
-              </Box>
-            ))}
-          </Box>
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                "Iron",
+                ironOptions[selectedPantsKind] || [],
+                selectedPantsIron,
+                setSelectedPantsIron
+              )
+            }
+            sx={{
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+            }}
+            disabled={!selectedPantsKind}
+          >
+            Choose Iron
+          </Button>
         </Box>
 
-        {/* Hole and Button Selection */}
+        {/* Loops Section */}
         <Box
           sx={{
             display: "flex",
@@ -585,78 +440,34 @@ const PantsControls = ({ isMobile: mobileProp }) => {
               mb: 1,
             }}
           >
-            Hole & Button
+            Loops
           </Typography>
-          <Box sx={{ display: "flex", gap: 1.5 }}>
-            {holeButtonOptions.slice(0, 3).map((option) => (
-              <Box
-                key={option.value}
-                onClick={() => setSelectedPantsHoleButton(option.value)}
-                sx={{
-                  cursor: "pointer",
-                  borderRadius: "16px",
-                  border:
-                    selectedPantsHoleButton === option.value
-                      ? "2px solid #C0D3CA"
-                      : "1px solid rgba(192, 211, 202, 0.2)",
-                  background:
-                    selectedPantsHoleButton === option.value
-                      ? "rgba(192, 211, 202, 0.1)"
-                      : "rgba(30, 30, 30, 0.6)",
-                  transition: "all 0.3s ease",
-                  overflow: "hidden",
-                  position: "relative",
-                  width: "70px",
-                  height: "70px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  pt: 1.5,
-                  flexShrink: 0,
-                  "&:hover": {
-                    border: "2px solid rgba(192, 211, 202, 0.5)",
-                    background: "rgba(192, 211, 202, 0.1)",
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.65rem",
-                    fontWeight: 500,
-                    color: "#C0D3CA",
-                    textAlign: "center",
-                    letterSpacing: "0.5px",
-                    lineHeight: 1.1,
-                    px: 0.5,
-                  }}
-                >
-                  {option.label}
-                </Typography>
-                {selectedPantsHoleButton === option.value && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "#C0D3CA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
-                  </Box>
-                )}
-              </Box>
-            ))}
-          </Box>
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                "Loops",
+                loopsOptions[selectedPantsKind] || [],
+                selectedPantsLoops,
+                setSelectedPantsLoops
+              )
+            }
+            sx={{
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+            }}
+          >
+            Choose Loops
+          </Button>
         </Box>
 
-        {/* Hem Selection */}
+        {/* Hole & Button Section */}
+
+        {/* Hem Section */}
         <Box
           sx={{
             display: "flex",
@@ -677,74 +488,87 @@ const PantsControls = ({ isMobile: mobileProp }) => {
           >
             Hem
           </Typography>
-          <Box sx={{ display: "flex", gap: 1.5 }}>
-            {hemOptions.map((option) => (
-              <Box
-                key={option.value}
-                onClick={() => setSelectedPantsHem(option.value)}
-                sx={{
-                  cursor: "pointer",
-                  borderRadius: "16px",
-                  border:
-                    selectedPantsHem === option.value
-                      ? "2px solid #C0D3CA"
-                      : "1px solid rgba(192, 211, 202, 0.2)",
-                  background:
-                    selectedPantsHem === option.value
-                      ? "rgba(192, 211, 202, 0.1)"
-                      : "rgba(30, 30, 30, 0.6)",
-                  transition: "all 0.3s ease",
-                  overflow: "hidden",
-                  position: "relative",
-                  width: "70px",
-                  height: "70px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  pt: 1.5,
-                  flexShrink: 0,
-                  "&:hover": {
-                    border: "2px solid rgba(192, 211, 202, 0.5)",
-                    background: "rgba(192, 211, 202, 0.1)",
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.65rem",
-                    fontWeight: 500,
-                    color: "#C0D3CA",
-                    textAlign: "center",
-                    letterSpacing: "0.5px",
-                    lineHeight: 1.1,
-                    px: 0.5,
-                  }}
-                >
-                  {option.label}
-                </Typography>
-                {selectedPantsHem === option.value && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "#C0D3CA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <CheckCircleIcon sx={{ fontSize: 12, color: "#000" }} />
-                  </Box>
-                )}
-              </Box>
-            ))}
-          </Box>
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                "Hem",
+                hemOptions,
+                selectedPantsHem,
+                setSelectedPantsHem
+              )
+            }
+            sx={{
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+            }}
+          >
+            Choose Hem
+          </Button>
         </Box>
+
+        {/* Mobile Drawer */}
+        <Drawer
+          anchor="bottom"
+          open={drawerOpen}
+          onClose={handleCloseDrawer}
+          PaperProps={{
+            className: classes.drawerPaper,
+            sx: {
+              height: "30vh",
+              borderTop: "1px solid rgba(192, 211, 202, 0.3)",
+            },
+          }}
+        >
+          <Box sx={{ padding: "16px 16px 8px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 1,
+              }}
+            >
+              <Typography className={classes.drawerTitle}>
+                {drawerTitle}
+              </Typography>
+              <IconButton onClick={handleCloseDrawer} sx={{ color: "#C0D3CA" }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <Divider className={classes.divider} />
+            <List>
+              {drawerContent?.options?.map((option) => (
+                <ListItem
+                  key={option.value}
+                  disablePadding
+                  className={`${classes.listItem} ${
+                    drawerContent.currentValue === option.value
+                      ? classes.selectedListItem
+                      : ""
+                  }`}
+                >
+                  <ListItemButton
+                    onClick={() => handleOptionSelect(option.value)}
+                    sx={{ padding: "14px 16px" }}
+                  >
+                    <ListItemText
+                      primary={option.label}
+                      className={classes.listItemText}
+                    />
+                    {drawerContent.currentValue === option.value && (
+                      <CheckCircleIcon className={classes.checkIcon} />
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </Drawer>
       </Box>
     );
   }
@@ -752,7 +576,7 @@ const PantsControls = ({ isMobile: mobileProp }) => {
   // Desktop layout
   return (
     <Box className={classes.root}>
-      <Typography className={classes.title}>התאמת מכנסיים</Typography>
+      <Typography className={classes.title}>Pants Customization</Typography>
 
       <Grid container spacing={3}>
         {/* Kind Selection */}
@@ -761,14 +585,14 @@ const PantsControls = ({ isMobile: mobileProp }) => {
             className={classes.controlButton}
             onClick={() =>
               handleOpenDrawer(
-                "סוג מכנסיים",
+                "Pants Type",
                 kindOptions,
                 selectedPantsKind,
                 handleKindChange
               )
             }
           >
-            סוג מכנסיים
+            Pants Type
           </Button>
         </Grid>
 
@@ -778,14 +602,14 @@ const PantsControls = ({ isMobile: mobileProp }) => {
             className={classes.controlButton}
             onClick={() =>
               handleOpenDrawer(
-                "כפתורים",
+                "Buttons",
                 buttonOptions[selectedPantsKind] || [],
                 selectedPantsButtonKind,
                 setSelectedPantsButtonKind
               )
             }
           >
-            כפתורים
+            Buttons
           </Button>
         </Grid>
 
@@ -795,7 +619,7 @@ const PantsControls = ({ isMobile: mobileProp }) => {
             className={classes.controlButton}
             onClick={() =>
               handleOpenDrawer(
-                "ברזלים",
+                "Iron",
                 ironOptions[selectedPantsKind] || [],
                 selectedPantsIron,
                 setSelectedPantsIron
@@ -803,7 +627,7 @@ const PantsControls = ({ isMobile: mobileProp }) => {
             }
             disabled={!selectedPantsKind}
           >
-            ברזלים
+            Iron
           </Button>
         </Grid>
 
@@ -813,14 +637,14 @@ const PantsControls = ({ isMobile: mobileProp }) => {
             className={classes.controlButton}
             onClick={() =>
               handleOpenDrawer(
-                "מכפלת",
+                "Hem",
                 hemOptions,
                 selectedPantsHem,
                 setSelectedPantsHem
               )
             }
           >
-            מכפלת
+            Hem
           </Button>
         </Grid>
       </Grid>

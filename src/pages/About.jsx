@@ -13,6 +13,8 @@ import { makeStyles } from "@mui/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useLanguage } from "../context/LanguageContext";
 
+const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+
 const useStyles = makeStyles({
   root: {
     backgroundColor: "#0a0a0a",

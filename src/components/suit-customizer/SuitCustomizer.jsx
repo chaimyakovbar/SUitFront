@@ -311,7 +311,7 @@ const SuitCustomizer = () => {
                   <Box
                     sx={{
                       position: "absolute",
-                      top: 16,
+                      top: 96,
                       right: 16,
                       zIndex: 10,
                     }}

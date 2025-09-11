@@ -67,9 +67,8 @@ const buttonColorMap = {
   // Add other mappings as needed
 };
 
-// Extracted to separate function with added caching mechanism
+// Extracted to separate function with added caching mechanism (no CORS HEAD)
 const loadImage = async (key, path) => {
-  // Use URL cache to avoid redundant HEAD requests
   if (!loadImage.cache) loadImage.cache = new Map();
   const cacheKey = `${key}-${path}`;
 
@@ -77,24 +76,21 @@ const loadImage = async (key, path) => {
     return loadImage.cache.get(cacheKey);
   }
 
-  try {
-    const imageUrl = path;
-    const response = await fetch(imageUrl, { method: "HEAD" });
+  // Preload using HTMLImageElement to avoid CORS issues from fetch(HEAD)
+  const imageUrl = path;
+  const result = await new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ key, src: imageUrl });
+    img.onerror = () => resolve({ key, src: null });
+    img.src = imageUrl;
+  });
 
-    const result = response.ok ? { key, src: imageUrl } : { key, src: null };
-
-    if (!response.ok) {
-      console.warn(`⚠️ Missing image for ${key} at path: ${path}`);
-    }
-
-    loadImage.cache.set(cacheKey, result);
-    return result;
-  } catch (error) {
-    console.warn(`⚠️ Error loading image for ${key} at path: ${path}:`, error);
-    const result = { key, src: null };
-    loadImage.cache.set(cacheKey, result);
-    return result;
+  if (!result.src) {
+    console.warn(`⚠️ Missing image for ${key} at path: ${path}`);
   }
+
+  loadImage.cache.set(cacheKey, result);
+  return result;
 };
 
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";

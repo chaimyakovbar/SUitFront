@@ -267,9 +267,11 @@ const useStyles = makeStyles({
   },
 });
 
-// Extracted to separate function with added caching mechanism
+// Simple in-memory cache for resolved image paths
+const imagePathCache = new Map();
+
+// Extracted to separate function with added caching mechanism (no CORS HEAD)
 const loadImage = async (key, path) => {
-  // Check if already in cache
   if (imagePathCache.has(path)) {
     return imagePathCache.get(path);
   }
@@ -280,13 +282,25 @@ const loadImage = async (key, path) => {
 
     // Check if WebP is supported
     const supportsWebP = await checkWebPSupport();
-
     const finalPath = supportsWebP ? webpPath : path;
 
-    const response = await fetch(finalPath, { method: "HEAD" });
-    const result = response.ok ? { key, src: finalPath } : { key, src: path };
+    const result = await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ key, src: finalPath });
+      img.onerror = () => {
+        // fallback to original if webp failed
+        if (finalPath !== path) {
+          const img2 = new Image();
+          img2.onload = () => resolve({ key, src: path });
+          img2.onerror = () => resolve({ key, src: null });
+          img2.src = path;
+        } else {
+          resolve({ key, src: null });
+        }
+      };
+      img.src = finalPath;
+    });
 
-    // Save to cache
     imagePathCache.set(path, result);
     return result;
   } catch (error) {
@@ -429,7 +443,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.textInsideText) {
       imagePaths.push({
         key: "textInside",
-        path: `/assets/adds/TextInside.png`,
+        path: `${S3_BASE_URL}/assets/adds/TextInside.png`,
       });
     }
   } else if (viewType === "pants") {
@@ -440,14 +454,14 @@ const getImagePaths = (item, viewType = "suit") => {
     // Base pants layer - always active
     imagePaths.push({
       key: "pants",
-      path: `/assets/pants/allPants/${pantsColor}.png`,
+      path: `${S3_BASE_URL}/assets/pants/allPants/${pantsColor}.png`,
     });
 
     // Add kind layer if exists (not regularBase)
     if (item.pantsKind && item.pantsKind !== "regularBase") {
       imagePaths.push({
         key: "pantsKind",
-        path: `/assets/pants/kind/${item.pantsKind}/${pantsColor}.png`,
+        path: `${S3_BASE_URL}/assets/pants/kind/${item.pantsKind}/${pantsColor}.png`,
       });
     }
 
@@ -486,7 +500,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (buttonPath) {
         imagePaths.push({
           key: "pantsButton",
-          path: `/assets/pants/button/${buttonPath}/${pantsColor}.png`,
+          path: `${S3_BASE_URL}/assets/pants/button/${buttonPath}/${pantsColor}.png`,
         });
       }
     }
@@ -509,7 +523,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (loopsPath) {
         imagePaths.push({
           key: "pantsLoops",
-          path: `/assets/pants/loops/${loopsPath}/${pantsColor}.png`,
+          path: `${S3_BASE_URL}/assets/pants/loops/${loopsPath}/${pantsColor}.png`,
         });
       }
     }
@@ -533,7 +547,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (ironPath) {
         imagePaths.push({
           key: "pantsIron",
-          path: `/assets/pants/iron/${ironPath}/${pantsColor}.png`,
+          path: `${S3_BASE_URL}/assets/pants/iron/${ironPath}/${pantsColor}.png`,
         });
       }
     }
@@ -542,7 +556,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.pantsHem && item.pantsHem !== "none") {
       imagePaths.push({
         key: "pantsHem",
-        path: `/assets/pants/hem/hem/${pantsColor}.png`,
+        path: `${S3_BASE_URL}/assets/pants/hem/hem/${pantsColor}.png`,
       });
     }
 
@@ -550,7 +564,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.sleeveButtons && item.sleeveButtons !== "none") {
       imagePaths.push({
         key: "sleeveButtons",
-        path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${pantsColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/sleevseButton/${item.sleeveButtons}/${pantsColor}.png`,
       });
     }
 
@@ -558,7 +572,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.poshetColor) {
       imagePaths.push({
         key: "poshetColor",
-        path: `/assets/adds/poshet/${item.poshetColor}.png`,
+        path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
       });
     }
 
@@ -566,7 +580,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.textInsideText) {
       imagePaths.push({
         key: "textInside",
-        path: `/assets/adds/TextInside.png`,
+        path: `${S3_BASE_URL}/assets/adds/TextInside.png`,
       });
     }
   }
@@ -845,6 +859,10 @@ const DynamicImage = ({
     }
   };
 
+  // Virtual scrolling hook must be called before any early returns
+  const virtualScroll = useVirtualScrolling(sortedSuits, 300, 600);
+  const startIndex = Math.floor(virtualScroll.offsetY / 300);
+
   // Handle loading state
   if (isLoading) {
     return (
@@ -997,9 +1015,6 @@ const DynamicImage = ({
       </div>
     );
   };
-
-  const virtualScroll = useVirtualScrolling(sortedSuits, 300, 600);
-  const startIndex = Math.floor(virtualScroll.offsetY / 300);
 
   return (
     <div className={classes.container}>

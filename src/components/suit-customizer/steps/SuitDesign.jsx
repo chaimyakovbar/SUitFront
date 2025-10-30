@@ -592,6 +592,9 @@ const SuitDesign = ({ isMobile }) => {
         >
           Suit Style
         </Typography>
+        <img src={"../../../public/assets/kinds/kind4.png"} alt="kind1" />
+
+        <img src={"/assets/kinds/kind1.png"} alt="kind1" />
         <Grid container spacing={2} justifyContent="center">
           {suitTypes.map((type) => (
             <Grid item key={type.name}>

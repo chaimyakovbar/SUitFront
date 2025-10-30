@@ -20,8 +20,7 @@ import {
   selectedKindTypeAtom,
   counterAtom,
 } from "../../../Utils";
-import wew from "../../../assets/2.png";
-import wew2 from "../../../assets/kind1.png";
+
 // S3 Assets URLs
 // const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 

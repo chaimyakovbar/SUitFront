@@ -26,19 +26,19 @@ import {
 
 // import kind1Img from "../../../../public/assets/kinds/kind1.png";
 // Kind images
-import kind1Img from "../../../assets/kind1.png";
-import kind2Img from "../../../assets/kind2.png";
-import kind3Img from "../../../assets/kind3.png";
-import kind4Img from "../../../assets/kind4.png";
+import kind1Img from "../../../assets/kinds/kind1.png";
+import kind2Img from "../../../assets/kinds/kind2.png";
+import kind3Img from "../../../assets/kinds/kind3.png";
+import kind4Img from "../../../assets/kinds/kind4.png";
 
 // Collar images
-import collarTight from "../../../assets/collarTight.png";
-import collarDistant from "../../../assets/collarDistant.png";
+import collarTight from "../../../assets/kinds/collarTight.png";
+import collarDistant from "../../../assets/kinds/collarDistant.png";
 
 // Packet images
-import packet1 from "../../../assets/1.png";
-import packet2 from "../../../assets/2.png";
-import packet3 from "../../../assets/3.png";
+import packet1 from "../../../assets/kinds/1.png";
+import packet2 from "../../../assets/kinds/2.png";
+import packet3 from "../../../assets/kinds/3.png";
 
 // Static data (module scope for referential stability)
 const SUIT_TYPES = [

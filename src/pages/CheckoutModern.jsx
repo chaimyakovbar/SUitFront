@@ -351,7 +351,10 @@ const CheckoutModern = ({
           position: "relative",
           zIndex: 10000,
           width: "100%",
-          height: viewMode === "list" ? 120 : 300,
+          height: {
+            xs: viewMode === "list" ? 100 : 180,
+            sm: viewMode === "list" ? 120 : 300,
+          },
           border: "1px solid rgba(255,255,255,0.1)",
           borderRadius: "12px",
           overflow: "hidden",
@@ -597,13 +600,18 @@ const CheckoutModern = ({
                   <Box
                     sx={{
                       display: "grid",
-                      gridTemplateColumns:
-                        viewMode === "grid"
-                          ? "repeat(auto-fill, minmax(300px, 1fr))"
-                          : "1fr",
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm:
+                          viewMode === "grid"
+                            ? "repeat(auto-fill, minmax(260px, 1fr))"
+                            : "1fr",
+                      },
                       gap: viewMode === "grid" ? 2 : 1,
-                      maxHeight: { xs: 360, sm: 480, md: 560 },
+                      maxHeight: { xs: "60vh", sm: 480, md: 560 },
                       overflowY: "auto",
+                      overscrollBehavior: "contain",
+                      WebkitOverflowScrolling: "touch",
                       pr: 1,
                       "&::-webkit-scrollbar": { width: 8 },
                       "&::-webkit-scrollbar-thumb": {

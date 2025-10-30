@@ -22,23 +22,24 @@ import {
 } from "../../../Utils";
 
 // S3 Assets URLs
-const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+// const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
+// import kind1Img from "../../../../public/assets/kinds/kind1.png";
+const path = "/assets/kinds/";
 // Kind images
-const kind1Img = '../../../public/assets/kinds/kind1.png';
-const kind2Img = '../../../public/assets/kinds/kind2.png';
-const kind3Img = '../../../public/assets/kinds/kind3.png';
-const kind4Img = '../../../public/assets/kinds/kind4.png';
+const kind1Img = `${path}kind1.png`;
+const kind2Img = `${path}kind2.png`;
+const kind3Img = `${path}kind3.png`;
+const kind4Img = `${path}kind4.png`;
 
 // Collar images
-const collarTight = '../../../public/assets/kinds/collarTight.png';
-const collarDistant = '../../../public/assets/kinds/collarDistant.png';
+const collarTight = `${path}collarTight.png`;
+const collarDistant = `${path}collarDistant.png`;
 
 // Packet images
-const packet1 = '../../../public/assets/kinds/1.png';
-const packet2 = '../../../public/assets/kinds/2.png';
-const packet3 = '../../../public/assets/kinds/3.png';
-
+const packet1 = `${path}1.png`;
+const packet2 = `${path}2.png`;
+const packet3 = `${path}3.png`;
 
 const SuitDesign = ({ isMobile }) => {
   const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);
@@ -49,7 +50,7 @@ const SuitDesign = ({ isMobile }) => {
   const [selectedPacketType, setSelectedPacketType] = useAtom(
     selectedPacketTypeAtom
   );
-  const [selectedKindType, setSelectedKindType] = useAtom(selectedKindTypeAtom);
+  const [, setSelectedKindType] = useAtom(selectedKindTypeAtom);
   const [counterArray, setCounterArray] = useAtom(counterAtom);
 
   const [selectedPocketStyle, setSelectedPocketStyle] = useState(true); // true = straight, false = crooked

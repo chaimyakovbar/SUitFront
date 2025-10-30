@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Box,
   Container,
@@ -7,7 +7,8 @@ import {
   Typography,
 } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
+import { getDefaultStore } from "jotai";
 import {
   currentIndexAtom,
   currentKindAtom,
@@ -58,49 +59,25 @@ const SuitCustomizer = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  // State required to build and save the suit
-  const [allSuitPart, setAllSuitPart] = useAtom(allSuitPartAtom);
-  const user = useAtomValue(authUserAtom);
-
-  const [currColor, setCurrColor] = useAtom(currentColorAtom);
-  const selectedKind = useAtomValue(currentKindAtom);
-  const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
-  const [selectedLapelType, setSelectedLapelType] = useAtom(
-    selectedLapelTypeAtom
-  );
-  const [selectedPacketType, setSelectedPacketType] = useAtom(
-    selectedPacketTypeAtom
-  );
-  const [selectedKindType] = useAtom(selectedKindTypeAtom);
-  const [selectedButton, setSelectedButton] = useAtom(selectedButtonAtom);
-  const [selectedPoshet, setSelectedPoshet] = useAtom(selectedPoshetAtom);
-  const [selectedHolesButton, setSelectedHolesButton] = useAtom(
-    selectedHolesButtonAtom
-  );
-  const [selectedHolesButtonUp, setSelectedHolesButtonUp] = useAtom(
-    selectedHolesButtonUpAtom
-  );
-  const [selectedInsideType, setSelectedInsideType] = useAtom(
-    selectedInsideTypeAtom
-  );
-  const [selectedPantsColor, setSelectedPantsColor] = useAtom(
-    selectedPantsColorAtom
-  );
-  const [selectedPantsLines, setSelectedPantsLines] = useAtom(
-    selectedPantsLinesAtom
-  );
-  const [selectedPantsHoleButton, setSelectedPantsHoleButton] = useAtom(
-    selectedPantsHoleButtonAtom
-  );
-  const [selectedPantsHem, setSelectedPantsHem] = useAtom(selectedPantsHemAtom);
-  const [selectedSleeveButtons, setSelectedSleeveButtons] = useAtom(
-    selectedSleeveButtonsAtom
-  );
-  const [textInsideText, setTextInsideText] = useAtom(textInsideTextAtom);
-  const [textInsideFont, setTextInsideFont] = useAtom(textInsideFontAtom);
-  const [textInsideColor, setTextInsideColor] = useAtom(textInsideColorAtom);
-  const [priceAllSuit] = useAtom(priceAllSuitAtom);
-  const [topCollarColor] = useAtom(selectedTopCollarColorAtom);
+  // Setters only (no subscription) for reset logic
+  const setAllSuitPart = useSetAtom(allSuitPartAtom);
+  const setCurrColor = useSetAtom(currentColorAtom);
+  const setSelectedCollar = useSetAtom(selectedCollarAtom);
+  const setSelectedLapelType = useSetAtom(selectedLapelTypeAtom);
+  const setSelectedPacketType = useSetAtom(selectedPacketTypeAtom);
+  const setSelectedButton = useSetAtom(selectedButtonAtom);
+  const setSelectedPoshet = useSetAtom(selectedPoshetAtom);
+  const setSelectedHolesButton = useSetAtom(selectedHolesButtonAtom);
+  const setSelectedHolesButtonUp = useSetAtom(selectedHolesButtonUpAtom);
+  const setSelectedInsideType = useSetAtom(selectedInsideTypeAtom);
+  const setSelectedPantsColor = useSetAtom(selectedPantsColorAtom);
+  const setSelectedPantsLines = useSetAtom(selectedPantsLinesAtom);
+  const setSelectedPantsHoleButton = useSetAtom(selectedPantsHoleButtonAtom);
+  const setSelectedPantsHem = useSetAtom(selectedPantsHemAtom);
+  const setSelectedSleeveButtons = useSetAtom(selectedSleeveButtonsAtom);
+  const setTextInsideText = useSetAtom(textInsideTextAtom);
+  const setTextInsideFont = useSetAtom(textInsideFontAtom);
+  const setTextInsideColor = useSetAtom(textInsideColorAtom);
 
   // Prevent scrolling on mobile
   // React.useEffect(() => {
@@ -119,40 +96,41 @@ const SuitCustomizer = () => {
   //   };
   // }, [isMobile]);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setIsPantsMode((prev) => !prev);
-  };
+  }, []);
 
   const handleFinish = async () => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
     try {
+      const store = getDefaultStore();
       const newSuit = createCompleteSuitObject({
-        currentColor: currColor,
-        selectedKind,
-        selectedCollar,
-        selectedLapelType,
-        selectedPacketType,
-        selectedKindType,
-        selectedButton,
-        selectedPoshet,
-        selectedHolesButton,
-        selectedHolesButtonUp,
-        selectedInsideType,
-        selectedPantsColor,
-        selectedPantsLines,
-        selectedPantsHoleButton,
-        selectedPantsHem,
-        selectedSleeveButtons,
-        textInsideText,
-        textInsideFont,
-        textInsideColor,
-        priceAllSuit,
-        topCollarColor,
+        currentColor: store.get(currentColorAtom),
+        selectedKind: store.get(currentKindAtom),
+        selectedCollar: store.get(selectedCollarAtom),
+        selectedLapelType: store.get(selectedLapelTypeAtom),
+        selectedPacketType: store.get(selectedPacketTypeAtom),
+        selectedKindType: store.get(selectedKindTypeAtom),
+        selectedButton: store.get(selectedButtonAtom),
+        selectedPoshet: store.get(selectedPoshetAtom),
+        selectedHolesButton: store.get(selectedHolesButtonAtom),
+        selectedHolesButtonUp: store.get(selectedHolesButtonUpAtom),
+        selectedInsideType: store.get(selectedInsideTypeAtom),
+        selectedPantsColor: store.get(selectedPantsColorAtom),
+        selectedPantsLines: store.get(selectedPantsLinesAtom),
+        selectedPantsHoleButton: store.get(selectedPantsHoleButtonAtom),
+        selectedPantsHem: store.get(selectedPantsHemAtom),
+        selectedSleeveButtons: store.get(selectedSleeveButtonsAtom),
+        textInsideText: store.get(textInsideTextAtom),
+        textInsideFont: store.get(textInsideFontAtom),
+        textInsideColor: store.get(textInsideColorAtom),
+        priceAllSuit: store.get(priceAllSuitAtom),
+        topCollarColor: store.get(selectedTopCollarColorAtom),
       });
 
-      const currentSuits = [...allSuitPart];
+      const currentSuits = [...store.get(allSuitPartAtom)];
       const isDuplicate = currentSuits.some(
         (suit) => JSON.stringify(suit) === JSON.stringify(newSuit)
       );
@@ -161,6 +139,7 @@ const SuitCustomizer = () => {
         currentSuits.push(newSuit);
         setAllSuitPart(currentSuits);
 
+        const user = store.get(authUserAtom);
         if (user?.email) {
           await postSuitProduct({
             email: user.email,

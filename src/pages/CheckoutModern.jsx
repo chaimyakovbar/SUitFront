@@ -325,7 +325,8 @@ const CheckoutModern = ({
     [getImagePaths, loadImage]
   );
 
-  const SuitCard = ({ suit }) => {
+  // Memoized list card for suits
+  const SuitCard = React.memo(({ suit }) => {
     const [images, setImages] = useState(null);
     const [imgLoading, setImgLoading] = useState(true);
 
@@ -381,6 +382,8 @@ const CheckoutModern = ({
                 key={`${suit._id}-${key}`}
                 src={src}
                 alt={`Suit part: ${key}`}
+                width={800}
+                height={800}
                 style={{
                   position: "absolute",
                   top: "50%",
@@ -389,9 +392,11 @@ const CheckoutModern = ({
                   width: "80%",
                   height: "80%",
                   objectFit: "contain",
+                  aspectRatio: "1 / 1",
                   zIndex: getZIndex(key),
                 }}
                 loading="lazy"
+                decoding="async"
               />
             ))
         ) : (
@@ -446,7 +451,9 @@ const CheckoutModern = ({
                       Math.max(0, prev - (suit.totalPrice || 0))
                     );
                   }
-                  queryClient.invalidateQueries(["useProduct"]);
+                  queryClient.invalidateQueries({
+                    queryKey: ["product", user?.email || "anon"],
+                  });
                 } catch (e) {
                   console.error("Failed to delete suit", e);
                 }
@@ -465,7 +472,332 @@ const CheckoutModern = ({
         </Box>
       </Box>
     );
-  };
+  });
+
+  // Order Summary section (memoized)
+  const OrderSummarySection = React.memo(() => {
+    return (
+      <Paper
+        elevation={0}
+        sx={{
+          background:
+            "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid rgba(192, 211, 202, 0.15)",
+          p: 3,
+          mb: 4,
+          borderRadius: "24px",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "4px",
+            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+            borderRadius: "24px 24px 0 0",
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <ShoppingBagIcon sx={{ color: highlight, mr: 1, fontSize: 32 }} />
+          <Typography
+            variant="h5"
+            sx={{
+              color: highlight,
+              fontWeight: 600,
+              letterSpacing: 1,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "1.8rem",
+            }}
+          >
+            Order Summary
+          </Typography>
+          <Box flex={1} />
+          <Button
+            onClick={onEditCart}
+            size="small"
+            sx={{
+              color: highlight,
+              fontWeight: 500,
+              borderRadius: "8px",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                background: "rgba(192, 211, 202, 0.1)",
+              },
+            }}
+          >
+            Edit
+          </Button>
+        </Box>
+        <Divider sx={{ borderColor: border, mb: 2, opacity: 0.3 }} />
+        <Button
+          variant="outlined"
+          onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+          sx={{
+            width: { xs: "100%", sm: "auto" },
+            mb: 2,
+            borderColor: border,
+            color: text,
+            borderRadius: "12px",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              borderColor: highlight,
+              background: "rgba(192, 211, 202, 0.05)",
+            },
+          }}
+        >
+          {viewMode === "grid" ? "הצג כרשימה" : "הצג ככרטיסים"}
+        </Button>
+        <Box sx={{ mt: 1 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm:
+                  viewMode === "grid"
+                    ? "repeat(auto-fill, minmax(260px, 1fr))"
+                    : "1fr",
+              },
+              gap: viewMode === "grid" ? 2 : 1,
+              maxHeight: { xs: "60vh", sm: 480, md: 560 },
+              overflowY: "auto",
+              overscrollBehavior: "contain",
+              WebkitOverflowScrolling: "touch",
+              pr: 1,
+              "&::-webkit-scrollbar": { width: 8 },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(192, 211, 202, 0.3)",
+                borderRadius: 8,
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "rgba(255,255,255,0.05)",
+                borderRadius: 8,
+              },
+            }}
+          >
+            {(products?.allSuitPart || []).map((suit) => (
+              <SuitCard key={suit._id} suit={suit} />
+            ))}
+          </Box>
+        </Box>
+      </Paper>
+    );
+  });
+
+  // Delivery Options section (memoized)
+  const DeliveryOptionsSection = React.memo(() => {
+    return (
+      <Paper
+        elevation={0}
+        sx={{
+          background:
+            "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid rgba(192, 211, 202, 0.15)",
+          p: 3,
+          mb: 4,
+          borderRadius: "24px",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "4px",
+            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+            borderRadius: "24px 24px 0 0",
+          },
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            color: highlight,
+            fontWeight: 600,
+            mb: 2,
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "1.4rem",
+          }}
+        >
+          Delivery Options
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
+            <Box
+              onClick={() => handleShippingChange(0)}
+              sx={{
+                p: 2,
+                borderRadius: 3,
+                border:
+                  shippingCost === 0
+                    ? `2.5px solid ${accent}`
+                    : `1.5px solid ${border}`,
+                background:
+                  shippingCost === 0
+                    ? "rgba(240, 147, 251, 0.08)"
+                    : "rgba(20, 20, 20, 0.92)",
+                boxShadow:
+                  shippingCost === 0 ? `0 0 0 2px ${accent}55` : "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                transition: "all 0.2s",
+                position: "relative",
+              }}
+            >
+              <LocalShippingIcon sx={{ color: accent, fontSize: 28, mr: 1 }} />
+              <Box>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    color: text,
+                    fontWeight: 600,
+                    fontFamily: "'Montserrat', sans-serif",
+                  }}
+                >
+                  Standard Delivery
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: muted, fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  3-5 business days
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: accent,
+                    fontWeight: 700,
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  Free
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box
+              onClick={() => handleShippingChange(15)}
+              sx={{
+                p: 2,
+                borderRadius: 3,
+                border:
+                  shippingCost === 15
+                    ? `2.5px solid ${highlight}`
+                    : `1.5px solid ${border}`,
+                background:
+                  shippingCost === 15
+                    ? "rgba(192, 211, 202, 0.08)"
+                    : "rgba(20, 20, 20, 0.92)",
+                boxShadow:
+                  shippingCost === 15 ? `0 0 0 2px ${highlight}55` : "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                transition: "all 0.2s",
+                position: "relative",
+              }}
+            >
+              <FlashOnIcon sx={{ color: highlight, fontSize: 28, mr: 1 }} />
+              <Box>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    color: text,
+                    fontWeight: 600,
+                    fontFamily: "'Montserrat', sans-serif",
+                  }}
+                >
+                  Express Delivery
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: muted, fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  1-2 business days
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: highlight,
+                    fontWeight: 700,
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  $15
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box
+              onClick={() => handleShippingChange(35)}
+              sx={{
+                p: 2,
+                borderRadius: 3,
+                border:
+                  shippingCost === 35
+                    ? `2.5px solid #40C4FF`
+                    : `1.5px solid ${border}`,
+                background:
+                  shippingCost === 35
+                    ? "rgba(64, 196, 255, 0.08)"
+                    : "rgba(20, 20, 20, 0.92)",
+                boxShadow: shippingCost === 35 ? `0 0 0 2px #40C4FF55` : "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                transition: "all 0.2s",
+                position: "relative",
+              }}
+            >
+              <AccessTimeIcon sx={{ color: "#40C4FF", fontSize: 28, mr: 1 }} />
+              <Box>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    color: text,
+                    fontWeight: 600,
+                    fontFamily: "'Montserrat', sans-serif",
+                  }}
+                >
+                  Same Day Delivery
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: muted, fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  Within 6 hours
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: "#40C4FF",
+                    fontWeight: 700,
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  $35
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
+    );
+  });
 
   // Handle shipping cost change
   const handleShippingChange = (newShippingCost) => {
@@ -514,122 +846,7 @@ const CheckoutModern = ({
             {/* Left: Order, Size, Delivery, Info */}
             <Grid item xs={12} md={7}>
               {/* Order Summary */}
-              <Paper
-                elevation={0}
-                sx={{
-                  background:
-                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(192, 211, 202, 0.15)",
-                  p: 3,
-                  mb: 4,
-                  borderRadius: "24px",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                  position: "relative",
-                  overflow: "hidden",
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: "4px",
-                    background:
-                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                    borderRadius: "24px 24px 0 0",
-                  },
-                }}
-              >
-                {/* Toggle view mode button */}
-
-                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                  <ShoppingBagIcon
-                    sx={{ color: highlight, mr: 1, fontSize: 32 }}
-                  />
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      color: highlight,
-                      fontWeight: 600,
-                      letterSpacing: 1,
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "1.8rem",
-                    }}
-                  >
-                    Order Summary
-                  </Typography>
-                  <Box flex={1} />
-                  <Button
-                    onClick={onEditCart}
-                    size="small"
-                    sx={{
-                      color: highlight,
-                      fontWeight: 500,
-                      borderRadius: "8px",
-                      transition: "all 0.2s ease",
-                      "&:hover": {
-                        background: "rgba(192, 211, 202, 0.1)",
-                      },
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </Box>
-                <Divider sx={{ borderColor: border, mb: 2, opacity: 0.3 }} />
-                <Button
-                  variant="outlined"
-                  onClick={() =>
-                    setViewMode(viewMode === "grid" ? "list" : "grid")
-                  }
-                  sx={{
-                    width: { xs: "100%", sm: "auto" },
-                    mb: 2,
-                    borderColor: border,
-                    color: text,
-                    borderRadius: "12px",
-                    transition: "all 0.2s ease",
-                    "&:hover": {
-                      borderColor: highlight,
-                      background: "rgba(192, 211, 202, 0.05)",
-                    },
-                  }}
-                >
-                  {viewMode === "grid" ? "הצג כרשימה" : "הצג ככרטיסים"}
-                </Button>
-                <Box sx={{ mt: 1 }}>
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: {
-                        xs: "1fr",
-                        sm:
-                          viewMode === "grid"
-                            ? "repeat(auto-fill, minmax(260px, 1fr))"
-                            : "1fr",
-                      },
-                      gap: viewMode === "grid" ? 2 : 1,
-                      maxHeight: { xs: "60vh", sm: 480, md: 560 },
-                      overflowY: "auto",
-                      overscrollBehavior: "contain",
-                      WebkitOverflowScrolling: "touch",
-                      pr: 1,
-                      "&::-webkit-scrollbar": { width: 8 },
-                      "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "rgba(192, 211, 202, 0.3)",
-                        borderRadius: 8,
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        backgroundColor: "rgba(255,255,255,0.05)",
-                        borderRadius: 8,
-                      },
-                    }}
-                  >
-                    {(products?.allSuitPart || []).map((suit) => (
-                      <SuitCard key={suit._id} suit={suit} />
-                    ))}
-                  </Box>
-                </Box>
-              </Paper>
+              <OrderSummarySection />
 
               {/* Size Selection */}
               <Paper
@@ -861,229 +1078,7 @@ const CheckoutModern = ({
               </Paper>
 
               {/* Delivery Options */}
-              <Paper
-                elevation={0}
-                sx={{
-                  background:
-                    "linear-gradient(135deg, rgba(20, 20, 20, 0.92) 0%, rgba(30, 30, 30, 0.95) 100%)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(192, 211, 202, 0.15)",
-                  p: 3,
-                  mb: 4,
-                  borderRadius: "24px",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                  position: "relative",
-                  overflow: "hidden",
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: "4px",
-                    background:
-                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                    borderRadius: "24px 24px 0 0",
-                  },
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: highlight,
-                    fontWeight: 600,
-                    mb: 2,
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: "1.4rem",
-                  }}
-                >
-                  Delivery Options
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={4}>
-                    <Box
-                      onClick={() => handleShippingChange(0)}
-                      sx={{
-                        p: 2,
-                        borderRadius: 3,
-                        border:
-                          shippingCost === 0
-                            ? `2.5px solid ${accent}`
-                            : `1.5px solid ${border}`,
-                        background:
-                          shippingCost === 0
-                            ? "rgba(240, 147, 251, 0.08)"
-                            : "rgba(20, 20, 20, 0.92)",
-                        boxShadow:
-                          shippingCost === 0 ? `0 0 0 2px ${accent}55` : "none",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        transition: "all 0.2s",
-                        position: "relative",
-                      }}
-                    >
-                      <LocalShippingIcon
-                        sx={{ color: accent, fontSize: 28, mr: 1 }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            color: text,
-                            fontWeight: 600,
-                            fontFamily: "'Montserrat', sans-serif",
-                          }}
-                        >
-                          Standard Delivery
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: muted,
-                            fontFamily: "'Montserrat', sans-serif",
-                          }}
-                        >
-                          3-5 business days
-                        </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            color: accent,
-                            fontWeight: 700,
-                            fontFamily: "'Cormorant Garamond', serif",
-                          }}
-                        >
-                          Free
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Box
-                      onClick={() => handleShippingChange(15)}
-                      sx={{
-                        p: 2,
-                        borderRadius: 3,
-                        border:
-                          shippingCost === 15
-                            ? `2.5px solid ${highlight}`
-                            : `1.5px solid ${border}`,
-                        background:
-                          shippingCost === 15
-                            ? "rgba(192, 211, 202, 0.08)"
-                            : "rgba(20, 20, 20, 0.92)",
-                        boxShadow:
-                          shippingCost === 15
-                            ? `0 0 0 2px ${highlight}55`
-                            : "none",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        transition: "all 0.2s",
-                        position: "relative",
-                      }}
-                    >
-                      <FlashOnIcon
-                        sx={{ color: highlight, fontSize: 28, mr: 1 }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            color: text,
-                            fontWeight: 600,
-                            fontFamily: "'Montserrat', sans-serif",
-                          }}
-                        >
-                          Express Delivery
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: muted,
-                            fontFamily: "'Montserrat', sans-serif",
-                          }}
-                        >
-                          1-2 business days
-                        </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            color: highlight,
-                            fontWeight: 700,
-                            fontFamily: "'Cormorant Garamond', serif",
-                          }}
-                        >
-                          $15
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Box
-                      onClick={() => handleShippingChange(35)}
-                      sx={{
-                        p: 2,
-                        borderRadius: 3,
-                        border:
-                          shippingCost === 35
-                            ? `2.5px solid #40C4FF`
-                            : `1.5px solid ${border}`,
-                        background:
-                          shippingCost === 35
-                            ? "rgba(64, 196, 255, 0.08)"
-                            : "rgba(20, 20, 20, 0.92)",
-                        boxShadow:
-                          shippingCost === 35 ? `0 0 0 2px #40C4FF55` : "none",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        transition: "all 0.2s",
-                        position: "relative",
-                      }}
-                    >
-                      <AccessTimeIcon
-                        sx={{ color: "#40C4FF", fontSize: 28, mr: 1 }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            color: text,
-                            fontWeight: 600,
-                            fontFamily: "'Montserrat', sans-serif",
-                          }}
-                        >
-                          Same Day Delivery
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: muted,
-                            fontFamily: "'Montserrat', sans-serif",
-                          }}
-                        >
-                          Within 6 hours
-                        </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            color: "#40C4FF",
-                            fontWeight: 700,
-                            fontFamily: "'Cormorant Garamond', serif",
-                          }}
-                        >
-                          $35
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Paper>
+              <DeliveryOptionsSection />
 
               {/* Contact Information */}
               <Paper

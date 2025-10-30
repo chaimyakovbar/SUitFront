@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Box,
   Typography,
@@ -20,7 +20,8 @@ import {
   selectedKindTypeAtom,
   counterAtom,
 } from "../../../Utils";
-
+import wew from "../../../assets/2.png";
+import wew2 from "../../../assets/kind1.png";
 // S3 Assets URLs
 // const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
@@ -40,6 +41,185 @@ const collarDistant = `${path}collarDistant.png`;
 const packet1 = `${path}1.png`;
 const packet2 = `${path}2.png`;
 const packet3 = `${path}3.png`;
+
+// Static data (module scope for referential stability)
+const SUIT_TYPES = [
+  { name: "kind1", image: kind1Img, label: "Classic Single" },
+  { name: "kind2", image: kind2Img, label: "Modern Double" },
+  { name: "kind3", image: kind3Img, label: "Contemporary" },
+  { name: "kind4", image: kind4Img, label: "Traditional" },
+];
+
+const COLLAR_STYLES = [
+  { name: "collarTight", image: collarTight, label: "Narrow Lapel" },
+  { name: "collarDistant", image: collarDistant, label: "Wide Lapel" },
+  { name: "collarCircel", image: collarDistant, label: "Rounded Lapel" },
+];
+
+const LAPEL_LEVELS = [
+  { value: 1, label: "Slim" },
+  { value: 2, label: "Standard" },
+  { value: 3, label: "Wide" },
+  { value: 4, label: "Extra Wide" },
+];
+
+const POCKET_TYPES_STRAIGHT = [
+  { name: "packet1", image: packet1, label: "Classic" },
+  { name: "packet2", image: packet2, label: "Modern" },
+  { name: "packet3", image: packet3, label: "Elegant" },
+  { name: "packet4", image: packet1, label: "Traditional" },
+  { name: "packet5", image: packet2, label: "Contemporary" },
+];
+
+const POCKET_TYPES_CROOKED = [
+  { name: "packet1", image: packet1, label: "Angled Classic" },
+  { name: "packet2", image: packet2, label: "Angled Modern" },
+  { name: "packet4", image: packet1, label: "Angled Traditional" },
+  { name: "packet5", image: packet2, label: "Angled Contemporary" },
+];
+
+// Animation variants (module scope for reuse)
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3 },
+  },
+};
+
+const OptionButton = React.memo(
+  function OptionButton({ item, isSelected, onSelectName, size = "medium" }) {
+    const handleClick = useCallback(
+      () => onSelectName(item.name),
+      [onSelectName, item.name]
+    );
+    return (
+      <motion.div
+        variants={itemVariants}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Box
+          onClick={handleClick}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClick();
+            }
+          }}
+          sx={{
+            position: "relative",
+            cursor: "pointer",
+            borderRadius: "12px",
+            border: isSelected
+              ? "2px solid #C0D3CA"
+              : "1px solid rgba(192, 211, 202, 0.2)",
+            background: "rgba(30, 30, 30, 0.6)",
+            transition: "all 0.3s ease",
+            boxShadow: isSelected
+              ? "0 8px 24px rgba(192, 211, 202, 0.3)"
+              : "0 4px 12px rgba(0, 0, 0, 0.2)",
+            overflow: "hidden",
+            "&:hover": {
+              border: "2px solid rgba(192, 211, 202, 0.5)",
+              background: "rgba(192, 211, 202, 0.1)",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              width:
+                size === "small" ? { xs: 60, md: 80 } : { xs: 80, md: 100 },
+              height:
+                size === "small" ? { xs: 60, md: 80 } : { xs: 80, md: 100 },
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 1,
+            }}
+          >
+            <img
+              src={item.image}
+              alt={item.label}
+              width={size === "small" ? 80 : 100}
+              height={size === "small" ? 80 : 100}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                aspectRatio: "1 / 1",
+                filter:
+                  "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+              }}
+              loading="lazy"
+              decoding="async"
+            />
+          </Box>
+
+          {isSelected && (
+            <Box
+              component={motion.div}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              sx={{
+                position: "absolute",
+                top: 4,
+                right: 4,
+                width: 24,
+                height: 24,
+                borderRadius: "50%",
+                background: "#C0D3CA",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CheckCircleIcon sx={{ fontSize: 16, color: "#000" }} />
+            </Box>
+          )}
+
+          <Typography
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: "linear-gradient(transparent, rgba(0, 0, 0, 0.8))",
+              color: "#fff",
+              fontSize: { xs: "0.7rem", md: "0.8rem" },
+              fontWeight: 500,
+              textAlign: "center",
+              py: 0.5,
+              px: 0.5,
+            }}
+          >
+            {item.label}
+          </Typography>
+        </Box>
+      </motion.div>
+    );
+  },
+  (prev, next) =>
+    prev.isSelected === next.isSelected &&
+    prev.item === next.item &&
+    prev.size === next.size &&
+    prev.onSelectName === next.onSelectName
+);
 
 const SuitDesign = ({ isMobile }) => {
   const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);
@@ -77,40 +257,11 @@ const SuitDesign = ({ isMobile }) => {
     validateStep();
   }, [selectedKind, selectedCollar, selectedLapelType, selectedPacketType]);
 
-  const suitTypes = [
-    { name: "kind1", image: kind1Img, label: "Classic Single" },
-    { name: "kind2", image: kind2Img, label: "Modern Double" },
-    { name: "kind3", image: kind3Img, label: "Contemporary" },
-    { name: "kind4", image: kind4Img, label: "Traditional" },
-  ];
-
-  const collarStyles = [
-    { name: "collarTight", image: collarTight, label: "Narrow Lapel" },
-    { name: "collarDistant", image: collarDistant, label: "Wide Lapel" },
-    { name: "collarCircel", image: collarDistant, label: "Rounded Lapel" },
-  ];
-
-  const lapelLevels = [
-    { value: 1, label: "Slim" },
-    { value: 2, label: "Standard" },
-    { value: 3, label: "Wide" },
-    { value: 4, label: "Extra Wide" },
-  ];
-
-  const pocketTypesStraight = [
-    { name: "packet1", image: packet1, label: "Classic" },
-    { name: "packet2", image: packet2, label: "Modern" },
-    { name: "packet3", image: packet3, label: "Elegant" },
-    { name: "packet4", image: packet1, label: "Traditional" },
-    { name: "packet5", image: packet2, label: "Contemporary" },
-  ];
-
-  const pocketTypesCrooked = [
-    { name: "packet1", image: packet1, label: "Angled Classic" },
-    { name: "packet2", image: packet2, label: "Angled Modern" },
-    { name: "packet4", image: packet1, label: "Angled Traditional" },
-    { name: "packet5", image: packet2, label: "Angled Contemporary" },
-  ];
+  const suitTypes = SUIT_TYPES;
+  const collarStyles = COLLAR_STYLES;
+  const lapelLevels = LAPEL_LEVELS;
+  const pocketTypesStraight = POCKET_TYPES_STRAIGHT;
+  const pocketTypesCrooked = POCKET_TYPES_CROOKED;
 
   const handlePocketStyleChange = (isStraight) => {
     setSelectedPocketStyle(isStraight);
@@ -120,118 +271,20 @@ const SuitDesign = ({ isMobile }) => {
     }
   };
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  // variants moved to module scope
 
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.3 },
-    },
-  };
-
-  const OptionButton = ({ item, isSelected, onSelect, size = "medium" }) => (
-    <motion.div
-      variants={itemVariants}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <Box
-        onClick={() => onSelect(item)}
-        sx={{
-          position: "relative",
-          cursor: "pointer",
-          borderRadius: "12px",
-          border: isSelected
-            ? "2px solid #C0D3CA"
-            : "1px solid rgba(192, 211, 202, 0.2)",
-          background: "rgba(30, 30, 30, 0.6)",
-          transition: "all 0.3s ease",
-          boxShadow: isSelected
-            ? "0 8px 24px rgba(192, 211, 202, 0.3)"
-            : "0 4px 12px rgba(0, 0, 0, 0.2)",
-          overflow: "hidden",
-          "&:hover": {
-            border: "2px solid rgba(192, 211, 202, 0.5)",
-            background: "rgba(192, 211, 202, 0.1)",
-          },
-        }}
-      >
-        <Box
-          sx={{
-            width: size === "small" ? { xs: 60, md: 80 } : { xs: 80, md: 100 },
-            height: size === "small" ? { xs: 60, md: 80 } : { xs: 80, md: 100 },
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            p: 1,
-          }}
-        >
-          <img
-            src={item.image}
-            alt={item.label}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              filter:
-                "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
-            }}
-          />
-        </Box>
-
-        {isSelected && (
-          <Box
-            component={motion.div}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            sx={{
-              position: "absolute",
-              top: 4,
-              right: 4,
-              width: 24,
-              height: 24,
-              borderRadius: "50%",
-              background: "#C0D3CA",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <CheckCircleIcon sx={{ fontSize: 16, color: "#000" }} />
-          </Box>
-        )}
-
-        <Typography
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: "linear-gradient(transparent, rgba(0, 0, 0, 0.8))",
-            color: "#fff",
-            fontSize: { xs: "0.7rem", md: "0.8rem" },
-            fontWeight: 500,
-            textAlign: "center",
-            py: 0.5,
-            px: 0.5,
-          }}
-        >
-          {item.label}
-        </Typography>
-      </Box>
-    </motion.div>
+  // Stable handlers for selection
+  const handleSelectKind = useCallback(
+    (name) => setSelectedKind(name),
+    [setSelectedKind]
+  );
+  const handleSelectCollar = useCallback(
+    (name) => setSelectedCollar(name),
+    [setSelectedCollar]
+  );
+  const handleSelectPacket = useCallback(
+    (name) => setSelectedPacketType(name),
+    [setSelectedPacketType]
   );
 
   // Mobile horizontal layout
@@ -378,6 +431,11 @@ const SuitDesign = ({ isMobile }) => {
               pb: 3,
             },
           }}
+          ModalProps={{ keepMounted: true }}
+          BackdropProps={{
+            invisible: false,
+            sx: { backgroundColor: "transparent" },
+          }}
         >
           <Typography
             variant="h6"
@@ -391,8 +449,8 @@ const SuitDesign = ({ isMobile }) => {
                 <OptionButton
                   item={type}
                   isSelected={selectedKind === type.name}
-                  onSelect={(item) => {
-                    setSelectedKind(item.name);
+                  onSelectName={(name) => {
+                    handleSelectKind(name);
                     setIsTypeDrawerOpen(false);
                   }}
                 />
@@ -416,6 +474,11 @@ const SuitDesign = ({ isMobile }) => {
               pt: 2,
               pb: 3,
             },
+          }}
+          ModalProps={{ keepMounted: true }}
+          BackdropProps={{
+            invisible: false,
+            sx: { backgroundColor: "transparent" },
           }}
         >
           <Typography
@@ -483,7 +546,7 @@ const SuitDesign = ({ isMobile }) => {
                 <OptionButton
                   item={pocket}
                   isSelected={selectedPacketType === pocket.name}
-                  onSelect={(item) => setSelectedPacketType(item.name)}
+                  onSelectName={handleSelectPacket}
                   size="small"
                 />
               </Grid>
@@ -507,6 +570,11 @@ const SuitDesign = ({ isMobile }) => {
               pb: 3,
             },
           }}
+          ModalProps={{ keepMounted: true }}
+          BackdropProps={{
+            invisible: false,
+            sx: { backgroundColor: "transparent" },
+          }}
         >
           <Typography
             variant="h6"
@@ -520,7 +588,7 @@ const SuitDesign = ({ isMobile }) => {
                 <OptionButton
                   item={style}
                   isSelected={selectedCollar === style.name}
-                  onSelect={(item) => setSelectedCollar(item.name)}
+                  onSelectName={handleSelectCollar}
                 />
               </Grid>
             ))}
@@ -592,16 +660,16 @@ const SuitDesign = ({ isMobile }) => {
         >
           Suit Style
         </Typography>
-        <img src={"../../../public/assets/kinds/kind4.png"} alt="kind1" />
+        <img src={wew} alt="kind1" />
+        <img src={wew2} alt="kind2" />
 
-        <img src={"../../../assets/kind1.png"} alt="kind1" />
         <Grid container spacing={2} justifyContent="center">
           {suitTypes.map((type) => (
             <Grid item key={type.name}>
               <OptionButton
                 item={type}
                 isSelected={selectedKind === type.name}
-                onSelect={(item) => setSelectedKind(item.name)}
+                onSelectName={handleSelectKind}
               />
             </Grid>
           ))}
@@ -630,7 +698,7 @@ const SuitDesign = ({ isMobile }) => {
               <OptionButton
                 item={style}
                 isSelected={selectedCollar === style.name}
-                onSelect={(item) => setSelectedCollar(item.name)}
+                onSelectName={handleSelectCollar}
               />
             </Grid>
           ))}
@@ -759,7 +827,7 @@ const SuitDesign = ({ isMobile }) => {
                 <OptionButton
                   item={pocket}
                   isSelected={selectedPacketType === pocket.name}
-                  onSelect={(item) => setSelectedPacketType(item.name)}
+                  onSelectName={handleSelectPacket}
                   size="small"
                 />
               </Grid>
@@ -809,4 +877,4 @@ const SuitDesign = ({ isMobile }) => {
   );
 };
 
-export default SuitDesign;
+export default React.memo(SuitDesign);

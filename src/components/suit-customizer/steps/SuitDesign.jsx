@@ -20,27 +20,25 @@ import {
   selectedKindTypeAtom,
   counterAtom,
 } from "../../../Utils";
-import wew from "../../../assets/2.png";
-import wew2 from "../../../assets/kind1.png";
+
 // S3 Assets URLs
 // const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
 // import kind1Img from "../../../../public/assets/kinds/kind1.png";
-const path = "/assets/kinds/";
 // Kind images
-const kind1Img = `${path}kind1.png`;
-const kind2Img = `${path}kind2.png`;
-const kind3Img = `${path}kind3.png`;
-const kind4Img = `${path}kind4.png`;
+const kind1Img = '../../../assets/kind1.png';
+const kind2Img = '../../../assets/kind2.png';
+const kind3Img = '../../../assets/kind3.png';
+const kind4Img = '../../../assets/kind4.png';
 
 // Collar images
-const collarTight = `${path}collarTight.png`;
-const collarDistant = `${path}collarDistant.png`;
+const collarTight = '../../../assets/collarTight.png';
+const collarDistant = '../../../assets/collarDistant.png';
 
 // Packet images
-const packet1 = `${path}1.png`;
-const packet2 = `${path}2.png`;
-const packet3 = `${path}3.png`;
+const packet1 = '../../../assets/1.png';
+const packet2 = '../../../assets/2.png';
+const packet3 = '../../../assets/3.png';
 
 // Static data (module scope for referential stability)
 const SUIT_TYPES = [
@@ -660,9 +658,6 @@ const SuitDesign = ({ isMobile }) => {
         >
           Suit Style
         </Typography>
-        <img src={wew} alt="kind1" />
-        <img src={wew2} alt="kind2" />
-
         <Grid container spacing={2} justifyContent="center">
           {suitTypes.map((type) => (
             <Grid item key={type.name}>

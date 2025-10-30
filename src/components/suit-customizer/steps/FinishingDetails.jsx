@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Box,
   Typography,
@@ -32,6 +32,121 @@ const inside = `${S3_BASE_URL}/assets/kinds/insid.svg`;
 const button = `${S3_BASE_URL}/assets/kinds/button.svg`;
 const holes = `${S3_BASE_URL}/assets/kinds/AllSuit2.png`;
 
+// Global animation variants for reuse
+const itemVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.4 },
+  },
+};
+
+// Static categories for referential stability
+const DETAIL_CATEGORIES = [
+  { key: "imagesInsideUp", label: "Inner Lining", image: inside },
+  { key: "imageButton", label: "Button Style", image: button },
+  { key: "imagesHoles", label: "Button Holes", image: holes },
+  { key: "sleeveButtons", label: "Sleeve Buttons", image: button },
+  { key: "textInside", label: "Text Inside", image: inside },
+  { key: "topCollar", label: "Top Collar Color", image: button },
+];
+
+const DetailCard = React.memo(function DetailCard({ category, onClick }) {
+  const handleClick = useCallback(
+    () => onClick(category.key, category.label),
+    [onClick, category.key, category.label]
+  );
+  return (
+    <motion.div
+      variants={itemVariants}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Box
+        onClick={handleClick}
+        sx={{
+          cursor: "pointer",
+          borderRadius: "20px",
+          border: "2px solid rgba(192, 211, 202, 0.2)",
+          background:
+            "linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          transition: "all 0.3s ease",
+          overflow: "hidden",
+          position: "relative",
+          width: "100px",
+          height: "100px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background:
+              "linear-gradient(135deg, rgba(192, 211, 202, 0.03) 0%, transparent 50%, rgba(192, 211, 202, 0.02) 100%)",
+            pointerEvents: "none",
+          },
+          "&:hover": {
+            border: "2px solid rgba(192, 211, 202, 0.4)",
+            transform: "translateY(-2px)",
+            boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            mb: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          <img
+            src={category.image}
+            alt={category.label}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              filter:
+                "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+              opacity: 0.9,
+            }}
+          />
+        </Box>
+        <Typography
+          sx={{
+            fontSize: "0.7rem",
+            fontWeight: 500,
+            color: "#C0D3CA",
+            textAlign: "center",
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
+            lineHeight: 1.2,
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          {category.label}
+        </Typography>
+      </Box>
+    </motion.div>
+  );
+});
+
 const FinishingDetails = ({ isPantsMode, isMobile }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -46,14 +161,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
   const [, setShowTextInside] = useAtom(showTextInsideAtom);
   const currColor = useAtomValue(currentColorAtom);
 
-  const detailCategories = [
-    { key: "imagesInsideUp", label: "Inner Lining", image: inside },
-    { key: "imageButton", label: "Button Style", image: button },
-    { key: "imagesHoles", label: "Button Holes", image: holes },
-    { key: "sleeveButtons", label: "Sleeve Buttons", image: button },
-    { key: "textInside", label: "Text Inside", image: inside },
-    { key: "topCollar", label: "Top Collar Color", image: button },
-  ];
+  const detailCategories = DETAIL_CATEGORIES;
 
   const handleCategoryClick = (key, label) => {
     if (key === "textInside") {
@@ -461,16 +569,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
       },
     },
   };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.4 },
-    },
-  };
+  // itemVariants moved to module scope
 
   if (isPantsMode) {
     return (
@@ -510,95 +609,11 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
         }}
       >
         {detailCategories.map((category) => (
-          <motion.div
+          <DetailCard
             key={category.key}
-            variants={itemVariants}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Box
-              onClick={() => handleCategoryClick(category.key, category.label)}
-              sx={{
-                cursor: "pointer",
-                borderRadius: "20px",
-                border: "2px solid rgba(192, 211, 202, 0.2)",
-                background:
-                  "linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)",
-                backdropFilter: "blur(20px)",
-                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                transition: "all 0.3s ease",
-                overflow: "hidden",
-                position: "relative",
-                width: "100px",
-                height: "100px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background:
-                    "linear-gradient(135deg, rgba(192, 211, 202, 0.03) 0%, transparent 50%, rgba(192, 211, 202, 0.02) 100%)",
-                  pointerEvents: "none",
-                },
-                "&:hover": {
-                  border: "2px solid rgba(192, 211, 202, 0.4)",
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)",
-                },
-              }}
-            >
-              {/* Icon Container */}
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  mb: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
-                <img
-                  src={category.image}
-                  alt={category.label}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    filter:
-                      "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
-                    opacity: 0.9,
-                  }}
-                />
-              </Box>
-
-              {/* Label */}
-              <Typography
-                sx={{
-                  fontSize: "0.7rem",
-                  fontWeight: 500,
-                  color: "#C0D3CA",
-                  textAlign: "center",
-                  letterSpacing: "0.5px",
-                  textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
-                  lineHeight: 1.2,
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
-                {category.label}
-              </Typography>
-            </Box>
-          </motion.div>
+            category={category}
+            onClick={handleCategoryClick}
+          />
         ))}
 
         {/* Drawers for mobile */}
@@ -633,6 +648,10 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                 borderTopRightRadius: "24px",
               },
             },
+          }}
+          BackdropProps={{
+            invisible: false,
+            sx: { backgroundColor: "transparent" },
           }}
         >
           <Box sx={{ p: 3, maxHeight: "100%", overflow: "auto" }}>
@@ -764,7 +783,6 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                   },
                 }}
               >
-                {/* Enhanced Category Icon */}
                 <Box
                   sx={{
                     width: { xs: 36, md: 44 },
@@ -774,17 +792,6 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                     alignItems: "center",
                     justifyContent: "center",
                     position: "relative",
-                    "&::after": {
-                      content: '""',
-                      position: "absolute",
-                      width: "100%",
-                      height: "100%",
-                      background:
-                        "radial-gradient(circle, rgba(192, 211, 202, 0.1) 0%, transparent 70%)",
-                      borderRadius: "50%",
-                      opacity: 0,
-                      transition: "opacity 0.3s ease",
-                    },
                   }}
                 >
                   <img
@@ -801,8 +808,6 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                     }}
                   />
                 </Box>
-
-                {/* Enhanced Category Label */}
                 <Typography
                   sx={{
                     color: "#C0D3CA",
@@ -851,6 +856,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
             },
           },
         }}
+        ModalProps={{ keepMounted: true }}
         transitionDuration={200}
         sx={{
           "& .MuiDrawer-paper": {
@@ -995,4 +1001,4 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
   );
 };
 
-export default FinishingDetails;
+export default React.memo(FinishingDetails);

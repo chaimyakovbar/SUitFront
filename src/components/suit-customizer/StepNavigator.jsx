@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Tooltip,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import { useAtom, useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
@@ -266,109 +272,166 @@ const StepNavigator = () => {
           const isAccessible = isStepAccessible(index);
           const isLast = index === steps.length - 1;
 
+          const tooltipTitle = !isAccessible ? (
+            <Box>
+              <Typography
+                sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 700, mb: 0.5 }}
+              >
+                Step Locked
+              </Typography>
+              <Typography sx={{ fontSize: { xs: 11, md: 13 }, opacity: 0.9 }}>
+                Complete the previous step to continue
+              </Typography>
+            </Box>
+          ) : (
+            <Box>
+              <Typography
+                sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 700, mb: 0.5 }}
+              >
+                {step.title}
+              </Typography>
+              <Typography sx={{ fontSize: { xs: 11, md: 13 }, opacity: 0.9 }}>
+                {step.subtitle}
+              </Typography>
+            </Box>
+          );
+
           return (
             <React.Fragment key={step.id}>
-              <Box
-                component={motion.div}
-                variants={stepVariants}
-                onClick={() => handleStepClick(index)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: { xs: 1, md: 1.5 },
-                  cursor: isAccessible ? "pointer" : "not-allowed",
-                  opacity: isAccessible ? 1 : 0.4,
-                  transition: "all 0.3s ease",
-                  padding: { xs: "8px 12px", md: "12px 16px" },
-                  borderRadius: "16px",
-                  position: "relative",
-                  "&:hover": isAccessible
-                    ? {
-                        background: "rgba(192, 211, 202, 0.1)",
-                        transform: "translateY(-2px)",
-                      }
-                    : {},
+              <Tooltip
+                title={tooltipTitle}
+                arrow
+                placement="top"
+                enterDelay={250}
+                disableFocusListener
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      maxWidth: 320,
+                      px: 2,
+                      py: 1.5,
+                      background:
+                        "linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(30,30,30,0.98) 100%)",
+                      border: "1px solid rgba(192, 211, 202, 0.25)",
+                      boxShadow:
+                        "0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)",
+                      color: "#E5ECE9",
+                      borderRadius: 2,
+                      backdropFilter: "blur(8px)",
+                    },
+                  },
+                  arrow: {
+                    sx: {
+                      color: "rgba(30,30,30,0.98)",
+                      "&::before": {
+                        border: "1px solid rgba(192, 211, 202, 0.25)",
+                      },
+                    },
+                  },
                 }}
               >
-                {/* Step Icon/Number */}
                 <Box
                   component={motion.div}
-                  animate={
-                    index === 3
-                      ? {
-                          scale: [1, 1.1, 1],
-                          rotate: [0, 5, -5, 0],
-                          transition: {
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                          },
-                        }
-                      : {}
-                  }
+                  variants={stepVariants}
+                  onClick={() => handleStepClick(index)}
                   sx={{
-                    width: { xs: 36, md: 44 },
-                    height: { xs: 36, md: 44 },
-                    borderRadius: "50%",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    background: isActive
-                      ? "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)"
-                      : isCompleted
-                      ? "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)"
-                      : "rgba(60, 60, 60, 0.6)",
-                    border: isActive
-                      ? "2px solid rgba(192, 211, 202, 0.5)"
-                      : "1px solid rgba(192, 211, 202, 0.2)",
-                    color: isActive || isCompleted ? "#000" : "#C0D3CA",
-                    fontSize: { xs: "14px", md: "16px" },
-                    fontWeight: 600,
-                    boxShadow: isActive
-                      ? "0 4px 16px rgba(192, 211, 202, 0.4)"
-                      : isCompleted
-                      ? "0 4px 16px rgba(76, 175, 80, 0.3)"
-                      : "none",
+                    gap: { xs: 1.2, md: 2 },
+                    cursor: isAccessible ? "pointer" : "not-allowed",
+                    opacity: isAccessible ? 1 : 0.4,
                     transition: "all 0.3s ease",
-                    transform: isActive ? "scale(1.1)" : "scale(1)",
+                    padding: { xs: "10px 14px", md: "14px 18px" },
+                    borderRadius: "16px",
                     position: "relative",
+                    "&:hover": isAccessible
+                      ? {
+                          background: "rgba(192, 211, 202, 0.1)",
+                          transform: "translateY(-2px)",
+                        }
+                      : {},
                   }}
                 >
-                  {index === 3 && isSubmitting
-                    ? "⏳"
-                    : isCompleted && !isActive
-                    ? "✓"
-                    : isMobile
-                    ? index + 1
-                    : step.icon}
-                </Box>
-
-                {/* Step Text - Hide on very small screens */}
-                {!isMobile && (
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography
-                      sx={{
-                        fontSize: "0.95rem",
-                        fontWeight: 600,
-                        color: isActive ? "#C0D3CA" : "#fff",
-                        lineHeight: 1.2,
-                        mb: 0.5,
-                      }}
-                    >
-                      {step.title}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "0.75rem",
-                        color: "rgba(192, 211, 202, 0.7)",
-                        lineHeight: 1.1,
-                      }}
-                    >
-                      {step.subtitle}
-                    </Typography>
+                  {/* Step Icon/Number */}
+                  <Box
+                    component={motion.div}
+                    animate={
+                      index === 3
+                        ? {
+                            scale: [1, 1.1, 1],
+                            rotate: [0, 5, -5, 0],
+                            transition: {
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            },
+                          }
+                        : {}
+                    }
+                    sx={{
+                      width: { xs: 40, md: 50 },
+                      height: { xs: 40, md: 50 },
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: isActive
+                        ? "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)"
+                        : isCompleted
+                        ? "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)"
+                        : "rgba(60, 60, 60, 0.6)",
+                      border: isActive
+                        ? "2px solid rgba(192, 211, 202, 0.5)"
+                        : "1px solid rgba(192, 211, 202, 0.2)",
+                      color: isActive || isCompleted ? "#000" : "#C0D3CA",
+                      fontSize: { xs: "15px", md: "18px" },
+                      fontWeight: 600,
+                      boxShadow: isActive
+                        ? "0 4px 16px rgba(192, 211, 202, 0.4)"
+                        : isCompleted
+                        ? "0 4px 16px rgba(76, 175, 80, 0.3)"
+                        : "none",
+                      transition: "all 0.3s ease",
+                      transform: isActive ? "scale(1.1)" : "scale(1)",
+                      position: "relative",
+                    }}
+                  >
+                    {index === 3 && isSubmitting
+                      ? "⏳"
+                      : isCompleted && !isActive
+                      ? "✓"
+                      : isMobile
+                      ? index + 1
+                      : step.icon}
                   </Box>
-                )}
-              </Box>
+
+                  {/* Step Text - Hide on very small screens */}
+                  {!isMobile && (
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography
+                        sx={{
+                          fontSize: "0.95rem",
+                          fontWeight: 600,
+                          color: isActive ? "#C0D3CA" : "#fff",
+                          lineHeight: 1.2,
+                          mb: 0.5,
+                        }}
+                      >
+                        {step.title}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "0.75rem",
+                          color: "rgba(192, 211, 202, 0.7)",
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        {step.subtitle}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
 
               {/* Connector Line */}
               {!isLast && (

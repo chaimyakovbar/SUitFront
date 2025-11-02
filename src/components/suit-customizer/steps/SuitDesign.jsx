@@ -20,7 +20,6 @@ import {
   selectedKindTypeAtom,
   counterAtom,
 } from "../../../Utils";
-
 // S3 Assets URLs
 // const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
@@ -441,13 +440,13 @@ const SuitDesign = ({ isMobile }) => {
           >
             Choose Suit Style
           </Typography>
-          <img src={wew} alt="kind1" />
+          {/* <img src={wew} alt="kind1" />
           <img src={wew2} alt="kind2" />
 
           <img src={kind1Img} alt="kind1" />
           <img src={kind2Img} alt="kind2" />
           <img src={kind3Img} alt="kind3" />
-          <img src={kind4Img} alt="kind4" />
+          <img src={kind4Img} alt="kind4" /> */}
 
           <Grid container spacing={2} justifyContent="center">
             {suitTypes.map((type) => (

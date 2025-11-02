@@ -301,8 +301,8 @@ const StepNavigator = () => {
               <Tooltip
                 title={tooltipTitle}
                 arrow
-                placement="top"
-                enterDelay={250}
+                placement="bottom"
+                enterDelay={50}
                 disableFocusListener
                 componentsProps={{
                   tooltip: {

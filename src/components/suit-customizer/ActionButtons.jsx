@@ -116,6 +116,9 @@ const ActionButtons = ({ isMobile }) => {
   const canGoBack = currentStep > 0;
   // Allow completion immediately on last step - finishing details are optional
   const canFinish = isLastStep;
+  const nextEnabled = isLastStep
+    ? canFinish && !isSubmitting
+    : isStepValid() && !isSubmitting;
 
   const handleNext = () => {
     if (canGoNext) {
@@ -302,6 +305,12 @@ const ActionButtons = ({ isMobile }) => {
         disabled={isLastStep ? isSubmitting : !isStepValid() || isSubmitting}
         endIcon={isLastStep ? <CheckCircleIcon /> : <ArrowForwardIcon />}
         component={motion.button}
+        animate={nextEnabled ? { scale: [1, 1.03, 1] } : {}}
+        transition={
+          nextEnabled
+            ? { duration: 1.6, repeat: Infinity, repeatType: "reverse" }
+            : {}
+        }
         whileHover={
           isLastStep
             ? !isSubmitting
@@ -326,21 +335,21 @@ const ActionButtons = ({ isMobile }) => {
           borderRadius: "12px",
           background: isLastStep
             ? !isSubmitting
-              ? "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)"
+              ? "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)"
               : "rgba(40, 40, 40, 0.6)"
             : isStepValid() && !isSubmitting
             ? "linear-gradient(135deg, rgba(192, 211, 202, 0.9) 0%, rgba(168, 195, 184, 0.9) 100%)"
             : "rgba(40, 40, 40, 0.6)",
           color: isLastStep
             ? !isSubmitting
-              ? "#fff"
+              ? "#0a0a0a"
               : "rgba(192, 211, 202, 0.3)"
             : isStepValid() && !isSubmitting
             ? "#000"
             : "rgba(192, 211, 202, 0.3)",
           border: isLastStep
             ? !isSubmitting
-              ? "1px solid rgba(76, 175, 80, 0.5)"
+              ? "1px solid rgba(192, 211, 202, 0.65)"
               : "1px solid rgba(192, 211, 202, 0.1)"
             : isStepValid() && !isSubmitting
             ? "1px solid rgba(192, 211, 202, 0.4)"
@@ -351,21 +360,42 @@ const ActionButtons = ({ isMobile }) => {
           letterSpacing: "0.02em",
           boxShadow: isLastStep
             ? !isSubmitting
-              ? "0 4px 16px rgba(76, 175, 80, 0.3)"
+              ? "0 10px 30px rgba(192, 211, 202, 0.35)"
               : "none"
             : isStepValid() && !isSubmitting
             ? "0 4px 16px rgba(192, 211, 202, 0.2)"
             : "none",
           transition: "all 0.3s ease",
           backdropFilter: "blur(10px)",
+          ...(nextEnabled
+            ? {
+                boxShadow:
+                  "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+                animation: "glow 1.8s ease-in-out infinite",
+                "@keyframes glow": {
+                  "0%": {
+                    boxShadow:
+                      "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+                  },
+                  "50%": {
+                    boxShadow:
+                      "0 0 0 6px rgba(192, 211, 202, 0.18), 0 14px 40px rgba(192, 211, 202, 0.45)",
+                  },
+                  "100%": {
+                    boxShadow:
+                      "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+                  },
+                },
+              }
+            : {}),
           "&:hover": isLastStep
             ? !isSubmitting
               ? {
                   background:
-                    "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
-                  boxShadow: "0 6px 20px rgba(76, 175, 80, 0.4)",
+                    "linear-gradient(135deg, #D0E3DA 0%, #C0D3CA 100%)",
+                  boxShadow: "0 14px 40px rgba(192, 211, 202, 0.45)",
                   transform: "translateY(-1px)",
-                  border: "1px solid rgba(76, 175, 80, 0.7)",
+                  border: "1px solid rgba(192, 211, 202, 0.7)",
                 }
               : {}
             : isStepValid() && !isSubmitting

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useAtom } from "jotai";
+import { useLanguage } from "../../../context/LanguageContext";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import {
@@ -20,59 +21,59 @@ import {
   selectedKindTypeAtom,
   counterAtom,
 } from "../../../Utils";
+
 // S3 Assets URLs
 // const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
-// import kind1Img from "../../../../public/assets/kinds/kind1.png";
-// Kind images
-import kind1Img from "../../../assets/kinds/kind1.png";
-import kind2Img from "../../../assets/kinds/kind2.png";
-import kind3Img from "../../../assets/kinds/kind3.png";
-import kind4Img from "../../../assets/kinds/kind4.png";
+import kind1Img from "../../../assets/icons/suit/suitsKind/kind1.webp";
+import kind2Img from "../../../assets/icons/suit/suitsKind/kind2.webp";
+import kind3Img from "../../../assets/icons/suit/suitsKind/kind3.webp";
+import kind4Img from "../../../assets/icons/suit/suitsKind/kind4.webp";
 
 // Collar images
-import collarTight from "../../../assets/kinds/collarTight.png";
-import collarDistant from "../../../assets/kinds/collarDistant.png";
+import collarTight from "../../../assets/icons/suit/lapels/regular.webp";
+import collarDistant from "../../../assets/icons/suit/lapels/peak.webp";
+import collarSmook from "../../../assets/icons/suit/lapels/smook.webp";
 
 // Packet images
-import packet1 from "../../../assets/kinds/1.png";
-import packet2 from "../../../assets/kinds/2.png";
-import packet3 from "../../../assets/kinds/3.png";
+import packet1 from "../../../assets/icons/suit/packets/patch.webp";
+import packet2 from "../../../assets/icons/suit/packets/regular.webp";
+import packet3 from "../../../assets/icons/suit/packets/welt.webp";
 
-// Static data (module scope for referential stability)
-const SUIT_TYPES = [
-  { name: "kind1", image: kind1Img, label: "Classic Single" },
-  { name: "kind2", image: kind2Img, label: "Modern Double" },
-  { name: "kind3", image: kind3Img, label: "Contemporary" },
-  { name: "kind4", image: kind4Img, label: "Traditional" },
+// Helper function to get translated labels
+const getSuitTypes = (t) => [
+  { name: "kind1", image: kind1Img, label: t("classicSingle") },
+  { name: "kind2", image: kind2Img, label: t("modernDouble") },
+  { name: "kind3", image: kind3Img, label: t("contemporary") },
+  { name: "kind4", image: kind4Img, label: t("traditional") },
 ];
 
-const COLLAR_STYLES = [
-  { name: "collarTight", image: collarTight, label: "Narrow Lapel" },
-  { name: "collarDistant", image: collarDistant, label: "Wide Lapel" },
-  { name: "collarCircel", image: collarDistant, label: "Rounded Lapel" },
+const getCollarStyles = (t) => [
+  { name: "collarTight", image: collarTight, label: t("narrowLapel") },
+  { name: "collarDistant", image: collarDistant, label: t("wideLapel") },
+  { name: "collarCircel", image: collarSmook, label: t("roundedLapel") },
 ];
 
-const LAPEL_LEVELS = [
-  { value: 1, label: "Slim" },
-  { value: 2, label: "Standard" },
-  { value: 3, label: "Wide" },
-  { value: 4, label: "Extra Wide" },
+const getLapelLevels = (t) => [
+  { value: 1, label: t("slim"), name: "Slim" },
+  { value: 2, label: t("standard"), name: "Standard" },
+  { value: 3, label: t("wide"), name: "Wide" },
+  { value: 4, label: t("extraWide"), name: "Extra Wide" },
 ];
 
-const POCKET_TYPES_STRAIGHT = [
-  { name: "packet1", image: packet1, label: "Classic" },
-  { name: "packet2", image: packet2, label: "Modern" },
-  { name: "packet3", image: packet3, label: "Elegant" },
-  { name: "packet4", image: packet1, label: "Traditional" },
-  { name: "packet5", image: packet2, label: "Contemporary" },
+const getPocketTypesStraight = (t) => [
+  { name: "packet1", image: packet1, label: t("classic") },
+  { name: "packet2", image: packet2, label: t("modern") },
+  { name: "packet3", image: packet3, label: t("elegant") },
+  { name: "packet4", image: packet1, label: t("traditional") },
+  { name: "packet5", image: packet2, label: t("contemporary") },
 ];
 
-const POCKET_TYPES_CROOKED = [
-  { name: "packet1", image: packet1, label: "Angled Classic" },
-  { name: "packet2", image: packet2, label: "Angled Modern" },
-  { name: "packet4", image: packet1, label: "Angled Traditional" },
-  { name: "packet5", image: packet2, label: "Angled Contemporary" },
+const getPocketTypesCrooked = (t) => [
+  { name: "packet1", image: packet1, label: t("angledClassic") },
+  { name: "packet2", image: packet2, label: t("angledModern") },
+  { name: "packet4", image: packet1, label: t("angledTraditional") },
+  { name: "packet5", image: packet2, label: t("angledContemporary") },
 ];
 
 // Animation variants (module scope for reuse)
@@ -161,7 +162,7 @@ const OptionButton = React.memo(
                 objectFit: "contain",
                 aspectRatio: "1 / 1",
                 filter:
-                  "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+                  "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
               }}
               loading="lazy"
               decoding="async"
@@ -219,6 +220,7 @@ const OptionButton = React.memo(
 );
 
 const SuitDesign = ({ isMobile }) => {
+  const { t } = useLanguage();
   const [selectedKind, setSelectedKind] = useAtom(currentKindAtom);
   const [selectedCollar, setSelectedCollar] = useAtom(selectedCollarAtom);
   const [selectedLapelType, setSelectedLapelType] = useAtom(
@@ -228,37 +230,44 @@ const SuitDesign = ({ isMobile }) => {
     selectedPacketTypeAtom
   );
   const [, setSelectedKindType] = useAtom(selectedKindTypeAtom);
-  const [counterArray, setCounterArray] = useAtom(counterAtom);
+  const [, setCounterArray] = useAtom(counterAtom);
 
   const [selectedPocketStyle, setSelectedPocketStyle] = useState(true); // true = straight, false = crooked
   const [isTypeDrawerOpen, setIsTypeDrawerOpen] = useState(false);
   const [isCollarDrawerOpen, setIsCollarDrawerOpen] = useState(false);
   const [isPocketDrawerOpen, setIsPocketDrawerOpen] = useState(false);
 
-  // Validate step 2 when user makes selections
-  const validateStep = () => {
+  // Validate step whenever selections change
+  React.useEffect(() => {
     if (
       selectedKind &&
       selectedCollar &&
       selectedLapelType &&
       selectedPacketType
     ) {
-      const newCounterArray = [...counterArray];
-      newCounterArray[1] = { ...newCounterArray[1], step2Validated: true };
-      setCounterArray(newCounterArray);
+      setCounterArray((prevCounterArray) => {
+        // Check if already validated to prevent unnecessary updates
+        if (prevCounterArray[1]?.step2Validated) {
+          return prevCounterArray;
+        }
+        const newCounterArray = [...prevCounterArray];
+        newCounterArray[1] = { ...newCounterArray[1], step2Validated: true };
+        return newCounterArray;
+      });
     }
-  };
+  }, [
+    selectedKind,
+    selectedCollar,
+    selectedLapelType,
+    selectedPacketType,
+    setCounterArray,
+  ]);
 
-  // Validate step whenever selections change
-  React.useEffect(() => {
-    validateStep();
-  }, [selectedKind, selectedCollar, selectedLapelType, selectedPacketType]);
-
-  const suitTypes = SUIT_TYPES;
-  const collarStyles = COLLAR_STYLES;
-  const lapelLevels = LAPEL_LEVELS;
-  const pocketTypesStraight = POCKET_TYPES_STRAIGHT;
-  const pocketTypesCrooked = POCKET_TYPES_CROOKED;
+  const suitTypes = getSuitTypes(t);
+  const collarStyles = getCollarStyles(t);
+  const lapelLevels = getLapelLevels(t);
+  const pocketTypesStraight = getPocketTypesStraight(t);
+  const pocketTypesCrooked = getPocketTypesCrooked(t);
 
   const handlePocketStyleChange = (isStraight) => {
     setSelectedPocketStyle(isStraight);
@@ -309,32 +318,63 @@ const SuitDesign = ({ isMobile }) => {
             gap: 2,
           }}
         >
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "#C0D3CA",
-              textAlign: "center",
-              mb: 1,
-            }}
-          >
-            Suit Style
-          </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="outlined"
               onClick={() => setIsTypeDrawerOpen(true)}
               sx={{
+                position: "relative",
                 borderRadius: "12px",
                 px: 2,
                 py: 1,
                 color: "#C0D3CA",
                 borderColor: "#C0D3CA",
                 "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+                width: { xs: 100, md: 120 },
+                height: { xs: 100, md: 120 },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 1,
+                overflow: "hidden",
               }}
             >
-              Choose Style
+              <img
+                src={
+                  selectedKind
+                    ? suitTypes.find((type) => type.name === selectedKind)
+                        ?.image || suitTypes[0].image
+                    : suitTypes[0].image
+                }
+                alt="Selected suit kind"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  aspectRatio: "1 / 1",
+                  filter:
+                    "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
+                }}
+              />
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  position: "absolute",
+                  top: 4,
+                  left: 0,
+                  right: 0,
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  color: "#C0D3CA",
+                  textAlign: "center",
+                  background:
+                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent)",
+                  py: 0.5,
+                  px: 1,
+                }}
+              >
+                Suit Kind
+              </Typography>
             </Button>
           </Box>
         </Box>
@@ -348,32 +388,66 @@ const SuitDesign = ({ isMobile }) => {
             gap: 2,
           }}
         >
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "#C0D3CA",
-              textAlign: "center",
-              mb: 1,
-            }}
-          >
-            Lapel Style
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={() => setIsCollarDrawerOpen(true)}
-            sx={{
-              borderRadius: "12px",
-              px: 2,
-              py: 1,
-              color: "#C0D3CA",
-              borderColor: "#C0D3CA",
-              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
-            }}
-          >
-            Choose Style
-          </Button>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setIsCollarDrawerOpen(true)}
+              sx={{
+                position: "relative",
+                borderRadius: "12px",
+                px: 2,
+                py: 1,
+                color: "#C0D3CA",
+                borderColor: "#C0D3CA",
+                "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+                width: { xs: 100, md: 120 },
+                height: { xs: 100, md: 120 },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 1,
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src={
+                  selectedCollar
+                    ? collarStyles.find(
+                        (style) => style.name === selectedCollar
+                      )?.image || collarStyles[0].image
+                    : collarStyles[0].image
+                }
+                alt="Selected lapel style"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  aspectRatio: "1 / 1",
+                  filter:
+                    "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
+                }}
+              />
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  position: "absolute",
+                  top: 4,
+                  left: 0,
+                  right: 0,
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  color: "#C0D3CA",
+                  textAlign: "center",
+                  background:
+                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent)",
+                  py: 0.5,
+                  px: 1,
+                }}
+              >
+                Lapel
+              </Typography>
+            </Button>
+          </Box>
         </Box>
 
         {/* Pocket Style Section → replaced with single button */}
@@ -385,32 +459,73 @@ const SuitDesign = ({ isMobile }) => {
             gap: 2,
           }}
         >
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "#C0D3CA",
-              textAlign: "center",
-              mb: 1,
-            }}
-          >
-            Pocket Style
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={() => setIsPocketDrawerOpen(true)}
-            sx={{
-              borderRadius: "12px",
-              px: 2,
-              py: 1,
-              color: "#C0D3CA",
-              borderColor: "#C0D3CA",
-              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
-            }}
-          >
-            Choose Style
-          </Button>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setIsPocketDrawerOpen(true)}
+              sx={{
+                position: "relative",
+                borderRadius: "12px",
+                px: 2,
+                py: 1,
+                color: "#C0D3CA",
+                borderColor: "#C0D3CA",
+                "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+                width: { xs: 100, md: 120 },
+                height: { xs: 100, md: 120 },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 1,
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src={
+                  selectedPacketType
+                    ? (selectedPocketStyle
+                        ? pocketTypesStraight
+                        : pocketTypesCrooked
+                      ).find((pocket) => pocket.name === selectedPacketType)
+                        ?.image ||
+                      (selectedPocketStyle
+                        ? pocketTypesStraight
+                        : pocketTypesCrooked)[0].image
+                    : (selectedPocketStyle
+                        ? pocketTypesStraight
+                        : pocketTypesCrooked)[0].image
+                }
+                alt="Selected pocket style"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  aspectRatio: "1 / 1",
+                  filter:
+                    "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
+                }}
+              />
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  position: "absolute",
+                  top: 4,
+                  left: 0,
+                  right: 0,
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  color: "#C0D3CA",
+                  textAlign: "center",
+                  background:
+                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent)",
+                  py: 0.5,
+                  px: 1,
+                }}
+              >
+                Pocket
+              </Typography>
+            </Button>
+          </Box>
         </Box>
 
         <Drawer
@@ -615,7 +730,7 @@ const SuitDesign = ({ isMobile }) => {
                 const selectedLevel = lapelLevels.find(
                   (level) => level.value === newValue
                 );
-                setSelectedLapelType(selectedLevel?.label || "Standard");
+                setSelectedLapelType(selectedLevel?.name || "Standard");
               }}
               sx={{
                 color: "#C0D3CA",
@@ -737,7 +852,7 @@ const SuitDesign = ({ isMobile }) => {
             const selectedLevel = lapelLevels.find(
               (level) => level.value === newValue
             );
-            setSelectedLapelType(selectedLevel?.label || "Standard");
+            setSelectedLapelType(selectedLevel?.name || "Standard");
           }}
           sx={{
             color: "#C0D3CA",
@@ -776,7 +891,7 @@ const SuitDesign = ({ isMobile }) => {
             textAlign: "center",
           }}
         >
-          Pocket Style
+          Pocket
         </Typography>
 
         {/* Pocket Orientation Toggle */}

@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { selectedInsideTypeAtom } from "../../../Utils";
 import { imagesInsideUp } from "../../../consts/KindOfColors";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useLanguage } from "../../../context/LanguageContext";
 
 const useStyles = makeStyles({
   container: {
@@ -85,6 +86,7 @@ const useStyles = makeStyles({
 });
 
 const ButtonInside = ({ handleCloseDrawer }) => {
+  const { t } = useLanguage();
   const classes = useStyles();
   const [selectedInsideType, setSelectedInsideType] = useAtom(
     selectedInsideTypeAtom
@@ -142,7 +144,7 @@ const ButtonInside = ({ handleCloseDrawer }) => {
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Button className={classes.resetButton} onClick={handleReset}>
-          Reset Selection
+          {t("resetSelection")}
         </Button>
       </Box>
     </motion.div>

@@ -28,6 +28,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -46,8 +47,12 @@ const createButtonCategoryMap = () => {
 const buttonCategoryMap = createButtonCategoryMap();
 
 // Lazy load 3D models
-const Doll = React.lazy(() => import('./Doll3D').then(module => ({ default: module.Doll })));
-const Doll2 = React.lazy(() => import('./Doll3D').then(module => ({ default: module.Doll2 })));
+const Doll = React.lazy(() =>
+  import("./Doll3D").then((module) => ({ default: module.Doll }))
+);
+const Doll2 = React.lazy(() =>
+  import("./Doll3D").then((module) => ({ default: module.Doll2 }))
+);
 
 // 3D Model Loading Component
 const ModelLoader = ({ modelType, ...props }) => {
@@ -58,12 +63,12 @@ const ModelLoader = ({ modelType, ...props }) => {
     // Preload model when component mounts
     const preloadModel = async () => {
       try {
-        if (modelType === 'suit') {
-          await import('./Doll3D');
+        if (modelType === "suit") {
+          await import("./Doll3D");
         }
         setModelLoaded(true);
       } catch (error) {
-        console.error('Failed to load 3D model:', error);
+        console.error("Failed to load 3D model:", error);
         setModelError(true);
       }
     };
@@ -89,7 +94,7 @@ const ModelLoader = ({ modelType, ...props }) => {
     );
   }
 
-  return modelType === 'suit' ? <Doll {...props} /> : <Doll2 {...props} />;
+  return modelType === "suit" ? <Doll {...props} /> : <Doll2 {...props} />;
 };
 
 const TakeSizes5 = () => {
@@ -99,6 +104,7 @@ const TakeSizes5 = () => {
   const isLoading = false;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
   const [sizes, setSizes] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(null);
@@ -133,7 +139,7 @@ const TakeSizes5 = () => {
     // If no profiles exist, create a default one
     if (profiles.length === 0) {
       const defaultProfile = {
-        name: "Default",
+        name: t("default"),
         sizes: {},
       };
       setSizeProfiles([defaultProfile]);
@@ -156,7 +162,7 @@ const TakeSizes5 = () => {
 
   const handleCreateNewProfile = async () => {
     if (!newProfileName.trim()) {
-      enqueueSnackbar("Please enter a profile name", { variant: "error" });
+      enqueueSnackbar(t("pleaseEnterProfileName"), { variant: "error" });
       return;
     }
 
@@ -177,12 +183,12 @@ const TakeSizes5 = () => {
       setSelectedProfile(newProfile);
       setNewProfileName("");
       setOpenNewProfileDialog(false);
-      enqueueSnackbar("New profile created successfully", {
+      enqueueSnackbar(t("newProfileCreatedSuccessfully"), {
         variant: "success",
       });
     } catch (error) {
       console.error("Error creating new profile:", error);
-      enqueueSnackbar("Failed to create new profile", { variant: "error" });
+      enqueueSnackbar(t("failedToCreateProfile"), { variant: "error" });
     }
   };
 
@@ -199,7 +205,7 @@ const TakeSizes5 = () => {
     e.preventDefault();
 
     if (!selectedProfile) {
-      enqueueSnackbar("Please select a profile first");
+      enqueueSnackbar(t("pleaseSelectProfileFirst"));
       return;
     }
 
@@ -213,10 +219,10 @@ const TakeSizes5 = () => {
 
       setDialogOpen(false);
       setSelectedButton(null);
-      enqueueSnackbar("Measurements saved successfully");
+      enqueueSnackbar(t("measurementsSavedSuccessfully"));
     } catch (error) {
       console.error("Error saving measurements:", error);
-      enqueueSnackbar("Error saving measurements");
+      enqueueSnackbar(t("errorSavingMeasurements"));
     }
   };
 
@@ -422,7 +428,7 @@ const TakeSizes5 = () => {
             ))}
           </select>
           <Typography variant="body2" sx={{ color: "black" }}>
-            Select Profile:
+            {t("selectProfile")}
           </Typography>
         </Box>
       </div>
@@ -438,12 +444,12 @@ const TakeSizes5 = () => {
           },
         }}
       >
-        <DialogTitle>Create New Size Profile</DialogTitle>
+        <DialogTitle>{t("createNewSizeProfile")}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Profile Name"
+            label={t("profileName")}
             type="text"
             fullWidth
             variant="outlined"
@@ -470,14 +476,14 @@ const TakeSizes5 = () => {
             onClick={() => setOpenNewProfileDialog(false)}
             sx={{ color: "#fff" }}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             onClick={handleCreateNewProfile}
             variant="contained"
             sx={{ backgroundColor: "#333" }}
           >
-            Create
+            {t("create")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -498,8 +504,16 @@ const TakeSizes5 = () => {
                   </mesh>
                 }
               >
-                <ModelLoader modelType="suit" position={[0, 5, 0]} color="red" />
-                <ModelLoader modelType="allSuit" position={[10, 5, 0]} color="blue" />
+                <ModelLoader
+                  modelType="suit"
+                  position={[0, 5, 0]}
+                  color="red"
+                />
+                <ModelLoader
+                  modelType="allSuit"
+                  position={[10, 5, 0]}
+                  color="blue"
+                />
               </Suspense>
               <ButtonArray
                 onButtonClick={handleButtonClick}
@@ -540,7 +554,7 @@ const TakeSizes5 = () => {
                   <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                     <TextField
                       type="number"
-                      label="Enter measurement (cm)"
+                      label={t("enterMeasurementCm")}
                       value={inputValue}
                       onChange={(e) => {
                         const newValue = e.target.value;
@@ -602,7 +616,7 @@ const TakeSizes5 = () => {
                   </Box>
                 </Box>
               ) : (
-                <p>No button selected</p>
+                <p>{t("noButtonSelected")}</p>
               )}
             </DialogContent>
 
@@ -610,7 +624,7 @@ const TakeSizes5 = () => {
               sx={{ backgroundColor: "#F5F5F7", padding: "10px 24px" }}
             >
               <Button onClick={handleSubmit} color="primary" variant="outlined">
-                Save
+                {t("save")}
               </Button>
             </DialogActions>
           </Dialog>
@@ -622,13 +636,13 @@ const TakeSizes5 = () => {
               <Box padding={2}>{dialogContent}</Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose2}>Close</Button>
+              <Button onClick={handleClose2}>{t("close")}</Button>
             </DialogActions>
           </Dialog>
         </div>
 
         <Drawer
-          style={{ zIndex: 20001, width: '50vw' }}
+          style={{ zIndex: 20001, width: "50vw" }}
           anchor="right"
           open={sideDrawerOpen}
           onClose={toggleSideDrawer}
@@ -649,7 +663,7 @@ const TakeSizes5 = () => {
                 fontSize: isMobile ? "1.2rem" : "1.5rem",
               }}
             >
-              כל המידות
+              {t("allMeasurements")}
             </Typography>
 
             <Box

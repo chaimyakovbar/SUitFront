@@ -43,6 +43,7 @@ import useProduct from "../Hooks/useProduct";
 import { authUserAtom } from "../Utils";
 import { useAtom } from "jotai";
 import Checkout from "./CheckOut";
+import { useLanguage } from "../context/LanguageContext";
 // import { getLocalOrders } from "../api/orders";
 
 // Props: all logic/state/handlers/data should be passed in from parent (see Payed.jsx)
@@ -63,6 +64,7 @@ const CheckoutModern = ({
 
   const { data: products } = useProduct();
   const [user] = useAtom(authUserAtom);
+  const { t } = useLanguage();
 
   const queryClient = useQueryClient();
 
@@ -409,7 +411,7 @@ const CheckoutModern = ({
               color: "rgba(255,255,255,0.5)",
             }}
           >
-            No image
+            {t("noImage")}
           </Box>
         )}
 
@@ -514,7 +516,7 @@ const CheckoutModern = ({
               fontSize: "1.8rem",
             }}
           >
-            Order Summary
+            {t("orderSummary")}
           </Typography>
           <Box flex={1} />
           <Button
@@ -530,7 +532,7 @@ const CheckoutModern = ({
               },
             }}
           >
-            Edit
+            {t("edit")}
           </Button>
         </Box>
         <Divider sx={{ borderColor: border, mb: 2, opacity: 0.3 }} />
@@ -550,7 +552,7 @@ const CheckoutModern = ({
             },
           }}
         >
-          {viewMode === "grid" ? "הצג כרשימה" : "הצג ככרטיסים"}
+          {viewMode === "grid" ? t("showAsList") : t("showAsCards")}
         </Button>
         <Box sx={{ mt: 1 }}>
           <Box
@@ -627,7 +629,7 @@ const CheckoutModern = ({
             fontSize: "1.4rem",
           }}
         >
-          Delivery Options
+          {t("deliveryOptions")}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
@@ -664,13 +666,13 @@ const CheckoutModern = ({
                     fontFamily: "'Montserrat', sans-serif",
                   }}
                 >
-                  Standard Delivery
+                  {t("standardDelivery")}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{ color: muted, fontFamily: "'Montserrat', sans-serif" }}
                 >
-                  3-5 business days
+                  {t("standardDeliveryTime")}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -680,7 +682,7 @@ const CheckoutModern = ({
                     fontFamily: "'Cormorant Garamond', serif",
                   }}
                 >
-                  Free
+                  {t("free")}
                 </Typography>
               </Box>
             </Box>
@@ -719,13 +721,13 @@ const CheckoutModern = ({
                     fontFamily: "'Montserrat', sans-serif",
                   }}
                 >
-                  Express Delivery
+                  {t("expressDelivery")}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{ color: muted, fontFamily: "'Montserrat', sans-serif" }}
                 >
-                  1-2 business days
+                  {t("expressDeliveryTime")}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -773,13 +775,13 @@ const CheckoutModern = ({
                     fontFamily: "'Montserrat', sans-serif",
                   }}
                 >
-                  Same Day Delivery
+                  {t("sameDayDelivery")}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{ color: muted, fontFamily: "'Montserrat', sans-serif" }}
                 >
-                  Within 6 hours
+                  {t("sameDayDeliveryTime")}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -885,7 +887,7 @@ const CheckoutModern = ({
                     fontSize: "1.4rem",
                   }}
                 >
-                  Size Selection
+                  {t("sizeSelection")}
                 </Typography>
                 <Box
                   sx={{
@@ -937,7 +939,7 @@ const CheckoutModern = ({
                       />
                     }
                   >
-                    Tailored Fit
+                    {t("tailoredFit")}
                   </Button>
                   {hasSizesTable && (
                     <Button
@@ -983,7 +985,7 @@ const CheckoutModern = ({
                         />
                       }
                     >
-                      Standard Sizes
+                      {t("standardSizes")}
                     </Button>
                   )}
                 </Box>
@@ -1037,7 +1039,7 @@ const CheckoutModern = ({
                     >
                       {sizeProfiles.length === 0 ? (
                         <MenuItem disabled sx={{ color: muted }}>
-                          אין לך פרופילי מידות שמורים. צור אחד בפרופיל שלך.
+                          {t("noSizeProfiles")}
                         </MenuItem>
                       ) : (
                         sizeProfiles.map((profile) => (
@@ -1062,7 +1064,7 @@ const CheckoutModern = ({
                         fontSize: "0.9rem",
                       }}
                     >
-                      Jacket Size: {products.sizesTable.jacket}
+                      {t("jacketSizeLabel")} {products.sizesTable.jacket}
                     </Typography>
                     <Typography
                       sx={{
@@ -1071,7 +1073,7 @@ const CheckoutModern = ({
                         fontSize: "0.9rem",
                       }}
                     >
-                      Pants Size: {products.sizesTable.pants}
+                      {t("pantsSizeLabel")} {products.sizesTable.pants}
                     </Typography>
                   </Box>
                 )}
@@ -1117,7 +1119,7 @@ const CheckoutModern = ({
                     fontSize: "1.4rem",
                   }}
                 >
-                  Contact Information
+                  {t("contactInformation")}
                 </Typography>
                 <Box
                   sx={{
@@ -1140,7 +1142,7 @@ const CheckoutModern = ({
                               fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
-                            Address:
+                            {t("addressLabel")}
                           </Typography>
                           <Typography
                             sx={{
@@ -1163,8 +1165,7 @@ const CheckoutModern = ({
                               fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
-                            Missing address, please add your address in your
-                            account settings
+                            {t("missingAddressMessage")}
                           </Typography>
                         </Box>
                       )}
@@ -1181,7 +1182,7 @@ const CheckoutModern = ({
                               fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
-                            Phone:
+                            {t("phoneLabel")}
                           </Typography>
                           <Typography
                             sx={{
@@ -1204,8 +1205,7 @@ const CheckoutModern = ({
                               fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
-                            Missing phone number, please add your phone in your
-                            account settings
+                            {t("missingPhoneMessage")}
                           </Typography>
                         </Box>
                       )}
@@ -1222,7 +1222,7 @@ const CheckoutModern = ({
                         fontSize: "0.9rem",
                       }}
                     >
-                      Edit Contact Information
+                      {t("editContactInformation")}
                     </Link>
                   </Box>
                 </Box>
@@ -1267,7 +1267,7 @@ const CheckoutModern = ({
                     fontSize: "1.8rem",
                   }}
                 >
-                  Payment Summary
+                  {t("paymentSummary")}
                 </Typography>
                 <Divider sx={{ borderColor: border, mb: 2, opacity: 0.3 }} />
                 <Stack spacing={1}>
@@ -1285,7 +1285,7 @@ const CheckoutModern = ({
                         fontSize: "0.9rem",
                       }}
                     >
-                      Subtotal
+                      {t("subtotal")}
                     </Typography>
                     <Typography
                       sx={{
@@ -1311,7 +1311,7 @@ const CheckoutModern = ({
                         fontSize: "0.9rem",
                       }}
                     >
-                      Shipping
+                      {t("shipping")}
                     </Typography>
                     <Typography
                       sx={{
@@ -1325,7 +1325,7 @@ const CheckoutModern = ({
                         fontFamily: "'Cormorant Garamond', serif",
                       }}
                     >
-                      {shippingCost === 0 ? "Free" : `$${shippingCost}`}
+                      {shippingCost === 0 ? t("free") : `$${shippingCost}`}
                     </Typography>
                   </Box>
                   <Divider sx={{ borderColor: border, my: 1, opacity: 0.3 }} />
@@ -1344,7 +1344,7 @@ const CheckoutModern = ({
                         fontFamily: "'Cormorant Garamond', serif",
                       }}
                     >
-                      Total
+                      {t("total")}
                     </Typography>
                     <Typography
                       sx={{
@@ -1369,7 +1369,7 @@ const CheckoutModern = ({
                       borderRadius: "12px",
                     }}
                   >
-                    Secure Payment — 256-bit SSL encryption protects your data
+                    {t("securePaymentMessage")}
                   </Alert>
                 </Box>
                 {paymentWarning && (
@@ -1402,7 +1402,7 @@ const CheckoutModern = ({
                         fontSize: "1.4rem",
                       }}
                     >
-                      בחר אמצעי תשלום
+                      {t("selectPaymentMethod")}
                     </Typography>
 
                     {/* PayPal Button */}
@@ -1430,7 +1430,7 @@ const CheckoutModern = ({
 
                     <Divider sx={{ borderColor: border, my: 2, opacity: 0.3 }}>
                       <Typography sx={{ color: muted, fontSize: 12 }}>
-                        או
+                        {t("or")}
                       </Typography>
                     </Divider>
 
@@ -1463,8 +1463,8 @@ const CheckoutModern = ({
                       startIcon={<LockIcon />}
                     >
                       {canUserPay
-                        ? `תשלום רגיל $${totalPrice + shippingCost}`
-                        : "Pay"}
+                        ? `${t("regularPayment")} $${totalPrice + shippingCost}`
+                        : t("pay")}
                     </Button>
                   </Box>
                 )}
@@ -1488,7 +1488,7 @@ const CheckoutModern = ({
                     }}
                     disabled={true}
                   >
-                    Pay
+                    {t("pay")}
                   </Button>
                 )}
 
@@ -1501,7 +1501,7 @@ const CheckoutModern = ({
                     fontFamily: "'Montserrat', sans-serif",
                   }}
                 >
-                  We accept major credit cards and PayPal
+                  {t("weAcceptPayment")}
                 </Typography>
               </Paper>
             </Grid>

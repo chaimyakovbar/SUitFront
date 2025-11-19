@@ -5,10 +5,10 @@ import { useAtom } from "jotai";
 import { selectedPoshetAtom } from "../../../Utils";
 import { imagesPoshet } from "../../../consts/KindOfColors";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
-
+import { useLanguage } from "../../../context/LanguageContext";
 
 const ButtonPoshet = ({ handleCloseDrawer }) => {
+  const { t } = useLanguage();
   const [selectedPoshet, setSelectedPoshet] = useAtom(selectedPoshetAtom);
 
   const handleClick = (color) => {
@@ -24,30 +24,30 @@ const ButtonPoshet = ({ handleCloseDrawer }) => {
   return (
     <Box sx={{ width: "100%" }}>
       {/* Enhanced Header */}
-      <Typography 
-        variant="h6" 
-        sx={{ 
-          mb: 1, 
-          color: '#C0D3CA', 
-          textAlign: 'center',
-          fontSize: '1.1rem',
+      <Typography
+        variant="h6"
+        sx={{
+          mb: 1,
+          color: "#C0D3CA",
+          textAlign: "center",
+          fontSize: "1.1rem",
           fontWeight: 500,
-          letterSpacing: '0.5px'
+          letterSpacing: "0.5px",
         }}
       >
-        Choose Pocket Square
+        {t("choosePocketSquare")}
       </Typography>
-      <Typography 
-        variant="body2" 
-        sx={{ 
-          mb: 3, 
-          color: 'rgba(192, 211, 202, 0.7)', 
-          textAlign: 'center',
-          fontSize: '0.85rem',
-          fontWeight: 300
+      <Typography
+        variant="body2"
+        sx={{
+          mb: 3,
+          color: "rgba(192, 211, 202, 0.7)",
+          textAlign: "center",
+          fontSize: "0.85rem",
+          fontWeight: 300,
         }}
       >
-        Select your pocket square style
+        {t("selectPocketSquareStyle")}
       </Typography>
 
       {/* Enhanced Grid */}
@@ -61,94 +61,104 @@ const ButtonPoshet = ({ handleCloseDrawer }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 {/* Enhanced Image Container */}
                 <Box
                   sx={{
                     width: { xs: 70, md: 80 },
                     height: { xs: 70, md: 80 },
-                    borderRadius: '16px',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    border: item.name === selectedPoshet
-                      ? '3px solid rgba(192, 211, 202, 0.8)'
-                      : '2px solid rgba(192, 211, 202, 0.2)',
-                    background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)',
-                    transition: 'all 0.3s ease',
-                    boxShadow: item.name === selectedPoshet
-                      ? '0 8px 24px rgba(192, 211, 202, 0.3)'
-                      : '0 4px 12px rgba(0, 0, 0, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: '0 12px 32px rgba(192, 211, 202, 0.2)',
-                      border: '3px solid rgba(192, 211, 202, 0.6)'
-                    }
+                    borderRadius: "16px",
+                    cursor: "pointer",
+                    position: "relative",
+                    overflow: "hidden",
+                    border:
+                      item.name === selectedPoshet
+                        ? "3px solid rgba(192, 211, 202, 0.8)"
+                        : "2px solid rgba(192, 211, 202, 0.2)",
+                    background:
+                      "linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)",
+                    transition: "all 0.3s ease",
+                    boxShadow:
+                      item.name === selectedPoshet
+                        ? "0 8px 24px rgba(192, 211, 202, 0.3)"
+                        : "0 4px 12px rgba(0, 0, 0, 0.2)",
+                    backdropFilter: "blur(10px)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      boxShadow: "0 12px 32px rgba(192, 211, 202, 0.2)",
+                      border: "3px solid rgba(192, 211, 202, 0.6)",
+                    },
                   }}
                   onClick={() => handleClick(item.name)}
                 >
                   {/* Image with consistent background */}
                   <Box
                     sx={{
-                      width: '85%',
-                      height: '85%',
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                      background: 'linear-gradient(135deg, rgba(40, 40, 40, 0.9) 0%, rgba(30, 30, 30, 0.95) 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '1px solid rgba(192, 211, 202, 0.1)'
+                      width: "85%",
+                      height: "85%",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      background:
+                        "linear-gradient(135deg, rgba(40, 40, 40, 0.9) 0%, rgba(30, 30, 30, 0.95) 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid rgba(192, 211, 202, 0.1)",
                     }}
                   >
                     <img
                       src={item.img}
                       alt={item.name}
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                        filter: 'brightness(1.1) contrast(1.1)',
-                        mixBlendMode: 'multiply'
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        filter: "brightness(1.1) contrast(1.1)",
+                        mixBlendMode: "multiply",
                       }}
                     />
                   </Box>
-                  
+
                   {/* Selection Check Icon */}
                   {item.name === selectedPoshet && (
-                    <CheckCircleIcon 
+                    <CheckCircleIcon
                       sx={{
-                        position: 'absolute',
-                        top: '-6px',
-                        right: '-6px',
-                        color: '#C0D3CA',
-                        backgroundColor: 'rgba(10, 10, 10, 0.95)',
-                        borderRadius: '50%',
-                        padding: '3px',
-                        fontSize: '18px',
-                        border: '2px solid rgba(192, 211, 202, 0.4)',
-                        backdropFilter: 'blur(10px)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                        position: "absolute",
+                        top: "-6px",
+                        right: "-6px",
+                        color: "#C0D3CA",
+                        backgroundColor: "rgba(10, 10, 10, 0.95)",
+                        borderRadius: "50%",
+                        padding: "3px",
+                        fontSize: "18px",
+                        border: "2px solid rgba(192, 211, 202, 0.4)",
+                        backdropFilter: "blur(10px)",
+                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
                       }}
                     />
                   )}
                 </Box>
-                
+
                 {/* Item Name */}
-                <Typography 
+                <Typography
                   sx={{
-                    color: '#C0D3CA',
-                    fontSize: '0.75rem',
+                    color: "#C0D3CA",
+                    fontSize: "0.75rem",
                     fontWeight: 500,
-                    textAlign: 'center',
+                    textAlign: "center",
                     mt: 1.5,
                     mb: 0.5,
-                    letterSpacing: '0.3px',
-                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                    letterSpacing: "0.3px",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)",
                   }}
                 >
                   {item.name}
@@ -161,32 +171,34 @@ const ButtonPoshet = ({ handleCloseDrawer }) => {
 
       {/* Enhanced Reset Button */}
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <Button 
+        <Button
           onClick={handleReset}
           component={motion.button}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           sx={{
-            background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(192, 211, 202, 0.05) 100%)',
-            color: '#C0D3CA',
-            border: '1px solid rgba(192, 211, 202, 0.3)',
-            padding: '10px 24px',
-            borderRadius: '8px',
+            background:
+              "linear-gradient(135deg, rgba(192, 211, 202, 0.1) 0%, rgba(192, 211, 202, 0.05) 100%)",
+            color: "#C0D3CA",
+            border: "1px solid rgba(192, 211, 202, 0.3)",
+            padding: "10px 24px",
+            borderRadius: "8px",
             fontFamily: "'Montserrat', sans-serif",
-            fontSize: '0.85rem',
+            fontSize: "0.85rem",
             fontWeight: 500,
-            letterSpacing: '0.5px',
-            transition: 'all 0.3s ease',
-            backdropFilter: 'blur(10px)',
-            '&:hover': {
-              background: 'linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(192, 211, 202, 0.1) 100%)',
-              border: '1px solid rgba(192, 211, 202, 0.5)',
-              transform: 'translateY(-2px)',
-              boxShadow: '0 8px 24px rgba(192, 211, 202, 0.2)'
-            }
+            letterSpacing: "0.5px",
+            transition: "all 0.3s ease",
+            backdropFilter: "blur(10px)",
+            "&:hover": {
+              background:
+                "linear-gradient(135deg, rgba(192, 211, 202, 0.2) 0%, rgba(192, 211, 202, 0.1) 100%)",
+              border: "1px solid rgba(192, 211, 202, 0.5)",
+              transform: "translateY(-2px)",
+              boxShadow: "0 8px 24px rgba(192, 211, 202, 0.2)",
+            },
           }}
         >
-          Reset Selection
+          {t("resetSelection")}
         </Button>
       </Box>
     </Box>

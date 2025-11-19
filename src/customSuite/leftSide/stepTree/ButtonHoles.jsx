@@ -6,14 +6,17 @@ import {
   selectedHolesButtonAtom,
   selectedHolesButtonUpAtom,
 } from "../../../Utils";
+import { useMediaQuery } from "@mui/material";
+import { useLanguage } from "../../../context/LanguageContext";
+
 import { imagesHoles } from "../../../consts/KindOfColors";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-// S3 Assets URLs
-const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const holes = `${S3_BASE_URL}/assets/kinds/AllSuit.png`;
-const JustUp = `${S3_BASE_URL}/assets/kinds/JustUp.png`;
+import JustUp from "../../../assets/icons/suit/suitAdd/holesUp.webp";
+import holes from "../../../assets/icons/suit/suitAdd/holesAll.webp";
 
 const ButtonHoles = ({ handleCloseDrawer }) => {
+  const { t } = useLanguage();
+  const isMobile = useMediaQuery("(max-width:600px)");
   const [selectedHolesButton, setSelectedHolesButton] = useAtom(
     selectedHolesButtonAtom
   );
@@ -83,8 +86,8 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
           }}
           centered
         >
-          <Tab label="All Suit" />
-          <Tab label="Just Upper" />
+          <Tab label={t("allSuit")} />
+          <Tab label={t("justUpper")} />
         </Tabs>
       </Box>
 
@@ -108,12 +111,13 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
       >
         <img
           src={tabValue === 0 ? holes : JustUp}
-          alt={tabValue === 0 ? "All Suit" : "Just Upper"}
+          alt={tabValue === 0 ? t("allSuit") : t("justUpper")}
           style={{
-            width: "100px",
-            height: "150px",
+            width: isMobile ? "200px" : "300px",
+            height: isMobile ? "200px" : "300px",
             objectFit: "contain",
-            filter: "brightness(1.1) contrast(1.1)",
+            filter:
+              "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
           }}
         />
       </Box>
@@ -277,7 +281,7 @@ const ButtonHoles = ({ handleCloseDrawer }) => {
             },
           }}
         >
-          Reset Selection
+          {t("resetSelection")}
         </Button>
       </Box>
     </Box>

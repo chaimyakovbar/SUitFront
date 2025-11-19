@@ -29,6 +29,7 @@ import useProduct from "../Hooks/useProduct";
 import { postProduct } from "../api/suit";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -77,6 +78,14 @@ const Doll = (props) => {
     return clone;
   }, [scene]);
 
+  // Notify parent when model is loaded
+  React.useEffect(() => {
+    if (scene && props.onLoad) {
+      props.onLoad();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene]);
+
   return (
     <primitive
       ref={modelRef}
@@ -94,6 +103,7 @@ const DollDisplay = () => {
   const { data, isLoading } = useProduct();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
   const [sizes, setSizes] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(null);
@@ -107,11 +117,39 @@ const DollDisplay = () => {
   const [sizeProfiles, setSizeProfiles] = useState([]);
   const [newProfileName, setNewProfileName] = useState("");
   const [openNewProfileDialog, setOpenNewProfileDialog] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Handle loading overlay logic - only show if there's actual delay
+  useEffect(() => {
+    // Start a timer when component mounts
+    const loadingTimer = setTimeout(() => {
+      // If model is not loaded after 500ms, show loading overlay
+      if (!modelLoaded) {
+        setShowLoading(true);
+      }
+    }, 500);
+
+    // If model loads quickly, don't show loading at all
+    if (modelLoaded) {
+      clearTimeout(loadingTimer);
+      // Hide loading after a short delay to ensure model is visible
+      const hideTimer = setTimeout(() => {
+        setShowLoading(false);
+      }, 300);
+      return () => {
+        clearTimeout(loadingTimer);
+        clearTimeout(hideTimer);
+      };
+    }
+
+    return () => clearTimeout(loadingTimer);
+  }, [modelLoaded]);
 
   // Initialize profiles from data
   useEffect(() => {
@@ -133,7 +171,7 @@ const DollDisplay = () => {
     // If no profiles exist, create a default one
     if (profiles.length === 0) {
       const defaultProfile = {
-        name: "Default",
+        name: t("default"),
         sizes: {},
       };
       setSizeProfiles([defaultProfile]);
@@ -156,7 +194,7 @@ const DollDisplay = () => {
 
   const handleCreateNewProfile = async () => {
     if (!newProfileName.trim()) {
-      enqueueSnackbar("Please enter a profile name", { variant: "error" });
+      enqueueSnackbar(t("pleaseEnterProfileName"), { variant: "error" });
       return;
     }
 
@@ -180,12 +218,12 @@ const DollDisplay = () => {
       setSelectedProfile(newProfile);
       setNewProfileName("");
       setOpenNewProfileDialog(false);
-      enqueueSnackbar("New profile created successfully", {
+      enqueueSnackbar(t("newProfileCreatedSuccessfully"), {
         variant: "success",
       });
     } catch (error) {
       console.error("Error creating new profile:", error);
-      enqueueSnackbar("Failed to create new profile", { variant: "error" });
+      enqueueSnackbar(t("failedToCreateProfile"), { variant: "error" });
     }
   };
 
@@ -202,7 +240,7 @@ const DollDisplay = () => {
     e.preventDefault();
 
     if (!selectedProfile) {
-      enqueueSnackbar("Please select a profile first");
+      enqueueSnackbar(t("pleaseSelectProfileFirst"));
       return;
     }
 
@@ -219,10 +257,10 @@ const DollDisplay = () => {
 
       setDialogOpen(false);
       setSelectedButton(null);
-      enqueueSnackbar("Measurements saved successfully");
+      enqueueSnackbar(t("measurementsSavedSuccessfully"));
     } catch (error) {
       console.error("Error saving measurements:", error);
-      enqueueSnackbar("Error saving measurements");
+      enqueueSnackbar(t("errorSavingMeasurements"));
     }
   };
 
@@ -319,6 +357,84 @@ const DollDisplay = () => {
         color: "#C0D3CA",
       }}
     >
+      {/* Loading Overlay with Shimmer Effect */}
+      {showLoading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#0A0F14",
+            zIndex: 9999,
+            transition: "opacity 0.3s ease-out",
+          }}
+        >
+          {/* Loading Shimmer Effect - Sliding from right to left */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 2,
+              pointerEvents: "none",
+              overflow: "hidden",
+            }}
+          >
+            {/* Shimmer bar that slides across */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: "-100%",
+                width: "100%",
+                height: "100%",
+                background:
+                  "linear-gradient(90deg, transparent, rgba(192, 211, 202, 0.4), transparent)",
+                animation: "slideShimmer 2s infinite",
+                "@keyframes slideShimmer": {
+                  "0%": {
+                    left: "-100%",
+                  },
+                  "100%": {
+                    left: "100%",
+                  },
+                },
+              }}
+            />
+
+            {/* Additional shimmer bars for layered effect */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: "-100%",
+                width: "80%",
+                height: "100%",
+                background:
+                  "linear-gradient(90deg, transparent, rgba(192, 211, 202, 0.2), transparent)",
+                animation: "slideShimmer2 2.5s infinite 0.3s",
+                "@keyframes slideShimmer2": {
+                  "0%": {
+                    left: "-100%",
+                  },
+                  "100%": {
+                    left: "100%",
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Box>
+      )}
+
       <div
         style={{
           position: "absolute",
@@ -436,7 +552,7 @@ const DollDisplay = () => {
             ))}
           </select>
           <Typography variant="body5" sx={{ color: "white" }}>
-            Select Profile:
+            {t("selectProfile")}
           </Typography>
         </Box>
       </div>
@@ -452,12 +568,12 @@ const DollDisplay = () => {
           },
         }}
       >
-        <DialogTitle>Create New Size Profile</DialogTitle>
+        <DialogTitle>{t("createNewSizeProfile")}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Profile Name"
+            label={t("profileName")}
             type="text"
             fullWidth
             variant="outlined"
@@ -484,14 +600,14 @@ const DollDisplay = () => {
             onClick={() => setOpenNewProfileDialog(false)}
             sx={{ color: "#fff" }}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             onClick={handleCreateNewProfile}
             variant="contained"
             sx={{ backgroundColor: "#333" }}
           >
-            Create
+            {t("create")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -559,7 +675,11 @@ const DollDisplay = () => {
                   </mesh>
                 }
               >
-                <Doll position={[10, 30, 10]} color="red" />
+                <Doll
+                  position={[10, 30, 10]}
+                  color="red"
+                  onLoad={() => setModelLoaded(true)}
+                />
               </Suspense>
               <ButtonArray
                 onButtonClick={handleButtonClick}
@@ -605,7 +725,7 @@ const DollDisplay = () => {
                   >
                     <TextField
                       type="number"
-                      label="Enter measurement (cm)"
+                      label={t("enterMeasurementCm")}
                       value={inputValue}
                       onChange={(e) => {
                         const newValue = e.target.value;

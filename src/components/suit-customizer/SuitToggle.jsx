@@ -3,7 +3,10 @@ import { Box, IconButton, Tooltip } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 
 // S3 Assets URLs
-const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+import kind1Img from "../../assets/icons/suit/suitsKind/kind1.webp";
+import kind2Img from "../../assets/icons/pant/kind2.webp";
+// import kind2Img from "../../assets/kinds/pantsIcon.svg";
+// const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
 const SuitToggle = ({ isPantsMode, onToggle, mobile }) => {
   const buttonVariants = {
@@ -87,12 +90,14 @@ const SuitToggle = ({ isPantsMode, onToggle, mobile }) => {
                   animate="suit"
                   exit={{ opacity: 0, scale: 0.5, rotate: -10 }}
                   transition={{ duration: 0.2 }}
-                  src={`${S3_BASE_URL}/assets/kinds/kind2.png`}
+                  src={kind1Img}
                   alt="Switch to Suit"
                   style={{
-                    width: mobile ? "28px" : "32px",
-                    height: mobile ? "35px" : "40px",
-                    filter: "brightness(0) invert(1)",
+                    width: mobile ? "50px" : "60px",
+                    height: mobile ? "50px" : "60px",
+                    borderRadius: "1000px",
+                    filter:
+                      "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
                     objectFit: "contain",
                   }}
                 />
@@ -103,12 +108,14 @@ const SuitToggle = ({ isPantsMode, onToggle, mobile }) => {
                   animate="pants"
                   exit={{ opacity: 0, scale: 0.5, rotate: 10 }}
                   transition={{ duration: 0.2 }}
-                  src={`${S3_BASE_URL}/assets/kinds/pantsIcon.svg`}
+                  src={kind2Img}
                   alt="Switch to Pants"
                   style={{
-                    width: mobile ? "28px" : "32px",
-                    height: mobile ? "35px" : "40px",
-                    filter: "brightness(0) invert(1)",
+                    width: mobile ? "50px" : "60px",
+                    height: mobile ? "50px" : "60px",
+                    borderRadius: "1000px",
+                    filter:
+                      "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
                     objectFit: "contain",
                   }}
                 />

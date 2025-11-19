@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAtom, useAtomValue } from "jotai";
+import { useLanguage } from "../../../context/LanguageContext";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -28,9 +29,14 @@ import TextInsideModal from "../../TextInsideModal";
 
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const inside = `${S3_BASE_URL}/assets/kinds/insid.svg`;
-const button = `${S3_BASE_URL}/assets/kinds/button.svg`;
-const holes = `${S3_BASE_URL}/assets/kinds/AllSuit2.png`;
+// const inside = `${S3_BASE_URL}/assets/kinds/insid.svg`;
+
+import holes from "../../../assets/icons/suit/suitAdd/holesUp.webp";
+import inside from "../../../assets/icons/suit/suitAdd/inner.webp";
+import textInside from "../../../assets/icons/suit/suitAdd/textInside.webp";
+import buttonStyle from "../../../assets/icons/suit/suitAdd/button.webp";
+import sleeves from "../../../assets/icons/suit/suitAdd/sleeves.webp";
+import topCollar from "../../../assets/icons/suit/suitAdd/topCollar.webp";
 
 // Global animation variants for reuse
 const itemVariants = {
@@ -43,14 +49,14 @@ const itemVariants = {
   },
 };
 
-// Static categories for referential stability
-const DETAIL_CATEGORIES = [
-  { key: "imagesInsideUp", label: "Inner Lining", image: inside },
-  { key: "imageButton", label: "Button Style", image: button },
-  { key: "imagesHoles", label: "Button Holes", image: holes },
-  { key: "sleeveButtons", label: "Sleeve Buttons", image: button },
-  { key: "textInside", label: "Text Inside", image: inside },
-  { key: "topCollar", label: "Top Collar Color", image: button },
+// Helper function to get categories with translations
+const getDetailCategories = (t) => [
+  { key: "imagesInsideUp", label: t("innerLining"), image: inside },
+  { key: "imageButton", label: t("buttonStyle"), image: buttonStyle },
+  { key: "imagesHoles", label: t("buttonHoles"), image: holes },
+  { key: "sleeveButtons", label: t("sleeveButtons"), image: sleeves },
+  { key: "textInside", label: t("textInside"), image: textInside },
+  { key: "topCollar", label: t("topCollarColor"), image: topCollar },
 ];
 
 const DetailCard = React.memo(function DetailCard({ category, onClick }) {
@@ -80,10 +86,10 @@ const DetailCard = React.memo(function DetailCard({ category, onClick }) {
           width: "100px",
           height: "100px",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           flexShrink: 0,
+          p: 0,
           "&::before": {
             content: '""',
             position: "absolute",
@@ -104,14 +110,13 @@ const DetailCard = React.memo(function DetailCard({ category, onClick }) {
       >
         <Box
           sx={{
-            width: 40,
-            height: 40,
-            mb: 1,
+            width: "100%",
+            height: "100%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             position: "relative",
-            zIndex: 2,
+            zIndex: 1,
           }}
         >
           <img
@@ -120,34 +125,39 @@ const DetailCard = React.memo(function DetailCard({ category, onClick }) {
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain",
+              objectFit: "cover",
               filter:
-                "brightness(1.2) contrast(0.8) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
-              opacity: 0.9,
+                "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
             }}
           />
+          <Typography
+            sx={{
+              position: "absolute",
+              bottom: 4,
+              left: 0,
+              right: 0,
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              color: "#C0D3CA",
+              textAlign: "center",
+              letterSpacing: "0.5px",
+              background:
+                "linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)",
+              py: 0.5,
+              px: 1,
+              zIndex: 2,
+            }}
+          >
+            {category.label}
+          </Typography>
         </Box>
-        <Typography
-          sx={{
-            fontSize: "0.7rem",
-            fontWeight: 500,
-            color: "#C0D3CA",
-            textAlign: "center",
-            letterSpacing: "0.5px",
-            textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
-            lineHeight: 1.2,
-            position: "relative",
-            zIndex: 2,
-          }}
-        >
-          {category.label}
-        </Typography>
       </Box>
     </motion.div>
   );
 });
 
 const FinishingDetails = ({ isPantsMode, isMobile }) => {
+  const { t } = useLanguage();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState("");
@@ -161,7 +171,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
   const [, setShowTextInside] = useAtom(showTextInsideAtom);
   const currColor = useAtomValue(currentColorAtom);
 
-  const detailCategories = DETAIL_CATEGORIES;
+  const detailCategories = getDetailCategories(t);
 
   const handleCategoryClick = (key, label) => {
     if (key === "textInside") {
@@ -182,23 +192,23 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
     const sleeveOptions = [
       {
         value: "none",
-        label: "No Buttons",
-        description: "Clean, minimal look",
+        label: t("noButtons"),
+        description: t("cleanMinimalLook"),
       },
       {
         value: "tree",
-        label: "3 Buttons",
-        description: "Classic three-button style",
+        label: t("threeButtons"),
+        description: t("classicThreeButtonStyle"),
       },
       {
         value: "four",
-        label: "4 Buttons",
-        description: "Modern four-button design",
+        label: t("fourButtons"),
+        description: t("modernFourButtonDesign"),
       },
       {
         value: "five",
-        label: "5 Buttons",
-        description: "Premium five-button finish",
+        label: t("fiveButtons"),
+        description: t("premiumFiveButtonFinish"),
       },
     ];
 
@@ -354,44 +364,44 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
       {
         name: "black",
         color: "#222",
-        label: "Black",
-        description: "Classic black collar",
+        label: t("black"),
+        description: t("classicBlackCollar"),
       },
       {
         name: "greyLight",
         color: "#d3d3d3",
-        label: "Light Grey",
-        description: "Subtle light grey",
+        label: t("lightGrey"),
+        description: t("subtleLightGrey"),
       },
       {
         name: "grey",
         color: "#888",
-        label: "Dark Grey",
-        description: "Sophisticated dark grey",
+        label: t("darkGrey"),
+        description: t("sophisticatedDarkGrey"),
       },
       {
         name: "bhez",
         color: "#e5d1b8",
-        label: "Beige",
-        description: "Warm beige tone",
+        label: t("beige"),
+        description: t("warmBeigeTone"),
       },
       {
         name: "red",
         color: "#c00",
-        label: "Red",
-        description: "Bold red accent",
+        label: t("red"),
+        description: t("boldRedAccent"),
       },
       {
         name: "blueLight",
         color: "#8ecae6",
-        label: "Light Blue",
-        description: "Fresh light blue",
+        label: t("lightBlue"),
+        description: t("freshLightBlue"),
       },
       {
         name: "white",
         color: "#fff",
-        label: "White",
-        description: "Clean white finish",
+        label: t("white"),
+        description: t("cleanWhiteFinish"),
       },
     ];
 
@@ -584,7 +594,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
               textAlign: "center",
             }}
           >
-            Pants Customization
+            {t("pantsCustomization")}
           </Typography>
         )}
         <PantsControls isMobile={isMobile} />
@@ -724,9 +734,9 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
           lineHeight: 1.5,
         }}
       >
-        Add the finishing touches that make your suit uniquely yours.
+        {t("addFinishingTouches")}
         <br />
-        Customize buttons, linings, and special details.
+        {t("customizeButtonsLinings")}
       </Typography>
 
       {/* Details Grid */}
@@ -754,10 +764,9 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                   overflow: "hidden",
                   aspectRatio: "1",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  p: { xs: 1.5, md: 2 },
+                  p: 0,
                   backdropFilter: "blur(10px)",
                   "&::before": {
                     content: '""',
@@ -785,13 +794,13 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
               >
                 <Box
                   sx={{
-                    width: { xs: 36, md: 44 },
-                    height: { xs: 36, md: 44 },
-                    mb: 1.5,
+                    width: "100%",
+                    height: "100%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     position: "relative",
+                    zIndex: 1,
                   }}
                 >
                   <img
@@ -800,27 +809,33 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "contain",
+                      objectFit: "cover",
                       filter:
-                        "brightness(1.3) contrast(0.9) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
-                      opacity: 0.95,
+                        "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
                       transition: "all 0.3s ease",
                     }}
                   />
+                  <Typography
+                    sx={{
+                      position: "absolute",
+                      bottom: 4,
+                      left: 0,
+                      right: 0,
+                      fontSize: { xs: "0.75rem", md: "0.85rem" },
+                      fontWeight: 600,
+                      color: "#C0D3CA",
+                      textAlign: "center",
+                      letterSpacing: "0.3px",
+                      background:
+                        "linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)",
+                      py: 0.5,
+                      px: 1,
+                      zIndex: 2,
+                    }}
+                  >
+                    {category.label}
+                  </Typography>
                 </Box>
-                <Typography
-                  sx={{
-                    color: "#C0D3CA",
-                    fontSize: { xs: "0.85rem", md: "0.95rem" },
-                    fontWeight: 600,
-                    textAlign: "center",
-                    lineHeight: 1.3,
-                    letterSpacing: "0.3px",
-                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)",
-                  }}
-                >
-                  {category.label}
-                </Typography>
               </Box>
             </motion.div>
           </Grid>
@@ -928,15 +943,14 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
                   }}
                 >
                   {selectedCategory === "sleeveButtons" &&
-                    "Select the number of buttons for your sleeve cuffs"}
+                    t("selectNumberOfButtons")}
                   {selectedCategory === "topCollar" &&
-                    "Select the color for your top collar accent"}
+                    t("selectTopCollarColor")}
                   {selectedCategory === "imagesInsideUp" &&
-                    "Choose your inner lining style"}
-                  {selectedCategory === "imageButton" &&
-                    "Select your button style"}
+                    t("chooseInnerLiningStyle")}
+                  {selectedCategory === "imageButton" && t("selectButtonStyle")}
                   {selectedCategory === "imagesHoles" &&
-                    "Choose your button hole color"}
+                    t("chooseButtonHoleColor")}
                 </Typography>
               </Box>
               <IconButton

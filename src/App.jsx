@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from "react";
+import { Box } from "@mui/material";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import PolicySupport from "./pages/PolicySupport";
@@ -38,6 +39,7 @@ import LoginWithGoogle from "./pages/LoginWithGoogle";
 import ResetPassword from "./pages/ResetPassword";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
+import OfflineIndicator from "./components/OfflineIndicator";
 
 // Loading component for lazy loaded components
 const LoadingSpinner = () => (
@@ -78,65 +80,68 @@ const App = () => {
     <AuthProvider>
       <LanguageProvider>
         <Router>
-          <NavBarWrapper />
-          {/* <Whatchap /> */}
-          <AccessibilityMenu />
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              <Route path="/" element={<HomePage2 />} />
-              <Route path="/login" element={<LoginWithGoogle />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              {/* <Route path="/customSuit" element={<SuitCustomizer />} /> */}
-              <Route
-                path="/Shopping"
-                element={
-                  user ? (
-                    // <Shopping />
-                    <CheckoutModern />
-                  ) : (
-                    <Navigate
-                      to="/login"
-                      state={{ from: { pathname: "/Shopping" } }}
-                    />
-                  )
-                }
-              />
-              <Route
-                path="/account"
-                element={
-                  user ? (
-                    <Account />
-                  ) : (
-                    <Navigate
-                      to="/login"
-                      state={{ from: { pathname: "/account" } }}
-                    />
-                  )
-                }
-              />
-              <Route
-                path="/customSuit"
-                element={
-                  user ? (
-                    <SuitCustomizer />
-                  ) : (
-                    <Navigate
-                      to="/login"
-                      state={{ from: { pathname: "/customSuit" } }}
-                    />
-                  )
-                }
-              />
-              <Route path="/indexSizes" element={<IndexSizes />} />
-              <Route path="/PolicySupport" element={<PolicySupport />} />
-              <Route path="/sizes/regular" element={<TakeSizes4 />} />
-              <Route path="/sizes/measure" element={<TakeSizes3 />} />
-              <Route path="/sizes/suitMeasur" element={<TakeSizes5 />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/Payed" element={<Payed />} />
-            </Routes>
-          </Suspense>
+          <Box sx={{ position: "relative", width: "100%", minHeight: "100vh" }}>
+            <OfflineIndicator />
+            <NavBarWrapper />
+            {/* <Whatchap /> */}
+            <AccessibilityMenu />
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/" element={<HomePage2 />} />
+                <Route path="/login" element={<LoginWithGoogle />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                {/* <Route path="/customSuit" element={<SuitCustomizer />} /> */}
+                <Route
+                  path="/Shopping"
+                  element={
+                    user ? (
+                      // <Shopping />
+                      <CheckoutModern />
+                    ) : (
+                      <Navigate
+                        to="/login"
+                        state={{ from: { pathname: "/Shopping" } }}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="/account"
+                  element={
+                    user ? (
+                      <Account />
+                    ) : (
+                      <Navigate
+                        to="/login"
+                        state={{ from: { pathname: "/account" } }}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="/customSuit"
+                  element={
+                    user ? (
+                      <SuitCustomizer />
+                    ) : (
+                      <Navigate
+                        to="/login"
+                        state={{ from: { pathname: "/customSuit" } }}
+                      />
+                    )
+                  }
+                />
+                <Route path="/indexSizes" element={<IndexSizes />} />
+                <Route path="/PolicySupport" element={<PolicySupport />} />
+                <Route path="/sizes/regular" element={<TakeSizes4 />} />
+                <Route path="/sizes/measure" element={<TakeSizes3 />} />
+                <Route path="/sizes/suitMeasur" element={<TakeSizes5 />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/Payed" element={<Payed />} />
+              </Routes>
+            </Suspense>
+          </Box>
         </Router>
       </LanguageProvider>
     </AuthProvider>

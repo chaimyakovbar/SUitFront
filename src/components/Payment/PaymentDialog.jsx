@@ -16,6 +16,7 @@ import {
   AddressElement,
 } from "@stripe/react-stripe-js";
 import { useSnackbar } from "notistack";
+import { useLanguage } from "../../context/LanguageContext";
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -25,6 +26,7 @@ const PaymentForm = ({ amount, onSuccess, onCancel }) => {
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,7 +53,7 @@ const PaymentForm = ({ amount, onSuccess, onCancel }) => {
       }
     } catch (error) {
       console.error("Payment error:", error);
-      enqueueSnackbar("An error occurred while processing your payment.", {
+      enqueueSnackbar(t("paymentError"), {
         variant: "error",
       });
     } finally {
@@ -63,7 +65,7 @@ const PaymentForm = ({ amount, onSuccess, onCancel }) => {
     <form onSubmit={handleSubmit}>
       <Box sx={{ maxWidth: 500, mx: "auto", p: 3 }}>
         <Typography variant="h6" gutterBottom>
-          Payment Details
+          {t("paymentDetails")}
         </Typography>
 
         <Box sx={{ mb: 3 }}>
@@ -91,7 +93,7 @@ const PaymentForm = ({ amount, onSuccess, onCancel }) => {
               textTransform: "uppercase",
             }}
           >
-            Cancel
+            {t("cancel")}
           </button>
           <button
             type="submit"
@@ -115,10 +117,10 @@ const PaymentForm = ({ amount, onSuccess, onCancel }) => {
             {isLoading ? (
               <>
                 <CircularProgress size={16} color="inherit" />
-                Processing...
+                {t("processing")}
               </>
             ) : (
-              `Pay ${(amount / 100).toFixed(2)}€`
+              t("payAmount").replace("{amount}", (amount / 100).toFixed(2))
             )}
           </button>
         </Box>
@@ -137,6 +139,7 @@ const PaymentDialog = ({
 }) => {
   const [clientSecret, setClientSecret] = useState("");
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (open) {
@@ -161,7 +164,7 @@ const PaymentDialog = ({
         .then((data) => setClientSecret(data.clientSecret))
         .catch((error) => {
           console.error("Payment initialization error:", error);
-          enqueueSnackbar("Failed to initialize payment", { variant: "error" });
+          enqueueSnackbar(t("failedToInitializePayment"), { variant: "error" });
           onClose();
         });
     }
@@ -208,7 +211,7 @@ const PaymentDialog = ({
           borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
       >
-        Complete Your Payment
+        {t("completeYourPayment")}
       </DialogTitle>
       <DialogContent>
         {clientSecret && (

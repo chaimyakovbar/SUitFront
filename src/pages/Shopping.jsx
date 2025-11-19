@@ -30,6 +30,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useLanguage } from "../context/LanguageContext";
 
 const useStyles = makeStyles({
   root: {
@@ -209,6 +210,7 @@ const Shopping = () => {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { t } = useLanguage();
 
   const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -257,7 +259,7 @@ const Shopping = () => {
         >
           <Link to="/Payed" style={{ textDecoration: "none" }}>
             <Button variant="outlined" className={classes.button}>
-              for payment
+              {t("forPayment")}
             </Button>
           </Link>
         </Box>
@@ -267,10 +269,10 @@ const Shopping = () => {
           {/* Hero Section */}
           <Box className={classes.heroSection}>
             <Typography className={classes.heroTitle}>
-              Premium Suit Collection
+              {t("premiumSuitCollection")}
             </Typography>
             <Typography className={classes.heroSubtitle}>
-              Discover our handcrafted suits designed for the modern gentleman
+              {t("shoppingSubtitle")}
             </Typography>
           </Box>
 
@@ -282,7 +284,7 @@ const Shopping = () => {
                   {data?.allSuitPart?.length || 0}
                 </Typography>
                 <Typography className={classes.statsLabel}>
-                  Available Suits
+                  {t("availableSuits")}
                 </Typography>
               </Paper>
             </Grid>
@@ -290,14 +292,16 @@ const Shopping = () => {
               <Paper className={classes.statsCard}>
                 <Typography className={classes.statsNumber}>Premium</Typography>
                 <Typography className={classes.statsLabel}>
-                  Quality Grade
+                  {t("qualityGrade")}
                 </Typography>
               </Paper>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Paper className={classes.statsCard}>
                 <Typography className={classes.statsNumber}>24/7</Typography>
-                <Typography className={classes.statsLabel}>Support</Typography>
+                <Typography className={classes.statsLabel}>
+                  {t("support")}
+                </Typography>
               </Paper>
             </Grid>
           </Grid>
@@ -316,7 +320,7 @@ const Shopping = () => {
                 onClick={() => handleSortChange("newest")}
                 startIcon={<SortIcon />}
               >
-                Newest
+                {t("newest")}
               </Button>
               <Button
                 className={`${classes.controlButton} ${
@@ -325,7 +329,7 @@ const Shopping = () => {
                 onClick={() => handleSortChange("price-low")}
                 startIcon={<SortIcon />}
               >
-                Price: Low to High
+                {t("priceLowToHigh")}
               </Button>
               <Button
                 className={`${classes.controlButton} ${
@@ -334,7 +338,7 @@ const Shopping = () => {
                 onClick={() => handleSortChange("price-high")}
                 startIcon={<SortIcon />}
               >
-                Price: High to Low
+                {t("priceHighToLow")}
               </Button>
             </Box>
 
@@ -372,7 +376,7 @@ const Shopping = () => {
           className={classes.drawer}
           PaperProps={{
             sx: {
-              width: '50vw',
+              width: "50vw",
             },
           }}
         >

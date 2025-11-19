@@ -59,6 +59,7 @@ import { useNavigate } from "react-router-dom";
 import { updateUser, deleteSizeProfile } from "../api/user";
 import { useSnackbar } from "notistack";
 import { getUserOrders } from "../api/orders";
+import { useLanguage } from "../context/LanguageContext";
 
 // Button color mapping extracted and expanded
 const buttonColorMap = {
@@ -958,6 +959,7 @@ function Account() {
   const { data } = useProduct();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -1225,7 +1227,7 @@ function Account() {
   const renderProfileSection = () => (
     <Box>
       <Typography className={classes.sectionTitle}>
-        <PersonIcon style={{ fontSize: "2rem" }} /> Personal Information
+        <PersonIcon style={{ fontSize: "2rem" }} /> {t("personalInformation")}
       </Typography>
 
       <Card className={classes.card}>
@@ -1267,64 +1269,72 @@ function Account() {
           </Box>
 
           <Box className={classes.infoItem}>
-            <Typography className={classes.infoLabel}>First Name:</Typography>
-            <Typography className={classes.infoValue}>
-              {user?.firstName || "Not provided"}
+            <Typography className={classes.infoLabel}>
+              {t("firstName")}:
             </Typography>
-          </Box>
-
-          <Box className={classes.infoItem}>
-            <Typography className={classes.infoLabel}>Last Name:</Typography>
             <Typography className={classes.infoValue}>
-              {user?.lastName || "Not provided"}
+              {user?.firstName || t("notProvided")}
             </Typography>
           </Box>
 
           <Box className={classes.infoItem}>
             <Typography className={classes.infoLabel}>
-              Email Address:
+              {t("lastName")}:
+            </Typography>
+            <Typography className={classes.infoValue}>
+              {user?.lastName || t("notProvided")}
+            </Typography>
+          </Box>
+
+          <Box className={classes.infoItem}>
+            <Typography className={classes.infoLabel}>
+              {t("emailAddress")}:
             </Typography>
             <Typography className={classes.infoValue}>{user?.email}</Typography>
           </Box>
 
           <Box className={classes.infoItem}>
-            <Typography className={classes.infoLabel}>Phone Number:</Typography>
+            <Typography className={classes.infoLabel}>
+              {t("phoneNumber")}:
+            </Typography>
             <Typography
               className={`${classes.infoValue} ${
                 !user?.phoneNumber ? classes.missingInfo : ""
               }`}
             >
-              {user?.phoneNumber || "Missing phone number"}
+              {user?.phoneNumber || t("missingPhoneNumber")}
             </Typography>
             <Button
               className={classes.editButton}
               onClick={() => setOpenPhoneDialog(true)}
             >
-              {user?.phoneNumber ? "Edit" : "Add"}
+              {user?.phoneNumber ? t("edit") : t("add")}
             </Button>
           </Box>
 
           <Box className={classes.infoItem}>
             <Typography className={classes.infoLabel}>
-              Delivery Address:
+              {t("deliveryAddress")}:
             </Typography>
             <Typography
               className={`${classes.infoValue} ${
                 !user?.address ? classes.missingInfo : ""
               }`}
             >
-              {user?.address || "Missing address"}
+              {user?.address || t("missingAddress")}
             </Typography>
             <Button
               className={classes.editButton}
               onClick={() => setOpenAddressDialog(true)}
             >
-              {user?.address ? "Edit" : "Add"}
+              {user?.address ? t("edit") : t("add")}
             </Button>
           </Box>
 
           <Box className={classes.infoItem}>
-            <Typography className={classes.infoLabel}>Member Since:</Typography>
+            <Typography className={classes.infoLabel}>
+              {t("memberSince")}:
+            </Typography>
             <Typography className={classes.infoValue}>
               {user?.metadata?.creationTime
                 ? formatDate(user.metadata.creationTime)
@@ -1339,7 +1349,7 @@ function Account() {
   const renderMeasurementsSection = () => (
     <Box>
       <Typography className={classes.sectionTitle}>
-        <HeightIcon style={{ fontSize: "2rem" }} /> Body Measurements
+        <HeightIcon style={{ fontSize: "2rem" }} /> {t("bodyMeasurements")}
       </Typography>
 
       <Card className={classes.card}>
@@ -1363,7 +1373,7 @@ function Account() {
               }}
               sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}
             >
-              Size Profiles
+              {t("sizeProfiles")}
             </Typography>
             <Button
               className={classes.editButton}
@@ -1373,7 +1383,7 @@ function Account() {
                 padding: { xs: "0.5rem 1rem", md: "0.6rem 1.2rem" },
               }}
             >
-              Edit Measurements
+              {t("editMeasurements")}
             </Button>
           </Box>
 
@@ -1392,7 +1402,7 @@ function Account() {
                   mb: { xs: 1, md: 2 },
                 }}
               >
-                Recommended Sizes
+                {t("recommendedSizes")}
               </Typography>
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                 <Box className={classes.measurementCard}>
@@ -1400,7 +1410,7 @@ function Account() {
                     {data.sizesTable.jacket}
                   </Typography>
                   <Typography className={classes.measurementLabel}>
-                    Jacket Size
+                    {t("jacketSize")}
                   </Typography>
                 </Box>
                 <Box className={classes.measurementCard}>
@@ -1408,7 +1418,7 @@ function Account() {
                     {data.sizesTable.pants}
                   </Typography>
                   <Typography className={classes.measurementLabel}>
-                    Pants Size
+                    {t("pantsSize")}
                   </Typography>
                 </Box>
               </Box>
@@ -1427,7 +1437,7 @@ function Account() {
                 }}
                 sx={{ fontSize: { xs: "0.85rem", md: "0.9rem" } }}
               >
-                Select Profile:
+                {t("selectProfile")}
               </Typography>
               <Box
                 sx={{
@@ -1488,7 +1498,7 @@ function Account() {
                       },
                     }}
                   >
-                    Delete Profile
+                    {t("deleteProfile")}
                   </Button>
                 )}
               </Box>
@@ -1561,7 +1571,7 @@ function Account() {
           }}
         >
           <Typography className={classes.sectionTitle}>
-            <ShoppingBagIcon style={{ fontSize: "2rem" }} /> Order History
+            <ShoppingBagIcon style={{ fontSize: "2rem" }} /> {t("orderHistory")}
           </Typography>
 
           {/* Sort Dropdown */}
@@ -1581,7 +1591,7 @@ function Account() {
                 fontWeight: "500",
               }}
             >
-              Sort by:
+              {t("sortBy")}
             </Typography>
             <select
               value={orderSortBy}
@@ -1599,10 +1609,10 @@ function Account() {
                 minWidth: "150px",
               }}
             >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="price-low">Price: Low to High</option>
+              <option value="newest">{t("newestFirst")}</option>
+              <option value="oldest">{t("oldestFirst")}</option>
+              <option value="price-high">{t("priceHighToLow")}</option>
+              <option value="price-low">{t("priceLowToHigh")}</option>
             </select>
           </Box>
         </Box>
@@ -1631,7 +1641,7 @@ function Account() {
                 fontWeight: "500",
               }}
             >
-              Total Orders: {orders.length}
+              {t("totalOrders")}: {orders.length}
             </Typography>
             <Typography
               sx={{
@@ -1641,7 +1651,7 @@ function Account() {
                 fontWeight: "400",
               }}
             >
-              Total Spent:{" "}
+              {t("totalSpent")}:{" "}
               {formatCurrency(
                 orders.reduce(
                   (total, order) =>
@@ -1672,7 +1682,7 @@ function Account() {
                   fontWeight: "300",
                 }}
               >
-                Loading orders...
+                {t("loadingOrders")}
               </Typography>
             </CardContent>
           </Card>
@@ -1695,7 +1705,7 @@ function Account() {
                   fontWeight: "300",
                 }}
               >
-                No orders found. Start shopping to see your order history here.
+                {t("noOrdersFound")}
               </Typography>
             </CardContent>
           </Card>
@@ -1727,7 +1737,7 @@ function Account() {
               >
                 <Box>
                   <Typography className={classes.orderNumber}>
-                    Order #{order.orderId.slice(-8).toUpperCase()}
+                    {t("order")} #{order.orderId.slice(-8).toUpperCase()}
                   </Typography>
                   <Typography className={classes.orderDate}>
                     {formatDate(order.paymentDate)}
@@ -1758,7 +1768,7 @@ function Account() {
                   {order.shippingSpeed === "EXPRESS" && (
                     <Chip
                       icon={<DiamondIcon />}
-                      label="Express"
+                      label={t("express")}
                       className={classes.luxuryBadge}
                       size="small"
                     />
@@ -1823,10 +1833,10 @@ function Account() {
                             marginBottom: "0.25rem",
                           }}
                         >
-                          {suit.kind === "kind1" && "Standard Suit"}
-                          {suit.kind === "kind2" && "Premium Suit"}
-                          {suit.kind === "kind3" && "Luxury Suit"}
-                          {suit.kind === "kind4" && "Custom Luxury Suit"}
+                          {suit.kind === "kind1" && t("standardSuit")}
+                          {suit.kind === "kind2" && t("premiumSuit")}
+                          {suit.kind === "kind3" && t("luxurySuit")}
+                          {suit.kind === "kind4" && t("customLuxurySuit")}
                           {!["kind1", "kind2", "kind3", "kind4"].includes(
                             suit.kind
                           ) && suit.kind}
@@ -1892,18 +1902,21 @@ function Account() {
                         }}
                       >
                         {order.selectedSuits.length > 2
-                          ? `View all ${order.selectedSuits.length} suits`
-                          : "View More Details"}
+                          ? t("viewAllSuits").replace(
+                              "{count}",
+                              order.selectedSuits.length
+                            )
+                          : t("viewMoreDetails")}
                       </Button>
                     </Box>
                   }
                 </Box>
                 <Box className={classes.deliveryInfo}>
                   <Typography className={classes.deliveryText}>
-                    Estimated Delivery:{" "}
+                    {t("estimatedDelivery")}{" "}
                     {order.estimatedDeliveryDate
                       ? formatDate(order.estimatedDeliveryDate)
-                      : "Calculating..."}
+                      : t("calculating")}
                   </Typography>
                   <Typography className={classes.orderTotal}>
                     {formatCurrency(order.totalAmount + order.shippingCost)}
@@ -1935,7 +1948,7 @@ function Account() {
       <Box className={classes.root}>
         <Container maxWidth="md">
           <Typography className={classes.notLoggedIn}>
-            Please log in to view your account details
+            {t("pleaseLogIn")}
           </Typography>
         </Container>
       </Box>
@@ -1945,7 +1958,7 @@ function Account() {
   return (
     <Box className={classes.root}>
       <Container maxWidth="lg">
-        <Typography className={classes.heading}>User Profile</Typography>
+        <Typography className={classes.heading}>{t("userProfile")}</Typography>
 
         <Grid container spacing={3}>
           {/* Sidebar - Hidden on Mobile */}
@@ -1980,7 +1993,7 @@ function Account() {
                     <PersonIcon />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Personal Information"
+                    primary={t("personalInformation")}
                     primaryTypographyProps={{ className: classes.sidebarText }}
                   />
                 </ListItem>
@@ -2000,7 +2013,7 @@ function Account() {
                     <HeightIcon />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Measurements"
+                    primary={t("bodyMeasurements")}
                     primaryTypographyProps={{ className: classes.sidebarText }}
                   />
                 </ListItem>
@@ -2020,7 +2033,7 @@ function Account() {
                     </Badge>
                   </ListItemIcon>
                   <ListItemText
-                    primary="Order History"
+                    primary={t("orderHistory")}
                     primaryTypographyProps={{ className: classes.sidebarText }}
                   />
                 </ListItem>
@@ -2560,7 +2573,7 @@ function Account() {
                   {selectedOrder.shippingSpeed === "EXPRESS" && (
                     <Chip
                       icon={<DiamondIcon />}
-                      label="Express"
+                      label={t("express")}
                       className={classes.luxuryBadge}
                       size="small"
                     />
@@ -2650,10 +2663,10 @@ function Account() {
                           }}
                         >
                           Suit #{index + 1} -{" "}
-                          {suit.kind === "kind1" && "Standard Suit"}
-                          {suit.kind === "kind2" && "Premium Suit"}
-                          {suit.kind === "kind3" && "Luxury Suit"}
-                          {suit.kind === "kind4" && "Custom Luxury Suit"}
+                          {suit.kind === "kind1" && t("standardSuit")}
+                          {suit.kind === "kind2" && t("premiumSuit")}
+                          {suit.kind === "kind3" && t("luxurySuit")}
+                          {suit.kind === "kind4" && t("customLuxurySuit")}
                           {!["kind1", "kind2", "kind3", "kind4"].includes(
                             suit.kind
                           ) && suit.kind}
@@ -2898,10 +2911,10 @@ function Account() {
                     fontFamily: "'Montserrat', sans-serif",
                   }}
                 >
-                  Estimated Delivery:{" "}
+                  {t("estimatedDelivery")}{" "}
                   {selectedOrder.estimatedDeliveryDate
                     ? formatDate(selectedOrder.estimatedDeliveryDate)
-                    : "Calculating..."}
+                    : t("calculating")}
                 </Typography>
               </Box>
             </DialogContent>

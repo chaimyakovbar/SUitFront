@@ -19,6 +19,7 @@ import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
 import StraightenIcon from "@mui/icons-material/Straighten";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import SecurityIcon from "@mui/icons-material/Security";
+import { useLanguage } from "../context/LanguageContext";
 
 const useStyles = makeStyles({
   root: {
@@ -145,62 +146,44 @@ const useStyles = makeStyles({
 
 const PolicySupport = () => {
   const classes = useStyles();
+  const { t } = useLanguage();
 
   const policies = [
     {
       id: 1,
-      title: "Shipping & Delivery",
+      titleKey: "shippingDelivery",
       icon: <LocalShippingIcon className={classes.accordionIcon} />,
       items: [
-        "Orders are processed within 1-3 business days.",
-        "Standard shipping takes 5-10 business days; expedited 2-5 days.",
-        "We offer worldwide shipping; delivery times vary.",
-        "Shipping fees are calculated at checkout.",
-        "Tracking information is sent via email once shipped.",
+        "shippingItem1",
+        "shippingItem2",
+        "shippingItem3",
+        "shippingItem4",
+        "shippingItem5",
       ],
     },
     {
       id: 2,
-      title: "Returns & Exchanges",
+      titleKey: "returnsExchanges",
       icon: <AssignmentReturnIcon className={classes.accordionIcon} />,
-      items: [
-        "Returns accepted within 14 days if unworn and unaltered.",
-        "Exchanges available within 7 days for size/style adjustments.",
-        "Custom suits & clearance items are non-returnable.",
-        "Refunds issued within 7 business days after return approval.",
-      ],
+      items: ["returnsItem1", "returnsItem2", "returnsItem3", "returnsItem4"],
     },
     {
       id: 3,
-      title: "Sizing Assistance",
+      titleKey: "sizingAssistance",
       icon: <StraightenIcon className={classes.accordionIcon} />,
-      items: [
-        "Use our detailed size guide for best fit.",
-        "Custom-tailored suits available based on measurements.",
-        "Live chat support for sizing help before ordering.",
-      ],
+      items: ["sizingItem1", "sizingItem2", "sizingItem3"],
     },
     {
       id: 4,
-      title: "Customer Support",
+      titleKey: "customerSupport",
       icon: <SupportAgentIcon className={classes.accordionIcon} />,
-      items: [
-        "Email: support@italiansuits.com",
-        "Phone: +39 123 456 7890",
-        "Live Chat: Available Mon-Fri, 9 AM - 6 PM (CET).",
-        "We respond to inquiries within 24 hours.",
-      ],
+      items: ["supportItem1", "supportItem2", "supportItem3", "supportItem4"],
     },
     {
       id: 5,
-      title: "Privacy Policy",
+      titleKey: "privacyPolicy",
       icon: <SecurityIcon className={classes.accordionIcon} />,
-      items: [
-        "We use secure encryption to protect personal data.",
-        "Your information is never sold or shared with third parties.",
-        "You can opt out of marketing emails anytime.",
-        "We comply with GDPR and other privacy regulations.",
-      ],
+      items: ["privacyItem1", "privacyItem2", "privacyItem3", "privacyItem4"],
     },
   ];
 
@@ -219,7 +202,7 @@ const PolicySupport = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <Typography variant="h1" className={classes.heading}>
-            Policies & Support
+            {t("policiesSupport")}
           </Typography>
         </motion.div>
 
@@ -231,12 +214,10 @@ const PolicySupport = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <Typography variant="h2" className={classes.subheading}>
-                Our Policies
+                {t("ourPolicies")}
               </Typography>
               <Typography variant="body1" className={classes.paragraph}>
-                At Italian Suits, we strive to provide exceptional service and
-                support to our customers. Below you'll find detailed information
-                about our policies and services.
+                {t("policiesDescription")}
               </Typography>
 
               {policies.map((policy, index) => (
@@ -255,13 +236,13 @@ const PolicySupport = () => {
                     >
                       {policy.icon}
                       <Typography className={classes.accordionTitle}>
-                        {policy.title}
+                        {t(policy.titleKey)}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails className={classes.accordionDetails}>
                       {policy.items.map((item, idx) => (
                         <Typography key={idx} className={classes.listItem}>
-                          {item}
+                          {t(item)}
                         </Typography>
                       ))}
                     </AccordionDetails>
@@ -279,19 +260,13 @@ const PolicySupport = () => {
             >
               <Paper elevation={0} className={classes.infoCard}>
                 <Typography variant="h3" className={classes.infoCardTitle}>
-                  Bespoke Service
+                  {t("bespokeService")}
                 </Typography>
                 <Typography variant="body1" className={classes.paragraph}>
-                  Our bespoke service offers a truly personalized experience.
-                  Each custom suit is crafted to your exact measurements and
-                  preferences, ensuring a perfect fit and unique style that
-                  reflects your personality.
+                  {t("bespokeDescription1")}
                 </Typography>
                 <Typography variant="body1" className={classes.paragraph}>
-                  The bespoke process typically takes 4-6 weeks from initial
-                  consultation to final delivery. During this time, our master
-                  tailors will work meticulously to create a garment of
-                  exceptional quality.
+                  {t("bespokeDescription2")}
                 </Typography>
               </Paper>
 
@@ -302,18 +277,13 @@ const PolicySupport = () => {
               >
                 <Paper elevation={0} className={classes.infoCard}>
                   <Typography variant="h3" className={classes.infoCardTitle}>
-                    Care Instructions
+                    {t("careInstructions")}
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    To maintain the quality and longevity of your suit, we
-                    recommend dry cleaning only when necessary, typically 2-3
-                    times per year. Between cleanings, use a soft brush to
-                    remove dust and spot clean as needed.
+                    {t("careDescription1")}
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    Always hang your suit on a proper wooden hanger to maintain
-                    its shape, and allow it to rest for at least 24 hours
-                    between wearings to allow the natural fibers to recover.
+                    {t("careDescription2")}
                   </Typography>
                 </Paper>
               </motion.div>
@@ -325,17 +295,13 @@ const PolicySupport = () => {
               >
                 <Paper elevation={0} className={classes.infoCard}>
                   <Typography variant="h3" className={classes.infoCardTitle}>
-                    Warranty Information
+                    {t("warrantyInformation")}
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    All our suits come with a 1-year warranty against
-                    manufacturing defects. This includes issues with stitching,
-                    buttons, and fabric quality under normal wear conditions.
+                    {t("warrantyDescription1")}
                   </Typography>
                   <Typography variant="body1" className={classes.paragraph}>
-                    For the first 30 days after purchase, we also offer
-                    complimentary minor alterations to ensure your complete
-                    satisfaction with the fit of your garment.
+                    {t("warrantyDescription2")}
                   </Typography>
                 </Paper>
               </motion.div>

@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { useAtom, useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   currentIndexAtom,
   counterAtom,
@@ -43,42 +44,43 @@ import {
 } from "../../utils/suitStateManager";
 import { postSuitProduct } from "../../api/suit";
 
-const steps = [
-  {
-    id: 0,
-    title: "Fabric Selection",
-    subtitle: "Choose your premium fabric",
-    validate: "step1Validated",
-    icon: "🎨",
-  },
-  {
-    id: 1,
-    title: "Suit Design",
-    subtitle: "Select style & structure",
-    validate: "step2Validated",
-    icon: "✂️",
-  },
-  {
-    id: 2,
-    title: "Finishing Details",
-    subtitle: "Perfect your personal touch",
-    validate: "step3Validated",
-    icon: "💎",
-  },
-  {
-    id: 3,
-    title: "Complete Suit",
-    subtitle: "Finalize your creation",
-    validate: "step3Validated", // Same as step 3 since it's the completion
-    icon: "✨",
-  },
-];
-
 const StepNavigator = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
+
+  const steps = [
+    {
+      id: 0,
+      title: t("fabricSelection"),
+      subtitle: t("choosePremiumFabric"),
+      validate: "step1Validated",
+      icon: "🎨",
+    },
+    {
+      id: 1,
+      title: t("suitDesign"),
+      subtitle: t("selectStyleStructure"),
+      validate: "step2Validated",
+      icon: "✂️",
+    },
+    {
+      id: 2,
+      title: t("finishingDetails"),
+      subtitle: t("perfectPersonalTouch"),
+      validate: "step3Validated",
+      icon: "💎",
+    },
+    {
+      id: 3,
+      title: t("completeSuit"),
+      subtitle: t("finalizeCreation"),
+      validate: "step3Validated", // Same as step 3 since it's the completion
+      icon: "✨",
+    },
+  ];
   const [currentStep, setCurrentStep] = useAtom(currentIndexAtom);
   const counterArray = useAtomValue(counterAtom);
   const currentKind = useAtomValue(currentKindAtom);
@@ -182,17 +184,17 @@ const StepNavigator = () => {
           });
         }
 
-        enqueueSnackbar("Your custom suit has been saved successfully!", {
+        enqueueSnackbar(t("customSuitSavedSuccessfully"), {
           variant: "success",
         });
       } else {
-        enqueueSnackbar("This suit configuration already exists!", {
+        enqueueSnackbar(t("suitConfigurationExists"), {
           variant: "warning",
         });
       }
     } catch (error) {
       console.error("Error saving suit:", error);
-      enqueueSnackbar("Error saving your suit configuration", {
+      enqueueSnackbar(t("errorSavingSuitConfiguration"), {
         variant: "error",
       });
     } finally {
@@ -277,10 +279,10 @@ const StepNavigator = () => {
               <Typography
                 sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 700, mb: 0.5 }}
               >
-                Step Locked
+                {t("stepLocked")}
               </Typography>
               <Typography sx={{ fontSize: { xs: 11, md: 13 }, opacity: 0.9 }}>
-                Complete the previous step to continue
+                {t("completePreviousStep")}
               </Typography>
             </Box>
           ) : (
@@ -334,21 +336,67 @@ const StepNavigator = () => {
                   component={motion.div}
                   variants={stepVariants}
                   onClick={() => handleStepClick(index)}
+                  initial={index === 3 ? { opacity: 0, y: 20 } : {}}
+                  animate={index === 3 ? { opacity: 1, y: 0 } : {}}
+                  transition={
+                    index === 3
+                      ? {
+                          duration: 0.6,
+                          delay: 0.1,
+                          ease: "easeOut",
+                        }
+                      : {}
+                  }
+                  style={
+                    index === 3 ? { willChange: "transform, opacity" } : {}
+                  }
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     gap: { xs: 1.2, md: 2 },
                     cursor: isAccessible ? "pointer" : "not-allowed",
                     opacity: isAccessible ? 1 : 0.4,
-                    transition: "all 0.3s ease",
-                    padding: { xs: "10px 14px", md: "14px 18px" },
-                    borderRadius: "16px",
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                    padding:
+                      index === 3
+                        ? { xs: "14px 24px", md: "14px 32px" }
+                        : { xs: "10px 14px", md: "14px 18px" },
+                    borderRadius: index === 3 ? "6px" : "16px",
                     position: "relative",
+                    background:
+                      index === 3 && isAccessible
+                        ? "linear-gradient(90deg,rgb(0, 0, 0),rgb(153, 153, 153),rgb(0, 0, 0))"
+                        : "transparent",
+                    backgroundSize:
+                      index === 3 && isAccessible ? "200% 100%" : "100% 100%",
+                    animation:
+                      index === 3 && isAccessible
+                        ? "gradientMove 2s linear infinite"
+                        : "none",
+                    "@keyframes gradientMove":
+                      index === 3 && isAccessible
+                        ? {
+                            "0%": { backgroundPosition: "0% 50%" },
+                            "100%": { backgroundPosition: "200% 50%" },
+                          }
+                        : {},
+                    boxShadow:
+                      index === 3 && isAccessible
+                        ? "0 10px 30px rgba(192, 211, 202, 0.35)"
+                        : "none",
                     "&:hover": isAccessible
-                      ? {
-                          background: "rgba(192, 211, 202, 0.1)",
-                          transform: "translateY(-2px)",
-                        }
+                      ? index === 3
+                        ? {
+                            animationPlayState: "paused",
+                            background:
+                              "linear-gradient(135deg, #D0E3DA 0%, #C0D3CA 100%)",
+                            boxShadow: "0 14px 40px rgba(192, 211, 202, 0.45)",
+                            transform: "translateY(-2px)",
+                          }
+                        : {
+                            background: "rgba(192, 211, 202, 0.1)",
+                            transform: "translateY(-2px)",
+                          }
                       : {},
                   }}
                 >
@@ -380,17 +428,28 @@ const StepNavigator = () => {
                         : isCompleted
                         ? "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)"
                         : "rgba(60, 60, 60, 0.6)",
-                      border: isActive
-                        ? "2px solid rgba(192, 211, 202, 0.5)"
-                        : "1px solid rgba(192, 211, 202, 0.2)",
-                      color: isActive || isCompleted ? "#000" : "#C0D3CA",
+                      border:
+                        index === 3 && isAccessible
+                          ? "none"
+                          : isActive
+                          ? "2px solid rgba(192, 211, 202, 0.5)"
+                          : "1px solid rgba(192, 211, 202, 0.2)",
+                      color:
+                        index === 3 && isAccessible
+                          ? "#0a0a0a"
+                          : isActive || isCompleted
+                          ? "#000"
+                          : "#C0D3CA",
                       fontSize: { xs: "15px", md: "18px" },
                       fontWeight: 600,
-                      boxShadow: isActive
-                        ? "0 4px 16px rgba(192, 211, 202, 0.4)"
-                        : isCompleted
-                        ? "0 4px 16px rgba(76, 175, 80, 0.3)"
-                        : "none",
+                      boxShadow:
+                        index === 3 && isAccessible
+                          ? "0 4px 16px rgba(192, 211, 202, 0.4)"
+                          : isActive
+                          ? "0 4px 16px rgba(192, 211, 202, 0.4)"
+                          : isCompleted
+                          ? "0 4px 16px rgba(76, 175, 80, 0.3)"
+                          : "none",
                       transition: "all 0.3s ease",
                       transform: isActive ? "scale(1.1)" : "scale(1)",
                       position: "relative",
@@ -410,9 +469,18 @@ const StepNavigator = () => {
                     <Box sx={{ minWidth: 0 }}>
                       <Typography
                         sx={{
-                          fontSize: "0.95rem",
-                          fontWeight: 600,
-                          color: isActive ? "#C0D3CA" : "#fff",
+                          fontSize: index === 3 ? "1rem" : "0.95rem",
+                          fontWeight: index === 3 ? 600 : 600,
+                          fontFamily:
+                            index === 3
+                              ? "'Montserrat', sans-serif"
+                              : "inherit",
+                          color:
+                            index === 3 && isAccessible
+                              ? "#0a0a0a"
+                              : isActive
+                              ? "#C0D3CA"
+                              : "#fff",
                           lineHeight: 1.2,
                           mb: 0.5,
                         }}
@@ -422,7 +490,10 @@ const StepNavigator = () => {
                       <Typography
                         sx={{
                           fontSize: "0.75rem",
-                          color: "rgba(192, 211, 202, 0.7)",
+                          color:
+                            index === 3 && isAccessible
+                              ? "rgba(10, 10, 10, 0.7)"
+                              : "rgba(192, 211, 202, 0.7)",
                           lineHeight: 1.1,
                         }}
                       >

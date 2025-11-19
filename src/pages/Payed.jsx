@@ -18,13 +18,14 @@ import { makeStyles } from "@mui/styles";
 import { useAtom } from "jotai";
 import { authUserAtom } from "../Utils";
 import useProduct from "../Hooks/useProduct";
+import { useLanguage } from "../context/LanguageContext";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import GetAllSuitFromDat from "../components/GetAllSuitFromData";
 import { useMediaQuery } from "@mui/material";
 import PaymentDialog from "../components/Payment/PaymentDialog";
-import { postSuitProduct } from "../api/suit";
+import { baseURL } from "../config/api";
 
 const useStyles = makeStyles({
   root: {
@@ -247,6 +248,7 @@ const Payed = () => {
   const navigate = useNavigate();
   const { data: products } = useProduct();
   const [user] = useAtom(authUserAtom);
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [selectedSuits, setSelectedSuits] = useState(() => {
     const saved = localStorage.getItem("selectedSuits");
@@ -344,14 +346,12 @@ const Payed = () => {
 
   const handlePayment = async () => {
     if (selectedSuits.size === 0) {
-      alert("Please select at least one suit before proceeding to payment");
+      alert(t("selectAtLeastOneSuit"));
       return;
     }
 
     if (!user?.address || !user?.phoneNumber) {
-      alert(
-        "Please complete your contact information before proceeding to payment"
-      );
+      alert(t("completeContactInfo"));
       return;
     }
 
@@ -430,7 +430,7 @@ const Payed = () => {
       });
     } catch (error) {
       console.error("Error saving order:", error);
-      alert("There was an error saving your order. Please contact support.");
+      alert(t("errorSavingOrder"));
     }
   };
 
@@ -449,7 +449,9 @@ const Payed = () => {
                   <ShoppingBagIcon
                     sx={{ mr: 2, color: "#fff", fontSize: "2rem" }}
                   />
-                  <Typography className={classes.title}>Your Order</Typography>
+                  <Typography className={classes.title}>
+                    {t("yourOrder")}
+                  </Typography>
                   <IconButton
                     onClick={handleClick}
                     sx={{
@@ -467,7 +469,7 @@ const Payed = () => {
 
                 <Box sx={{ mb: 3 }}>
                   <Typography className={classes.subtitle}>
-                    {selectedItemsCount} Item/s in your Bag for a value of
+                    {selectedItemsCount} {t("itemsInBag")}
                   </Typography>
                   <Typography className={classes.price}>
                     {totalPrice.toFixed(2)}€
@@ -476,7 +478,7 @@ const Payed = () => {
 
                 <Box sx={{ mb: 3 }}>
                   <Typography className={classes.shippingTitle}>
-                    Shipping cost:
+                    {t("shippingCostLabel")}
                   </Typography>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                     <Button
@@ -488,7 +490,7 @@ const Payed = () => {
                         shippingCost === 0 ? classes.shippingButtonSelected : ""
                       }`}
                     >
-                      Free & tracked (0€)
+                      {t("freeTracked")}
                     </Button>
                     <Button
                       onClick={() => {
@@ -501,7 +503,7 @@ const Payed = () => {
                           : ""
                       }`}
                     >
-                      Fast & tracked (+20€)
+                      {t("fastTracked")}
                     </Button>
                     <Button
                       onClick={() => {
@@ -514,7 +516,7 @@ const Payed = () => {
                           : ""
                       }`}
                     >
-                      Fastest & tracked (+35€)
+                      {t("fastestTracked")}
                     </Button>
                   </Box>
                 </Box>
@@ -533,10 +535,10 @@ const Payed = () => {
                     }}
                   >
                     <Typography className={classes.shippingTitle}>
-                      Select Size Profile Type
+                      {t("selectSizeProfileType")}
                     </Typography>
                     <Link to="/IndexSizes" className={classes.editLink}>
-                      Edit
+                      {t("edit")}
                     </Link>
                   </Box>
 
@@ -549,7 +551,7 @@ const Payed = () => {
                           : ""
                       }`}
                     >
-                      Regular Profile
+                      {t("regularProfile")}
                     </Button>
                     {hasSizesTable && (
                       <Button
@@ -560,7 +562,7 @@ const Payed = () => {
                             : ""
                         }`}
                       >
-                        Size Table
+                        {t("sizeTable")}
                       </Button>
                     )}
                   </Box>
@@ -600,10 +602,10 @@ const Payed = () => {
                   {profileType === "sizesTable" && products?.sizesTable && (
                     <Box sx={{ mb: 2 }}>
                       <Typography sx={{ color: "#fff", mb: 1 }}>
-                        Jacket Size: {products.sizesTable.jacket}
+                        {t("jacketSizeLabel")} {products.sizesTable.jacket}
                       </Typography>
                       <Typography sx={{ color: "#fff" }}>
-                        Pants Size: {products.sizesTable.pants}
+                        {t("pantsSizeLabel")} {products.sizesTable.pants}
                       </Typography>
                     </Box>
                   )}
@@ -611,12 +613,12 @@ const Payed = () => {
 
                 <Box className={classes.contactInfo}>
                   <Typography className={classes.shippingTitle}>
-                    Contact Information
+                    {t("contactInformation")}
                   </Typography>
                   {user?.address ? (
                     <Box sx={{ mb: 2 }}>
                       <Typography className={classes.contactLabel}>
-                        Address:
+                        {t("addressLabel")}
                       </Typography>
                       <Typography className={classes.contactValue}>
                         {user.address}
@@ -625,8 +627,7 @@ const Payed = () => {
                   ) : (
                     <Box sx={{ mb: 2 }}>
                       <Typography className={classes.errorText}>
-                        Missing address, please add your address in your account
-                        settings
+                        {t("missingAddressMessage")}
                       </Typography>
                     </Box>
                   )}
@@ -634,7 +635,7 @@ const Payed = () => {
                   {user?.phoneNumber ? (
                     <Box sx={{ mb: 2 }}>
                       <Typography className={classes.contactLabel}>
-                        Phone:
+                        {t("phoneLabel")}
                       </Typography>
                       <Typography className={classes.contactValue}>
                         {user.phoneNumber}
@@ -643,21 +644,20 @@ const Payed = () => {
                   ) : (
                     <Box sx={{ mb: 2 }}>
                       <Typography className={classes.errorText}>
-                        Missing phone number, please add your phone in your
-                        account settings
+                        {t("missingPhoneMessage")}
                       </Typography>
                     </Box>
                   )}
 
                   <Link to="/account" className={classes.editLink}>
-                    Edit Contact Information
+                    {t("editContactInformation")}
                   </Link>
                 </Box>
               </Box>
 
               <Box className={classes.totalRow}>
                 <Typography className={classes.totalText}>
-                  Subtotal (VAT incl.)
+                  {t("subtotal")} (VAT incl.)
                 </Typography>
                 <Typography className={classes.totalPrice}>
                   {totalPrice}€
@@ -672,7 +672,7 @@ const Payed = () => {
             disabled={!selectedProfile}
             className={classes.paymentButton}
           >
-            Continue to Payment
+            {t("continueToPayment")}
           </Button>
 
           <PaymentDialog
@@ -698,7 +698,7 @@ const Payed = () => {
             className={classes.dialog}
           >
             <DialogTitle className={classes.dialogTitle}>
-              Select Items
+              {t("selectItems")}
             </DialogTitle>
             <DialogContent>
               <GetAllSuitFromDat

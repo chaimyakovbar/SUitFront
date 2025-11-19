@@ -14,6 +14,7 @@ import {
 import { motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
+import { useLanguage } from "../context/LanguageContext";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
@@ -22,10 +23,10 @@ import {
   showTextInsideAtom,
 } from "../Utils";
 
-// S3 Assets URLs
-const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
+import textInside from "../assets/icons/suit/suitAdd/textInside.webp";
 
 const TextInsideModal = () => {
+  const { t } = useLanguage();
   const { enqueueSnackbar } = useSnackbar();
   const [showTextInside, setShowTextInside] = useAtom(showTextInsideAtom);
   const [textInsideText, setTextInsideText] = useAtom(textInsideTextAtom);
@@ -59,18 +60,15 @@ const TextInsideModal = () => {
       setShowTextInside(false);
 
       // Show success message to user using snackbar
-      enqueueSnackbar(
-        "Text saved successfully! It will be saved with the suit when you finish creating it.",
-        {
-          variant: "success",
-          autoHideDuration: 4000,
-        }
-      );
+      enqueueSnackbar(t("textSavedSuccessfully"), {
+        variant: "success",
+        autoHideDuration: 4000,
+      });
 
       // The text will be saved as part of the suit when the user finishes the suit creation
     } catch (error) {
       console.error("Error updating text inside settings:", error);
-      enqueueSnackbar("Error updating text settings", {
+      enqueueSnackbar(t("errorUpdatingTextSettings"), {
         variant: "error",
         autoHideDuration: 4000,
       });
@@ -158,7 +156,7 @@ const TextInsideModal = () => {
                 mb: 0.5,
               }}
             >
-              Add Text Inside
+              {t("addTextInside")}
             </Typography>
             <Typography
               variant="body2"
@@ -169,7 +167,7 @@ const TextInsideModal = () => {
                 letterSpacing: "0.3px",
               }}
             >
-              Personalize your suit with custom text
+              {t("personalizeSuitWithCustomText")}
             </Typography>
           </Box>
           <IconButton
@@ -242,13 +240,14 @@ const TextInsideModal = () => {
             }}
           >
             <img
-              src={`${S3_BASE_URL}/assets/adds/TextInside.png`}
+              src={textInside}
               alt="TextInside"
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "contain",
-                filter: "brightness(1.1) contrast(1.1)",
+                objectFit: "cover",
+                filter:
+                  "brightness(0.8) contrast(1.5) invert(1) sepia() saturate(0) hue-rotate(0deg)",
               }}
             />
             {/* Enhanced Text overlay */}
@@ -259,9 +258,9 @@ const TextInsideModal = () => {
                 transition={{ duration: 0.3 }}
                 style={{
                   position: "absolute",
-                  top: "65%",
-                  left: "30%",
-                  transform: "translateY(-50px) rotate(-20deg)",
+                  top: "35%",
+                  right: "30%",
+                  transform: "translateY(-70px) rotate(-50deg)",
                   backgroundColor: "rgba(159, 148, 148, 0.4)",
                   border: "1px solid rgba(0, 0, 0, 0.3)",
                   color: tempColor,
@@ -284,11 +283,11 @@ const TextInsideModal = () => {
           {/* Enhanced Text Input */}
           <TextField
             fullWidth
-            label="Your Text"
+            label={t("yourText")}
             value={tempText}
             onChange={(e) => setTempText(e.target.value)}
             variant="outlined"
-            placeholder="Enter your text here..."
+            placeholder={t("enterYourTextHere")}
             sx={{
               "& .MuiOutlinedInput-root": {
                 background:
@@ -339,7 +338,7 @@ const TextInsideModal = () => {
                 letterSpacing: "0.5px",
               }}
             >
-              Choose Text Color
+              {t("chooseTextColor")}
             </Typography>
             <Grid container spacing={1.5} sx={{ justifyContent: "center" }}>
               {colorOptions.map((color, index) => (
@@ -456,7 +455,7 @@ const TextInsideModal = () => {
             },
           }}
         >
-          Cancel
+          {t("cancel")}
         </Button>
         <Button
           onClick={handleSave}
@@ -485,7 +484,7 @@ const TextInsideModal = () => {
             },
           }}
         >
-          Save
+          {t("save")}
         </Button>
       </DialogActions>
     </Dialog>

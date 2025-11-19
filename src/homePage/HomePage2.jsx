@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import "./HomePage2.css";
 
 // S3 Assets URLs
+import heroBackground from "../assets/icons/background/homePage.webp";
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 import {
   Box,
@@ -256,7 +257,7 @@ const HomePage2 = () => {
           // animate={{ scale: 1 }}
           // transition={{ duration: 10, ease: "easeOut" }}
           className={classes.videoBackground}
-          src={`${S3_BASE_URL}/assets/photoBackGround3.jpg`}
+          src={heroBackground}
           alt="Background"
         />
         <div className={classes.heroOverlay}></div>

@@ -8,33 +8,33 @@ import {
 } from "@mui/material";
 import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-// S3 Assets URLs
-const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const imgFor = `${S3_BASE_URL}/assets/takeSizesM.png`;
-const imgFor2 = `${S3_BASE_URL}/assets/takeSizesR.png`;
-// const imgFor3 = `${S3_BASE_URL}/assets/suitMeasur.jpeg`;
+import { useLanguage } from "../context/LanguageContext";
+
+import imgFor2 from "../assets/icons/background/takeSizesM.webp";
+import imgFor from "../assets/icons/background/takeSizesR.webp";
 
 const IndexSizes = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
+  const { t } = useLanguage();
 
   const measurementOptions = [
     {
       id: "measure",
-      title: "Measure Your Body",
-      subtitle: "Custom measurements",
-      description: "Get precise measurements for a perfect fit",
+      titleKey: "measureYourBody",
+      subtitleKey: "customMeasurements",
+      descriptionKey: "measureDescription",
       image: imgFor,
       path: "/sizes/measure",
       color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
     },
     {
       id: "regular",
-      title: "Regular Sizes",
-      subtitle: "Choose from standard sizes",
-      description: "Perfect if you know your standard suit size",
+      titleKey: "regularSizes",
+      subtitleKey: "chooseStandardSizes",
+      descriptionKey: "regularDescription",
       image: imgFor2,
       path: "/sizes/regular",
       color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -113,7 +113,7 @@ const IndexSizes = () => {
                 textShadow: "0 4px 20px rgba(192, 211, 202, 0.3)",
               }}
             >
-              Choose Your Measurement Method
+              {t("chooseMeasurementMethod")}
             </Typography>
             <Typography
               variant="h6"
@@ -126,8 +126,7 @@ const IndexSizes = () => {
                 lineHeight: 1.6,
               }}
             >
-              Select the measurement approach that works best for you. Each
-              method ensures a perfect fit for your custom suit.
+              {t("measurementMethodSubtitle")}
             </Typography>
           </Box>
 
@@ -231,7 +230,7 @@ const IndexSizes = () => {
                         fontFamily: "'Cormorant Garamond', serif",
                       }}
                     >
-                      {option.title}
+                      {t(option.titleKey)}
                     </Typography>
 
                     <Typography
@@ -243,7 +242,7 @@ const IndexSizes = () => {
                         mb: 2,
                       }}
                     >
-                      {option.subtitle}
+                      {t(option.subtitleKey)}
                     </Typography>
 
                     <Typography
@@ -256,7 +255,7 @@ const IndexSizes = () => {
                         flex: 1,
                       }}
                     >
-                      {option.description}
+                      {t(option.descriptionKey)}
                     </Typography>
 
                     {/* Action Button */}
@@ -282,7 +281,7 @@ const IndexSizes = () => {
                           },
                         }}
                       >
-                        Get Started
+                        {t("getStarted")}
                         <Box
                           component="span"
                           sx={{

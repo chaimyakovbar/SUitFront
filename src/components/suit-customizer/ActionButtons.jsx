@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useAtom, useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { useLanguage } from "../../context/LanguageContext";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -43,16 +44,17 @@ import {
 } from "../../utils/suitStateManager";
 import { postSuitProduct } from "../../api/suit";
 
-const steps = [
-  { id: 0, label: "Fabric", validate: "step1Validated" },
-  { id: 1, label: "Design", validate: "step2Validated" },
-  { id: 2, label: "Details", validate: "step3Validated" },
-];
-
 const ActionButtons = ({ isMobile }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useLanguage();
+
+  const steps = [
+    { id: 0, label: t("fabric"), validate: "step1Validated" },
+    { id: 1, label: t("design"), validate: "step2Validated" },
+    { id: 2, label: t("details"), validate: "step3Validated" },
+  ];
 
   const [currentStep, setCurrentStep] = useAtom(currentIndexAtom);
   const [counterArray] = useAtom(counterAtom);
@@ -181,7 +183,7 @@ const ActionButtons = ({ isMobile }) => {
           });
         }
 
-        enqueueSnackbar("Your custom suit has been saved successfully!", {
+        enqueueSnackbar(t("customSuitSavedSuccessfully"), {
           variant: "success",
         });
         // Reset all customization state to defaults after successful save
@@ -209,7 +211,7 @@ const ActionButtons = ({ isMobile }) => {
         // Navigate only after successful save
         navigate("/indexSizes");
       } else {
-        enqueueSnackbar("This suit configuration already exists!", {
+        enqueueSnackbar(t("suitConfigurationExists"), {
           variant: "warning",
         });
         // For duplicates, still navigate to sizes for user flow consistency
@@ -221,7 +223,7 @@ const ActionButtons = ({ isMobile }) => {
       // setCurrentStep(0);
     } catch (error) {
       console.error("Error saving suit:", error);
-      enqueueSnackbar("Error saving your suit configuration", {
+      enqueueSnackbar(t("errorSavingSuitConfiguration"), {
         variant: "error",
       });
     } finally {
@@ -296,132 +298,159 @@ const ActionButtons = ({ isMobile }) => {
           },
         }}
       >
-        {currentStep === 0 ? "Start" : "Back"}
+        {currentStep === 0 ? t("start") : t("back")}
       </Button>
 
       {/* Next/Finish Button */}
-      <Button
-        onClick={isLastStep ? handleFinish : handleNext}
-        disabled={isLastStep ? isSubmitting : !isStepValid() || isSubmitting}
-        endIcon={isLastStep ? <CheckCircleIcon /> : <ArrowForwardIcon />}
-        component={motion.button}
-        animate={nextEnabled ? { scale: [1, 1.03, 1] } : {}}
-        transition={
-          nextEnabled
-            ? { duration: 1.6, repeat: Infinity, repeatType: "reverse" }
-            : {}
-        }
-        whileHover={
-          isLastStep
-            ? !isSubmitting
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.6,
+          delay: 0.1,
+          ease: "easeOut",
+        }}
+        style={{ willChange: "transform, opacity", width: "100%", flex: 1 }}
+      >
+        <Button
+          onClick={isLastStep ? handleFinish : handleNext}
+          disabled={isLastStep ? isSubmitting : !isStepValid() || isSubmitting}
+          endIcon={isLastStep ? <CheckCircleIcon /> : <ArrowForwardIcon />}
+          component={motion.button}
+          animate={nextEnabled ? { scale: [1, 1.03, 1] } : {}}
+          transition={
+            nextEnabled
+              ? { duration: 1.6, repeat: Infinity, repeatType: "reverse" }
+              : {}
+          }
+          initial={isLastStep && !isSubmitting ? { opacity: 0, y: 10 } : {}}
+          whileHover={
+            isLastStep
+              ? !isSubmitting
+                ? { scale: 1.02 }
+                : {}
+              : isStepValid() && !isSubmitting
               ? { scale: 1.02 }
               : {}
-            : isStepValid() && !isSubmitting
-            ? { scale: 1.02 }
-            : {}
-        }
-        whileTap={
-          isLastStep
-            ? !isSubmitting
+          }
+          whileTap={
+            isLastStep
+              ? !isSubmitting
+                ? { scale: 0.98 }
+                : {}
+              : isStepValid() && !isSubmitting
               ? { scale: 0.98 }
               : {}
-            : isStepValid() && !isSubmitting
-            ? { scale: 0.98 }
-            : {}
-        }
-        sx={{
-          flex: 1,
-          minHeight: { xs: 44, md: 48 },
-          borderRadius: "12px",
-          background: isLastStep
-            ? !isSubmitting
-              ? "linear-gradient(135deg, #C0D3CA 0%, #A8C3B8 100%)"
-              : "rgba(40, 40, 40, 0.6)"
-            : isStepValid() && !isSubmitting
-            ? "linear-gradient(135deg, rgba(192, 211, 202, 0.9) 0%, rgba(168, 195, 184, 0.9) 100%)"
-            : "rgba(40, 40, 40, 0.6)",
-          color: isLastStep
-            ? !isSubmitting
-              ? "#0a0a0a"
-              : "rgba(192, 211, 202, 0.3)"
-            : isStepValid() && !isSubmitting
-            ? "#000"
-            : "rgba(192, 211, 202, 0.3)",
-          border: isLastStep
-            ? !isSubmitting
-              ? "1px solid rgba(192, 211, 202, 0.65)"
-              : "1px solid rgba(192, 211, 202, 0.1)"
-            : isStepValid() && !isSubmitting
-            ? "1px solid rgba(192, 211, 202, 0.4)"
-            : "1px solid rgba(192, 211, 202, 0.1)",
-          fontSize: { xs: "0.85rem", md: "0.9rem" },
-          fontWeight: 500,
-          textTransform: "none",
-          letterSpacing: "0.02em",
-          boxShadow: isLastStep
-            ? !isSubmitting
-              ? "0 10px 30px rgba(192, 211, 202, 0.35)"
-              : "none"
-            : isStepValid() && !isSubmitting
-            ? "0 4px 16px rgba(192, 211, 202, 0.2)"
-            : "none",
-          transition: "all 0.3s ease",
-          backdropFilter: "blur(10px)",
-          ...(nextEnabled
-            ? {
-                boxShadow:
-                  "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
-                animation: "glow 1.8s ease-in-out infinite",
-                "@keyframes glow": {
-                  "0%": {
-                    boxShadow:
-                      "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+          }
+          sx={{
+            flex: 1,
+            minHeight: { xs: 44, md: 48 },
+            borderRadius: isLastStep ? "6px" : "12px",
+            background: isLastStep
+              ? !isSubmitting
+                ? "linear-gradient(90deg, #C0D3CA, #A8C3B8, #C0D3CA)"
+                : "rgba(40, 40, 40, 0.6)"
+              : isStepValid() && !isSubmitting
+              ? "linear-gradient(135deg, rgba(192, 211, 202, 0.9) 0%, rgba(168, 195, 184, 0.9) 100%)"
+              : "rgba(40, 40, 40, 0.6)",
+            backgroundSize:
+              isLastStep && !isSubmitting ? "200% 100%" : "100% 100%",
+            animation:
+              isLastStep && !isSubmitting
+                ? "gradientMove 2s linear infinite"
+                : "none",
+            "@keyframes gradientMove":
+              isLastStep && !isSubmitting
+                ? {
+                    "0%": { backgroundPosition: "0% 50%" },
+                    "100%": { backgroundPosition: "200% 50%" },
+                  }
+                : {},
+            color: isLastStep
+              ? !isSubmitting
+                ? "#0a0a0a"
+                : "rgba(192, 211, 202, 0.3)"
+              : isStepValid() && !isSubmitting
+              ? "#000"
+              : "rgba(192, 211, 202, 0.3)",
+            border: isLastStep
+              ? !isSubmitting
+                ? "none"
+                : "1px solid rgba(192, 211, 202, 0.1)"
+              : isStepValid() && !isSubmitting
+              ? "1px solid rgba(192, 211, 202, 0.4)"
+              : "1px solid rgba(192, 211, 202, 0.1)",
+            fontSize: { xs: "0.85rem", md: isLastStep ? "1rem" : "0.9rem" },
+            fontWeight: isLastStep ? 600 : 500,
+            fontFamily: isLastStep ? "'Montserrat', sans-serif" : "inherit",
+            textTransform: "none",
+            letterSpacing: "0.02em",
+            padding: isLastStep ? "14px 32px" : "auto",
+            boxShadow: isLastStep
+              ? !isSubmitting
+                ? "0 10px 30px rgba(192, 211, 202, 0.35)"
+                : "none"
+              : isStepValid() && !isSubmitting
+              ? "0 4px 16px rgba(192, 211, 202, 0.2)"
+              : "none",
+            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            backdropFilter: "blur(10px)",
+            ...(nextEnabled
+              ? {
+                  boxShadow:
+                    "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+                  animation: "glow 1.8s ease-in-out infinite",
+                  "@keyframes glow": {
+                    "0%": {
+                      boxShadow:
+                        "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+                    },
+                    "50%": {
+                      boxShadow:
+                        "0 0 0 6px rgba(192, 211, 202, 0.18), 0 14px 40px rgba(192, 211, 202, 0.45)",
+                    },
+                    "100%": {
+                      boxShadow:
+                        "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
+                    },
                   },
-                  "50%": {
-                    boxShadow:
-                      "0 0 0 6px rgba(192, 211, 202, 0.18), 0 14px 40px rgba(192, 211, 202, 0.45)",
-                  },
-                  "100%": {
-                    boxShadow:
-                      "0 0 0 0 rgba(192, 211, 202, 0.0), 0 10px 30px rgba(192, 211, 202, 0.35)",
-                  },
-                },
-              }
-            : {}),
-          "&:hover": isLastStep
-            ? !isSubmitting
+                }
+              : {}),
+            "&:hover": isLastStep
+              ? !isSubmitting
+                ? {
+                    background:
+                      "linear-gradient(135deg, #D0E3DA 0%, #C0D3CA 100%)",
+                    boxShadow: "0 14px 40px rgba(192, 211, 202, 0.45)",
+                    transform: "translateY(-1px)",
+                    animationPlayState: "paused",
+                  }
+                : {}
+              : isStepValid() && !isSubmitting
               ? {
                   background:
-                    "linear-gradient(135deg, #D0E3DA 0%, #C0D3CA 100%)",
-                  boxShadow: "0 14px 40px rgba(192, 211, 202, 0.45)",
+                    "linear-gradient(135deg, rgba(208, 227, 218, 0.95) 0%, rgba(184, 211, 200, 0.95) 100%)",
+                  boxShadow: "0 6px 20px rgba(192, 211, 202, 0.3)",
                   transform: "translateY(-1px)",
-                  border: "1px solid rgba(192, 211, 202, 0.7)",
+                  border: "1px solid rgba(192, 211, 202, 0.6)",
                 }
-              : {}
-            : isStepValid() && !isSubmitting
-            ? {
-                background:
-                  "linear-gradient(135deg, rgba(208, 227, 218, 0.95) 0%, rgba(184, 211, 200, 0.95) 100%)",
-                boxShadow: "0 6px 20px rgba(192, 211, 202, 0.3)",
-                transform: "translateY(-1px)",
-                border: "1px solid rgba(192, 211, 202, 0.6)",
-              }
-            : {},
-          "&:disabled": {
-            cursor: "not-allowed",
-            opacity: 0.5,
-          },
-          "& .MuiButton-endIcon": {
-            marginLeft: "6px",
-          },
-        }}
-      >
-        {isSubmitting
-          ? "Saving..."
-          : isLastStep
-          ? "Complete Suit"
-          : "Next Step"}
-      </Button>
+              : {},
+            "&:disabled": {
+              cursor: "not-allowed",
+              opacity: 0.5,
+            },
+            "& .MuiButton-endIcon": {
+              marginLeft: "6px",
+            },
+          }}
+        >
+          {isSubmitting
+            ? t("saving")
+            : isLastStep
+            ? t("completeSuit")
+            : t("nextStep")}
+        </Button>
+      </motion.div>
     </Box>
   );
 };

@@ -13,6 +13,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useLanguage } from "../context/LanguageContext";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
@@ -157,6 +158,7 @@ const useStyles = makeStyles({
 const PaymentSuccess = () => {
   const classes = useStyles();
   const location = useLocation();
+  const { t } = useLanguage();
   const { paymentData, orderStatus, orderId, message } = location.state || {};
 
   // If no state data, show error
@@ -166,10 +168,10 @@ const PaymentSuccess = () => {
         <Container maxWidth="md" className={classes.container}>
           <Paper className={classes.paper}>
             <Typography className={classes.title}>
-              Payment Information Not Found
+              {t("paymentInformationNotFound")}
             </Typography>
             <Typography className={classes.subtitle}>
-              Please return to the shopping page and try again.
+              {t("returnToShoppingMessage")}
             </Typography>
             <Box className={classes.buttonGroup}>
               <Link to="/Shopping" style={{ textDecoration: "none" }}>
@@ -177,7 +179,7 @@ const PaymentSuccess = () => {
                   className={classes.button}
                   startIcon={<ShoppingBagIcon />}
                 >
-                  Back to Shopping
+                  {t("backToShopping")}
                 </Button>
               </Link>
             </Box>
@@ -201,17 +203,17 @@ const PaymentSuccess = () => {
             )}
 
             <Typography className={classes.title}>
-              {isPending ? "Payment Processed" : "Payment Successful"}
+              {isPending ? t("paymentProcessed") : t("paymentSuccessful")}
             </Typography>
 
             <Typography className={classes.subtitle}>
               {isPending
-                ? "Your payment has been processed successfully"
-                : "Thank you for your purchase"}
+                ? t("paymentProcessedMessage")
+                : t("thankYouForPurchase")}
             </Typography>
 
             <Chip
-              label={isPending ? "Awaiting Approval" : "Completed"}
+              label={isPending ? t("awaitingApproval") : t("completed")}
               className={classes.statusChip}
               icon={isPending ? <ScheduleIcon /> : <CheckCircleIcon />}
             />
@@ -219,11 +221,7 @@ const PaymentSuccess = () => {
 
           {isPending && (
             <Alert severity="warning" className={classes.alert}>
-              <Typography variant="body2">
-                Your order is currently being reviewed and will be approved
-                shortly. You will receive a confirmation email once your order
-                is approved.
-              </Typography>
+              <Typography variant="body2">{t("orderBeingReviewed")}</Typography>
             </Alert>
           )}
 
@@ -244,11 +242,13 @@ const PaymentSuccess = () => {
                 color: "#fff",
               }}
             >
-              Order Details
+              {t("orderDetails")}
             </Typography>
 
             <Box className={classes.detailRow}>
-              <Typography className={classes.detailLabel}>Order ID:</Typography>
+              <Typography className={classes.detailLabel}>
+                {t("orderId")}
+              </Typography>
               <Typography className={classes.detailValue}>
                 {orderId || paymentData.paymentIntentId}
               </Typography>
@@ -256,7 +256,7 @@ const PaymentSuccess = () => {
 
             <Box className={classes.detailRow}>
               <Typography className={classes.detailLabel}>
-                Total Amount:
+                {t("totalAmount")}
               </Typography>
               <Typography className={classes.detailValue}>
                 {paymentData.totalAmount}€
@@ -265,18 +265,18 @@ const PaymentSuccess = () => {
 
             <Box className={classes.detailRow}>
               <Typography className={classes.detailLabel}>
-                Shipping Cost:
+                {t("shippingCost")}
               </Typography>
               <Typography className={classes.detailValue}>
                 {paymentData.shippingCost === 0
-                  ? "Free"
+                  ? t("free")
                   : `${paymentData.shippingCost}€`}
               </Typography>
             </Box>
 
             <Box className={classes.detailRow}>
               <Typography className={classes.detailLabel}>
-                Shipping Type:
+                {t("shippingType")}
               </Typography>
               <Typography className={classes.detailValue}>
                 {paymentData.shippingType}
@@ -284,9 +284,12 @@ const PaymentSuccess = () => {
             </Box>
 
             <Box className={classes.detailRow}>
-              <Typography className={classes.detailLabel}>Items:</Typography>
+              <Typography className={classes.detailLabel}>
+                {t("items")}
+              </Typography>
               <Typography className={classes.detailValue}>
-                {paymentData.suits?.length || 0} suit(s)
+                {paymentData.suits?.length || 0}{" "}
+                {paymentData.suits?.length === 1 ? t("suit") : t("suits")}
               </Typography>
             </Box>
           </Box>
@@ -295,8 +298,8 @@ const PaymentSuccess = () => {
 
           <Typography className={classes.infoText}>
             {isPending
-              ? "We're processing your order and will notify you once it's approved. This usually takes 1-2 business days."
-              : "Your order has been confirmed and will be shipped according to your selected shipping method."}
+              ? t("processingOrderMessage")
+              : t("orderConfirmedMessage")}
           </Typography>
 
           <Box className={classes.buttonGroup}>
@@ -305,7 +308,7 @@ const PaymentSuccess = () => {
                 className={classes.button}
                 startIcon={<ShoppingBagIcon />}
               >
-                Continue Shopping
+                {t("continueShopping")}
               </Button>
             </Link>
 
@@ -314,13 +317,13 @@ const PaymentSuccess = () => {
                 className={classes.button}
                 startIcon={<AccountCircleIcon />}
               >
-                View Orders
+                {t("viewOrders")}
               </Button>
             </Link>
 
             <Link to="/" style={{ textDecoration: "none" }}>
               <Button className={classes.button} startIcon={<HomeIcon />}>
-                Home
+                {t("home")}
               </Button>
             </Link>
           </Box>

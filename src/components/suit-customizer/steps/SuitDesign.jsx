@@ -36,9 +36,9 @@ import collarDistant from "../../../assets/icons/suit/lapels/peak.webp";
 import collarSmook from "../../../assets/icons/suit/lapels/smook.webp";
 
 // Packet images
-import packet1 from "../../../assets/icons/suit/packets/patch.webp";
-import packet2 from "../../../assets/icons/suit/packets/regular.webp";
-import packet3 from "../../../assets/icons/suit/packets/welt.webp";
+import packet1 from "../../../assets/icons/suit/packets/regular.webp";
+import packet2 from "../../../assets/icons/suit/packets/welt.webp";
+import packet3 from "../../../assets/icons/suit/packets/patch.webp";
 
 // Helper function to get translated labels
 const getSuitTypes = (t) => [
@@ -373,7 +373,7 @@ const SuitDesign = ({ isMobile }) => {
                   px: 1,
                 }}
               >
-                Suit Kind
+                {t("suitKind")}
               </Typography>
             </Button>
           </Box>
@@ -444,7 +444,7 @@ const SuitDesign = ({ isMobile }) => {
                   px: 1,
                 }}
               >
-                Lapel
+                {t("lapel")}
               </Typography>
             </Button>
           </Box>
@@ -522,7 +522,7 @@ const SuitDesign = ({ isMobile }) => {
                   px: 1,
                 }}
               >
-                Pocket
+                {t("pocket")}
               </Typography>
             </Button>
           </Box>
@@ -553,7 +553,7 @@ const SuitDesign = ({ isMobile }) => {
             variant="h6"
             sx={{ color: "#C0D3CA", textAlign: "center", mb: 2 }}
           >
-            Choose Suit Style
+            {t("chooseSuitStyle")}
           </Typography>
           {/* <img src={wew} alt="kind1" />
           <img src={wew2} alt="kind2" />
@@ -605,7 +605,7 @@ const SuitDesign = ({ isMobile }) => {
             variant="h6"
             sx={{ color: "#C0D3CA", textAlign: "center", mb: 2 }}
           >
-            Choose Pocket Style
+            {t("choosePocketStyle")}
           </Typography>
 
           {/* Pocket Orientation Toggle */}
@@ -631,7 +631,7 @@ const SuitDesign = ({ isMobile }) => {
                 },
               }}
             >
-              Straight
+              {t("straight")}
             </Button>
             <Button
               onClick={() => handlePocketStyleChange(false)}
@@ -652,7 +652,7 @@ const SuitDesign = ({ isMobile }) => {
                 },
               }}
             >
-              Angled
+              {t("angled")}
             </Button>
           </Box>
 
@@ -700,7 +700,7 @@ const SuitDesign = ({ isMobile }) => {
             variant="h6"
             sx={{ color: "#C0D3CA", textAlign: "center", mb: 2 }}
           >
-            Choose Lapel Style
+            {t("chooseLapelStyle")}
           </Typography>
           <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
             {collarStyles.map((style) => (
@@ -778,7 +778,7 @@ const SuitDesign = ({ isMobile }) => {
             textAlign: "center",
           }}
         >
-          Suit Style
+          {t("suitStyle")}
         </Typography>
         <Grid container spacing={2} justifyContent="center">
           {suitTypes.map((type) => (
@@ -807,7 +807,7 @@ const SuitDesign = ({ isMobile }) => {
             textAlign: "center",
           }}
         >
-          Lapel Style
+          {t("lapelStyle")}
         </Typography>
         <Grid container spacing={2} justifyContent="center">
           {collarStyles.map((style) => (
@@ -834,7 +834,7 @@ const SuitDesign = ({ isMobile }) => {
             textAlign: "center",
           }}
         >
-          Lapel Width
+          {t("lapelWidth")}
         </Typography>
 
         <Slider
@@ -891,7 +891,7 @@ const SuitDesign = ({ isMobile }) => {
             textAlign: "center",
           }}
         >
-          Pocket
+          {t("pocket")}
         </Typography>
 
         {/* Pocket Orientation Toggle */}

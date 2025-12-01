@@ -221,7 +221,16 @@ const NavBar = () => {
             }`}
           >
             <Link to="/" className={classes.logo}>
-              Suit
+              <img
+                src="/LogoSite4.webp"
+                alt="Suit"
+                style={{
+                  position: "absolute",
+                  top: "-25%",
+                  left: isMobile ? 0 : "6%",
+                  width: isMobile ? "90px" : "100px",
+                }}
+              />
             </Link>
 
             {isMobile ? (
@@ -236,7 +245,10 @@ const NavBar = () => {
               </IconButton>
             ) : (
               <>
-                <Box className={classes.navContainer}>
+                <Box
+                  style={{ marginLeft: "10%" }}
+                  className={classes.navContainer}
+                >
                   {menuItems.map((item) => (
                     <AnimatePresence key={item.text}>
                       {item.link ? (

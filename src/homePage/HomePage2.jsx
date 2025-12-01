@@ -21,7 +21,7 @@ import ButtonReactBits from "../reactBits/Button";
 import { motion } from "framer-motion";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import MostPoPular from "./MostPoPular";
+// MostPoPular הוסר - לא בשימוש
 import AllCollection from "./AllCollection";
 import NavBar from "./NavBar";
 import { useLanguage } from "../context/LanguageContext";
@@ -230,6 +230,56 @@ const HomePage2 = () => {
   const classes = useStyles({ isMobile });
   const location = useLocation();
   const { t } = useLanguage();
+  const [shouldLoadCollections, setShouldLoadCollections] =
+    React.useState(false);
+  const collectionsTriggerRef = React.useRef(null);
+
+  // דחיית טעינת AllCollection עד שהכל נטען או שהמשתמש מגיע אליו
+  React.useEffect(() => {
+    // אפשרות 1: טען אחרי שהדף נטען לחלוטין (אם requestIdleCallback זמין)
+    const loadAfterIdle = () => {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(
+          () => {
+            setShouldLoadCollections(true);
+          },
+          { timeout: 2000 }
+        );
+      } else {
+        // Fallback: טען אחרי 2 שניות
+        setTimeout(() => {
+          setShouldLoadCollections(true);
+        }, 2000);
+      }
+    };
+
+    // אפשרות 2: טען כשהמשתמש מגיע קרוב לסקשן (Intersection Observer)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldLoadCollections(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: "200px", // התחל טעינה 200px לפני שהמשתמש מגיע
+        threshold: 0.1,
+      }
+    );
+
+    if (collectionsTriggerRef.current) {
+      observer.observe(collectionsTriggerRef.current);
+    }
+
+    // גם טען אחרי שהדף נטען (backup)
+    loadAfterIdle();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   React.useEffect(() => {
     if (location.state && location.state.scrollToAllCollection) {
@@ -311,32 +361,7 @@ const HomePage2 = () => {
 
       <Divider className={classes.divider} />
 
-      {/* Popular Section */}
-      {/* <Box
-        component="section"
-        className={`${classes.section} ${classes.sectionLight}`}
-        ref={popularSectionRef}
-      >
-        <Container maxWidth="lg">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Typography variant="h2" className={classes.sectionTitle}>
-              {t("mostPopular")}
-            </Typography>
-            <Typography variant="body1" className={classes.sectionSubtitle}>
-              {t("mostPopularSubtitle")}
-            </Typography>
-          </motion.div>
-
-          <MostPoPular />
-        </Container>
-      </Box> */}
-
-      <Divider className={classes.divider} />
+      {/* Popular Section - הוסר כי לא בשימוש */}
 
       {/* Featured Section */}
       <Box
@@ -388,31 +413,36 @@ const HomePage2 = () => {
 
       <Divider className={classes.divider} />
 
-      {/* Collections Section */}
-      <Box
-        component="section"
-        className={`${classes.section} ${classes.sectionLight}`}
-        ref={targetSectionRef}
-        id="targetSection"
-      >
-        <Container maxWidth="lg">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Typography variant="h2" className={classes.sectionTitle}>
-              {t("ourCollections")}
-            </Typography>
-            <Typography variant="body1" className={classes.sectionSubtitle}>
-              {t("collectionsSubtitle")}
-            </Typography>
-          </motion.div>
+      {/* Trigger element for Intersection Observer */}
+      <div ref={collectionsTriggerRef} style={{ height: "1px" }} />
 
-          <AllCollection targetSectionRef={targetSectionRef} />
-        </Container>
-      </Box>
+      {/* Collections Section - נטען רק אחרי שהכל נטען או שהמשתמש מגיע אליו */}
+      {shouldLoadCollections && (
+        <Box
+          component="section"
+          className={`${classes.section} ${classes.sectionLight}`}
+          ref={targetSectionRef}
+          id="targetSection"
+        >
+          <Container maxWidth="lg">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Typography variant="h2" className={classes.sectionTitle}>
+                {t("ourCollections")}
+              </Typography>
+              <Typography variant="body1" className={classes.sectionSubtitle}>
+                {t("collectionsSubtitle")}
+              </Typography>
+            </motion.div>
+
+            <AllCollection targetSectionRef={targetSectionRef} />
+          </Container>
+        </Box>
+      )}
     </div>
   );
 };

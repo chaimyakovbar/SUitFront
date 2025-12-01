@@ -42,20 +42,20 @@ import { LanguageProvider } from "./context/LanguageContext.jsx";
 import OfflineIndicator from "./components/OfflineIndicator";
 
 // Loading component for lazy loaded components
-const LoadingSpinner = () => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      backgroundColor: "#0a0a0a",
-      color: "#fff",
-    }}
-  >
-    <div>Loading...</div>
-  </div>
-);
+// const LoadingSpinner = () => (
+//   <div
+//     style={{
+//       display: "flex",
+//       justifyContent: "center",
+//       alignItems: "center",
+//       height: "100vh",
+//       backgroundColor: "#0a0a0a",
+//       color: "#fff",
+//     }}
+//   >
+//     <div>Loading...</div>
+//   </div>
+// );
 
 // NavBarWrapper provides scrollToAllCollection logic for NavBar
 const NavBarWrapper = () => {
@@ -85,7 +85,7 @@ const App = () => {
             <NavBarWrapper />
             {/* <Whatchap /> */}
             <AccessibilityMenu />
-            <Suspense fallback={<LoadingSpinner />}>
+            {/* <Suspense fallback={<LoadingSpinner />}> */}
               <Routes>
                 <Route path="/" element={<HomePage2 />} />
                 <Route path="/login" element={<LoginWithGoogle />} />
@@ -140,7 +140,7 @@ const App = () => {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/Payed" element={<Payed />} />
               </Routes>
-            </Suspense>
+            {/* </Suspense> */}
           </Box>
         </Router>
       </LanguageProvider>

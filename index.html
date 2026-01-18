@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/public/LogoSite.png" />
+    <link rel="icon" type="image/png" href="/LogoSite.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suits</title>
     <style>
@@ -45,7 +45,8 @@
         transform: translate(-50%, -50%);
         width: 120%;
         height: 120%;
-        background: url("/gifLogo3.webm") center/cover no-repeat;
+        /* Use a static image for the blurred background instead of a video */
+        background: url("/LogoSite4.webp") center/cover no-repeat;
         filter: blur(50px) brightness(0.4) saturate(1.2);
         opacity: 0.5;
         z-index: -1;
@@ -74,8 +75,10 @@
         muted
         playsinline
         preload="auto"
+        poster="/LogoSite4.webp"
       >
         <source src="/gifLogo6.webm" type="video/webm" />
+        <source src="/gifLogo6.mp4" type="video/mp4" />
       </video>
     </div>
 

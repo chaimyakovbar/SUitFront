@@ -18,6 +18,7 @@ import {
   Tooltip,
   Typography,
   Drawer,
+  IconButton,
 } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import { bodyPoints, buttons } from "../consts/KindOfColors";
@@ -33,6 +34,8 @@ import { useLanguage } from "../context/LanguageContext";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { estimateFromMinimalInput } from "../utils/measurementEstimator";
+import RadialMenu from "./RadialMenu";
 
 // Create a mapping from button ID to bodyPoint category
 const createButtonCategoryMap = () => {
@@ -119,6 +122,24 @@ const DollDisplay = () => {
   const [openNewProfileDialog, setOpenNewProfileDialog] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+  const [quickFitMode, setQuickFitMode] = useState(true);
+  const [heightCm, setHeightCm] = useState("");
+  const [weightKg, setWeightKg] = useState("");
+  const [estimation, setEstimation] = useState(null);
+  const [openProfileMobileDialog, setOpenProfileMobileDialog] = useState(false);
+
+  const closeHeightWeightInputs = () => {};
+
+  // In Quick Fit mode we only show minimal points needed for the new estimator
+  const quickFitButtonIds = React.useMemo(() => [1, 2, 3, 9], []); // Chest, Waist, Seat (Hips), Shoulder
+
+  const effectiveButtons = React.useMemo(
+    () =>
+      quickFitMode
+        ? buttons.filter((b) => quickFitButtonIds.includes(b.id))
+        : buttons,
+    [quickFitMode, quickFitButtonIds]
+  );
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -151,7 +172,7 @@ const DollDisplay = () => {
     return () => clearTimeout(loadingTimer);
   }, [modelLoaded]);
 
-  // Initialize profiles from data
+  // Initialize profiles from data (runs once when data.sizes arrives)
   useEffect(() => {
     if (!data?.sizes) return;
 
@@ -265,20 +286,39 @@ const DollDisplay = () => {
   };
 
   const toggleSideDrawer = () => {
+    closeHeightWeightInputs();
     setSideDrawerOpen(!sideDrawerOpen);
   };
 
   const completedPoints = React.useMemo(() => {
     if (!selectedProfile || !sizes) return [];
 
-    return buttons
+    return effectiveButtons
       .filter((button) => {
         const category = buttonCategoryMap[button.id];
         const value = sizes[category];
         return value && value.toString().trim() !== "" && Number(value) > 0;
       })
       .map((button) => button.id);
-  }, [selectedProfile, sizes]);
+  }, [selectedProfile, sizes, effectiveButtons]);
+
+  // For Quick Fit mode: count also height & weight as part of the required inputs
+  const quickFitCompletedCount =
+    completedPoints.length +
+    (heightCm && Number(heightCm) > 0 ? 1 : 0) +
+    (weightKg && Number(weightKg) > 0 ? 1 : 0);
+
+  // Targets: 6 for Quick Fit (4 נקודות + גובה + משקל), 14 לכל המידות
+  const QUICK_FIT_TARGET = 6;
+  const FULL_BODY_TARGET = 14;
+
+  const isQuickFitComplete =
+    quickFitMode && quickFitCompletedCount >= QUICK_FIT_TARGET;
+  const isFullBodyComplete =
+    !quickFitMode && completedPoints.length >= FULL_BODY_TARGET;
+
+  const HEIGHT_KEY = "heightCm";
+  const WEIGHT_KEY = "weightKg";
 
   React.useEffect(() => {
     if (!isLoading && data?.sizes && Object.keys(sizes).length === 0) {
@@ -286,7 +326,66 @@ const DollDisplay = () => {
     }
   }, [isLoading, data, sizes]);
 
+  const handleEstimateAll = () => {
+    closeHeightWeightInputs();
+    const chest = sizes?.["Chest"];
+    const waist = sizes?.["Waist"];
+    const seat = sizes?.["Seat"];
+
+    const h = Number(heightCm);
+    const w = Number(weightKg);
+    const chestNum = Number(chest);
+    const waistNum = Number(waist);
+    const hipNum = Number(seat);
+
+    if (!h || !w || !chestNum || !waistNum || !hipNum) {
+      enqueueSnackbar(
+        "Please fill height, weight, chest, waist and seat (hips) before estimating.",
+        { variant: "warning" }
+      );
+      return;
+    }
+
+    const minimalInput = {
+      heightCm: h,
+      weightKg: w,
+      chestCm: chestNum,
+      waistCm: waistNum,
+      hipCm: hipNum,
+    };
+
+    const result = estimateFromMinimalInput(minimalInput);
+    setEstimation(result);
+    setSideDrawerOpen(true);
+  };
+
+  const handleFinishAndGoToShopping = () => {
+    // מפעיל את האלגוריתם במצב Quick Fit לפני מעבר לשופינג
+    if (quickFitMode) {
+      handleEstimateAll();
+    }
+    navigate("/Shopping");
+  };
+
+  const handleHWClick = (type) => {
+    closeHeightWeightInputs();
+    const isHeight = type === "height";
+    const key = isHeight ? HEIGHT_KEY : WEIGHT_KEY;
+    const existingSize = sizes?.[key] || (isHeight ? heightCm : weightKg) || "";
+
+    setSelectedButton({
+      id: type,
+      label: isHeight ? "Height / גובה" : "Weight / משקל",
+      img: null,
+      video: null,
+      explain: "",
+    });
+    setInputValue(existingSize);
+    setDialogOpen(true);
+  };
+
   const handleButtonClick = (button) => {
+    closeHeightWeightInputs();
     setSelectedButton(button);
 
     const category = buttonCategoryMap[button.id];
@@ -313,6 +412,7 @@ const DollDisplay = () => {
 
   // Handle point click to temporarily highlight a specific point
   const handlePointClick = (pointId) => {
+    closeHeightWeightInputs();
     setActivePoints((prev) =>
       prev.includes(pointId) ? prev.filter((id) => id !== pointId) : [pointId]
     );
@@ -371,7 +471,7 @@ const DollDisplay = () => {
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#0A0F14",
-            zIndex: 9999,
+            zIndex: 99999,
             transition: "opacity 0.3s ease-out",
           }}
         >
@@ -445,7 +545,7 @@ const DollDisplay = () => {
       >
         <div
           style={{
-            display: isMobile ? "grid" : "flex",
+            display: isMobile ? "none" : "flex",
             gap: isMobile ? "2px" : "10px",
             width: isMobile ? "130px" : "100%",
           }}
@@ -493,11 +593,62 @@ const DollDisplay = () => {
         </div>
         <div>
           <Typography variant="body2">
-            {/* {completedPoints.length}/{bodyPoints.length} measurements completed */}
-            {completedPoints.length}/{"15"} measurements completed
+            {quickFitMode
+              ? `${quickFitCompletedCount}/${QUICK_FIT_TARGET} Quick Fit inputs completed`
+              : `${completedPoints.length}/${FULL_BODY_TARGET} measurements completed`}
           </Typography>
         </div>
+        {/* <Button
+          variant="contained"
+          size="small"
+          onClick={handleEstimateAll}
+          sx={{ mt: 1 }}
+        >
+          Estimate 16 measurements
+        </Button> */}
       </div>
+
+      {/* Finish button overlay – קופץ רק כשכל המידות הנדרשות הושלמו */}
+      {(isQuickFitComplete || isFullBodyComplete) && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: { xs: "27%", md: "30%" },
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 100,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleFinishAndGoToShopping}
+            sx={{
+              borderRadius: 999,
+              px: 4,
+              py: 1.2,
+              boxShadow: "0 12px 30px rgba(0,0,0,0.6)",
+              background:
+                "linear-gradient(135deg, #C0D3CA, #9BB8AC, #151515, #9BB8AC)",
+              backgroundSize: "260% 260%",
+              animation: "finishGradient 5s ease-in-out infinite",
+              color: "#000",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              "@keyframes finishGradient": {
+                "0%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
+                "100%": { backgroundPosition: "0% 50%" },
+              },
+            }}
+          >
+            FINISH & GO TO SHOPPING
+          </Button>
+        </Box>
+      )}
 
       {/* Profile Selection */}
       <div
@@ -510,7 +661,7 @@ const DollDisplay = () => {
       >
         <Box
           sx={{
-            display: isMobile ? "grid" : "flex",
+            display: isMobile ? "none" : "flex",
             gap: isMobile ? "2px" : "10px",
             alignItems: "center",
             width: isMobile ? "70px" : "100%",
@@ -528,6 +679,20 @@ const DollDisplay = () => {
             }}
           >
             New Profile
+          </Button>
+          <Button
+            variant={quickFitMode ? "contained" : "outlined"}
+            onClick={() => setQuickFitMode((prev) => !prev)}
+            style={{
+              backgroundColor: quickFitMode ? "#1976d2" : "#333",
+              color: "#fff",
+              borderColor: "#1976d2",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {quickFitMode
+              ? "Quick Fit – minimal points"
+              : "Full body – all points"}
           </Button>
           <select
             value={selectedProfile?.name || ""}
@@ -612,6 +777,80 @@ const DollDisplay = () => {
         </DialogActions>
       </Dialog>
 
+      {/* Mobile-only: Profile selection dialog, נגיש דרך תפריט ההגדרות העגול */}
+      <Dialog
+        open={openProfileMobileDialog}
+        onClose={() => setOpenProfileMobileDialog(false)}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{
+          sx: {
+            backgroundColor: "#1e1e1e",
+            color: "#fff",
+          },
+        }}
+      >
+        <DialogTitle>{t("selectProfile")}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            {t("selectProfile")}:
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
+            <select
+              value={selectedProfile?.name || ""}
+              onChange={(e) => {
+                const profile = sizeProfiles.find(
+                  (p) => p.name === e.target.value
+                );
+                setSelectedProfile(profile);
+              }}
+              style={{
+                backgroundColor: "#333",
+                color: "#fff",
+                padding: "10px",
+                borderRadius: "6px",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                width: "100%",
+              }}
+            >
+              {sizeProfiles.map((profile) => (
+                <option key={profile.name} value={profile.name}>
+                  {profile.name}
+                </option>
+              ))}
+            </select>
+
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#fff",
+                borderColor: "rgba(255,255,255,0.5)",
+              }}
+              onClick={() => {
+                setOpenProfileMobileDialog(false);
+                setOpenNewProfileDialog(true);
+              }}
+            >
+              {t("createNewSizeProfile")}
+            </Button>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenProfileMobileDialog(false)}
+            sx={{ color: "#fff" }}
+          >
+            {t("close")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <div style={{ marginTop: "100px" }}>
         <div style={{ position: "relative" }}>
           <div style={{ marginTop: "70px", width: "100%", height: "150vh" }}>
@@ -681,11 +920,86 @@ const DollDisplay = () => {
                   onLoad={() => setModelLoaded(true)}
                 />
               </Suspense>
+              {/* Height & Weight controls – show only in Quick Fit mode */}
+              {quickFitMode && (
+                <>
+                  {/* Height control (left shoulder area) */}
+                  {/* Coordinates tuned to sit near upper-left chest/shoulder, similar to existing red points */}
+                  <Html
+                    position={[-1.2, 7.4, -0.2]}
+                    zIndexRange={[1, 10]}
+                    center
+                    style={{ pointerEvents: "auto" }}
+                  >
+                    <Tooltip title="Height (cm) / גובה">
+                      <div
+                        onClick={() => handleHWClick("height")}
+                        style={{
+                          width: 26,
+                          height: 26,
+                          borderRadius: "50%",
+                          backgroundColor: heightCm ? "#4caf50" : "#ffeb3b",
+                          border: heightCm
+                            ? "2px solid #1b5e20"
+                            : "2px solid #000",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: heightCm ? "#fff" : "#000",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          boxShadow: heightCm
+                            ? "0 0 14px rgba(76, 175, 80, 0.9)"
+                            : "0 0 12px rgba(255, 235, 59, 0.9)",
+                          cursor: "pointer",
+                        }}
+                      >
+                        H
+                      </div>
+                    </Tooltip>
+                  </Html>
+                  {/* Weight control (right shoulder area) */}
+                  <Html
+                    position={[1.2, 7.4, -0.2]}
+                    zIndexRange={[1, 10]}
+                    center
+                    style={{ pointerEvents: "auto" }}
+                  >
+                    <Tooltip title="Weight (kg) / משקל">
+                      <div
+                        onClick={() => handleHWClick("weight")}
+                        style={{
+                          width: 26,
+                          height: 26,
+                          borderRadius: "50%",
+                          backgroundColor: weightKg ? "#4caf50" : "#ff5722",
+                          border: weightKg
+                            ? "2px solid #1b5e20"
+                            : "2px solid #000",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#fff",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          boxShadow: weightKg
+                            ? "0 0 14px rgba(76, 175, 80, 0.9)"
+                            : "0 0 12px rgba(255, 87, 34, 0.9)",
+                          cursor: "pointer",
+                        }}
+                      >
+                        W
+                      </div>
+                    </Tooltip>
+                  </Html>
+                </>
+              )}
               <ButtonArray
                 onButtonClick={handleButtonClick}
                 onPointClick={handlePointClick}
                 activePoints={activePoints}
                 completedPoints={completedPoints}
+                buttons={effectiveButtons}
               />
             </Canvas>
           </div>
@@ -709,150 +1023,198 @@ const DollDisplay = () => {
               }}
             >
               {selectedButton ? (
-                <Box
-                  sx={{
-                    padding: isMobile ? "10px" : "20px",
-                    width: "100%",
-                    maxWidth: isMobile ? "250px" : "300px",
-                  }}
-                >
+                selectedButton.id === "height" ||
+                selectedButton.id === "weight" ? (
+                  // דיאלוג מיוחד לגובה/משקל – רק שדה מספרי + הערה
                   <Box
                     sx={{
+                      padding: isMobile ? "10px" : "20px",
+                      width: "100%",
+                      maxWidth: isMobile ? "260px" : "320px",
                       display: "flex",
-                      alignItems: "center",
-                      mb: isMobile ? 2 : 3,
+                      flexDirection: "column",
+                      gap: 2,
                     }}
                   >
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#555", textAlign: "center" }}
+                    >
+                      {selectedButton.id === "height"
+                        ? "אנא מלא את הגובה שלך בסנטימטרים"
+                        : "אנא מלא את המשקל שלך בקילוגרמים"}
+                    </Typography>
                     <TextField
                       type="number"
-                      label={t("enterMeasurementCm")}
+                      label={
+                        selectedButton.id === "height"
+                          ? "Height (cm)"
+                          : "Weight (kg)"
+                      }
                       value={inputValue}
                       onChange={(e) => {
                         const newValue = e.target.value;
                         setInputValue(newValue);
 
-                        const category = buttonCategoryMap[selectedButton.id];
-                        handleSizeChange(category, newValue);
+                        if (selectedButton.id === "height") {
+                          setHeightCm(newValue);
+                          handleSizeChange(HEIGHT_KEY, newValue);
+                        } else if (selectedButton.id === "weight") {
+                          setWeightKg(newValue);
+                          handleSizeChange(WEIGHT_KEY, newValue);
+                        }
                       }}
                       variant="outlined"
                       fullWidth
                       size={isMobile ? "small" : "medium"}
                     />
                   </Box>
-
+                ) : (
+                  // דיאלוג הרגיל לשאר הנקודות על הגוף
                   <Box
                     sx={{
-                      mb: isMobile ? 1 : 2,
-                      display: "flex",
-                      justifyContent: "center",
+                      padding: isMobile ? "10px" : "20px",
+                      width: "100%",
+                      maxWidth: isMobile ? "250px" : "300px",
                     }}
                   >
-                    <img
-                      src={selectedButton.img}
-                      alt={selectedButton.title}
-                      style={{
-                        width: "100%",
-                        height: isMobile ? "100px" : "150px",
-                        objectFit: "contain",
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        mb: isMobile ? 2 : 3,
                       }}
-                    />
-                  </Box>
+                    >
+                      <TextField
+                        type="number"
+                        label={t("enterMeasurementCm")}
+                        value={inputValue}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          setInputValue(newValue);
 
-                  <Box
-                    sx={{
-                      gap: "10px",
-                      display: "flex",
-                      justifyContent: "center",
-                      boxShadow: 3,
-                      borderRadius: "12px",
-                      width: "90%",
-                      height: isMobile ? "80px" : "100px",
-                      margin: "0 auto",
-                    }}
-                  >
-                    <div style={{ textAlign: "center" }}>
-                      <Typography
-                        variant={isMobile ? "body2" : "subtitle1"}
-                        sx={{
-                          marginBottom: isMobile ? "4px" : "8px",
-                          color: "black",
-                          fontSize: isMobile ? "0.8rem" : "inherit",
+                          const category = buttonCategoryMap[selectedButton.id];
+                          handleSizeChange(category, newValue);
                         }}
-                      >
-                        Video
-                        <br />
-                        Explanation
-                      </Typography>
-                      <Tooltip title="Click to watch video" placement="top">
-                        <Button
-                          variant="outlined"
-                          onClick={() =>
-                            handleOpenDialog("YouTube", selectedButton.video)
-                          }
-                          size={isMobile ? "small" : "medium"}
+                        variant="outlined"
+                        fullWidth
+                        size={isMobile ? "small" : "medium"}
+                      />
+                    </Box>
+
+                    <Box
+                      sx={{
+                        mb: isMobile ? 1 : 2,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={selectedButton.img}
+                        alt={selectedButton.title}
+                        style={{
+                          width: "100%",
+                          height: isMobile ? "100px" : "150px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Box>
+
+                    <Box
+                      sx={{
+                        gap: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        boxShadow: 3,
+                        borderRadius: "12px",
+                        width: "90%",
+                        height: isMobile ? "80px" : "100px",
+                        margin: "0 auto",
+                      }}
+                    >
+                      <div style={{ textAlign: "center" }}>
+                        <Typography
+                          variant={isMobile ? "body2" : "subtitle1"}
                           sx={{
-                            borderColor: "#ff0000",
-                            minWidth: isMobile ? "40px" : "auto",
-                            height: isMobile ? "32px" : "auto",
-                            "&:hover": {
-                              borderColor: "#cc0000",
-                              backgroundColor: "rgba(255, 0, 0, 0.04)",
-                            },
+                            marginBottom: isMobile ? "4px" : "8px",
+                            color: "black",
+                            fontSize: isMobile ? "0.8rem" : "inherit",
                           }}
                         >
-                          <YouTubeIcon
+                          Video
+                          <br />
+                          Explanation
+                        </Typography>
+                        <Tooltip title="Click to watch video" placement="top">
+                          <Button
+                            variant="outlined"
+                            onClick={() =>
+                              handleOpenDialog("YouTube", selectedButton.video)
+                            }
+                            size={isMobile ? "small" : "medium"}
                             sx={{
-                              color: "red",
-                              fontSize: isMobile ? "1.2rem" : "inherit",
+                              borderColor: "#ff0000",
+                              minWidth: isMobile ? "40px" : "auto",
+                              height: isMobile ? "32px" : "auto",
+                              "&:hover": {
+                                borderColor: "#cc0000",
+                                backgroundColor: "rgba(255, 0, 0, 0.04)",
+                              },
                             }}
-                          />
-                        </Button>
-                      </Tooltip>
-                    </div>
-                    <div style={{ textAlign: "center" }}>
-                      <Typography
-                        variant={isMobile ? "body2" : "subtitle1"}
-                        sx={{
-                          marginBottom: isMobile ? "4px" : "8px",
-                          color: "black",
-                          fontSize: isMobile ? "0.8rem" : "inherit",
-                        }}
-                      >
-                        Text
-                        <br />
-                        Explanation
-                      </Typography>
-                      <Tooltip
-                        title="Click to read instructions"
-                        placement="top"
-                      >
-                        <Button
-                          variant="outlined"
-                          onClick={() =>
-                            handleOpenDialog("Text", selectedButton.explain)
-                          }
-                          size={isMobile ? "small" : "medium"}
+                          >
+                            <YouTubeIcon
+                              sx={{
+                                color: "red",
+                                fontSize: isMobile ? "1.2rem" : "inherit",
+                              }}
+                            />
+                          </Button>
+                        </Tooltip>
+                      </div>
+                      <div style={{ textAlign: "center" }}>
+                        <Typography
+                          variant={isMobile ? "body2" : "subtitle1"}
                           sx={{
-                            // borderColor: "#1a73e8",
-                            minWidth: isMobile ? "40px" : "auto",
-                            height: isMobile ? "32px" : "auto",
-                            "&:hover": {
-                              borderColor: "#1557b0",
-                              backgroundColor: "rgba(26, 115, 232, 0.04)",
-                            },
+                            marginBottom: isMobile ? "4px" : "8px",
+                            color: "black",
+                            fontSize: isMobile ? "0.8rem" : "inherit",
                           }}
                         >
-                          <ErrorOutlineIcon
+                          Text
+                          <br />
+                          Explanation
+                        </Typography>
+                        <Tooltip
+                          title="Click to read instructions"
+                          placement="top"
+                        >
+                          <Button
+                            variant="outlined"
+                            onClick={() =>
+                              handleOpenDialog("Text", selectedButton.explain)
+                            }
+                            size={isMobile ? "small" : "medium"}
                             sx={{
-                              color: "#1a73e8",
-                              fontSize: isMobile ? "1.2rem" : "inherit",
+                              minWidth: isMobile ? "40px" : "auto",
+                              height: isMobile ? "32px" : "auto",
+                              "&:hover": {
+                                borderColor: "#1557b0",
+                                backgroundColor: "rgba(26, 115, 232, 0.04)",
+                              },
                             }}
-                          />
-                        </Button>
-                      </Tooltip>
-                    </div>
+                          >
+                            <ErrorOutlineIcon
+                              sx={{
+                                color: "#1a73e8",
+                                fontSize: isMobile ? "1.2rem" : "inherit",
+                              }}
+                            />
+                          </Button>
+                        </Tooltip>
+                      </div>
+                    </Box>
                   </Box>
-                </Box>
+                )
               ) : (
                 <p>No button selected</p>
               )}
@@ -1050,6 +1412,71 @@ const DollDisplay = () => {
               All Measurements
             </Typography>
 
+            {estimation && estimation.measurements && (
+              <Box
+                sx={{
+                  mb: isMobile ? 1 : 3,
+                  p: isMobile ? 1 : 2,
+                  borderRadius: 2,
+                  backgroundColor: "rgba(224, 242, 241, 0.6)",
+                  border: "1px solid #80cbc4",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: "bold", mb: 1, color: "#004d40" }}
+                >
+                  Estimated suit measurements (Quick Fit)
+                </Typography>
+                {[
+                  { key: "chest", label: "Chest" },
+                  { key: "waist", label: "Waist" },
+                  { key: "hip", label: "Hips" },
+                  { key: "jacketLength", label: "Jacket length" },
+                  { key: "shoulderWidth", label: "Shoulder width" },
+                  { key: "backLength", label: "Back length" },
+                  { key: "sleeveLength", label: "Sleeve length" },
+                  { key: "biceps", label: "Biceps" },
+                  { key: "wrist", label: "Wrist" },
+                  { key: "inseam", label: "Inseam" },
+                  { key: "rise", label: "Rise" },
+                  { key: "thigh", label: "Thigh" },
+                  { key: "knee", label: "Knee" },
+                  { key: "calf", label: "Calf" },
+                  { key: "ankle", label: "Ankle" },
+                  {
+                    key: "frontChestToWaist",
+                    label: "Front chest to waist",
+                  },
+                ].map((m) => (
+                  <Box
+                    key={m.key}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: isMobile ? "0.8rem" : "0.9rem",
+                    }}
+                  >
+                    <span>{m.label}</span>
+                    <span>
+                      {estimation.measurements[m.key] != null
+                        ? `${estimation.measurements[m.key]} cm`
+                        : "-"}
+                    </span>
+                  </Box>
+                ))}
+                {estimation.diagnostics && (
+                  <Typography
+                    variant="caption"
+                    sx={{ display: "block", mt: 1, color: "#00695c" }}
+                  >
+                    BMI: {estimation.diagnostics.BMI} | Body type:{" "}
+                    {estimation.diagnostics.bodyType}
+                  </Typography>
+                )}
+              </Box>
+            )}
+
             <Box
               sx={{
                 display: "grid",
@@ -1149,6 +1576,45 @@ const DollDisplay = () => {
           </Box>
         </Drawer>
       </div>
+
+      {/* Mobile radial menu for main actions */}
+      {isMobile && (
+        <RadialMenu
+          buttons={[
+            {
+              label: "👤",
+              action: () => {
+                setOpenProfileMobileDialog(true);
+              },
+            },
+            {
+              label: quickFitMode ? "Full body" : "Quick Fit",
+              action: () => {
+                closeHeightWeightInputs();
+                setQuickFitMode((prev) => !prev);
+              },
+            },
+            {
+              label: "All Sizes",
+              action: toggleSideDrawer,
+            },
+            {
+              label: "🛒",
+              action: () => {
+                closeHeightWeightInputs();
+                navigate("/Shopping");
+              },
+            },
+            {
+              label: "←",
+              action: () => {
+                closeHeightWeightInputs();
+                navigate("/indexSizes");
+              },
+            },
+          ]}
+        />
+      )}
     </div>
   );
 };
@@ -1159,6 +1625,7 @@ const ButtonArray = ({
   onPointClick,
   activePoints,
   completedPoints,
+  buttons,
 }) => {
   const { camera } = useThree();
 

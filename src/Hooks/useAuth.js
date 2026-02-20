@@ -62,7 +62,6 @@ export const useAuth = () => {
                     }
                 }
 
-                // If we get here, something went wrong - sign out
                 await signOut(auth);
                 setUser(null);
                 throw new Error(error.response?.data?.message || 'Authentication failed');

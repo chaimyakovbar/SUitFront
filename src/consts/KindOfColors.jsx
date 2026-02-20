@@ -2,120 +2,120 @@
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
 // Colors
-export const photo1 = `${S3_BASE_URL}/assets/colors/1.png`;
-export const photo2 = `${S3_BASE_URL}/assets/colors/2.png`;
-export const photo3 = `${S3_BASE_URL}/assets/colors/3.png`;
-export const photo4 = `${S3_BASE_URL}/assets/colors/4.png`;
-export const photo5 = `${S3_BASE_URL}/assets/colors/5.png`;
+import photo1 from '../assets/homeMenu/color/1.webp';
+import photo2 from '../assets/homeMenu/color/2.webp';
+import photo3 from '../assets/homeMenu/color/3.webp';
+import photo4 from '../assets/homeMenu/color/4.webp';
+import photo5 from '../assets/homeMenu/color/5.webp';
 
 // Color Inside Up
-export const gold = `${S3_BASE_URL}/assets/adds/colorInsideUp/gold.jpg`;
-export const grey = `${S3_BASE_URL}/assets/adds/colorInsideUp/grey.jpg`;
-export const purple = `${S3_BASE_URL}/assets/adds/colorInsideUp/purple.jpg`;
-export const blueCube = `${S3_BASE_URL}/assets/adds/colorInsideUp/blueCube.jpg`;
-export const blueLight = `${S3_BASE_URL}/assets/adds/colorInsideUp/blueLight.jpg`;
-export const redPurple = `${S3_BASE_URL}/assets/adds/colorInsideUp/redPurple.jpg`;
-export const colorFull = `${S3_BASE_URL}/assets/adds/colorInsideUp/colorFull.jpg`;
-export const whiteBlue = `${S3_BASE_URL}/assets/adds/colorInsideUp/whiteBlue.jpg`;
-export const blueWithWhiteLines = `${S3_BASE_URL}/assets/adds/colorInsideUp/blueWithWhiteLines.jpg`;
+export const gold = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/gold.jpg`;
+export const grey = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/grey.jpg`;
+export const purple = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/purple.jpg`;
+export const blueCube = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/blueCube.jpg`;
+export const blueLight = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/blueLight.jpg`;
+export const redPurple = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/redPurple.jpg`;
+export const colorFull = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/colorFull.jpg`;
+export const whiteBlue = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/whiteBlue.jpg`;
+export const blueWithWhiteLines = `${S3_BASE_URL}/assets_V2/adds/colorInsideUp/blueWithWhiteLines.jpg`;
 
 // Buttons
-export const blackBlue = `${S3_BASE_URL}/assets/adds/button/blackBlue.jpg`;
-export const brownBlack = `${S3_BASE_URL}/assets/adds/button/brownBlack.jpg`;
-export const brownWhite = `${S3_BASE_URL}/assets/adds/button/brownWhite.jpg`;
-export const gold2 = `${S3_BASE_URL}/assets/adds/button/gold.jpg`;
-export const goldLight = `${S3_BASE_URL}/assets/adds/button/goldLight.jpg`;
-export const greyBlack = `${S3_BASE_URL}/assets/adds/button/greyBlack.jpg`;
-export const greyWhite = `${S3_BASE_URL}/assets/adds/button/greyWhite.jpg`;
-export const silver = `${S3_BASE_URL}/assets/adds/button/silver.jpg`;
-export const silverLight = `${S3_BASE_URL}/assets/adds/button/silverLight.jpg`;
-export const white = `${S3_BASE_URL}/assets/adds/button/white.jpg`;
+export const blackBlue = `${S3_BASE_URL}/assets_V2/adds/button/blackBlue.jpg`;
+export const brownBlack = `${S3_BASE_URL}/assets_V2/adds/button/brownBlack.jpg`;
+export const brownWhite = `${S3_BASE_URL}/assets_V2/adds/button/brownWhite.jpg`;
+export const gold2 = `${S3_BASE_URL}/assets_V2/adds/button/gold.jpg`;
+export const goldLight = `${S3_BASE_URL}/assets_V2/adds/button/goldLight.jpg`;
+export const greyBlack = `${S3_BASE_URL}/assets_V2/adds/button/greyBlack.jpg`;
+export const greyWhite = `${S3_BASE_URL}/assets_V2/adds/button/greyWhite.jpg`;
+export const silver = `${S3_BASE_URL}/assets_V2/adds/button/silver.jpg`;
+export const silverLight = `${S3_BASE_URL}/assets_V2/adds/button/silverLight.jpg`;
+export const white = `${S3_BASE_URL}/assets_V2/adds/button/white.jpg`;
 
 // Poshet
-export const poset2 = `${S3_BASE_URL}/assets/poshet/black2.jpg`;
-export const poset4 = `${S3_BASE_URL}/assets/poshet/blackWithDots.jpg`;
-export const poset6 = `${S3_BASE_URL}/assets/poshet/blueLight.jpg`;
-export const poset7 = `${S3_BASE_URL}/assets/poshet/blueLightWithDots.jpg`;
-export const poset9 = `${S3_BASE_URL}/assets/poshet/blueNevey2.jpg`;
-export const poset10 = `${S3_BASE_URL}/assets/poshet/blueWithBlueLightLins.jpg`;
-export const poset11 = `${S3_BASE_URL}/assets/poshet/blueWithBlueLightLins2.jpg`;
-export const poset12 = `${S3_BASE_URL}/assets/poshet/blueWithDots.jpg`;
-export const poset13 = `${S3_BASE_URL}/assets/poshet/blueWithDots2.jpg`;
-export const poset14 = `${S3_BASE_URL}/assets/poshet/blueWithLines.jpg`;
-export const poset15 = `${S3_BASE_URL}/assets/poshet/brown.jpg`;
-export const poset16 = `${S3_BASE_URL}/assets/poshet/brownWithDots.jpg`;
-export const poset17 = `${S3_BASE_URL}/assets/poshet/gold.jpg`;
-export const poset18 = `${S3_BASE_URL}/assets/poshet/goldWhite.jpg`;
-export const poset19 = `${S3_BASE_URL}/assets/poshet/grey.jpg`;
-export const poset20 = `${S3_BASE_URL}/assets/poshet/peenk.jpg`;
-export const poset21 = `${S3_BASE_URL}/assets/poshet/prupleWithDots.jpg`;
-export const poset22 = `${S3_BASE_URL}/assets/poshet/purple.jpg`;
-export const poset23 = `${S3_BASE_URL}/assets/poshet/purpleLight.jpg`;
-export const poset25 = `${S3_BASE_URL}/assets/poshet/red2.jpg`;
-export const poset26 = `${S3_BASE_URL}/assets/poshet/redLight.jpg`;
-export const poset28 = `${S3_BASE_URL}/assets/poshet/redWithDots2.jpg`;
-export const poset29 = `${S3_BASE_URL}/assets/poshet/redWithines.jpg`;
-export const poset30 = `${S3_BASE_URL}/assets/poshet/white.jpg`;
+import poset2 from '../assets/homeMenu/poshet/black2.webp'
+import poset4 from '../assets/homeMenu/poshet/blackWithDots.webp'
+import poset6 from '../assets/homeMenu/poshet/blueLight.webp'
+import poset7 from '../assets/homeMenu/poshet/blueLightWithDots.webp'
+import poset9 from '../assets/homeMenu/poshet/blueNevey2.webp'
+import poset10 from '../assets/homeMenu/poshet/blueWithBlueLightLins.webp'
+import poset11 from '../assets/homeMenu/poshet/blueWithBlueLightLins2.webp'
+import poset12 from '../assets/homeMenu/poshet/blueWithDots.webp'
+import poset13 from '../assets/homeMenu/poshet/blueWithDots2.webp'
+import poset14 from '../assets/homeMenu/poshet/blueWithLines.webp'
+import poset15 from '../assets/homeMenu/poshet/brown.webp'
+import poset16 from '../assets/homeMenu/poshet/brownWithDots.webp'
+import poset17 from '../assets/homeMenu/poshet/gold.webp'
+import poset18 from '../assets/homeMenu/poshet/goldWhite.webp'
+import poset19 from '../assets/homeMenu/poshet/grey.webp'
+import poset20 from '../assets/homeMenu/poshet/peenk.webp'
+import poset21 from '../assets/homeMenu/poshet/prupleWithDots.webp'
+import poset22 from '../assets/homeMenu/poshet/purple.webp'
+import poset23 from '../assets/homeMenu/poshet/purpleLight.webp'
+import poset25 from '../assets/homeMenu/poshet/red2.webp'
+import poset26 from '../assets/homeMenu/poshet/redLight.webp'
+import poset28 from '../assets/homeMenu/poshet/redWithDots2.webp'
+import poset29 from '../assets/homeMenu/poshet/redWithines.webp'
+import poset30 from '../assets/homeMenu/poshet/white.webp'
 
 // Suits - Updated to use .webp format for better performance
-export const Suit1 = `${S3_BASE_URL}/assets/suits/1.webp`;
-export const Suit2 = `${S3_BASE_URL}/assets/suits/2.webp`;
-export const Suit3 = `${S3_BASE_URL}/assets/suits/3.webp`;
-export const Suit4 = `${S3_BASE_URL}/assets/suits/4.webp`;
-export const Suit5 = `${S3_BASE_URL}/assets/suits/5.webp`;
-export const Suit6 = `${S3_BASE_URL}/assets/suits/6.webp`;
-export const Suit7 = `${S3_BASE_URL}/assets/suits/7.webp`;
-export const Suit8 = `${S3_BASE_URL}/assets/suits/8.webp`;
-export const Suit9 = `${S3_BASE_URL}/assets/suits/9.webp`;
-export const Suit10 = `${S3_BASE_URL}/assets/suits/10.webp`;
-export const Suit11 = `${S3_BASE_URL}/assets/suits/11.webp`;
-export const Suit12 = `${S3_BASE_URL}/assets/suits/12.webp`;
-export const Suit13 = `${S3_BASE_URL}/assets/suits/13.webp`;
-export const Suit14 = `${S3_BASE_URL}/assets/suits/14.webp`;
-export const Suit15 = `${S3_BASE_URL}/assets/suits/15.webp`;
-export const Suit16 = `${S3_BASE_URL}/assets/suits/16.webp`;
-export const Suit17 = `${S3_BASE_URL}/assets/suits/17.webp`;
-export const Suit18 = `${S3_BASE_URL}/assets/suits/18.webp`;
-export const Suit19 = `${S3_BASE_URL}/assets/suits/19.webp`;
-export const Suit20 = `${S3_BASE_URL}/assets/suits/20.webp`;
-export const Suit21 = `${S3_BASE_URL}/assets/suits/21.webp`;
+export const Suit1 = `${S3_BASE_URL}/assets_V2/suits/1.webp`;
+export const Suit2 = `${S3_BASE_URL}/assets_V2/suits/2.webp`;
+export const Suit3 = `${S3_BASE_URL}/assets_V2/suits/3.webp`;
+export const Suit4 = `${S3_BASE_URL}/assets_V2/suits/4.webp`;
+export const Suit5 = `${S3_BASE_URL}/assets_V2/suits/5.webp`;
+export const Suit6 = `${S3_BASE_URL}/assets_V2/suits/6.webp`;
+export const Suit7 = `${S3_BASE_URL}/assets_V2/suits/7.webp`;
+export const Suit8 = `${S3_BASE_URL}/assets_V2/suits/8.webp`;
+export const Suit9 = `${S3_BASE_URL}/assets_V2/suits/9.webp`;
+export const Suit10 = `${S3_BASE_URL}/assets_V2/suits/10.webp`;
+export const Suit11 = `${S3_BASE_URL}/assets_V2/suits/11.webp`;
+export const Suit12 = `${S3_BASE_URL}/assets_V2/suits/12.webp`;
+export const Suit13 = `${S3_BASE_URL}/assets_V2/suits/13.webp`;
+export const Suit14 = `${S3_BASE_URL}/assets_V2/suits/14.webp`;
+export const Suit15 = `${S3_BASE_URL}/assets_V2/suits/15.webp`;
+export const Suit16 = `${S3_BASE_URL}/assets_V2/suits/16.webp`;
+export const Suit17 = `${S3_BASE_URL}/assets_V2/suits/17.webp`;
+export const Suit18 = `${S3_BASE_URL}/assets_V2/suits/18.webp`;
+export const Suit19 = `${S3_BASE_URL}/assets_V2/suits/19.webp`;
+export const Suit20 = `${S3_BASE_URL}/assets_V2/suits/20.webp`;
+export const Suit21 = `${S3_BASE_URL}/assets_V2/suits/21.webp`;
 
-// Sizes
-export const size1 = `${S3_BASE_URL}/assets/sizes/1.jpg`;
-export const size2 = `${S3_BASE_URL}/assets/sizes/2.jpg`;
-export const size3 = `${S3_BASE_URL}/assets/sizes/3.jpg`;
-export const size4 = `${S3_BASE_URL}/assets/sizes/4.jpg`;
-export const size5 = `${S3_BASE_URL}/assets/sizes/5.jpg`;
-export const size6 = `${S3_BASE_URL}/assets/sizes/6.jpg`;
-export const size7 = `${S3_BASE_URL}/assets/sizes/7.jpg`;
-export const size8 = `${S3_BASE_URL}/assets/sizes/8.jpg`;
-export const size9 = `${S3_BASE_URL}/assets/sizes/9.jpg`;
-export const size10 = `${S3_BASE_URL}/assets/sizes/10.jpg`;
-export const size11 = `${S3_BASE_URL}/assets/sizes/11.jpg`;
-export const size12 = `${S3_BASE_URL}/assets/sizes/12.jpg`;
-export const size13 = `${S3_BASE_URL}/assets/sizes/13.jpg`;
-export const size14 = `${S3_BASE_URL}/assets/sizes/14.jpg`;
-export const size15 = `${S3_BASE_URL}/assets/sizes/15.jpg`;
-export const size16 = `${S3_BASE_URL}/assets/sizes/16.jpg`;
+
+import size1 from '../assets/sizes/1.webp';
+import size2 from '../assets/sizes/2.webp';
+import size3 from '../assets/sizes/3.webp';
+import size4 from '../assets/sizes/4.webp';
+import size5 from '../assets/sizes/5.webp';
+import size6 from '../assets/sizes/6.webp';
+import size7 from '../assets/sizes/7.webp';
+import size8 from '../assets/sizes/8.webp';
+import size9 from '../assets/sizes/9.webp';
+import size10 from '../assets/sizes/10.webp';
+import size11 from '../assets/sizes/11.webp';
+import size12 from '../assets/sizes/12.webp';
+import size13 from '../assets/sizes/13.webp';
+import size14 from '../assets/sizes/14.webp';
+import size15 from '../assets/sizes/15.webp';
+import size16 from '../assets/sizes/16.webp';
 
 // Videos
-export const Chest = `${S3_BASE_URL}/assets/videoExplaine/Chest.mp4`;
-export const Waist = `${S3_BASE_URL}/assets/videoExplaine/Waist.mp4`;
-export const Seat = `${S3_BASE_URL}/assets/videoExplaine/Seat.mp4`;
-export const JacketLength = `${S3_BASE_URL}/assets/videoExplaine/Jacket Length.mp4`;
-export const FrontWidth = `${S3_BASE_URL}/assets/videoExplaine/Front Width.mp4`;
-export const RearWidth = `${S3_BASE_URL}/assets/videoExplaine/Rear Width.mp4`;
-// export const Armhole = `${S3_BASE_URL}/assets/videoExplaine/Armhole.mp4`;
-export const Biceps = `${S3_BASE_URL}/assets/videoExplaine/Biceps.mp4`;
-export const Shoulder = `${S3_BASE_URL}/assets/videoExplaine/Shoulder.mp4`;
-export const SleeveLengthFront = `${S3_BASE_URL}/assets/videoExplaine/Sleeve Length.mp4`;
-export const TrousersLengthBack = `${S3_BASE_URL}/assets/videoExplaine/Trousers Length back.mp4`;
-export const TrousersLengthFront = `${S3_BASE_URL}/assets/videoExplaine/Trousers Length front.mp4`;
-export const Waistband = `${S3_BASE_URL}/assets/videoExplaine/Waistband.mp4`;
-export const StrideLength = `${S3_BASE_URL}/assets/videoExplaine/Stride Length.mp4`;
-export const Thigh = `${S3_BASE_URL}/assets/videoExplaine/Thigh.mp4`;
-// export const Knee = `${S3_BASE_URL}/assets/videoExplaine/Knee.mp4`;
-export const Ankles = `${S3_BASE_URL}/assets/videoExplaine/Ankles.mp4`;
+export const Chest = `${S3_BASE_URL}/assets_V2/videoExplaine/Chest.mp4`;
+export const Waist = `${S3_BASE_URL}/assets_V2/videoExplaine/Waist.mp4`;
+export const Seat = `${S3_BASE_URL}/assets_V2/videoExplaine/Seat.mp4`;
+export const JacketLength = `${S3_BASE_URL}/assets_V2/videoExplaine/Jacket Length.mp4`;
+export const FrontWidth = `${S3_BASE_URL}/assets_V2/videoExplaine/Front Width.mp4`;
+export const RearWidth = `${S3_BASE_URL}/assets_V2/videoExplaine/Rear Width.mp4`;
+// export const Armhole = `${S3_BASE_URL}/assets_V2/videoExplaine/Armhole.mp4`;
+export const Biceps = `${S3_BASE_URL}/assets_V2/videoExplaine/Biceps.mp4`;
+export const Shoulder = `${S3_BASE_URL}/assets_V2/videoExplaine/Shoulder.mp4`;
+export const SleeveLengthFront = `${S3_BASE_URL}/assets_V2/videoExplaine/Sleeve Length.mp4`;
+export const TrousersLengthBack = `${S3_BASE_URL}/assets_V2/videoExplaine/Trousers Length back.mp4`;
+export const TrousersLengthFront = `${S3_BASE_URL}/assets_V2/videoExplaine/Trousers Length front.mp4`;
+export const Waistband = `${S3_BASE_URL}/assets_V2/videoExplaine/Waistband.mp4`;
+export const StrideLength = `${S3_BASE_URL}/assets_V2/videoExplaine/Stride Length.mp4`;
+export const Thigh = `${S3_BASE_URL}/assets_V2/videoExplaine/Thigh.mp4`;
+// export const Knee = `${S3_BASE_URL}/assets_V2/videoExplaine/Knee.mp4`;
+export const Ankles = `${S3_BASE_URL}/assets_V2/videoExplaine/Ankles.mp4`;
 
 // ===== מדידות גוף - שמות באנגלית =====
 export const userSizes = [

@@ -85,6 +85,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Never cache video/audio files - they use range requests (HTTP 206) which can't be cached
+  const isMedia = request.destination === 'video' || request.destination === 'audio'
+    || /\.(mp4|webm|ogg|mp3|wav)(\?.*)?$/.test(url.pathname);
+  if (isMedia) {
+    // Pass through directly, no caching
+    event.respondWith(fetch(request));
+    return;
+  }
+
   // Handle images - cache with network first strategy
   if (request.destination === 'image') {
     event.respondWith(
@@ -94,9 +103,9 @@ self.addEventListener('fetch', (event) => {
             // Return cached version immediately
             return response;
           }
-          // Fetch from network and cache
+          // Fetch from network and cache (skip partial responses)
           const fetchPromise = fetch(request).then((networkResponse) => {
-            if (networkResponse.ok) {
+            if (networkResponse.ok && networkResponse.status !== 206) {
               cache.put(request, networkResponse.clone());
             }
             return networkResponse;
@@ -112,8 +121,8 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        // If successful, cache the response for future use
-        if (response.ok && request.method === 'GET') {
+        // Only cache full (non-partial) successful GET responses
+        if (response.ok && response.status !== 206 && request.method === 'GET') {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(request, responseClone);

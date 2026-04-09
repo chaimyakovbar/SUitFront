@@ -23,7 +23,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 // MostPoPular הוסר - לא בשימוש
 import AllCollection from "./AllCollection";
-import NavBar from "./NavBar";
 import { useLanguage } from "../context/LanguageContext";
 
 const useStyles = makeStyles({
@@ -298,8 +297,6 @@ const HomePage2 = () => {
 
   return (
     <div className={classes.root}>
-      <NavBar />
-
       {/* Hero Section */}
       <section className={classes.heroSection}>
         <img

@@ -62,6 +62,7 @@ const SuitCustomizer = () => {
   // Setters only (no subscription) for reset logic
   const setAllSuitPart = useSetAtom(allSuitPartAtom);
   const setCurrColor = useSetAtom(currentColorAtom);
+  const setCurrentKind = useSetAtom(currentKindAtom);
   const setSelectedCollar = useSetAtom(selectedCollarAtom);
   const setSelectedLapelType = useSetAtom(selectedLapelTypeAtom);
   const setSelectedPacketType = useSetAtom(selectedPacketTypeAtom);
@@ -158,7 +159,7 @@ const SuitCustomizer = () => {
       // Reset all customization state to defaults after successful save
       resetSuitState({
         setCurrColor,
-        setSelectedKind: (v) => setCurrentStep(0) || v, // step reset handled separately
+        setSelectedKind: setCurrentKind,
         setSelectedCollar,
         setSelectedLapelType,
         setSelectedPacketType,

@@ -11,7 +11,7 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState("en"); // Default to Hebrew
+  const [language, setLanguage] = useState("en"); // Default to English
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === "en" ? "he" : "en"));
@@ -130,6 +130,9 @@ export const LanguageProvider = ({ children }) => {
       warrantyDescription2:
         "למשך 30 הימים הראשונים לאחר הרכישה, אנו מציעים גם שינויים קלים משלימים כדי להבטיח את שביעות הרצון המלאה שלך עם ההתאמה של הבגד שלך.",
       // IndexSizes page translations
+      aiQuickSize: "מדידה חכמה — AI",
+      aiQuickSizeSubtitle: "מידות מדויקות בלי סרט מידה",
+      aiQuickSizeDesc: "הכנס גובה ומשקל בלבד — ה-AI יחשב את כל 16 המידות שלך בדיוק של עד 93%",
       chooseMeasurementMethod: "בחר את שיטת המדידה שלך",
       measurementMethodSubtitle:
         "בחר את גישת המדידה שעובדת הכי טוב עבורך. כל שיטה מבטיחה התאמה מושלמת לחליפה המותאמת אישית שלך.",
@@ -529,6 +532,9 @@ export const LanguageProvider = ({ children }) => {
       warrantyDescription2:
         "For the first 30 days after purchase, we also offer complimentary minor alterations to ensure your complete satisfaction with the fit of your garment.",
       // IndexSizes page translations
+      aiQuickSize: "Smart Size — AI",
+      aiQuickSizeSubtitle: "Precise measurements without a tape measure",
+      aiQuickSizeDesc: "Enter only height & weight — AI calculates all 16 of your measurements with up to 93% accuracy",
       chooseMeasurementMethod: "Choose Your Measurement Method",
       measurementMethodSubtitle:
         "Select the measurement approach that works best for you. Each method ensures a perfect fit for your custom suit.",

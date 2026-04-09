@@ -1,9 +1,5 @@
 import React, { Suspense, lazy } from "react";
 import { Box } from "@mui/material";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import PolicySupport from "./pages/PolicySupport";
-// import AllCollection from "./pages/AllCollection"
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "./Utils";
 
@@ -16,7 +12,14 @@ import {
   useLocation,
 } from "react-router-dom";
 
-// Lazy load heavy components
+// ─── Eager: minimal shell (NavBar + home) ──────────────────────────────────
+import HomePage2 from "./homePage/HomePage2";
+import NavBar from "./homePage/NavBar";
+import OfflineIndicator from "./components/OfflineIndicator";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { LanguageProvider } from "./context/LanguageContext.jsx";
+
+// ─── Lazy: everything else ─────────────────────────────────────────────────
 const SuitCustomizer = lazy(() =>
   import("./components/suit-customizer/SuitCustomizer")
 );
@@ -25,37 +28,31 @@ const TakeSizes4 = lazy(() => import("./components/TakeSizes4"));
 const TakeSizes5 = lazy(() => import("./components/TakeSizes5.jsx"));
 const Account = lazy(() => import("./pages/Account"));
 const CheckoutModern = lazy(() => import("./pages/CheckoutModern"));
-
-// import ImageFilterComponent from './components/ImageCollector'
-import IndexSizes from "./sizes/IndexSizes";
-import HomePage2 from "./homePage/HomePage2";
-// import Shopping from "./pages/Shopping";
-import AccessibilityMenu from "./pages/AccessibilityMenu";
-// import Whatchap from "./pages/Whatchap";
-import Payed from "./pages/Payed";
-// import PaymentSuccess from "./pages/PaymentSuccess";
-import NavBar from "./homePage/NavBar";
-import LoginWithGoogle from "./pages/LoginWithGoogle";
-import ResetPassword from "./pages/ResetPassword";
-import { AuthProvider } from "./context/AuthContext.jsx";
-import { LanguageProvider } from "./context/LanguageContext.jsx";
-import OfflineIndicator from "./components/OfflineIndicator";
+const IndexSizes = lazy(() => import("./sizes/IndexSizes"));
+const AIQuickSize = lazy(() => import("./pages/AIQuickSize"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const PolicySupport = lazy(() => import("./pages/PolicySupport"));
+const LoginWithGoogle = lazy(() => import("./pages/LoginWithGoogle"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const AccessibilityMenu = lazy(() => import("./pages/AccessibilityMenu"));
+const Payed = lazy(() => import("./pages/Payed"));
 
 // Loading component for lazy loaded components
-// const LoadingSpinner = () => (
-//   <div
-//     style={{
-//       display: "flex",
-//       justifyContent: "center",
-//       alignItems: "center",
-//       height: "100vh",
-//       backgroundColor: "#0a0a0a",
-//       color: "#fff",
-//     }}
-//   >
-//     <div>Loading...</div>
-//   </div>
-// );
+const LoadingSpinner = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      backgroundColor: "#0a0a0a",
+      color: "#fff",
+    }}
+  >
+    <div>Loading...</div>
+  </div>
+);
 
 // NavBarWrapper provides scrollToAllCollection logic for NavBar
 const NavBarWrapper = () => {
@@ -85,7 +82,7 @@ const App = () => {
             <NavBarWrapper />
             {/* <Whatchap /> */}
             <AccessibilityMenu />
-            {/* <Suspense fallback={<LoadingSpinner />}> */}
+            <Suspense fallback={<LoadingSpinner />}>
               <Routes>
                 <Route path="/" element={<HomePage2 />} />
                 <Route path="/login" element={<LoginWithGoogle />} />
@@ -136,11 +133,12 @@ const App = () => {
                 <Route path="/sizes/regular" element={<TakeSizes4 />} />
                 <Route path="/sizes/measure" element={<TakeSizes3 />} />
                 <Route path="/sizes/suitMeasur" element={<TakeSizes5 />} />
+                <Route path="/sizes/ai" element={<AIQuickSize />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/Payed" element={<Payed />} />
               </Routes>
-            {/* </Suspense> */}
+            </Suspense>
           </Box>
         </Router>
       </LanguageProvider>

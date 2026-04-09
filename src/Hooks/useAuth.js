@@ -8,6 +8,15 @@ import { userAPI } from '../config/api.js';
 export const useAuth = () => {
     const [user, setUser] = useAtom(authUserAtom);
 
+    // Helper: build basic user object from Firebase
+    const buildFirebaseUser = (firebaseUser) => ({
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName,
+        name: firebaseUser.displayName,
+        photoURL: firebaseUser.photoURL,
+    });
+
     // Mutation for Google sign in
     const googleSignIn = useMutation({
         mutationFn: async ({ isNewUser = false }) => {
@@ -20,8 +29,12 @@ export const useAuth = () => {
             return result.user;
         },
         onSuccess: async (firebaseUser) => {
+            // Always set Firebase user data first so login never blocks on backend
+            const firebaseUserData = buildFirebaseUser(firebaseUser);
+            setUser(firebaseUserData);
+
+            // Try to enrich with DB data (non-blocking)
             try {
-                // Send email to our webhook
                 const response = await userAPI.authWebhook({
                     email: firebaseUser.email,
                     name: firebaseUser.displayName,
@@ -29,43 +42,16 @@ export const useAuth = () => {
                     photoURL: firebaseUser.photoURL
                 });
 
-                if (!response.success) {
-                    throw new Error(response.message || 'Authentication failed');
+                if (response?.success && response.user) {
+                    setUser(response.user);
+                    return response.user;
                 }
-
-                // Store the user data from our database
-                setUser(response.user);
-                return response.user;
             } catch (error) {
-                console.error('Detailed auth error:', {
-                    message: error.message,
-                    response: error.response?.data,
-                    status: error.response?.status
-                });
-
-                // If user not found in our database, create them
-                if (error.response?.status === 404) {
-                    try {
-                        const createResponse = await userAPI.createUser({
-                            email: firebaseUser.email,
-                            name: firebaseUser.displayName,
-                            firebaseUid: firebaseUser.uid,
-                            photoURL: firebaseUser.photoURL
-                        });
-
-                        if (createResponse.success) {
-                            setUser(createResponse.user);
-                            return createResponse.user;
-                        }
-                    } catch (createError) {
-                        console.error('Error creating user:', createError);
-                    }
-                }
-
-                await signOut(auth);
-                setUser(null);
-                throw new Error(error.response?.data?.message || 'Authentication failed');
+                // Backend may be cold-starting on Render — Firebase data is already set
+                console.warn('Auth webhook failed (user still logged in with Firebase data):', error.message);
             }
+
+            return firebaseUserData;
         },
         onError: (error) => {
             console.error('Google sign in error:', error);
@@ -80,23 +66,20 @@ export const useAuth = () => {
             return result.user;
         },
         onSuccess: async (firebaseUser) => {
+            // Always set Firebase user data first so login never blocks on backend
+            const firebaseUserData = buildFirebaseUser(firebaseUser);
+            setUser(firebaseUserData);
+
+            // Try to enrich with DB data (non-blocking)
             try {
-                // Send email to our webhook
                 const response = await userAPI.authWebhook({
                     email: firebaseUser.email
                 });
-
-                if (!response.success) {
-                    throw new Error(response.message);
+                if (response?.success && response.user) {
+                    setUser(response.user);
                 }
-
-                // Store the user data from our database
-                setUser(response.user);
             } catch (error) {
-                // If user not found in our database, sign out from Firebase
-                await signOut(auth);
-                setUser(null);
-                throw new Error('User not found in our database', error);
+                console.warn('Auth webhook failed (user still logged in with Firebase data):', error.message);
             }
         },
         onError: (error) => {
@@ -146,53 +129,27 @@ export const useAuth = () => {
             return result.user;
         },
         onSuccess: async (firebaseUser) => {
+            // Always set Firebase user data first so signup never blocks on backend
+            const firebaseUserData = buildFirebaseUser(firebaseUser);
+            setUser(firebaseUserData);
+
+            // Try to enrich with DB data (non-blocking)
             try {
-                // Send email to our webhook
                 const response = await userAPI.authWebhook({
                     email: firebaseUser.email,
                     name: firebaseUser.displayName,
                     firebaseUid: firebaseUser.uid,
                     photoURL: firebaseUser.photoURL
                 });
-
-                if (!response.success) {
-                    throw new Error(response.message || 'Authentication failed');
+                if (response?.success && response.user) {
+                    setUser(response.user);
+                    return response.user;
                 }
-
-                // Store the user data from our database
-                setUser(response.user);
-                return response.user;
             } catch (error) {
-                console.error('Detailed auth error:', {
-                    message: error.message,
-                    response: error.response?.data,
-                    status: error.response?.status
-                });
-
-                // If user not found in our database, create them
-                if (error.response?.status === 404) {
-                    try {
-                        const createResponse = await userAPI.createUser({
-                            email: firebaseUser.email,
-                            name: firebaseUser.displayName,
-                            firebaseUid: firebaseUser.uid,
-                            photoURL: firebaseUser.photoURL
-                        });
-
-                        if (createResponse.success) {
-                            setUser(createResponse.user);
-                            return createResponse.user;
-                        }
-                    } catch (createError) {
-                        console.error('Error creating user:', createError);
-                    }
-                }
-
-                // If we get here, something went wrong - sign out
-                await signOut(auth);
-                setUser(null);
-                throw new Error(error.response?.data?.message || 'Authentication failed');
+                console.warn('Auth webhook failed (user still registered with Firebase data):', error.message);
             }
+
+            return firebaseUserData;
         },
         onError: (error) => {
             console.error('Email sign up error:', error);

@@ -3,6 +3,39 @@ import { useNavigate } from "react-router-dom";
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 const doll1 = `${S3_BASE_URL}/assets/suits/dollSuitGrey.webp`;
+
+// Elegant placeholder for images that fail to load (S3 403 / not yet uploaded)
+const PLACEHOLDER_STYLE = {
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)",
+  color: "#C0D3CA",
+  fontFamily: "'Cormorant Garamond', serif",
+  fontSize: "1.2rem",
+  letterSpacing: "0.1em",
+};
+
+const ImageWithFallback = ({ src, alt, className, style, onMouseEnter, onMouseLeave, title }) => {
+  const [failed, setFailed] = useState(false);
+  return failed ? (
+    <div style={{ ...PLACEHOLDER_STYLE, ...style }} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      {title || "Suit"}
+    </div>
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      style={style}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onError={() => setFailed(true)}
+    />
+  );
+};
 import { makeStyles } from "@mui/styles";
 import Slider from "react-slick";
 import { Box, useMediaQuery, Typography } from "@mui/material";
@@ -218,11 +251,12 @@ const AllCollection = ({ targetSectionRef }) => {
                   transition={{ duration: 0.3 }}
                   onClick={() => navigate(`/customSuit`)}
                 >
-                  <img
+                  <ImageWithFallback
                     src={
                       hoveredImage === collection.id ? doll1 : collection.image
                     }
                     alt={collection.title}
+                    title={collection.title}
                     className={`${classes.collectionImage} ${
                       hoveredImage === collection.id
                         ? classes.collectionImageHovered
@@ -274,13 +308,14 @@ const AllCollection = ({ targetSectionRef }) => {
                   },
                 }}
               >
-                <img
+                <ImageWithFallback
                   src={
                     hoveredImage === `${collection.id}-${index}`
                       ? doll1
                       : collection.image
                   }
                   alt={collection.title}
+                  title={collection.title}
                   className={`${classes.collectionImage} ${
                     hoveredImage === `${collection.id}-${index}`
                       ? classes.collectionImageHovered

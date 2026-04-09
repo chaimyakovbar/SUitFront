@@ -18,9 +18,19 @@ const IndexSizes = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const measurementOptions = [
+    {
+      id: "ai",
+      titleKey: "aiQuickSize",
+      subtitleKey: "aiQuickSizeSubtitle",
+      descriptionKey: "aiQuickSizeDesc",
+      image: imgFor2,
+      path: "/sizes/ai",
+      color: "linear-gradient(135deg, #C0D3CA 0%, #8fb8a9 100%)",
+      badge: language === "he" ? "✨ חדש — AI" : "✨ New — AI",
+    },
     {
       id: "measure",
       titleKey: "measureYourBody",
@@ -137,7 +147,7 @@ const IndexSizes = () => {
               gridTemplateColumns: {
                 xs: "1fr",
                 sm: "repeat(2, minmax(0, 1fr))",
-                md: "repeat(2, minmax(0, 1fr))",
+                md: "repeat(3, minmax(0, 1fr))",
               },
               gap: { xs: 3, md: 4 },
               maxWidth: "1100px",
@@ -191,6 +201,29 @@ const IndexSizes = () => {
                     },
                   }}
                 >
+                  {/* AI Badge */}
+                  {option.badge && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 16,
+                        right: 16,
+                        zIndex: 2,
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: "20px",
+                        background: "linear-gradient(135deg, #C0D3CA 0%, #8fb8a9 100%)",
+                        color: "#0a0a0a",
+                        fontSize: "0.7rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.05em",
+                        boxShadow: "0 2px 12px rgba(192,211,202,0.4)",
+                      }}
+                    >
+                      {option.badge}
+                    </Box>
+                  )}
+
                   {/* Image */}
                   <Box
                     sx={{

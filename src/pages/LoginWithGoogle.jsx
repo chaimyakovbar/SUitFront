@@ -506,6 +506,7 @@ const LoginWithGoogle = () => {
               fullWidth
               variant="outlined"
               disabled={isEmailLoading}
+              inputProps={{ autoComplete: isSignUp ? "new-password" : "current-password" }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

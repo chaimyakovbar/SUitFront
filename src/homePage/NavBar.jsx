@@ -188,7 +188,7 @@ const NavBar = () => {
     },
     {
       icon: <ShoppingBagIcon sx={{ fontSize: "1.2rem" }} />,
-      link: "/shopping",
+      link: "/Shopping",
       label: t("shoppingBag"),
     },
   ];

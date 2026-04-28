@@ -106,7 +106,7 @@ const CheckoutModern = ({
           }
           return acc;
         },
-        []
+        [],
       );
       setSizeProfiles(profiles);
       if (profiles.length > 0 && !selectedProfile) {
@@ -121,7 +121,7 @@ const CheckoutModern = ({
       const allSuitIds = new Set(products.allSuitPart.map((suit) => suit._id));
       const total = products.allSuitPart.reduce(
         (sum, suit) => sum + suit.totalPrice,
-        0
+        0,
       );
 
       setSelectedSuits(allSuitIds);
@@ -135,7 +135,7 @@ const CheckoutModern = ({
       try {
         localStorage.setItem(
           "selectedSuits",
-          JSON.stringify([...selectedSuits])
+          JSON.stringify([...selectedSuits]),
         );
         localStorage.setItem("totalPrice", totalPrice.toString());
       } catch (error) {
@@ -176,7 +176,7 @@ const CheckoutModern = ({
       black: "blackGrey",
       grey: "greyLight",
     }),
-    []
+    [],
   );
 
   const loadImage = useCallback(async (key, path) => {
@@ -226,63 +226,63 @@ const CheckoutModern = ({
           key: "baseSuit",
           path:
             item.baseSuitImagePath ||
-            `${S3_BASE_URL}/assets/ragach/kinds/${item.kind}/${item.color}.png`,
-          fallbackPath: `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+            `${S3_BASE_URL}/assets_V3/Ragach/kinds/${item.kind}/${item.color}.webp`,
+          fallbackPath: `${S3_BASE_URL}/assets_V3/Ragach/Kinds/${item.kind}/${item.color}.webp`,
         },
         {
           key: "insideUp",
-          path: `${S3_BASE_URL}/assets/ragach/insideUp/${item.insideColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/insideUp/${item.insideColor}.webp`,
         },
         {
           key: "lapelCollar",
-          path: `${S3_BASE_URL}/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.webp`,
         },
         {
           key: "colar",
-          path: `${S3_BASE_URL}/assets/ragach/colar/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/colar/${item.color}.webp`,
         },
         {
           key: "sleeves",
-          path: `${S3_BASE_URL}/assets/ragach/sleeves/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/sleeves/${item.color}.webp`,
         },
         {
           key: "insideBottom",
-          path: `${S3_BASE_URL}/assets/ragach/insideBottom/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/insideBottom/${item.color}.webp`,
         },
         {
           key: "packetUp",
-          path: `${S3_BASE_URL}/assets/ragach/packetUp/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/packetUp/${item.color}.webp`,
         },
       ];
 
       if (item?.bottomPart === "bottom") {
         imagePaths.push({
           key: "bottom",
-          path: `${S3_BASE_URL}/assets/ragach/bottom/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/bottom/${item.color}.webp`,
         });
       }
       if (item?.bottomPart === "bottomKind3") {
         imagePaths.push({
           key: "bottomKind3",
-          path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/bottomKind3/${item.color}.webp`,
         });
       }
       if (item?.holeButtonColor) {
         imagePaths.push({
           key: "holeButton",
-          path: `${S3_BASE_URL}/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/adds/holesButton/${item.kind}/${item.holeButtonColor}.webp`,
         });
       }
       if (item?.holeButtonUpColor) {
         imagePaths.push({
           key: "holeButtonUp",
-          path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/adds/holesButtonUp/${item.holeButtonUpColor}.webp`,
         });
       }
       if (item.poshetColor) {
         imagePaths.push({
           key: "poshetColor",
-          path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/adds/poshet/${item.poshetColor}.webp`,
         });
       }
       if (item.buttonColor) {
@@ -290,7 +290,7 @@ const CheckoutModern = ({
           buttonColorMap[item.buttonColor] || item.buttonColor;
         imagePaths.push({
           key: "button",
-          path: `${S3_BASE_URL}/assets/ragach/button/${item.kind}/${actualColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/button/${item.kind}/${actualColor}.webp`,
         });
       }
       // Add packet based on selected kind/type (bottom pockets or side)
@@ -298,12 +298,12 @@ const CheckoutModern = ({
         const packetKind = item.packetKind || "packetBottom";
         imagePaths.push({
           key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
-          path: `${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${item.packetType}/${item.color}.png`,
+          path: `${S3_BASE_URL}/assets_V3/Ragach/packet/${packetKind}/${item.packetType}/${item.color}.webp`,
         });
       }
       return imagePaths;
     },
-    [buttonColorMap]
+    [buttonColorMap],
   );
 
   const fetchImages = useCallback(
@@ -317,14 +317,14 @@ const CheckoutModern = ({
             return loadImage(key, fallbackPath);
           }
           return res;
-        })
+        }),
       );
       return images.reduce((acc, { key, src }) => {
         if (src) acc[key] = src;
         return acc;
       }, {});
     },
-    [getImagePaths, loadImage]
+    [getImagePaths, loadImage],
   );
 
   // Memoized list card for suits
@@ -450,7 +450,7 @@ const CheckoutModern = ({
                     newSet.delete(suit._id);
                     setSelectedSuits(newSet);
                     setTotalPrice((prev) =>
-                      Math.max(0, prev - (suit.totalPrice || 0))
+                      Math.max(0, prev - (suit.totalPrice || 0)),
                     );
                   }
                   queryClient.invalidateQueries({
@@ -995,7 +995,7 @@ const CheckoutModern = ({
                       value={selectedProfile?.name || ""}
                       onChange={(e) => {
                         const profile = sizeProfiles.find(
-                          (p) => p.name === e.target.value
+                          (p) => p.name === e.target.value,
                         );
                         setSelectedProfile(profile);
                       }}
@@ -1319,8 +1319,8 @@ const CheckoutModern = ({
                           shippingCost === 0
                             ? accent
                             : shippingCost === 15
-                            ? highlight
-                            : "#40C4FF",
+                              ? highlight
+                              : "#40C4FF",
                         fontWeight: 600,
                         fontFamily: "'Cormorant Garamond', serif",
                       }}
@@ -1416,8 +1416,8 @@ const CheckoutModern = ({
                           shippingCost === 0
                             ? "STANDARD"
                             : shippingCost === 15
-                            ? "EXPRESS"
-                            : "SAME_DAY"
+                              ? "EXPRESS"
+                              : "SAME_DAY"
                         }
                         sizeProfile={selectedProfile?.name || null}
                         sizeMeasurements={selectedProfile?.sizes || {}}

@@ -375,7 +375,7 @@ const HomePage2 = () => {
                 transition={{ duration: 0.8 }}
               >
                 <img
-                  src={`${S3_BASE_URL}/assets/photoBackGround4.webp`}
+                  src={`${S3_BASE_URL}/assets_V3/photoBackGround4.webp`}
                   alt="Featured Collection"
                   className={classes.featuredImage}
                 />

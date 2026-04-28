@@ -21,7 +21,7 @@ import {
 } from "@mui/icons-material";
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const sec = `${S3_BASE_URL}/assets/places/sec.png`;
+const sec = `${S3_BASE_URL}/assets_V3/places/sec.webp`;
 
 const useStyles = makeStyles({
   container: {
@@ -306,7 +306,7 @@ const MostPoPular = () => {
   const [error, setError] = useState(null);
   const [suitImages, setSuitImages] = useState({});
   const [likedSuits, setLikedSuits] = useState(
-    new Set(JSON.parse(localStorage.getItem("likedSuits") || "[]"))
+    new Set(JSON.parse(localStorage.getItem("likedSuits") || "[]")),
   );
 
   // טעינת חליפות מהזמנות
@@ -370,7 +370,7 @@ const MostPoPular = () => {
     const suitsWithLikes = suits.map((suit) => {
       const suitId = suit._id || suit.orderId;
       const likedSuitsArray = JSON.parse(
-        localStorage.getItem("likedSuits") || "[]"
+        localStorage.getItem("likedSuits") || "[]",
       );
       const isLiked = likedSuitsArray.includes(suitId);
 
@@ -437,7 +437,7 @@ const MostPoPular = () => {
           setSuits(data.suits || []);
         } else {
           console.log(
-            "Server returned success: false, falling back to localStorage"
+            "Server returned success: false, falling back to localStorage",
           );
           // נסה לטעון מ-localStorage
           loadFromLocalStorage();
@@ -491,30 +491,30 @@ const MostPoPular = () => {
         key: "baseSuit",
         path:
           suit.baseSuitImagePath ||
-          `${S3_BASE_URL}/assets/ragach/Kinds/${suit.kind || "kind1"}/${
+          `${S3_BASE_URL}/assets_V3/Ragach/Kinds/${suit.kind || "kind1"}/${
             suit.color || "blackGrey"
-          }.png`,
+          }.webp`,
       },
       {
         key: "lapelCollar",
-        path: `${S3_BASE_URL}/assets/ragach/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/${
           suit.lapelKind || "collarTight"
         }/${suit.lapelType || "Standard"}/${suit.kind || "kind1"}/${
           suit.color || "blackGrey"
-        }.png`,
+        }.webp`,
       },
       {
         key: "colar",
-        path: `${S3_BASE_URL}/assets/ragach/colar/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/colar/${
           suit.color || "blackGrey"
-        }.png`,
+        }.webp`,
       },
       {
         key: "sleeves",
-        path: `${S3_BASE_URL}/assets/ragach/sleeves/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/sleeves/${
           suit.color || "blackGrey"
-        }.png`,
-      }
+        }.webp`,
+      },
     );
 
     // Add packet based on packet type and kind
@@ -524,9 +524,9 @@ const MostPoPular = () => {
 
       imagePaths.push({
         key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
-        path: `${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${packetType}/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/packet/${packetKind}/${packetType}/${
           suit.color || "blackGrey"
-        }.png`,
+        }.webp`,
       });
     }
 
@@ -534,41 +534,41 @@ const MostPoPular = () => {
     if (suit?.bottomPart === "bottom") {
       imagePaths.push({
         key: "bottom",
-        path: `${S3_BASE_URL}/assets/ragach/bottom/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/bottom/${
           suit.color || "blackGrey"
-        }.png`,
+        }.webp`,
       });
     }
 
     if (suit?.bottomPart === "bottomKind3") {
       imagePaths.push({
         key: "bottomKind3",
-        path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/bottomKind3/${
           suit.color || "blackGrey"
-        }.png`,
+        }.webp`,
       });
     }
 
     if (suit?.holeButtonColor) {
       imagePaths.push({
         key: "holeButton",
-        path: `${S3_BASE_URL}/assets/adds/holesButton/${suit.kind || "kind1"}/${
+        path: `${S3_BASE_URL}/assets_V3/adds/holesButton/${suit.kind || "kind1"}/${
           suit.holeButtonColor
-        }.png`,
+        }.webp`,
       });
     }
 
     if (suit?.holeButtonUpColor) {
       imagePaths.push({
         key: "holeButtonUp",
-        path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${suit.holeButtonUpColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/holesButtonUp/${suit.holeButtonUpColor}.webp`,
       });
     }
 
     if (suit.poshetColor) {
       imagePaths.push({
         key: "poshetColor",
-        path: `${S3_BASE_URL}/assets/adds/poshet/${suit.poshetColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/poshet/${suit.poshetColor}.webp`,
       });
     }
 
@@ -580,9 +580,9 @@ const MostPoPular = () => {
       const actualColor = buttonColorMap[suit.buttonColor] || suit.buttonColor;
       imagePaths.push({
         key: "button",
-        path: `${S3_BASE_URL}/assets/ragach/button/${
+        path: `${S3_BASE_URL}/assets_V3/Ragach/button/${
           suit.kind || "kind1"
-        }/${actualColor}.png`,
+        }/${actualColor}.webp`,
       });
     }
 
@@ -609,7 +609,7 @@ const MostPoPular = () => {
     } catch (error) {
       console.warn(
         `⚠️ Error loading image for ${key} at path: ${path}:`,
-        error
+        error,
       );
       const result = { key, src: null };
       imagePathCache.set(path, result);
@@ -633,7 +633,7 @@ const MostPoPular = () => {
 
     const imagePaths = getImagePaths(suit);
     const images = await Promise.all(
-      imagePaths.map(({ key, path }) => loadImage(key, path))
+      imagePaths.map(({ key, path }) => loadImage(key, path)),
     );
 
     const result = images.reduce((acc, { key, src }) => {
@@ -711,7 +711,7 @@ const MostPoPular = () => {
       setLikedSuits(newLikedSuits);
       localStorage.setItem("likedSuits", JSON.stringify([...newLikedSuits]));
     },
-    [likedSuits]
+    [likedSuits],
   );
 
   return (

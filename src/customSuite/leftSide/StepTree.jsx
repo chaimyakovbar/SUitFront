@@ -24,10 +24,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const inside = `${S3_BASE_URL}/assets/kinds/insid.svg`;
-const poshet = `${S3_BASE_URL}/assets/kinds/poshet.svg`;
-const button = `${S3_BASE_URL}/assets/kinds/button.svg`;
-const holes = `${S3_BASE_URL}/assets/kinds/AllSuit2.png`;
+const inside = `${S3_BASE_URL}/assets_V3/kinds/insid.svg`;
+const poshet = `${S3_BASE_URL}/assets_V3/kinds/poshet.svg`;
+const button = `${S3_BASE_URL}/assets_V3/kinds/button.svg`;
+const holes = `${S3_BASE_URL}/assets_V3/kinds/AllSuit2.webp`;
 
 import PantsControls from "../../components/PantsControls";
 import TextInsideModal from "../../components/TextInsideModal";
@@ -216,7 +216,7 @@ const StepTree = ({ isPants }) => {
             }}
           >
             <img
-              src={`/assets/adds/topCollar/body/${currColor}.png`}
+              src={`/assets/adds/topCollar/body/${currColor}.webp`}
               alt="body"
               style={{
                 position: "absolute",
@@ -227,7 +227,7 @@ const StepTree = ({ isPants }) => {
               }}
             />
             <img
-              src={`/assets/adds/topCollar/bottom/${currColor}.png`}
+              src={`/assets/adds/topCollar/bottom/${currColor}.webp`}
               alt="bottom"
               style={{
                 position: "absolute",
@@ -238,7 +238,7 @@ const StepTree = ({ isPants }) => {
               }}
             />
             <img
-              src={`/assets/adds/topCollar/sleeves/${currColor}.png`}
+              src={`/assets/adds/topCollar/sleeves/${currColor}.webp`}
               alt="sleeves"
               style={{
                 position: "absolute",
@@ -250,7 +250,7 @@ const StepTree = ({ isPants }) => {
             />
             {selectedSleeveButtons !== "none" && (
               <img
-                src={`/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.png`}
+                src={`/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.webp`}
                 alt={`Sleeve Buttons - ${selectedSleeveButtons}`}
                 style={{
                   position: "absolute",
@@ -322,7 +322,7 @@ const StepTree = ({ isPants }) => {
             }}
           >
             <img
-              src={`/assets/adds/topCollar/body/${currColor}.png`}
+              src={`/assets/adds/topCollar/body/${currColor}.webp`}
               alt="body"
               style={{
                 position: "absolute",
@@ -333,7 +333,7 @@ const StepTree = ({ isPants }) => {
               }}
             />
             <img
-              src={`/assets/adds/topCollar/bottom/${currColor}.png`}
+              src={`/assets/adds/topCollar/bottom/${currColor}.webp`}
               alt="bottom"
               style={{
                 position: "absolute",
@@ -344,7 +344,7 @@ const StepTree = ({ isPants }) => {
               }}
             />
             <img
-              src={`/assets/adds/topCollar/sleeves/${currColor}.png`}
+              src={`/assets/adds/topCollar/sleeves/${currColor}.webp`}
               alt="sleeves"
               style={{
                 position: "absolute",
@@ -355,7 +355,7 @@ const StepTree = ({ isPants }) => {
               }}
             />
             <img
-              src={`/assets/adds/topCollar/topColor/${selectedTopCollarColor}.png`}
+              src={`/assets/adds/topCollar/topColor/${selectedTopCollarColor}.webp`}
               alt="topColor"
               style={{
                 position: "absolute",

@@ -103,31 +103,31 @@ const getImagePaths = (item) => {
       key: "baseSuit",
       path:
         item.baseSuitImagePath ||
-        `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+        `${S3_BASE_URL}/assets_V3/Ragach/Kinds/${item.kind}/${item.color}.webp`,
     },
     {
       key: "insideUp",
-      path: `${S3_BASE_URL}/assets/ragach/insideUp/${item.insideColor}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/insideUp/${item.insideColor}.webp`,
     },
     {
       key: "lapelCollar",
-      path: `${S3_BASE_URL}/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.webp`,
     },
     {
       key: "colar",
-      path: `${S3_BASE_URL}/assets/ragach/colar/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/colar/${item.color}.webp`,
     },
     {
       key: "sleeves",
-      path: `${S3_BASE_URL}/assets/ragach/sleeves/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/sleeves/${item.color}.webp`,
     },
     {
       key: "insideBottom",
-      path: `${S3_BASE_URL}/assets/ragach/insideBottom/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/insideBottom/${item.color}.webp`,
     },
     {
       key: "packetUp",
-      path: `${S3_BASE_URL}/assets/ragach/packetUp/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/packetUp/${item.color}.webp`,
     },
   ];
 
@@ -135,35 +135,35 @@ const getImagePaths = (item) => {
   if (item?.bottomPart === "bottom") {
     imagePaths.push({
       key: "bottom",
-      path: `${S3_BASE_URL}/assets/ragach/bottom/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/bottom/${item.color}.webp`,
     });
   }
 
   if (item?.bottomPart === "bottomKind3") {
     imagePaths.push({
       key: "bottomKind3",
-      path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${item.color}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/bottomKind3/${item.color}.webp`,
     });
   }
 
   if (item?.holeButtonColor) {
     imagePaths.push({
       key: "holeButton",
-      path: `${S3_BASE_URL}/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
+      path: `${S3_BASE_URL}/assets_V3/adds/holesButton/${item.kind}/${item.holeButtonColor}.webp`,
     });
   }
 
   if (item?.holeButtonUpColor) {
     imagePaths.push({
       key: "holeButtonUp",
-      path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
+      path: `${S3_BASE_URL}/assets_V3/adds/holesButtonUp/${item.holeButtonUpColor}.webp`,
     });
   }
 
   if (item.poshetColor) {
     imagePaths.push({
       key: "poshetColor",
-      path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
+      path: `${S3_BASE_URL}/assets_V3/adds/poshet/${item.poshetColor}.webp`,
     });
   }
 
@@ -171,7 +171,7 @@ const getImagePaths = (item) => {
     const actualColor = buttonColorMap[item.buttonColor] || item.buttonColor;
     imagePaths.push({
       key: "button",
-      path: `${S3_BASE_URL}/assets/ragach/button/${item.kind}/${actualColor}.png`,
+      path: `${S3_BASE_URL}/assets_V3/Ragach/button/${item.kind}/${actualColor}.webp`,
     });
   }
 
@@ -183,7 +183,7 @@ const fetchImages = async (item) => {
 
   const imagePaths = getImagePaths(item);
   const images = await Promise.all(
-    imagePaths.map(({ key, path }) => loadImage(key, path))
+    imagePaths.map(({ key, path }) => loadImage(key, path)),
   );
 
   return images.reduce((acc, { key, src }) => {
@@ -1034,7 +1034,7 @@ function Account() {
           }
           return acc;
         },
-        []
+        [],
       );
       setSizeProfiles(profiles);
 
@@ -1148,7 +1148,7 @@ function Account() {
       setSizeProfiles((prev) => prev.filter((p) => p.name !== profileToDelete));
       if (selectedProfile?.name === profileToDelete) {
         setSelectedProfile(
-          sizeProfiles.find((p) => p.name !== profileToDelete) || null
+          sizeProfiles.find((p) => p.name !== profileToDelete) || null,
         );
       }
 
@@ -1656,8 +1656,8 @@ function Account() {
                 orders.reduce(
                   (total, order) =>
                     total + order.totalAmount + order.shippingCost,
-                  0
-                )
+                  0,
+                ),
               )}
             </Typography>
           </Box>
@@ -1838,7 +1838,7 @@ function Account() {
                           {suit.kind === "kind3" && t("luxurySuit")}
                           {suit.kind === "kind4" && t("customLuxurySuit")}
                           {!["kind1", "kind2", "kind3", "kind4"].includes(
-                            suit.kind
+                            suit.kind,
                           ) && suit.kind}
                         </Typography>
                         <Typography
@@ -1904,7 +1904,7 @@ function Account() {
                         {order.selectedSuits.length > 2
                           ? t("viewAllSuits").replace(
                               "{count}",
-                              order.selectedSuits.length
+                              order.selectedSuits.length,
                             )
                           : t("viewMoreDetails")}
                       </Button>
@@ -2558,7 +2558,7 @@ function Account() {
                   >
                     Total:{" "}
                     {formatCurrency(
-                      selectedOrder.totalAmount + selectedOrder.shippingCost
+                      selectedOrder.totalAmount + selectedOrder.shippingCost,
                     )}
                   </Typography>
                 </Box>
@@ -2668,7 +2668,7 @@ function Account() {
                           {suit.kind === "kind3" && t("luxurySuit")}
                           {suit.kind === "kind4" && t("customLuxurySuit")}
                           {!["kind1", "kind2", "kind3", "kind4"].includes(
-                            suit.kind
+                            suit.kind,
                           ) && suit.kind}
                         </Typography>
 
@@ -2886,7 +2886,7 @@ function Account() {
                                   </Typography>
                                 </Box>
                               </Grid>
-                            )
+                            ),
                           )}
                         </Grid>
                       </Box>

@@ -2,14 +2,23 @@
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 
 // Colors
-import photo1 from "../assets/homeMenu/color/1.webp";
-import photo2 from "../assets/homeMenu/color/black.webp";
-import photo3 from "../assets/homeMenu/color/blueLight.webp";
-import photo4 from "../assets/homeMenu/color/brun.webp";
-import photo5 from "../assets/homeMenu/color/brownlight.webp";
-import photo6 from "../assets/homeMenu/color/burgundy.webp";
-import photo7 from "../assets/homeMenu/color/bezz.webp";
-import photo8 from "../assets/homeMenu/color/TR224-17 (NEVY).webp";
+// import photo1 from "../assets/homeMenu/color/1.webp";
+// import photo2 from "../assets/homeMenu/color/black.webp";
+// import photo3 from "../assets/homeMenu/color/blueLight.webp";
+// import photo4 from "../assets/homeMenu/color/brun.webp";
+// import photo5 from "../assets/homeMenu/color/brownlight.webp";
+// import photo6 from "../assets/homeMenu/color/burgundy.webp";
+// import photo7 from "../assets/homeMenu/color/bezz.webp";
+// import photo8 from "../assets/homeMenu/color/TR224-17 (NEVY).webp";
+import photo1 from "../assets/homeMenu/color/TR224-6.webp";
+import photo2 from "../assets/homeMenu/color/TR224-7.webp";
+import photo3 from "../assets/homeMenu/color/TR224-10.webp";
+import photo4 from "../assets/homeMenu/color/TR224-12.webp";
+import photo5 from "../assets/homeMenu/color/TR224-14.webp";
+import photo6 from "../assets/homeMenu/color/TR224-16.webp";
+import photo7 from "../assets/homeMenu/color/TR224-17.webp";
+import photo8 from "../assets/homeMenu/color/TR224-18.webp";
+import photo9 from "../assets/homeMenu/color/TR224-19.webp";
 
 // Color Inside Up
 export const gold = `${S3_BASE_URL}/assets_V3/adds/colorInsideUp/gold.jpg`;
@@ -1039,7 +1048,7 @@ export const suitsColors = [
   {
     color: photo4,
     colorId: 4,
-    colorName: "(TR224-8) brown",
+    colorName: "TR224-8",
     name: "brown",
     price: "200$",
     hexCode: "#DC143C",
@@ -1047,7 +1056,7 @@ export const suitsColors = [
   {
     color: photo5,
     colorId: 5,
-    colorName: "TR224-2(beze)",
+    colorName: "TR224-2",
     name: "brownlight",
     price: "200$",
     hexCode: "#50C878",
@@ -1055,7 +1064,7 @@ export const suitsColors = [
   {
     color: photo6,
     colorId: 6,
-    colorName: "(TR224-11)",
+    colorName: "(TR224-11) burgundy",
     name: "burgundy",
     price: "200$",
     hexCode: "#50C878",
@@ -1063,13 +1072,21 @@ export const suitsColors = [
   {
     color: photo7,
     colorId: 7,
-    colorName: "",
+    colorName: "TR224-1",
     name: "beze",
     price: "200$",
     hexCode: "#50C878",
   },
   {
     color: photo8,
+    colorId: 8,
+    colorName: "TR224-17",
+    name: "navy",
+    price: "200$",
+    hexCode: "#50C878",
+  },
+  {
+    color: photo9,
     colorId: 8,
     colorName: "TR224-17",
     name: "navy",

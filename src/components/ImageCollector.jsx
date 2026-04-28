@@ -23,7 +23,7 @@ import { suitPricing } from "../config/suitPricing";
 
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const TextInside = `${S3_BASE_URL}/assets/adds/TextInside.png`;
+const TextInside = `${S3_BASE_URL}/assets_V3/adds/TextInside.webp`;
 
 const ImageFilterComponent = () => {
   // const previousConfigRef = useRef(null);
@@ -58,8 +58,8 @@ const ImageFilterComponent = () => {
     selectedKind === "kind2"
       ? "bottom2"
       : selectedKind === "kind1"
-      ? "bottom"
-      : "bottomKind3";
+        ? "bottom"
+        : "bottomKind3";
 
   // Remove artificial loading delay to avoid jank on every small change
   useEffect(() => {
@@ -195,7 +195,7 @@ const ImageFilterComponent = () => {
       {/* Loader removed to reduce constant reflow/paint on minor state changes */}
       {/* Base parts */}
       <img
-        src={`${S3_BASE_URL}/assets/ragach/Kinds/${selectedKind}/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/Kinds/${selectedKind}/${currColor}.webp`}
         alt={`Suit Body - ${selectedKind} ${currColor}`}
         style={{ ...imageStyle, zIndex: 2 }}
         loading="lazy"
@@ -203,7 +203,7 @@ const ImageFilterComponent = () => {
         onError={() => handleImageError("suitBody")}
       />
       <img
-        src={`${S3_BASE_URL}/assets/ragach/colar/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/colar/${currColor}.webp`}
         alt={`Collar - ${currColor}`}
         style={{ ...imageStyle, zIndex: 200 }}
         loading="lazy"
@@ -211,7 +211,7 @@ const ImageFilterComponent = () => {
         onError={() => handleImageError("collar")}
       />
       <img
-        src={`${S3_BASE_URL}/assets/ragach/sleeves/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/sleeves/${currColor}.webp`}
         alt={`Sleeves - ${currColor}`}
         style={imageStyle}
         loading="lazy"
@@ -219,7 +219,7 @@ const ImageFilterComponent = () => {
         onError={() => handleImageError("sleeves")}
       />
       <img
-        src={`${S3_BASE_URL}/assets/ragach/insideUp/${insideColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/insideUp/${insideColor}.webp`}
         alt={`Inside Up - ${insideColor}`}
         style={imageStyle}
         loading="lazy"
@@ -227,7 +227,7 @@ const ImageFilterComponent = () => {
         onError={() => handleImageError("insideUp")}
       />
       <img
-        src={`${S3_BASE_URL}/assets/ragach/insideBottom/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/insideBottom/${currColor}.webp`}
         alt={`Inside Bottom - ${insideColor}`}
         style={imageStyle}
         loading="lazy"
@@ -235,7 +235,7 @@ const ImageFilterComponent = () => {
         onError={() => handleImageError("insideBottom")}
       />
       <img
-        src={`${S3_BASE_URL}/assets/ragach/${bottomPart}/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/${bottomPart}/${currColor}.webp`}
         alt={`Bottom - ${currColor}`}
         style={{ ...imageStyle, zIndex: 2 }}
         loading="lazy"
@@ -244,21 +244,21 @@ const ImageFilterComponent = () => {
       />
       {/* Fixed Lapel/Collar path */}
       <img
-        src={`${S3_BASE_URL}/assets/ragach/${selectedCollar}/${lapelDir}/${selectedKind}/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/${selectedCollar}/${lapelDir}/${selectedKind}/${currColor}.webp`}
         alt={`Lapel Collar - ${currColor}`}
         style={{ ...imageStyle, zIndex: 200 }}
         loading="lazy"
         decoding="async"
         onError={() =>
           handleImageError(
-            `lapelCollar: ${selectedCollar}/${lapelDir}/${selectedKind}/${currColor}`
+            `lapelCollar: ${selectedCollar}/${lapelDir}/${selectedKind}/${currColor}`,
           )
         }
       />
       {/* Packet Bottom with specific type */}
       {selectedPacketType === "packet4" && (
         <img
-          src={`${S3_BASE_URL}/assets/ragach/packet/${packetKind}/packet1/${currColor}.png`}
+          src={`${S3_BASE_URL}/assets_V3/Ragach/packet/${packetKind}/packet1/${currColor}.webp`}
           alt={`Packet Bottom - ${currColor}`}
           style={overlayStyle}
           loading="lazy"
@@ -270,7 +270,7 @@ const ImageFilterComponent = () => {
       )}
       {selectedPacketType === "packet5" && (
         <img
-          src={`${S3_BASE_URL}/assets/ragach/packet/${packetKind}/packet2/${currColor}.png`}
+          src={`${S3_BASE_URL}/assets_V3/Ragach/packet/${packetKind}/packet2/${currColor}.webp`}
           alt={`Packet Bottom - ${currColor}`}
           style={overlayStyle}
           loading="lazy"
@@ -281,7 +281,7 @@ const ImageFilterComponent = () => {
         />
       )}
       <img
-        src={`${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${selectedPacketType}/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/packet/${packetKind}/${selectedPacketType}/${currColor}.webp`}
         alt={`Packet Bottom - ${currColor}`}
         style={overlayStyle}
         loading="lazy"
@@ -292,7 +292,7 @@ const ImageFilterComponent = () => {
       />
       {poshetColor && (
         <img
-          src={`${S3_BASE_URL}/assets/adds/poshet/${poshetColor}.png`}
+          src={`${S3_BASE_URL}/assets_V3/adds/poshet/${poshetColor}.webp`}
           alt={`Poshet - ${poshetColor}`}
           style={overlayStyle}
           loading="lazy"
@@ -301,7 +301,7 @@ const ImageFilterComponent = () => {
         />
       )}
       <img
-        src={`${S3_BASE_URL}/assets/ragach/packetUp/${currColor}.png`}
+        src={`${S3_BASE_URL}/assets_V3/Ragach/packetUp/${currColor}.webp`}
         alt={`Packet Up - ${currColor}`}
         style={{ ...imageStyle, zIndex: 3 }}
         loading="lazy"
@@ -310,7 +310,7 @@ const ImageFilterComponent = () => {
       />
       {buttonColor !== null && (
         <img
-          src={`${S3_BASE_URL}/assets/ragach/button/${selectedKind}/${buttonColor}.png`}
+          src={`${S3_BASE_URL}/assets_V3/Ragach/button/${selectedKind}/${buttonColor}.webp`}
           alt={`Button - ${buttonColor}`}
           style={overlayStyle}
           loading="lazy"
@@ -322,7 +322,7 @@ const ImageFilterComponent = () => {
       )}
       {holeButtonColor && (
         <img
-          src={`${S3_BASE_URL}/assets/adds/holesButton/${selectedKind}/${holeButtonColor}.png`}
+          src={`${S3_BASE_URL}/assets_V3/adds/holesButton/${selectedKind}/${holeButtonColor}.webp`}
           alt={`Hole Button - ${holeButtonColor}`}
           style={overlayStyle}
           loading="lazy"
@@ -334,7 +334,7 @@ const ImageFilterComponent = () => {
       )}
       {holeButtonUpColor && (
         <img
-          src={`${S3_BASE_URL}/assets/adds/holesButtonUp/${holeButtonUpColor}.png`}
+          src={`${S3_BASE_URL}/assets_V3/adds/holesButtonUp/${holeButtonUpColor}.webp`}
           alt={`Hole Button Up - ${holeButtonUpColor}`}
           style={overlayStyle}
           loading="lazy"
@@ -345,7 +345,7 @@ const ImageFilterComponent = () => {
       {/* Sleeve buttons overlay - only show if selected */}
       {/* {selectedSleeveButtons !== "none" && (
         <img
-          src={`public/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.png`}
+          src={`public/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.webp`}
           alt={`Sleeve Buttons - ${selectedSleeveButtons}`}
           style={overlayStyle}
           onError={() =>
@@ -359,7 +359,7 @@ const ImageFilterComponent = () => {
       {/* {textInsideText && (
         <div style={{ ...overlayStyle, zIndex: 200 }}>
           <img
-            src={`${S3_BASE_URL}/assets/adds/TextInside.png`}
+            src={`${S3_BASE_URL}/assets_V3/adds/TextInside.webp`}
             alt="TextInside"
             style={imageStyle}
             onError={() => handleImageError("TextInside")}

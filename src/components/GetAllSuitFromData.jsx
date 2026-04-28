@@ -10,7 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const useVirtualScrolling = (
   items,
   itemHeight = 300,
-  containerHeight = 600
+  containerHeight = 600,
 ) => {
   const [scrollTop, setScrollTop] = useState(0);
 
@@ -343,32 +343,32 @@ const getImagePaths = (item, viewType = "suit") => {
         key: "baseSuit",
         path:
           item.baseSuitImagePath ||
-          `${S3_BASE_URL}/assets/ragach/Kinds/${item.kind}/${item.color}.png`,
+          `${S3_BASE_URL}/assets_V3/Ragach/Kinds/${item.kind}/${item.color}.webp`,
       },
       {
         key: "insideUp",
-        path: `${S3_BASE_URL}/assets/ragach/insideUp/${item.insideColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/insideUp/${item.insideColor}.webp`,
       },
       {
         key: "lapelCollar",
-        path: `${S3_BASE_URL}/assets/ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/${item.lapelKind}/${item.lapelType}/${item.kind}/${item.color}.webp`,
       },
       {
         key: "colar",
-        path: `${S3_BASE_URL}/assets/ragach/colar/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/colar/${item.color}.webp`,
       },
       {
         key: "sleeves",
-        path: `${S3_BASE_URL}/assets/ragach/sleeves/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/sleeves/${item.color}.webp`,
       },
       {
         key: "insideBottom",
-        path: `${S3_BASE_URL}/assets/ragach/insideBottom/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/insideBottom/${item.color}.webp`,
       },
       {
         key: "packetUp",
-        path: `${S3_BASE_URL}/assets/ragach/packetUp/${item.color}.png`,
-      }
+        path: `${S3_BASE_URL}/assets_V3/Ragach/packetUp/${item.color}.webp`,
+      },
     );
 
     // Add packet based on packet type and kind - only what user selected
@@ -380,7 +380,7 @@ const getImagePaths = (item, viewType = "suit") => {
 
       imagePaths.push({
         key: packetKind === "packetSide" ? "packetSide" : "packetBottom",
-        path: `${S3_BASE_URL}/assets/ragach/packet/${packetKind}/${packetType}/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/packet/${packetKind}/${packetType}/${item.color}.webp`,
       });
     } else {
       console.warn("⚠️ Missing packetType for suit:", item._id);
@@ -391,35 +391,35 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item?.bottomPart === "bottom") {
       imagePaths.push({
         key: "bottom",
-        path: `${S3_BASE_URL}/assets/ragach/bottom/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/bottom/${item.color}.webp`,
       });
     }
 
     if (item?.bottomPart === "bottomKind3") {
       imagePaths.push({
         key: "bottomKind3",
-        path: `${S3_BASE_URL}/assets/ragach/bottomKind3/${item.color}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/bottomKind3/${item.color}.webp`,
       });
     }
 
     if (item?.holeButtonColor) {
       imagePaths.push({
         key: "holeButton",
-        path: `${S3_BASE_URL}/assets/adds/holesButton/${item.kind}/${item.holeButtonColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/holesButton/${item.kind}/${item.holeButtonColor}.webp`,
       });
     }
 
     if (item?.holeButtonUpColor) {
       imagePaths.push({
         key: "holeButtonUp",
-        path: `${S3_BASE_URL}/assets/adds/holesButtonUp/${item.holeButtonUpColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/holesButtonUp/${item.holeButtonUpColor}.webp`,
       });
     }
 
     if (item.poshetColor) {
       imagePaths.push({
         key: "poshetColor",
-        path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/poshet/${item.poshetColor}.webp`,
       });
     }
 
@@ -427,7 +427,7 @@ const getImagePaths = (item, viewType = "suit") => {
       const actualColor = buttonColorMap[item.buttonColor] || item.buttonColor;
       imagePaths.push({
         key: "button",
-        path: `${S3_BASE_URL}/assets/ragach/button/${item.kind}/${actualColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/button/${item.kind}/${actualColor}.webp`,
       });
     }
 
@@ -435,7 +435,7 @@ const getImagePaths = (item, viewType = "suit") => {
     // if (item.sleeveButtons && item.sleeveButtons !== "none") {
     //   imagePaths.push({
     //     key: "sleeveButtons",
-    //     path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${item.color}.png`,
+    //     path: `public/assets/adds/sleevseButton/${item.sleeveButtons}/${item.color}.webp`,
     //   });
     // }
 
@@ -443,7 +443,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.textInsideText) {
       imagePaths.push({
         key: "textInside",
-        path: `${S3_BASE_URL}/assets/adds/TextInside.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/TextInside.webp`,
       });
     }
   } else if (viewType === "pants") {
@@ -454,14 +454,14 @@ const getImagePaths = (item, viewType = "suit") => {
     // Base pants layer - always active
     imagePaths.push({
       key: "pants",
-      path: `${S3_BASE_URL}/assets/pants/allPants/${pantsColor}.png`,
+      path: `${S3_BASE_URL}/assets_V3/pants/allPants/${pantsColor}.webp`,
     });
 
     // Add kind layer if exists (not regularBase)
     if (item.pantsKind && item.pantsKind !== "regularBase") {
       imagePaths.push({
         key: "pantsKind",
-        path: `${S3_BASE_URL}/assets/pants/kind/${item.pantsKind}/${pantsColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/pants/kind/${item.pantsKind}/${pantsColor}.webp`,
       });
     }
 
@@ -500,7 +500,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (buttonPath) {
         imagePaths.push({
           key: "pantsButton",
-          path: `${S3_BASE_URL}/assets/pants/button/${buttonPath}/${pantsColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/pants/button/${buttonPath}/${pantsColor}.webp`,
         });
       }
     }
@@ -523,7 +523,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (loopsPath) {
         imagePaths.push({
           key: "pantsLoops",
-          path: `${S3_BASE_URL}/assets/pants/loops/${loopsPath}/${pantsColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/pants/loops/${loopsPath}/${pantsColor}.webp`,
         });
       }
     }
@@ -547,7 +547,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (ironPath) {
         imagePaths.push({
           key: "pantsIron",
-          path: `${S3_BASE_URL}/assets/pants/iron/${ironPath}/${pantsColor}.png`,
+          path: `${S3_BASE_URL}/assets_V3/pants/iron/${ironPath}/${pantsColor}.webp`,
         });
       }
     }
@@ -556,7 +556,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.pantsHem && item.pantsHem !== "none") {
       imagePaths.push({
         key: "pantsHem",
-        path: `${S3_BASE_URL}/assets/pants/hem/hem/${pantsColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/pants/hem/hem/${pantsColor}.webp`,
       });
     }
 
@@ -564,7 +564,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.sleeveButtons && item.sleeveButtons !== "none") {
       imagePaths.push({
         key: "sleeveButtons",
-        path: `${S3_BASE_URL}/assets/adds/sleevseButton/${item.sleeveButtons}/${pantsColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/sleevseButton/${item.sleeveButtons}/${pantsColor}.webp`,
       });
     }
 
@@ -572,7 +572,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.poshetColor) {
       imagePaths.push({
         key: "poshetColor",
-        path: `${S3_BASE_URL}/assets/adds/poshet/${item.poshetColor}.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/poshet/${item.poshetColor}.webp`,
       });
     }
 
@@ -580,7 +580,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.textInsideText) {
       imagePaths.push({
         key: "textInside",
-        path: `${S3_BASE_URL}/assets/adds/TextInside.png`,
+        path: `${S3_BASE_URL}/assets_V3/adds/TextInside.webp`,
       });
     }
   }
@@ -593,7 +593,7 @@ const fetchImages = async (item, viewType = "suit") => {
 
   const imagePaths = getImagePaths(item, viewType);
   const images = await Promise.all(
-    imagePaths.map(({ key, path }) => loadImage(key, path))
+    imagePaths.map(({ key, path }) => loadImage(key, path)),
   );
 
   return images.reduce((acc, { key, src }) => {
@@ -662,7 +662,7 @@ const DynamicImage = ({
           zIndex: getZIndex(key),
         }));
     },
-    [getZIndex]
+    [getZIndex],
   );
 
   // Sort suits based on sortBy prop
@@ -676,7 +676,7 @@ const DynamicImage = ({
       case "newest":
       default:
         return suits.sort(
-          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
         );
     }
   }, [allSuits, sortBy]);
@@ -744,7 +744,7 @@ const DynamicImage = ({
         setLoadingStates((prev) => ({ ...prev, [cacheKey]: false }));
       }
     },
-    [sortedSuits, imagesCache]
+    [sortedSuits, imagesCache],
   );
 
   // Lazy loading with Intersection Observer - רק טוען תמונות כשהכרטיס נראה
@@ -760,7 +760,7 @@ const DynamicImage = ({
           }
         });
       },
-      { threshold: 0.1, rootMargin: "100px" }
+      { threshold: 0.1, rootMargin: "100px" },
     );
 
     // Observe all suit cards
@@ -1038,7 +1038,7 @@ const DynamicImage = ({
               style={{ transform: `translateY(${virtualScroll.offsetY}px)` }}
             >
               {virtualScroll.visibleItems.map((item, index) =>
-                renderCard(item, startIndex + index)
+                renderCard(item, startIndex + index),
               )}
             </div>
           </div>

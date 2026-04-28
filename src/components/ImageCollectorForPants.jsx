@@ -163,7 +163,7 @@ const ImageCollectorForPants = () => {
 
       {/* Base pants - allPants (always active) */}
       <img
-        src={`${PANTS_BASE}/assets/pants/allPants/${effectivePantsColor}.png`}
+        src={`${PANTS_BASE}/assets_V3/pants/allPants/${effectivePantsColor}.webp`}
         alt={`All Pants - ${effectivePantsColor}`}
         style={imageStyle}
         loading="lazy"
@@ -176,7 +176,7 @@ const ImageCollectorForPants = () => {
       {/* Kind layer - only show if not regularBase */}
       {selectedPantsKind !== "regularBase" && (
         <img
-          src={`${PANTS_BASE}/assets/pants/kind/${selectedPantsKind}/${effectivePantsColor}.png`}
+          src={`${PANTS_BASE}/assets_V3/pants/kind/${selectedPantsKind}/${effectivePantsColor}.webp`}
           alt={`Kind - ${selectedPantsKind}`}
           style={overlayStyle}
           loading="lazy"
@@ -194,7 +194,7 @@ const ImageCollectorForPants = () => {
         const buttonPath = getButtonImagePath();
         return buttonPath ? (
           <img
-            src={`${PANTS_BASE}/assets/pants/button/${buttonPath}/${effectivePantsColor}.png`}
+            src={`${PANTS_BASE}/assets_V3/pants/button/${buttonPath}/${effectivePantsColor}.webp`}
             alt={`Button - ${buttonPath}`}
             style={overlayStyle}
             loading="lazy"
@@ -213,7 +213,7 @@ const ImageCollectorForPants = () => {
         const loopsPath = getLoopsImagePath();
         return loopsPath ? (
           <img
-            src={`${PANTS_BASE}/assets/pants/loops/${loopsPath}/${effectivePantsColor}.png`}
+            src={`${PANTS_BASE}/assets_V3/pants/loops/${loopsPath}/${effectivePantsColor}.webp`}
             alt={`Loops - ${loopsPath}`}
             style={overlayStyle}
             loading="lazy"
@@ -232,7 +232,7 @@ const ImageCollectorForPants = () => {
         const ironPath = getIronImagePath();
         return ironPath ? (
           <img
-            src={`${PANTS_BASE}/assets/pants/iron/${ironPath}/${effectivePantsColor}.png`}
+            src={`${PANTS_BASE}/assets_V3/pants/iron/${ironPath}/${effectivePantsColor}.webp`}
             alt={`Iron - ${ironPath}`}
             style={overlayStyle}
             loading="lazy"
@@ -249,7 +249,7 @@ const ImageCollectorForPants = () => {
       {/* Hem layer - only show if hem is selected */}
       {selectedPantsHem !== "none" && (
         <img
-          src={`${PANTS_BASE}/assets/pants/hem/hem/${effectivePantsColor}.png`}
+          src={`${PANTS_BASE}/assets_V3/pants/hem/hem/${effectivePantsColor}.webp`}
           alt={`Hem - ${effectivePantsColor}`}
           style={overlayStyle}
           loading="lazy"

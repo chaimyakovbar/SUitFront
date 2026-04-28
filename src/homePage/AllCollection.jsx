@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const doll1 = `${S3_BASE_URL}/assets/suits/dollSuitGrey.webp`;
+const doll1 = `${S3_BASE_URL}/assets_V3/suits/dollSuitGrey.webp`;
 
 // Elegant placeholder for images that fail to load (S3 403 / not yet uploaded)
 const PLACEHOLDER_STYLE = {

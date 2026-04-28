@@ -21,10 +21,10 @@
 ### 1. **קבצי Ragach מוגנים**
 
 ```
-403 Forbidden: /assets/ragach/Kinds/kind1/blackGrey.png
+403 Forbidden: /assets/Ragach/Kinds/kind1/blackGrey.png
 ```
 
-**הבעיה:** קבצי ragach מוגנים ב-S3 ולא נגישים לציבור.
+**הבעיה:** קבצי Ragach מוגנים ב-S3 ולא נגישים לציבור.
 
 **פתרונות:**
 
@@ -66,7 +66,7 @@ aws s3api put-bucket-policy --bucket ch-suits --policy '{
 
 ```bash
 # העתק תמונות חשובות לתיקיית public
-cp -r /path/to/ragach/images public/assets/ragach/
+cp -r /path/to/Ragach/images public/assets/Ragach/
 ```
 
 ## 📊 סטטוס נוכחי:
@@ -96,4 +96,4 @@ cp -r /path/to/ragach/images public/assets/ragach/
 
 - השרת רץ על http://localhost:5173
 - תמונות suits נטענות מהר יותר (webp)
-- קבצי ragach לא נטענים עדיין (צריך פתרון הרשאות)
+- קבצי Ragach לא נטענים עדיין (צריך פתרון הרשאות)

@@ -227,7 +227,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
           }}
         >
           <img
-            src={`/assets/adds/topCollar/body/${currColor}.png`}
+            src={`/assets/adds/topCollar/body/${currColor}.webp`}
             alt="body"
             style={{
               position: "absolute",
@@ -239,7 +239,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
             }}
           />
           <img
-            src={`/assets/adds/topCollar/bottom/${currColor}.png`}
+            src={`/assets/adds/topCollar/bottom/${currColor}.webp`}
             alt="bottom"
             style={{
               position: "absolute",
@@ -251,7 +251,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
             }}
           />
           <img
-            src={`/assets/adds/topCollar/sleeves/${currColor}.png`}
+            src={`/assets/adds/topCollar/sleeves/${currColor}.webp`}
             alt="sleeves"
             style={{
               position: "absolute",
@@ -264,7 +264,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
           />
           {selectedSleeveButtons !== "none" && (
             <img
-              src={`/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.png`}
+              src={`/assets/adds/sleevseButton/${selectedSleeveButtons}/${currColor}.webp`}
               alt={`Sleeve Buttons - ${selectedSleeveButtons}`}
               style={{
                 position: "absolute",
@@ -428,7 +428,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
           }}
         >
           <img
-            src={`/assets/adds/topCollar/body/${currColor}.png`}
+            src={`/assets/adds/topCollar/body/${currColor}.webp`}
             alt="body"
             style={{
               position: "absolute",
@@ -440,7 +440,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
             }}
           />
           <img
-            src={`/assets/adds/topCollar/bottom/${currColor}.png`}
+            src={`/assets/adds/topCollar/bottom/${currColor}.webp`}
             alt="bottom"
             style={{
               position: "absolute",
@@ -452,7 +452,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
             }}
           />
           <img
-            src={`/assets/adds/topCollar/sleeves/${currColor}.png`}
+            src={`/assets/adds/topCollar/sleeves/${currColor}.webp`}
             alt="sleeves"
             style={{
               position: "absolute",
@@ -464,7 +464,7 @@ const FinishingDetails = ({ isPantsMode, isMobile }) => {
             }}
           />
           <img
-            src={`/assets/adds/topCollar/topColor/${selectedTopCollarColor}.png`}
+            src={`/assets/adds/topCollar/topColor/${selectedTopCollarColor}.webp`}
             alt="topColor"
             style={{
               position: "absolute",

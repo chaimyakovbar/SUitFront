@@ -26,14 +26,14 @@ import { useNavigate } from "react-router-dom";
 import useProduct from "../Hooks/useProduct";
 // S3 Assets URLs
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const tai = `${S3_BASE_URL}/assets/sizes/humen/tai.png`;
-const suit = `${S3_BASE_URL}/assets/sizes/humen/suit.png`;
-const head = `${S3_BASE_URL}/assets/sizes/humen/head.png`;
-const pants = `${S3_BASE_URL}/assets/sizes/humen/pants.png`;
-const shirt = `${S3_BASE_URL}/assets/sizes/humen/shirt.png`;
-const shoose = `${S3_BASE_URL}/assets/sizes/humen/shoose.png`;
-const sleevs = `${S3_BASE_URL}/assets/sizes/humen/sleevs.png`;
-const bottomSuit = `${S3_BASE_URL}/assets/sizes/humen/bottomSuit.png`;
+const tai = `${S3_BASE_URL}/assets_V3/sizes/humen/tai.webp`;
+const suit = `${S3_BASE_URL}/assets_V3/sizes/humen/suit.webp`;
+const head = `${S3_BASE_URL}/assets_V3/sizes/humen/head.webp`;
+const pants = `${S3_BASE_URL}/assets_V3/sizes/humen/pants.webp`;
+const shirt = `${S3_BASE_URL}/assets_V3/sizes/humen/shirt.webp`;
+const shoose = `${S3_BASE_URL}/assets_V3/sizes/humen/shoose.webp`;
+const sleevs = `${S3_BASE_URL}/assets_V3/sizes/humen/sleevs.webp`;
+const bottomSuit = `${S3_BASE_URL}/assets_V3/sizes/humen/bottomSuit.webp`;
 import { postProduct } from "../api/suit";
 
 const arrayOfImg = [shirt, tai, bottomSuit, sleevs, suit];

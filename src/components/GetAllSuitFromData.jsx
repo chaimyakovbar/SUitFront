@@ -454,14 +454,14 @@ const getImagePaths = (item, viewType = "suit") => {
     // Base pants layer - always active
     imagePaths.push({
       key: "pants",
-      path: `${S3_BASE_URL}/assets_V3/pants/allPants/${pantsColor}.webp`,
+      path: `${S3_BASE_URL}/assets_V3/Pants/allPants/${pantsColor}.webp`,
     });
 
     // Add kind layer if exists (not regularBase)
     if (item.pantsKind && item.pantsKind !== "regularBase") {
       imagePaths.push({
         key: "pantsKind",
-        path: `${S3_BASE_URL}/assets_V3/pants/kind/${item.pantsKind}/${pantsColor}.webp`,
+        path: `${S3_BASE_URL}/assets_V3/Pants/kind/${item.pantsKind}/${pantsColor}.webp`,
       });
     }
 
@@ -500,7 +500,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (buttonPath) {
         imagePaths.push({
           key: "pantsButton",
-          path: `${S3_BASE_URL}/assets_V3/pants/button/${buttonPath}/${pantsColor}.webp`,
+          path: `${S3_BASE_URL}/assets_V3/Pants/button/${buttonPath}/${pantsColor}.webp`,
         });
       }
     }
@@ -523,7 +523,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (loopsPath) {
         imagePaths.push({
           key: "pantsLoops",
-          path: `${S3_BASE_URL}/assets_V3/pants/loops/${loopsPath}/${pantsColor}.webp`,
+          path: `${S3_BASE_URL}/assets_V3/Pants/loops/${loopsPath}/${pantsColor}.webp`,
         });
       }
     }
@@ -547,7 +547,7 @@ const getImagePaths = (item, viewType = "suit") => {
       if (ironPath) {
         imagePaths.push({
           key: "pantsIron",
-          path: `${S3_BASE_URL}/assets_V3/pants/iron/${ironPath}/${pantsColor}.webp`,
+          path: `${S3_BASE_URL}/assets_V3/Pants/iron/${ironPath}/${pantsColor}.webp`,
         });
       }
     }
@@ -556,7 +556,7 @@ const getImagePaths = (item, viewType = "suit") => {
     if (item.pantsHem && item.pantsHem !== "none") {
       imagePaths.push({
         key: "pantsHem",
-        path: `${S3_BASE_URL}/assets_V3/pants/hem/hem/${pantsColor}.webp`,
+        path: `${S3_BASE_URL}/assets_V3/Pants/hem/hem/${pantsColor}.webp`,
       });
     }
 

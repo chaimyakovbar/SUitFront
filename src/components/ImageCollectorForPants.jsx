@@ -15,8 +15,7 @@ import { useMediaQuery } from "@mui/material";
 
 // Configurable base for pants assets. Use empty string to load from local /public.
 const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
-const PANTS_BASE =
-  (import.meta?.env?.VITE_PANTS_ASSETS_BASE ?? S3_BASE_URL) || "";
+(import.meta?.env?.VITE_PANTS_ASSETS_BASE ?? S3_BASE_URL) || "";
 
 const ImageCollectorForPants = () => {
   // Remove artificial loading state to prevent re-render jank on small changes
@@ -163,27 +162,27 @@ const ImageCollectorForPants = () => {
 
       {/* Base pants - allPants (always active) */}
       <img
-        src={`${PANTS_BASE}/assets_V3/pants/allPants/${effectivePantsColor}.webp`}
+        src={`${S3_BASE_URL}/assets_V3/Pants/allPants/${effectivePantsColor}.webp`}
         alt={`All Pants - ${effectivePantsColor}`}
         style={imageStyle}
         loading="lazy"
         decoding="async"
         onError={() =>
-          handleImageError(`allPants: pants/allPants/${effectivePantsColor}`)
+          handleImageError(`allPants: /Pants/allPants/${effectivePantsColor}`)
         }
       />
 
       {/* Kind layer - only show if not regularBase */}
       {selectedPantsKind !== "regularBase" && (
         <img
-          src={`${PANTS_BASE}/assets_V3/pants/kind/${selectedPantsKind}/${effectivePantsColor}.webp`}
+          src={`${S3_BASE_URL}/assets_V3/Pants/kind/${selectedPantsKind}/${effectivePantsColor}.webp`}
           alt={`Kind - ${selectedPantsKind}`}
           style={overlayStyle}
           loading="lazy"
           decoding="async"
           onError={() =>
             handleImageError(
-              `kind: pants/kind/${selectedPantsKind}/${effectivePantsColor}`
+              `kind: pants/kind/${selectedPantsKind}/${effectivePantsColor}`,
             )
           }
         />
@@ -194,14 +193,14 @@ const ImageCollectorForPants = () => {
         const buttonPath = getButtonImagePath();
         return buttonPath ? (
           <img
-            src={`${PANTS_BASE}/assets_V3/pants/button/${buttonPath}/${effectivePantsColor}.webp`}
+            src={`${S3_BASE_URL}/assets_V3/Pants/button/${buttonPath}/${effectivePantsColor}.webp`}
             alt={`Button - ${buttonPath}`}
             style={overlayStyle}
             loading="lazy"
             decoding="async"
             onError={() =>
               handleImageError(
-                `button: pants/button/${buttonPath}/${effectivePantsColor}`
+                `button: pants/button/${buttonPath}/${effectivePantsColor}`,
               )
             }
           />
@@ -213,14 +212,14 @@ const ImageCollectorForPants = () => {
         const loopsPath = getLoopsImagePath();
         return loopsPath ? (
           <img
-            src={`${PANTS_BASE}/assets_V3/pants/loops/${loopsPath}/${effectivePantsColor}.webp`}
+            src={`${S3_BASE_URL}/assets_V3/Pants/loops/${loopsPath}/${effectivePantsColor}.webp`}
             alt={`Loops - ${loopsPath}`}
             style={overlayStyle}
             loading="lazy"
             decoding="async"
             onError={() =>
               handleImageError(
-                `loops: pants/loops/${loopsPath}/${effectivePantsColor}`
+                `loops: pants/loops/${loopsPath}/${effectivePantsColor}`,
               )
             }
           />
@@ -232,14 +231,14 @@ const ImageCollectorForPants = () => {
         const ironPath = getIronImagePath();
         return ironPath ? (
           <img
-            src={`${PANTS_BASE}/assets_V3/pants/iron/${ironPath}/${effectivePantsColor}.webp`}
+            src={`${S3_BASE_URL}/assets_V3/Pants/iron/${ironPath}/${effectivePantsColor}.webp`}
             alt={`Iron - ${ironPath}`}
             style={overlayStyle}
             loading="lazy"
             decoding="async"
             onError={() =>
               handleImageError(
-                `iron: pants/iron/${ironPath}/${effectivePantsColor}`
+                `iron: pants/iron/${ironPath}/${effectivePantsColor}`,
               )
             }
           />
@@ -249,7 +248,7 @@ const ImageCollectorForPants = () => {
       {/* Hem layer - only show if hem is selected */}
       {selectedPantsHem !== "none" && (
         <img
-          src={`${PANTS_BASE}/assets_V3/pants/hem/hem/${effectivePantsColor}.webp`}
+          src={`${S3_BASE_URL}/assets_V3/Pants/hem/hem/${effectivePantsColor}.webp`}
           alt={`Hem - ${effectivePantsColor}`}
           style={overlayStyle}
           loading="lazy"

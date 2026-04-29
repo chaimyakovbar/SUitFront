@@ -1,396 +1,396 @@
 import React, { useState, useEffect } from "react";
-import HaveUser from "../components/HaveUser";
-// import { authUserAtom } from "../Utils";
-// import { useAtom } from "jotai";
 import GetAllSuitFromData from "../components/GetAllSuitFromData";
 import {
-  Button,
-  Drawer,
   Box,
   Container,
   Typography,
-  IconButton,
-  Badge,
   Fab,
   useMediaQuery,
   useTheme,
-  Paper,
+  Drawer,
   Divider,
-  Chip,
-  Grid,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import ShowSizes from "../components/ShowSizes";
 import useProduct from "../Hooks/useProduct";
-import { makeStyles } from "@mui/styles";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PersonIcon from "@mui/icons-material/Person";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import SortIcon from "@mui/icons-material/Sort";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import TuneIcon from "@mui/icons-material/Tune";
 import { useLanguage } from "../context/LanguageContext";
+import { Link } from "react-router-dom";
 
-const useStyles = makeStyles({
-  root: {
-    backgroundColor: "#0a0a0a",
-    color: "#fff",
-    minHeight: "100vh",
-    paddingTop: "120px",
-    paddingBottom: "80px",
-  },
-  container: {
-    position: "relative",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    gap: "20px",
-    marginBottom: "40px",
-    position: "sticky",
-    top: "60px",
-    zIndex: 100,
-    backgroundColor: "#0a0a0a",
-    padding: "20px 0",
-    transition: "background-color 0.3s ease",
-  },
-  headerScrolled: {
-    backgroundColor: "transparent",
-  },
-  button: {
-    backgroundColor: "transparent !important",
-    color: "#fff !important",
-    border: "1px solid #fff !important",
-    padding: "12px 35px !important",
-    fontSize: "0.85rem !important",
-    borderRadius: "0 !important",
-    fontWeight: "400 !important",
-    letterSpacing: "0.15em !important",
-    textTransform: "uppercase !important",
-    transition: "all 0.3s ease !important",
-    fontFamily: "'Montserrat', sans-serif !important",
-    minWidth: "200px !important",
-    "&:hover": {
-      backgroundColor: "#fff !important",
-      color: "#000 !important",
-    },
-  },
-  mainContainer: {
-    paddingTop: "20px",
-    paddingBottom: "40px",
-  },
-  heroSection: {
-    textAlign: "center",
-    padding: "60px 0",
-    marginBottom: "40px",
-    background:
-      "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
-    borderRadius: "16px",
-    border: "1px solid rgba(255,255,255,0.1)",
-  },
-  heroTitle: {
-    fontSize: "3rem",
-    fontWeight: "700",
-    marginBottom: "16px",
-    background: "linear-gradient(45deg, #fff 30%, #f0f0f0 90%)",
-    backgroundClip: "text",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  heroSubtitle: {
-    fontSize: "1.2rem",
-    color: "rgba(255, 255, 255, 0.7)",
-    marginBottom: "32px",
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  controlsSection: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "40px",
-    padding: "20px",
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    borderRadius: "12px",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    flexWrap: "wrap",
-    gap: "16px",
-  },
-  leftControls: {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    flexWrap: "wrap",
-  },
-  rightControls: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  },
-  controlButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.1) !important",
-    color: "#fff !important",
-    border: "1px solid rgba(255, 255, 255, 0.2) !important",
-    padding: "8px 16px !important",
-    borderRadius: "8px !important",
-    textTransform: "none !important",
-    fontWeight: "500 !important",
-    transition: "all 0.3s ease !important",
-    minWidth: "auto !important",
-    "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.2) !important",
-      border: "1px solid rgba(255, 255, 255, 0.4) !important",
-    },
-  },
-  activeControlButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2) !important",
-    border: "1px solid rgba(255, 255, 255, 0.4) !important",
-  },
-  contentSection: {
-    position: "relative",
-  },
-  drawer: {
-    "& .MuiDrawer-paper": {
-      backgroundColor: "#0a0a0a !important",
-      color: "#fff !important",
-      borderLeft: "1px solid rgba(255,255,255,0.1) !important",
-      backdropFilter: "blur(10px)",
-    },
-  },
-  scrollToTop: {
-    position: "fixed !important",
-    bottom: "24px !important",
-    right: "24px !important",
-    backgroundColor: "rgba(255, 255, 255, 0.1) !important",
-    color: "#fff !important",
-    border: "1px solid rgba(255, 255, 255, 0.2) !important",
-    backdropFilter: "blur(10px)",
-    "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.2) !important",
-      transform: "translateY(-2px)",
-    },
-  },
-  statsCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: "12px",
-    padding: "20px",
-    textAlign: "center",
-    transition: "all 0.3s ease",
-    "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.08)",
-      transform: "translateY(-4px)",
-    },
-  },
-  statsNumber: {
-    fontSize: "2rem",
-    fontWeight: "700",
-    color: "#fff",
-    marginBottom: "8px",
-  },
-  statsLabel: {
-    fontSize: "0.9rem",
-    color: "rgba(255, 255, 255, 0.7)",
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-  },
-  mobileControls: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    width: "100%",
-  },
-});
+// ─── Reusable pill button ──────────────────────────────────────────────────────
+const Pill = ({ active, onClick, children }) => (
+  <Box
+    component="button"
+    onClick={onClick}
+    sx={{
+      background: "none",
+      border: "1px solid",
+      borderColor: active ? "#C0D3CA" : "rgba(255,255,255,0.15)",
+      color: active ? "#C0D3CA" : "rgba(255,255,255,0.5)",
+      borderRadius: 0,
+      px: "20px",
+      py: "9px",
+      fontSize: "0.7rem",
+      fontFamily: "'Montserrat', sans-serif",
+      fontWeight: active ? 600 : 400,
+      letterSpacing: "0.14em",
+      textTransform: "uppercase",
+      cursor: "pointer",
+      backgroundColor: active ? "rgba(192,211,202,0.07)" : "transparent",
+      transition: "all 0.22s ease",
+      "&:hover": { borderColor: "rgba(192,211,202,0.45)", color: "rgba(255,255,255,0.85)" },
+    }}
+  >
+    {children}
+  </Box>
+);
 
+// ─── Icon toggle button ────────────────────────────────────────────────────────
+const IconBtn = ({ active, onClick, children }) => (
+  <Box
+    component="button"
+    onClick={onClick}
+    sx={{
+      background: "none",
+      border: "1px solid",
+      borderColor: active ? "rgba(192,211,202,0.45)" : "rgba(255,255,255,0.1)",
+      color: active ? "#C0D3CA" : "rgba(255,255,255,0.3)",
+      borderRadius: "2px",
+      width: 34,
+      height: 34,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      transition: "all 0.2s ease",
+      "&:hover": { borderColor: "rgba(192,211,202,0.4)", color: "#C0D3CA" },
+    }}
+  >
+    {children}
+  </Box>
+);
+
+// ══════════════════════════════════════════════════════════════════════════════
 const Shopping = () => {
-  // const [user] = useAtom(authUserAtom);
-  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useLanguage();
-
-  const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
-  const [sortBy, setSortBy] = useState("newest"); // 'newest', 'price-low', 'price-high'
   const { data } = useProduct();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 60);
-      setShowScrollTop(window.scrollY > 400);
-    };
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [viewMode, setViewMode] = useState("grid");
+  const [sortBy, setSortBy] = useState("newest");
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+  useEffect(() => {
+    const fn = () => setShowScrollTop(window.scrollY > 500);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const toggleSideDrawer = () => {
-    setSideDrawerOpen(!sideDrawerOpen);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleViewModeChange = (mode) => {
-    setViewMode(mode);
-  };
-
-  const handleSortChange = (sort) => {
-    setSortBy(sort);
-  };
-
-  // if (!user) return <HaveUser />;
+  const suitCount = data?.allSuitPart?.length || 0;
 
   return (
-    <Box className={classes.root}>
-      <Container maxWidth="lg" className={classes.container}>
-        {/* Original Header */}
-        <Box
-          className={`${classes.header} ${
-            isScrolled ? classes.headerScrolled : ""
-          }`}
-        >
-          <Link to="/Payed" style={{ textDecoration: "none" }}>
-            <Button variant="outlined" className={classes.button}>
-              {t("forPayment")}
-            </Button>
-          </Link>
-        </Box>
+    <Box sx={{ backgroundColor: "#0a0a0a", color: "#fff", minHeight: "100vh" }}>
 
-        {/* Main Content */}
-        <Container maxWidth="xl" className={classes.mainContainer}>
-          {/* Hero Section */}
-          <Box className={classes.heroSection}>
-            <Typography className={classes.heroTitle}>
-              {t("premiumSuitCollection")}
-            </Typography>
-            <Typography className={classes.heroSubtitle}>
-              {t("shoppingSubtitle")}
-            </Typography>
-          </Box>
-
-          {/* Stats Section */}
-          <Grid container spacing={3} sx={{ marginBottom: 4 }}>
-            <Grid item xs={12} sm={4}>
-              <Paper className={classes.statsCard}>
-                <Typography className={classes.statsNumber}>
-                  {data?.allSuitPart?.length || 0}
-                </Typography>
-                <Typography className={classes.statsLabel}>
-                  {t("availableSuits")}
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Paper className={classes.statsCard}>
-                <Typography className={classes.statsNumber}>Premium</Typography>
-                <Typography className={classes.statsLabel}>
-                  {t("qualityGrade")}
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Paper className={classes.statsCard}>
-                <Typography className={classes.statsNumber}>24/7</Typography>
-                <Typography className={classes.statsLabel}>
-                  {t("support")}
-                </Typography>
-              </Paper>
-            </Grid>
-          </Grid>
-
-          {/* Controls Section */}
-          <Box className={classes.controlsSection}>
-            <Box
-              className={
-                isMobile ? classes.mobileControls : classes.leftControls
-              }
-            >
-              <Button
-                className={`${classes.controlButton} ${
-                  sortBy === "newest" ? classes.activeControlButton : ""
-                }`}
-                onClick={() => handleSortChange("newest")}
-                startIcon={<SortIcon />}
-              >
-                {t("newest")}
-              </Button>
-              <Button
-                className={`${classes.controlButton} ${
-                  sortBy === "price-low" ? classes.activeControlButton : ""
-                }`}
-                onClick={() => handleSortChange("price-low")}
-                startIcon={<SortIcon />}
-              >
-                {t("priceLowToHigh")}
-              </Button>
-              <Button
-                className={`${classes.controlButton} ${
-                  sortBy === "price-high" ? classes.activeControlButton : ""
-                }`}
-                onClick={() => handleSortChange("price-high")}
-                startIcon={<SortIcon />}
-              >
-                {t("priceHighToLow")}
-              </Button>
-            </Box>
-
-            <Box className={classes.rightControls}>
-              <IconButton
-                className={`${classes.controlButton} ${
-                  viewMode === "grid" ? classes.activeControlButton : ""
-                }`}
-                onClick={() => handleViewModeChange("grid")}
-              >
-                <ViewModuleIcon />
-              </IconButton>
-              <IconButton
-                className={`${classes.controlButton} ${
-                  viewMode === "list" ? classes.activeControlButton : ""
-                }`}
-                onClick={() => handleViewModeChange("list")}
-              >
-                <ViewListIcon />
-              </IconButton>
-            </Box>
-          </Box>
-
-          {/* Content Section */}
-          <Box className={classes.contentSection}>
-            <GetAllSuitFromData viewMode={viewMode} sortBy={sortBy} />
-          </Box>
-        </Container>
-
-        {/* Size Drawer */}
-        <Drawer
-          anchor="right"
-          open={sideDrawerOpen}
-          onClose={toggleSideDrawer}
-          className={classes.drawer}
-          PaperProps={{
-            sx: {
-              width: "50vw",
-            },
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* HERO                                                                */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      <Box
+        sx={{
+          position: "relative",
+          minHeight: { xs: "70vh", md: "80vh" },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          overflow: "hidden",
+          pt: { xs: "80px", md: "90px" },
+          pb: 8,
+        }}
+      >
+        {/* Background large text */}
+        <Typography
+          aria-hidden
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: { xs: "30vw", md: "20vw" },
+            fontWeight: 700,
+            letterSpacing: "-0.04em",
+            color: "rgba(192,211,202,0.03)",
+            userSelect: "none",
+            whiteSpace: "nowrap",
+            lineHeight: 1,
+            pointerEvents: "none",
           }}
         >
-          <ShowSizes data={data} onClose={toggleSideDrawer} />
-        </Drawer>
+          SUIT
+        </Typography>
+
+        {/* Eyebrow */}
+        <Typography
+          sx={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: "0.68rem",
+            fontWeight: 500,
+            letterSpacing: "0.3em",
+            color: "#C0D3CA",
+            textTransform: "uppercase",
+            mb: 3,
+          }}
+        >
+          Bespoke Atelier
+        </Typography>
+
+        {/* Main headline */}
+        <Typography
+          component="h1"
+          sx={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: { xs: "3.5rem", sm: "5rem", md: "7rem" },
+            fontWeight: 300,
+            letterSpacing: { xs: "0.1em", md: "0.15em" },
+            textTransform: "uppercase",
+            color: "#fff",
+            lineHeight: 0.9,
+            mb: 4,
+          }}
+        >
+          {t("premiumSuitCollection")}
+        </Typography>
+
+        {/* Divider */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            mb: 4,
+            width: { xs: "80%", md: "40%" },
+          }}
+        >
+          <Box sx={{ flex: 1, height: "1px", backgroundColor: "rgba(192,211,202,0.2)" }} />
+          <Box
+            sx={{
+              width: 6,
+              height: 6,
+              border: "1px solid rgba(192,211,202,0.5)",
+              transform: "rotate(45deg)",
+            }}
+          />
+          <Box sx={{ flex: 1, height: "1px", backgroundColor: "rgba(192,211,202,0.2)" }} />
+        </Box>
+
+        {/* Subtitle */}
+        <Typography
+          sx={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: { xs: "0.8rem", md: "0.9rem" },
+            fontWeight: 300,
+            color: "rgba(255,255,255,0.45)",
+            letterSpacing: "0.08em",
+            maxWidth: 480,
+            lineHeight: 1.8,
+            mb: 6,
+          }}
+        >
+          {t("shoppingSubtitle")}
+        </Typography>
+
+        {/* Payment CTA */}
+        <Link to="/Payed" style={{ textDecoration: "none" }}>
+          <Box
+            component="span"
+            sx={{
+              display: "inline-block",
+              border: "1px solid rgba(192,211,202,0.3)",
+              color: "#C0D3CA",
+              px: 5,
+              py: 1.5,
+              fontSize: "0.72rem",
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 500,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "rgba(192,211,202,0.07)",
+                borderColor: "#C0D3CA",
+                letterSpacing: "0.25em",
+              },
+            }}
+          >
+            {t("forPayment")}
+          </Box>
+        </Link>
+
+        {/* Scroll indicator */}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 32,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 1,
+            opacity: 0.4,
+          }}
+        >
+          <Typography sx={{ fontSize: "0.6rem", fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.2em", textTransform: "uppercase" }}>
+            Scroll
+          </Typography>
+          <Box sx={{ width: "1px", height: 40, backgroundColor: "rgba(255,255,255,0.4)" }} />
+        </Box>
+      </Box>
+
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* STICKY CONTROLS BAR                                                 */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      <Box
+        sx={{
+          position: "sticky",
+          top: { xs: 56, md: 64 },
+          zIndex: 100,
+          backgroundColor: "rgba(8,8,8,0.9)",
+          backdropFilter: "blur(20px)",
+          borderTop: "1px solid rgba(192,211,202,0.08)",
+          borderBottom: "1px solid rgba(192,211,202,0.08)",
+        }}
+      >
+        <Container maxWidth="xl">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              py: 1.5,
+              flexWrap: "wrap",
+              gap: 1.5,
+            }}
+          >
+            {/* Sort pills */}
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+              <Pill active={sortBy === "newest"} onClick={() => setSortBy("newest")}>
+                {t("newest")}
+              </Pill>
+              <Pill active={sortBy === "price-low"} onClick={() => setSortBy("price-low")}>
+                {t("priceLowToHigh")}
+              </Pill>
+              <Pill active={sortBy === "price-high"} onClick={() => setSortBy("price-high")}>
+                {t("priceHighToLow")}
+              </Pill>
+            </Box>
+
+            {/* Right controls */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              {suitCount > 0 && (
+                <Typography
+                  sx={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "0.68rem",
+                    color: "rgba(255,255,255,0.3)",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    mr: 1,
+                    display: { xs: "none", sm: "block" },
+                  }}
+                >
+                  {suitCount} {t("availableSuits")}
+                </Typography>
+              )}
+
+              <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255,255,255,0.08)", mx: 0.5 }} />
+
+              {/* Sizes / Filter button */}
+              <Box
+                component="button"
+                onClick={() => setDrawerOpen(true)}
+                sx={{
+                  background: "none",
+                  border: "1px solid rgba(192,211,202,0.25)",
+                  color: "rgba(255,255,255,0.6)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  px: "14px",
+                  py: "8px",
+                  borderRadius: "2px",
+                  fontSize: "0.68rem",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 500,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  transition: "all 0.22s ease",
+                  "&:hover": { borderColor: "#C0D3CA", color: "#C0D3CA", backgroundColor: "rgba(192,211,202,0.05)" },
+                }}
+              >
+                <TuneIcon sx={{ fontSize: "0.9rem" }} />
+                {!isMobile && t("sizes")}
+              </Box>
+
+              <IconBtn active={viewMode === "grid"} onClick={() => setViewMode("grid")}>
+                <ViewModuleIcon sx={{ fontSize: "1rem" }} />
+              </IconBtn>
+              <IconBtn active={viewMode === "list"} onClick={() => setViewMode("list")}>
+                <ViewListIcon sx={{ fontSize: "1rem" }} />
+              </IconBtn>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* PRODUCT GRID                                                         */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      <Container maxWidth="xl" sx={{ pt: 6, pb: 14 }}>
+        <GetAllSuitFromData viewMode={viewMode} sortBy={sortBy} />
       </Container>
 
-      {/* Scroll to Top Button */}
+      {/* ── Sizes drawer ────────────────────────────────────────────────────── */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{
+          sx: {
+            width: { xs: "92vw", sm: "48vw", md: "36vw" },
+            backgroundColor: "#080808",
+            borderLeft: "1px solid rgba(192,211,202,0.12)",
+          },
+        }}
+      >
+        <ShowSizes data={data} onClose={() => setDrawerOpen(false)} />
+      </Drawer>
+
+      {/* ── Scroll to top ────────────────────────────────────────────────────── */}
       {showScrollTop && (
         <Fab
-          color="primary"
+          size="small"
           aria-label="scroll to top"
-          onClick={scrollToTop}
-          className={classes.scrollToTop}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          sx={{
+            position: "fixed",
+            bottom: 28,
+            right: 28,
+            backgroundColor: "rgba(192,211,202,0.08)",
+            color: "#C0D3CA",
+            border: "1px solid rgba(192,211,202,0.2)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "none",
+            "&:hover": { backgroundColor: "rgba(192,211,202,0.15)" },
+            transition: "all 0.2s ease",
+          }}
         >
           <KeyboardArrowUpIcon />
         </Fab>

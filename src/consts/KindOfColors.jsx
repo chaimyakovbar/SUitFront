@@ -1099,7 +1099,7 @@ export const suitsColors = [
   },
   {
     color: photo9,
-    colorId: 8,
+    colorId: 9,
     colorName: "TR224-14",
     name: "black",
     price: "200$",
@@ -1107,7 +1107,7 @@ export const suitsColors = [
   },
   {
     color: photo10,
-    colorId: 8,
+    colorId: 10,
     colorName: "TR224-16",
     name: "black",
     price: "200$",
@@ -1115,7 +1115,7 @@ export const suitsColors = [
   },
   {
     color: photo11,
-    colorId: 8,
+    colorId: 11,
     colorName: "TR224-17",
     name: "black",
     price: "200$",
@@ -1123,7 +1123,7 @@ export const suitsColors = [
   },
   {
     color: photo12,
-    colorId: 8,
+    colorId: 12,
     colorName: "TR224-18",
     name: "black",
     price: "200$",
@@ -1131,7 +1131,7 @@ export const suitsColors = [
   },
   {
     color: photo13,
-    colorId: 8,
+    colorId: 13,
     colorName: "TR224-19",
     name: "black",
     price: "200$",

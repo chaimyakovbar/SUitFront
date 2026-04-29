@@ -27,6 +27,7 @@ const TakeSizes3 = lazy(() => import("./components/TakeSize3"));
 const TakeSizes4 = lazy(() => import("./components/TakeSizes4"));
 const TakeSizes5 = lazy(() => import("./components/TakeSizes5.jsx"));
 const Account = lazy(() => import("./pages/Account"));
+const Shopping = lazy(() => import("./pages/Shopping"));
 const CheckoutModern = lazy(() => import("./pages/CheckoutModern"));
 const IndexSizes = lazy(() => import("./sizes/IndexSizes"));
 const AIQuickSize = lazy(() => import("./pages/AIQuickSize"));
@@ -37,6 +38,7 @@ const LoginWithGoogle = lazy(() => import("./pages/LoginWithGoogle"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AccessibilityMenu = lazy(() => import("./pages/AccessibilityMenu"));
 const Payed = lazy(() => import("./pages/Payed"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 
 // Loading component for lazy loaded components
 const LoadingSpinner = () => (
@@ -92,8 +94,7 @@ const App = () => {
                   path="/Shopping"
                   element={
                     user ? (
-                      // <Shopping />
-                      <CheckoutModern />
+                      <Shopping />
                     ) : (
                       <Navigate
                         to="/login"
@@ -137,6 +138,7 @@ const App = () => {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/Payed" element={<Payed />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
               </Routes>
             </Suspense>
           </Box>

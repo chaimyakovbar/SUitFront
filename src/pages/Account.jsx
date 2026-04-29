@@ -318,46 +318,41 @@ const useStyles = makeStyles({
     backgroundColor: "#0a0a0a",
     color: "#fff",
     minHeight: "100vh",
-    paddingTop: "120px",
+    paddingTop: "80px",
     paddingBottom: "80px",
     "@media (max-width: 768px)": {
-      paddingTop: "100px",
-      paddingBottom: "120px",
+      paddingTop: "70px",
+      paddingBottom: "100px",
     },
   },
   sidebar: {
-    width: 320,
-    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-    borderRight: "1px solid rgba(192, 211, 202, 0.2) !important",
-    height: "calc(100vh - 200px)",
-    position: "sticky",
-    top: 120,
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-    borderRadius: "4px",
-    marginRight: "2rem",
+    backgroundColor: "rgba(10, 10, 10, 0.92) !important",
+    border: "1px solid rgba(192, 211, 202, 0.12) !important",
+    borderRadius: "2px !important",
+    position: "sticky !important",
+    top: "90px !important",
+    backdropFilter: "blur(24px) !important",
+    overflow: "hidden !important",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.5) !important",
     "@media (max-width: 768px)": {
-      width: "100% !important",
-      height: "auto !important",
       position: "static !important",
-      marginRight: "0 !important",
-      marginBottom: "2rem !important",
-      borderRadius: "4px !important",
+      width: "100% !important",
+      marginBottom: "1.5rem !important",
     },
   },
   mobileBottomNav: {
     display: "none",
-    "@media (max-width: 768px)": {
+    "@media (max-width: 900px)": {
       display: "flex !important",
       position: "fixed !important",
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: "rgba(30, 30, 30, 0.95) !important",
-      backdropFilter: "blur(20px)",
-      borderTop: "1px solid rgba(192, 211, 202, 0.2) !important",
+      backgroundColor: "rgba(8, 8, 8, 0.97) !important",
+      backdropFilter: "blur(24px) !important",
+      borderTop: "1px solid rgba(192, 211, 202, 0.1) !important",
       zIndex: 1000,
-      padding: "0.5rem 0",
+      padding: "0.4rem 0",
     },
   },
   mobileTabItem: {
@@ -365,411 +360,277 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "0.5rem",
-    color: "rgba(255, 255, 255, 0.6) !important",
+    padding: "0.5rem 0.25rem",
+    color: "rgba(255, 255, 255, 0.35) !important",
     textDecoration: "none",
-    transition: "all 0.3s ease",
-    borderRadius: "8px",
-    margin: "0 0.25rem",
-    "@media (max-width: 768px)": {
+    transition: "color 0.2s ease",
+    "@media (max-width: 900px)": {
       "&.active": {
         color: "#C0D3CA !important",
-        backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-        border: "1px solid rgba(192, 211, 202, 0.3) !important",
-        transform: "translateY(-2px)",
-        boxShadow: "0 4px 12px rgba(192, 211, 202, 0.2)",
-      },
-      "&:hover": {
-        backgroundColor: "rgba(255, 255, 255, 0.05)",
-        transform: "translateY(-1px)",
       },
     },
   },
   mobileTabIcon: {
-    fontSize: "1.5rem !important",
-    marginBottom: "0.25rem",
-    transition: "all 0.3s ease",
-    "@media (max-width: 768px)": {
-      fontSize: "1.2rem !important",
-      "&.active": {
-        transform: "scale(1.1)",
-      },
-    },
+    fontSize: "1.3rem !important",
+    marginBottom: "0.2rem",
+    transition: "all 0.2s ease",
   },
   mobileTabLabel: {
-    fontSize: "0.7rem !important",
+    fontSize: "0.58rem !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    fontWeight: "400 !important",
-    letterSpacing: "0.05em !important",
+    fontWeight: "500 !important",
+    letterSpacing: "0.1em !important",
     textTransform: "uppercase",
-    transition: "all 0.3s ease",
-    "@media (max-width: 768px)": {
-      fontSize: "0.65rem !important",
-      "&.active": {
-        fontWeight: "600 !important",
-        transform: "scale(1.05)",
-      },
-    },
   },
   mainContent: {
-    flex: 1,
-    paddingLeft: "2.5rem",
+    paddingLeft: "2rem",
     "@media (max-width: 768px)": {
       paddingLeft: "0 !important",
     },
   },
   heading: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "3.5rem !important",
+    fontSize: "3rem !important",
     fontWeight: "300 !important",
-    marginBottom: "3rem !important",
-    letterSpacing: "0.15em !important",
+    marginBottom: "2.5rem !important",
+    letterSpacing: "0.2em !important",
     color: "#fff !important",
     textAlign: "center",
     textTransform: "uppercase",
-    "@media (max-width: 768px)": {
-      fontSize: "2.5rem !important",
-      marginBottom: "2rem !important",
-    },
   },
   sectionTitle: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "2.2rem !important",
+    fontSize: "1.6rem !important",
     fontWeight: "300 !important",
-    marginBottom: "2rem !important",
-    letterSpacing: "0.1em !important",
-    color: "#C0D3CA !important",
+    marginBottom: "1.75rem !important",
+    letterSpacing: "0.18em !important",
+    color: "#fff !important",
     display: "flex",
     alignItems: "center",
-    gap: "1rem",
+    gap: "0.75rem",
     textTransform: "uppercase",
+    paddingBottom: "1rem !important",
+    borderBottom: "1px solid rgba(192, 211, 202, 0.1) !important",
+    "& svg": { color: "#C0D3CA", fontSize: "1.3rem !important" },
     "@media (max-width: 768px)": {
-      fontSize: "1.8rem !important",
-      marginBottom: "1.5rem !important",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      gap: "0.5rem",
+      fontSize: "1.3rem !important",
+      marginBottom: "1.25rem !important",
     },
   },
   card: {
-    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-    border: "1px solid rgba(192, 211, 202, 0.2) !important",
-    borderRadius: "4px !important",
-    marginBottom: "2rem",
-    transition: "all 0.4s ease",
-    backdropFilter: "blur(10px)",
+    backgroundColor: "rgba(12, 12, 12, 0.88) !important",
+    border: "1px solid rgba(192, 211, 202, 0.1) !important",
+    borderRadius: "2px !important",
+    marginBottom: "1.25rem !important",
+    backdropFilter: "blur(20px) !important",
+    transition: "border-color 0.3s ease, box-shadow 0.3s ease !important",
+    boxShadow: "0 4px 28px rgba(0,0,0,0.35) !important",
     "&:hover": {
-      // transform: "translateY(-4px)",
-      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
-      border: "1px solid rgba(192, 211, 202, 0.3) !important",
+      borderColor: "rgba(192, 211, 202, 0.22) !important",
+      boxShadow: "0 16px 48px rgba(0,0,0,0.5) !important",
     },
-    "@media (max-width: 768px)": {
-      marginBottom: "1.5rem !important",
-      "& .MuiCardContent-root": {
-        padding: "1rem !important",
-      },
-    },
-    "@media (max-width: 480px)": {
-      marginBottom: "1rem !important",
-      "& .MuiCardContent-root": {
-        padding: "0.75rem !important",
-      },
+    "& .MuiCardContent-root": {
+      padding: "0 !important",
     },
   },
   avatar: {
-    width: 100,
-    height: 100,
-    border: "3px solid rgba(192, 211, 202, 0.3)",
-    backgroundColor: "rgba(192, 211, 202, 0.05)",
-    backdropFilter: "blur(10px)",
-    "@media (max-width: 768px)": {
-      width: 80,
-      height: 80,
-      border: "2px solid rgba(192, 211, 202, 0.3)",
-    },
-    "@media (max-width: 480px)": {
-      width: 70,
-      height: 70,
-    },
+    width: "80px !important",
+    height: "80px !important",
+    border: "1px solid rgba(192, 211, 202, 0.25) !important",
+    backgroundColor: "transparent !important",
+    color: "#C0D3CA !important",
+    fontSize: "1.8rem !important",
+    fontFamily: "'Cormorant Garamond', serif !important",
+    fontWeight: "300 !important",
   },
   userInfo: {
     display: "flex",
     alignItems: "center",
-    gap: "1.5rem",
-    marginBottom: "2rem",
-    padding: "1.5rem",
-    backgroundColor: "rgba(192, 211, 202, 0.02)",
-    borderRadius: "4px",
-    border: "1px solid rgba(192, 211, 202, 0.1)",
+    gap: "2rem",
+    padding: "2rem 2.5rem",
+    borderBottom: "1px solid rgba(192, 211, 202, 0.07)",
     "@media (max-width: 768px)": {
       flexDirection: "column !important",
       alignItems: "center !important",
       textAlign: "center !important",
       gap: "1rem !important",
-      padding: "1rem !important",
-      marginBottom: "1.5rem !important",
+      padding: "1.5rem !important",
     },
   },
   userName: {
     fontFamily: "'Cormorant Garamond', serif !important",
-    fontSize: "2.5rem !important",
+    fontSize: "2rem !important",
     fontWeight: "300 !important",
-    letterSpacing: "0.1em !important",
+    letterSpacing: "0.08em !important",
     color: "#fff !important",
-    "@media (max-width: 768px)": {
-      fontSize: "2rem !important",
-      textAlign: "center !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "1.8rem !important",
-    },
+    lineHeight: "1.1 !important",
   },
   userEmail: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "1rem !important",
+    fontSize: "0.78rem !important",
     fontWeight: "300 !important",
-    color: "rgba(255, 255, 255, 0.7) !important",
-    letterSpacing: "0.05em !important",
-    "@media (max-width: 768px)": {
-      fontSize: "0.9rem !important",
-      textAlign: "center !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "0.85rem !important",
-    },
+    color: "rgba(255, 255, 255, 0.38) !important",
+    letterSpacing: "0.04em !important",
+    marginTop: "0.25rem !important",
   },
   infoItem: {
     display: "flex",
     alignItems: "center",
     gap: "1.5rem",
-    padding: "1.2rem 0",
-    borderBottom: "1px solid rgba(192, 211, 202, 0.1)",
-    "&:last-child": {
-      borderBottom: "none",
-    },
+    padding: "1.2rem 2.5rem",
+    borderBottom: "1px solid rgba(192, 211, 202, 0.06)",
+    "&:last-child": { borderBottom: "none" },
+    "&:hover": { backgroundColor: "rgba(192,211,202,0.02)" },
     "@media (max-width: 768px)": {
       flexDirection: "column !important",
       alignItems: "flex-start !important",
       gap: "0.5rem !important",
-      padding: "1rem 0 !important",
+      padding: "1rem 1.5rem !important",
     },
   },
   infoLabel: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.95rem !important",
-    fontWeight: "500 !important",
+    fontSize: "0.7rem !important",
+    fontWeight: "600 !important",
     color: "#C0D3CA !important",
-    minWidth: "140px",
-    letterSpacing: "0.05em",
+    minWidth: "120px",
+    letterSpacing: "0.1em !important",
     textTransform: "uppercase",
-    "@media (max-width: 768px)": {
-      minWidth: "auto !important",
-      fontSize: "0.85rem !important",
-      fontWeight: "600 !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "0.8rem !important",
-    },
   },
   infoValue: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "1rem !important",
+    fontSize: "0.9rem !important",
     fontWeight: "300 !important",
     color: "#fff !important",
     flex: 1,
     letterSpacing: "0.02em",
-    "@media (max-width: 768px)": {
-      fontSize: "0.9rem !important",
-      width: "100% !important",
-      textAlign: "left !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "0.85rem !important",
-    },
   },
   missingInfo: {
-    color: "#ef5350 !important",
+    color: "rgba(255,255,255,0.2) !important",
     fontStyle: "italic",
+    fontSize: "0.85rem !important",
   },
   editButton: {
-    color: "#fff !important",
-    backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-    border: "1px solid rgba(192, 211, 202, 0.3) !important",
-    padding: "0.6rem 1.2rem",
-    borderRadius: "0",
-    textTransform: "none",
-    fontSize: "0.85rem",
-    fontWeight: "500",
+    color: "rgba(192, 211, 202, 0.8) !important",
+    backgroundColor: "transparent !important",
+    border: "1px solid rgba(192, 211, 202, 0.2) !important",
+    padding: "0.35rem 1rem !important",
+    borderRadius: "2px !important",
+    textTransform: "uppercase !important",
+    fontSize: "0.68rem !important",
+    fontWeight: "500 !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    letterSpacing: "0.05em !important",
-    transition: "all 0.3s ease",
+    letterSpacing: "0.1em !important",
+    transition: "all 0.25s ease !important",
     "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.2) !important",
-      transform: "translateY(-2px)",
-      boxShadow: "0 8px 20px rgba(192, 211, 202, 0.2)",
-    },
-    "@media (max-width: 768px)": {
-      fontSize: "0.8rem !important",
-      padding: "0.5rem 1rem !important",
-      width: "100% !important",
-      marginTop: "0.5rem !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "0.75rem !important",
-      padding: "0.4rem 0.8rem !important",
+      backgroundColor: "rgba(192, 211, 202, 0.07) !important",
+      borderColor: "#C0D3CA !important",
+      color: "#C0D3CA !important",
     },
   },
   measurementsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "1.5rem",
-    marginTop: "1.5rem",
-    "@media (max-width: 768px)": {
-      gridTemplateColumns: "repeat(2, 1fr) !important",
-      gap: "0.75rem !important",
-      marginTop: "1rem !important",
-    },
+    display: "grid !important",
+    gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr)) !important",
+    gap: "0.6rem !important",
+    marginTop: "1.5rem !important",
     "@media (max-width: 480px)": {
-      gridTemplateColumns: "repeat(2, 1fr) !important",
-      gap: "0.5rem !important",
+      gridTemplateColumns: "repeat(3, 1fr) !important",
+      gap: "0.4rem !important",
     },
   },
   measurementCard: {
-    backgroundColor: "rgba(192, 211, 202, 0.02)",
-    padding: "1.5rem",
-    borderRadius: "4px",
-    border: "1px solid rgba(192, 211, 202, 0.1)",
+    padding: "1.1rem 0.5rem !important",
+    borderRadius: "2px !important",
     textAlign: "center",
-    transition: "all 0.3s ease",
-    backdropFilter: "blur(10px)",
+    transition: "border-color 0.2s ease !important",
     "&:hover": {
-      // transform: "translateY(-2px)",
-      boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
-      border: "1px solid rgba(192, 211, 202, 0.2)",
-    },
-    "@media (max-width: 768px)": {
-      padding: "0.75rem !important",
-      "&:hover": {
-        transform: "none",
-      },
-    },
-    "@media (max-width: 480px)": {
-      padding: "0.5rem !important",
+      borderColor: "rgba(192, 211, 202, 0.3) !important",
     },
   },
   measurementValue: {
-    fontSize: "1.8rem",
-    fontWeight: "300",
-    color: "#C0D3CA",
-    marginBottom: "0.8rem",
-    fontFamily: "'Cormorant Garamond', serif",
-    letterSpacing: "0.05em",
-    "@media (max-width: 768px)": {
-      fontSize: "1.2rem !important",
-      marginBottom: "0.3rem !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "1rem !important",
-      marginBottom: "0.2rem !important",
-    },
+    fontSize: "1.5rem !important",
+    fontWeight: "300 !important",
+    color: "#fff !important",
+    fontFamily: "'Cormorant Garamond', serif !important",
+    letterSpacing: "0.02em !important",
+    lineHeight: "1 !important",
+    marginBottom: "0.4rem !important",
   },
   measurementLabel: {
-    fontSize: "0.85rem",
-    color: "rgba(255, 255, 255, 0.7)",
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    fontFamily: "'Montserrat', sans-serif",
-    fontWeight: "500",
-    "@media (max-width: 768px)": {
-      fontSize: "0.65rem !important",
-      letterSpacing: "0.05em !important",
-    },
-    "@media (max-width: 480px)": {
-      fontSize: "0.6rem !important",
-      letterSpacing: "0.02em !important",
-    },
+    fontSize: "0.55rem !important",
+    color: "rgba(255, 255, 255, 0.38) !important",
+    textTransform: "uppercase !important",
+    letterSpacing: "0.12em !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    fontWeight: "500 !important",
   },
   orderCard: {
-    backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-    marginBottom: "1.5rem",
-    borderRadius: "4px !important",
-    border: "1px solid rgba(192, 211, 202, 0.2) !important",
+    backgroundColor: "rgba(12, 12, 12, 0.88) !important",
+    marginBottom: "0.75rem !important",
+    borderRadius: "2px !important",
+    border: "1px solid rgba(192, 211, 202, 0.1) !important",
     overflow: "hidden",
-    transition: "all 0.4s ease",
-    backdropFilter: "blur(10px)",
+    backdropFilter: "blur(20px) !important",
+    transition: "border-color 0.25s ease !important",
     "&:hover": {
-      // transform: "translateY(-4px)",
-      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
-      border: "1px solid rgba(192, 211, 202, 0.3) !important",
-    },
-    "@media (max-width: 768px)": {
-      marginBottom: "1rem !important",
-      "&:hover": {
-        transform: "none",
-      },
+      borderColor: "rgba(192, 211, 202, 0.22) !important",
     },
   },
   orderHeader: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "1.5rem",
-    borderBottom: "1px solid rgba(192, 211, 202, 0.1) !important",
-    backgroundColor: "rgba(192, 211, 202, 0.02) !important",
+    padding: "1.1rem 1.5rem",
+    borderBottom: "1px solid rgba(192, 211, 202, 0.07) !important",
     "@media (max-width: 768px)": {
       flexDirection: "column !important",
       alignItems: "flex-start !important",
-      gap: "1rem !important",
+      gap: "0.75rem !important",
       padding: "1rem !important",
     },
   },
   orderNumber: {
-    fontSize: "1.3rem !important",
-    fontWeight: "400 !important",
+    fontSize: "0.78rem !important",
+    fontWeight: "500 !important",
     color: "#C0D3CA !important",
-    fontFamily: "'Cormorant Garamond', serif !important",
-    letterSpacing: "0.05em !important",
-    "@media (max-width: 768px)": {
-      fontSize: "1.1rem !important",
-    },
+    fontFamily: "'Montserrat', sans-serif !important",
+    letterSpacing: "0.12em !important",
+    textTransform: "uppercase !important",
   },
   orderDate: {
-    fontSize: "0.9rem !important",
-    color: "rgba(255, 255, 255, 0.6) !important",
+    fontSize: "0.75rem !important",
+    color: "rgba(255, 255, 255, 0.3) !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    letterSpacing: "0.02em !important",
+    letterSpacing: "0.04em !important",
     fontWeight: "300 !important",
-    "@media (max-width: 768px)": {
-      fontSize: "0.8rem !important",
-    },
   },
   orderStatus: {
-    padding: "0.4rem 1rem !important",
-    borderRadius: "25px !important",
-    fontSize: "0.8rem !important",
+    padding: "0.28rem 0.8rem !important",
+    borderRadius: "20px !important",
+    fontSize: "0.65rem !important",
     fontWeight: "600 !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    letterSpacing: "0.05em !important",
+    letterSpacing: "0.08em !important",
     textTransform: "uppercase !important",
   },
   statusPreparing: {
-    backgroundColor: "rgba(255, 193, 7, 0.15)",
-    color: "#FFC107",
-    border: "1px solid rgba(255, 193, 7, 0.3)",
+    backgroundColor: "rgba(255, 193, 7, 0.1) !important",
+    color: "#FFC107 !important",
+    border: "1px solid rgba(255, 193, 7, 0.22) !important",
   },
   statusShipped: {
-    backgroundColor: "rgba(33, 150, 243, 0.15)",
-    color: "#2196F3",
-    border: "1px solid rgba(33, 150, 243, 0.3)",
+    backgroundColor: "rgba(33, 150, 243, 0.1) !important",
+    color: "#64B5F6 !important",
+    border: "1px solid rgba(33, 150, 243, 0.22) !important",
   },
   statusCompleted: {
-    backgroundColor: "rgba(98, 5, 248, 0.15)",
-    color: "#4CAF50",
-    border: "1px solid rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(192, 211, 202, 0.1) !important",
+    color: "#C0D3CA !important",
+    border: "1px solid rgba(192, 211, 202, 0.22) !important",
   },
   statusCancelled: {
-    backgroundColor: "rgba(244, 67, 54, 0.15)",
-    color: "#F44336",
+    backgroundColor: "rgba(244, 67, 54, 0.1) !important",
+    color: "#EF5350 !important",
     border: "1px solid rgba(244, 67, 54, 0.3)",
   },
   orderDetails: {
@@ -777,66 +638,66 @@ const useStyles = makeStyles({
     backgroundColor: "rgba(30, 30, 30, 0.3) !important",
   },
   orderTotal: {
-    fontSize: "1.4rem !important",
-    fontWeight: "400 !important",
-    color: "#C0D3CA !important",
+    fontSize: "1.1rem !important",
+    fontWeight: "300 !important",
+    color: "#fff !important",
     textAlign: "right !important",
     fontFamily: "'Cormorant Garamond', serif !important",
     letterSpacing: "0.05em !important",
   },
   logoutButton: {
-    color: "#fff !important",
-    backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-    border: "1px solid rgba(192, 211, 202, 0.3) !important",
-    padding: "1rem 2rem !important",
+    color: "rgba(255,255,255,0.4) !important",
+    backgroundColor: "transparent !important",
+    border: "none !important",
+    padding: "1rem 1.5rem !important",
     borderRadius: "0 !important",
-    textTransform: "none !important",
-    fontSize: "0.9rem !important",
-    fontWeight: "500 !important",
+    textTransform: "uppercase !important",
+    fontSize: "0.7rem !important",
+    fontWeight: "400 !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    letterSpacing: "0.05em !important",
-    transition: "all 0.3s ease !important",
+    letterSpacing: "0.12em !important",
+    transition: "color 0.2s ease !important",
     width: "100% !important",
+    justifyContent: "flex-start !important",
     "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.2) !important",
-      // transform: "translateY(-2px) !important",
-      boxShadow: "0 8px 25px rgba(192, 211, 202, 0.2) !important",
+      color: "rgba(239,83,80,0.8) !important",
+      backgroundColor: "rgba(239,83,80,0.04) !important",
     },
   },
   sidebarItem: {
-    color: "rgba(255, 255, 255, 0.7) !important",
-    borderBottom: "1px solid rgba(192, 211, 202, 0.1) !important",
-    padding: "1.2rem 1.5rem !important",
-    transition: "all 0.3s ease !important",
+    color: "rgba(255, 255, 255, 0.42) !important",
+    borderBottom: "1px solid rgba(192, 211, 202, 0.06) !important",
+    borderLeft: "3px solid transparent !important",
+    padding: "1rem 1.5rem !important",
+    transition: "all 0.22s ease !important",
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.9rem !important",
+    fontSize: "0.72rem !important",
     fontWeight: "400 !important",
-    letterSpacing: "0.05em !important",
+    letterSpacing: "0.1em !important",
     textTransform: "uppercase !important",
+    cursor: "pointer",
     "&:hover": {
-      backgroundColor: "rgba(192, 211, 202, 0.05) !important",
-      color: "#fff !important",
-      paddingLeft: "2rem !important",
-      // transform: "translateX(4px)",
+      backgroundColor: "rgba(192, 211, 202, 0.04) !important",
+      color: "rgba(255,255,255,0.75) !important",
+      borderLeftColor: "rgba(192, 211, 202, 0.3) !important",
     },
     "&.active": {
-      backgroundColor: "rgba(192, 211, 202, 0.1) !important",
-      color: "#fff !important",
-      borderLeft: "4px solid #C0D3CA !important",
-      paddingLeft: "2rem !important",
-      fontWeight: "500 !important",
+      backgroundColor: "rgba(192, 211, 202, 0.06) !important",
+      color: "#C0D3CA !important",
+      borderLeftColor: "#C0D3CA !important",
+      fontWeight: "600 !important",
     },
   },
   sidebarIcon: {
     color: "inherit !important",
-    marginRight: "1rem !important",
-    fontSize: "1.2rem !important",
+    minWidth: "34px !important",
+    "& svg": { fontSize: "1rem !important" },
   },
   sidebarText: {
     fontFamily: "'Montserrat', sans-serif !important",
-    fontSize: "0.9rem !important",
-    fontWeight: "400 !important",
-    letterSpacing: "0.05em !important",
+    fontSize: "0.72rem !important",
+    fontWeight: "inherit !important",
+    letterSpacing: "0.1em !important",
     textTransform: "uppercase !important",
     color: "inherit !important",
   },
@@ -1593,27 +1454,41 @@ function Account() {
             >
               {t("sortBy")}
             </Typography>
-            <select
+            <Box
+              component="select"
               value={orderSortBy}
               onChange={(e) => setOrderSortBy(e.target.value)}
-              style={{
-                backgroundColor: "rgba(30, 30, 30, 0.8)",
+              sx={{
+                backgroundColor: "rgba(20,20,20,0.9)",
                 color: "#fff",
-                border: "1px solid rgba(192, 211, 202, 0.3)",
+                border: "1px solid rgba(192,211,202,0.3)",
                 borderRadius: "4px",
-                padding: "0.5rem 1rem",
-                fontSize: "0.85rem",
+                px: "14px",
+                py: "8px",
+                fontSize: "0.82rem",
                 fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 400,
+                letterSpacing: "0.04em",
                 cursor: "pointer",
                 outline: "none",
-                minWidth: "150px",
+                minWidth: "160px",
+                appearance: "auto",
+                "&:hover": {
+                  borderColor: "rgba(192,211,202,0.6)",
+                },
+                "&:focus": {
+                  borderColor: "#C0D3CA",
+                },
+                "& option": {
+                  backgroundColor: "#1a1a1a",
+                },
               }}
             >
               <option value="newest">{t("newestFirst")}</option>
               <option value="oldest">{t("oldestFirst")}</option>
               <option value="price-high">{t("priceHighToLow")}</option>
               <option value="price-low">{t("priceLowToHigh")}</option>
-            </select>
+            </Box>
           </Box>
         </Box>
 
@@ -1945,20 +1820,195 @@ function Account() {
 
   if (!user) {
     return (
-      <Box className={classes.root}>
-        <Container maxWidth="md">
-          <Typography className={classes.notLoggedIn}>
+      <Box
+        sx={{
+          backgroundColor: "#0a0a0a",
+          color: "#fff",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pt: "80px",
+        }}
+      >
+        <Box
+          sx={{
+            textAlign: "center",
+            px: 4,
+            py: 8,
+            maxWidth: 480,
+            border: "1px solid rgba(192,211,202,0.15)",
+            borderRadius: "4px",
+            backgroundColor: "rgba(30,30,30,0.5)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <Typography
+            sx={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: { xs: "2rem", md: "2.8rem" },
+              fontWeight: 300,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#fff",
+              mb: 2,
+            }}
+          >
+            {t("userProfile")}
+          </Typography>
+          <Box
+            sx={{
+              width: 40,
+              height: "1px",
+              backgroundColor: "rgba(192,211,202,0.4)",
+              mx: "auto",
+              mb: 3,
+            }}
+          />
+          <Typography
+            sx={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.9rem",
+              fontWeight: 300,
+              color: "rgba(255,255,255,0.6)",
+              letterSpacing: "0.05em",
+              mb: 5,
+            }}
+          >
             {t("pleaseLogIn")}
           </Typography>
-        </Container>
+          <Box
+            component="a"
+            href="/LoginWithGoogle"
+            sx={{
+              display: "inline-block",
+              border: "1px solid rgba(192,211,202,0.4)",
+              color: "#C0D3CA",
+              px: "36px",
+              py: "12px",
+              fontSize: "0.78rem",
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 500,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "rgba(192,211,202,0.08)",
+                borderColor: "#C0D3CA",
+              },
+            }}
+          >
+            Sign In
+          </Box>
+        </Box>
       </Box>
     );
   }
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="lg">
-        <Typography className={classes.heading}>{t("userProfile")}</Typography>
+      <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 6, lg: 8 } }}>
+        {/* ── Page header ───────────────────────────────────────────────────── */}
+        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
+          <Typography
+            sx={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: { xs: "1rem", md: "0.85rem" },
+              fontWeight: 300,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "#C0D3CA",
+              mb: 1,
+            }}
+          >
+            {t("userProfile")}
+          </Typography>
+          <Typography
+            sx={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: { xs: "2.5rem", md: "3.5rem" },
+              fontWeight: 300,
+              letterSpacing: "0.1em",
+              color: "#fff",
+              lineHeight: 1.1,
+            }}
+          >
+            {user?.displayName || user?.firstName || user?.email?.split("@")[0] || "Welcome"}
+          </Typography>
+          <Box
+            sx={{
+              width: 50,
+              height: "1px",
+              backgroundColor: "rgba(192,211,202,0.35)",
+              mx: "auto",
+              mt: 2.5,
+            }}
+          />
+        </Box>
+
+        {/* ── Stats bar ─────────────────────────────────────────────────────── */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: { xs: 1.5, md: 3 },
+            justifyContent: "center",
+            mb: { xs: 4, md: 6 },
+            flexWrap: "wrap",
+          }}
+        >
+          {[
+            { label: t("orderHistory"), value: orders.length || "—", section: "orders" },
+            { label: t("bodyMeasurements"), value: sizeProfiles.length || "—", section: "measurements" },
+            { label: "Member Since", value: user?.createdAt ? new Date(user.createdAt).getFullYear() : "2024", section: null },
+          ].map(({ label, value, section }) => (
+            <Box
+              key={label}
+              onClick={() => section && setActiveSection(section)}
+              sx={{
+                textAlign: "center",
+                px: { xs: 3, md: 5 },
+                py: 2,
+                border: "1px solid rgba(192,211,202,0.1)",
+                borderRadius: "2px",
+                minWidth: 120,
+                backgroundColor: "rgba(12,12,12,0.6)",
+                backdropFilter: "blur(12px)",
+                cursor: section ? "pointer" : "default",
+                transition: "border-color 0.2s ease, background-color 0.2s ease",
+                "&:hover": section ? {
+                  borderColor: "rgba(192,211,202,0.3)",
+                  backgroundColor: "rgba(192,211,202,0.05)",
+                } : {},
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: { xs: "1.8rem", md: "2.2rem" },
+                  fontWeight: 300,
+                  color: "#fff",
+                  lineHeight: 1,
+                  mb: 0.5,
+                }}
+              >
+                {value}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: "0.6rem",
+                  fontWeight: 500,
+                  color: "rgba(255,255,255,0.35)",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {label}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
 
         <Grid container spacing={3}>
           {/* Sidebar - Hidden on Mobile */}
@@ -1971,11 +2021,7 @@ function Account() {
             <Paper
               className={classes.sidebar}
               elevation={0}
-              sx={{
-                backgroundColor: "rgba(30, 30, 30, 0.6) !important",
-                border: "1px solid rgba(192, 211, 202, 0.2) !important",
-                borderRadius: "4px !important",
-              }}
+              sx={{ border: "none !important" }}
             >
               <List sx={{ p: 0 }}>
                 <ListItem

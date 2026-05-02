@@ -157,7 +157,7 @@ const About = () => {
               className={classes.imageContainer}
             >
               <img
-                src={`${S3_BASE_URL}/assets_V3/images/oldMan.jpg`}
+                src={`${S3_BASE_URL}/assets_V3/images/oldMan.webp`}
                 alt="Tailor workshop"
                 className={classes.image}
               />
@@ -194,7 +194,7 @@ const About = () => {
               className={classes.imageContainer}
             >
               <img
-                src={`${S3_BASE_URL}/assets_V3/images/takeSizes.jpg`}
+                src={`${S3_BASE_URL}/assets_V3/images/takeSizes.webp`}
                 alt="Suit detail"
                 className={classes.image}
               />

@@ -1,10 +1,10 @@
 export const suitPricing = {
     // Base prices for different suit kinds
     basePrices: {
-        kind1: 500, // Standard suit
-        kind2: 550, // Premium suit
-        kind3: 600, // Luxury suit
-        kind4: 650, // Custom luxury suit
+        kind1: 1500, // Standard suit
+        kind2: 1600, // Premium suit
+        kind3: 1700, // Luxury suit
+        kind4: 1800, // Custom luxury suit
     },
 
     // Additional costs for different components

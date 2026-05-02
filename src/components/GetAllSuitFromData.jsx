@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useProduct from "../Hooks/useProduct";
 import { deleteSuit } from "../api/suit";
@@ -336,14 +336,10 @@ const getImagePaths = (item, viewType = "suit") => {
   const imagePaths = [];
 
   if (viewType === "suit") {
-    // חליפה - כל החלקים
     imagePaths.push(
-      // Base suit image - use stored path if available, otherwise construct it
       {
         key: "baseSuit",
-        path:
-          item.baseSuitImagePath ||
-          `${S3_BASE_URL}/assets_V3/Ragach/Kinds/${item.kind}/${item.color}.webp`,
+        path: `${S3_BASE_URL}/assets_V3/Ragach/Kinds/${item.kind}/${item.color}.webp`,
       },
       {
         key: "insideUp",
@@ -614,7 +610,6 @@ const DynamicImage = ({
   const allSuits = useMemo(() => data?.allSuitPart || [], [data?.allSuitPart]);
   const [deletingSuitId, setDeletingSuitId] = useState(null);
   const [cardViewTypes, setCardViewTypes] = useState({}); // Store view type for each card
-  console.log("Received suits data:", allSuits); // Debug log
 
   // Get z-index for image layers - מועבר ל-memoized function
   const getZIndex = useCallback((key) => {
@@ -711,40 +706,38 @@ const DynamicImage = ({
     },
   });
 
-  // Create a cache for images
-  const [imagesCache, setImagesCache] = useState({});
-  const [loadingStates, setLoadingStates] = useState({});
+  // Use refs for cache/loading to avoid triggering re-render loops
+  const imagesCacheRef = useRef({});
+  const loadingStateRef = useRef({});
+  const [cacheVersion, setCacheVersion] = useState(0);
 
   // Function to load images for a specific suit and view type
   const loadImagesForSuit = useCallback(
     async (suitId, viewType) => {
       const cacheKey = `${suitId}-${viewType}`;
 
-      // Check if already in cache
-      if (imagesCache[cacheKey]) {
-        return imagesCache[cacheKey];
+      if (imagesCacheRef.current[cacheKey] || loadingStateRef.current[cacheKey]) {
+        return imagesCacheRef.current[cacheKey] || null;
       }
 
-      // Set loading state
-      setLoadingStates((prev) => ({ ...prev, [cacheKey]: true }));
+      loadingStateRef.current[cacheKey] = true;
 
       try {
         const suit = sortedSuits.find((s) => s._id === suitId);
         if (!suit) return null;
 
         const images = await fetchImages(suit, viewType);
-
-        // Cache the result
-        setImagesCache((prev) => ({ ...prev, [cacheKey]: images }));
+        imagesCacheRef.current[cacheKey] = images;
+        setCacheVersion((v) => v + 1);
         return images;
       } catch (error) {
         console.error(`Error loading images for ${suitId}:`, error);
         return null;
       } finally {
-        setLoadingStates((prev) => ({ ...prev, [cacheKey]: false }));
+        loadingStateRef.current[cacheKey] = false;
       }
     },
-    [sortedSuits, imagesCache],
+    [sortedSuits],
   );
 
   // Lazy loading with Intersection Observer - רק טוען תמונות כשהכרטיס נראה
@@ -772,86 +765,61 @@ const DynamicImage = ({
 
   // Load images only for visible suits
   useEffect(() => {
-    const loadVisibleImages = async () => {
-      const promises = [];
+    if (visibleSuits.size === 0) return;
 
-      visibleSuits.forEach((suitId) => {
-        const suit = sortedSuits.find((s) => s._id === suitId);
-        if (suit) {
-          const viewType = cardViewTypes[suitId] || "suit";
-          const cacheKey = `${suitId}-${viewType}`;
-
-          if (!imagesCache[cacheKey] && !loadingStates[cacheKey]) {
-            promises.push(loadImagesForSuit(suitId, viewType));
-          }
-        }
-      });
-
-      // Load in batches of 3 to avoid overwhelming the browser
-      for (let i = 0; i < promises.length; i += 3) {
-        const batch = promises.slice(i, i + 3);
-        await Promise.all(batch);
-        // Small delay between batches
-        if (i + 3 < promises.length) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
+    visibleSuits.forEach((suitId) => {
+      const suit = sortedSuits.find((s) => s._id === suitId);
+      if (suit) {
+        const viewType = cardViewTypes[suitId] || "suit";
+        loadImagesForSuit(suitId, viewType);
       }
-    };
+    });
+  }, [visibleSuits, sortedSuits, cardViewTypes, loadImagesForSuit]);
 
-    if (visibleSuits.size > 0) {
-      loadVisibleImages();
-    }
-  }, [
-    visibleSuits,
-    sortedSuits,
-    cardViewTypes,
-    imagesCache,
-    loadingStates,
-    loadImagesForSuit,
-  ]);
-
-  // Get images data for display
+  // cacheVersion triggers re-render when images load (via setCacheVersion in loadImagesForSuit)
+  void cacheVersion;
   const imagesData = sortedSuits.map((suit) => {
     const viewType = cardViewTypes[suit._id] || "suit";
     const cacheKey = `${suit._id}-${viewType}`;
-    return imagesCache[cacheKey] || null;
+    return imagesCacheRef.current[cacheKey] || null;
   });
 
-  // Check loading state
   const isLoading =
-    productLoading || Object.values(loadingStates).some(Boolean);
+    productLoading || Object.values(loadingStateRef.current).some(Boolean);
 
   const handleSelect = (suitId, price) => {
+    const isSelected = selectedSuits.has(suitId);
     setSelectedSuits((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(suitId)) {
         newSet.delete(suitId);
-        setTotalPrice((prevPrice) => prevPrice - price);
       } else {
         newSet.add(suitId);
-        setTotalPrice((prevPrice) => prevPrice + price);
       }
-      // Call parent's onSelect if provided
-      if (onSelect) {
-        onSelect(suitId);
-      }
+      if (onSelect) onSelect(suitId);
       return newSet;
     });
+    setTotalPrice((prev) => isSelected ? prev - price : prev + price);
   };
 
   const handleDelete = async (suitId) => {
-    console.log("Deleting suit with ID:", suitId); // Debug log
-    if (!suitId) {
-      console.error("No suit ID provided for deletion");
-      return;
-    }
+    if (!suitId) return;
+    const suit = sortedSuits.find((s) => s._id === suitId);
     try {
       setDeletingSuitId(suitId);
-      // Start both the deletion and delay in parallel
       await Promise.all([
         deleteMutation.mutateAsync(suitId),
         new Promise((resolve) => setTimeout(resolve, 500)),
       ]);
+      // Remove from selected if it was checked
+      if (selectedSuits.has(suitId)) {
+        setSelectedSuits((prev) => {
+          const next = new Set(prev);
+          next.delete(suitId);
+          return next;
+        });
+        setTotalPrice((prev) => prev - (suit?.totalPrice || 0));
+      }
     } catch (error) {
       console.error("Failed to delete suit:", error);
     } finally {
@@ -907,20 +875,10 @@ const DynamicImage = ({
     // Get view type for this specific card
     const cardViewType = cardViewTypes[item._id] || "suit";
 
-    // Function to toggle view type for this card
-    const toggleCardViewType = async () => {
+    const toggleCardViewType = () => {
       const newViewType = cardViewType === "suit" ? "pants" : "suit";
-
-      setCardViewTypes((prev) => ({
-        ...prev,
-        [item._id]: newViewType,
-      }));
-
-      // Load images for the new view type if not in cache
-      const cacheKey = `${item._id}-${newViewType}`;
-      if (!imagesCache[cacheKey]) {
-        await loadImagesForSuit(item._id, newViewType);
-      }
+      setCardViewTypes((prev) => ({ ...prev, [item._id]: newViewType }));
+      loadImagesForSuit(item._id, newViewType);
     };
 
     return (
@@ -946,12 +904,6 @@ const DynamicImage = ({
               <img
                 key={`${item._id}-${key}`}
                 src={src}
-                srcSet={`
-                  ${src.replace(/\.(png|jpg|jpeg|webp)$/i, "@1x.$1")} 1x,
-                  ${src.replace(/\.(png|jpg|jpeg|webp)$/i, "@2x.$1")} 2x,
-                  ${src.replace(/\.(png|jpg|jpeg|webp)$/i, "@3x.$1")} 3x
-                `}
-                sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={`Suit part: ${key}`}
                 className={photoClass}
                 style={{ zIndex }}
@@ -978,7 +930,7 @@ const DynamicImage = ({
         )} */}
 
         <div className={controlsClass}>
-          <div className={priceClass}>{item.totalPrice}$</div>
+          <div className={priceClass}>₪{item.totalPrice?.toLocaleString()}</div>
           <div className={classes.controlsWrapper}>
             {/* View Type Toggle Button */}
             <button

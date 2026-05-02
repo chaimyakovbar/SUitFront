@@ -43,12 +43,11 @@ const TakeSizes4 = () => {
         if (userData?.sizesTable) {
           const { jacket, pants } = userData.sizesTable;
 
-          // Convert to numbers and set the states
           const jacketSize = parseInt(jacket);
           const pantsSize = parseInt(pants);
 
-          setSelectedJacketSize(jacketSize);
-          setSelectedPantsSize(pantsSize);
+          if (!isNaN(jacketSize)) setSelectedJacketSize(jacketSize);
+          if (!isNaN(pantsSize)) setSelectedPantsSize(pantsSize);
 
           enqueueSnackbar("Loaded your saved sizes", { variant: "info" });
         }

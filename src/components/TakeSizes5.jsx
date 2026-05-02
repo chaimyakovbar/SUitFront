@@ -21,8 +21,10 @@ import {
 } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import { bodyPointsSuit, buttonsSuit } from "../consts/KindOfColors";
-// import { authUserAtom } from "../Utils"; // Not needed for new DB
-// import { useAtom } from "jotai"; // Not needed for new DB
+import { authUserAtom } from "../Utils";
+import { useAtom } from "jotai";
+import { postProduct } from "../api/suit";
+import useProduct from "../Hooks/useProduct";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
@@ -99,9 +101,8 @@ const ModelLoader = ({ modelType, ...props }) => {
 
 const TakeSizes5 = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
-  // const [user] = useAtom(authUserAtom); // Not needed for new DB
-  const data = null;
-  const isLoading = false;
+  const [user] = useAtom(authUserAtom);
+  const { data, isLoading, refetch } = useProduct();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useLanguage();
@@ -177,7 +178,10 @@ const TakeSizes5 = () => {
         [`profile_${newProfileName.trim()}`]: newProfile.sizes,
       };
 
-      // TODO: Add new database connection here
+      if (user?.email) {
+        await postProduct({ email: user.email, sizes: updatedSizes });
+        await refetch?.();
+      }
 
       setSizeProfiles([...sizeProfiles, newProfile]);
       setSelectedProfile(newProfile);
@@ -215,7 +219,13 @@ const TakeSizes5 = () => {
         [`profile_${selectedProfile.name}`]: sizes,
       };
 
-      // TODO: Add new database connection here
+      if (!user?.email) {
+        enqueueSnackbar(t("pleaseLoginToSave") || "Please log in to save");
+        return;
+      }
+
+      await postProduct({ email: user.email, sizes: updatedSizes });
+      await refetch?.();
 
       setDialogOpen(false);
       setSelectedButton(null);

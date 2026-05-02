@@ -153,6 +153,7 @@ export const LanguageProvider = ({ children }) => {
       newest: "החדש ביותר",
       priceLowToHigh: "מחיר: נמוך לגבוה",
       priceHighToLow: "מחיר: גבוה לנמוך",
+      sizes: "מידות",
       // Account page translations
       userProfile: "פרופיל משתמש",
       personalInformation: "מידע אישי",
@@ -555,6 +556,7 @@ export const LanguageProvider = ({ children }) => {
       newest: "Newest",
       priceLowToHigh: "Price: Low to High",
       priceHighToLow: "Price: High to Low",
+      sizes: "Sizes",
       // Account page translations
       userProfile: "User Profile",
       personalInformation: "Personal Information",

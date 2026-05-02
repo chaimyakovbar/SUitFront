@@ -24,12 +24,13 @@ import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRound
 // MostPoPular הוסר - לא בשימוש
 import AllCollection from "./AllCollection";
 import { useLanguage } from "../context/LanguageContext";
+import ScrollSequence from "../components/ScrollSequence";
 
 const useStyles = makeStyles({
   root: {
     background: "#0a0a0a",
     color: "#fff",
-    overflowX: "hidden",
+    overflow: "clip",
   },
   heroSection: {
     height: "100vh",
@@ -300,9 +301,6 @@ const HomePage2 = () => {
       {/* Hero Section */}
       <section className={classes.heroSection}>
         <img
-          // initial={{ scale: 1.1 }}
-          // animate={{ scale: 1 }}
-          // transition={{ duration: 10, ease: "easeOut" }}
           className={classes.videoBackground}
           src={heroBackground}
           alt="Background"
@@ -340,7 +338,6 @@ const HomePage2 = () => {
           </Button>
         </motion.div>
 
-        {/* החלפת אנימציה אינסופית ב-CSS */}
         <div
           className={classes.scrollDown}
           onClick={() => scrollToSection(popularSectionRef)}
@@ -358,9 +355,6 @@ const HomePage2 = () => {
 
       <Divider className={classes.divider} />
 
-      {/* Popular Section - הוסר כי לא בשימוש */}
-
-      {/* Featured Section */}
       <Box
         component="section"
         className={`${classes.section} ${classes.sectionDark}`}
@@ -375,7 +369,7 @@ const HomePage2 = () => {
                 transition={{ duration: 0.8 }}
               >
                 <img
-                  src={`${S3_BASE_URL}/assets_V3/photoBackGround4.webp`}
+                  src={`${S3_BASE_URL}/assets_V3/images/photoBackGround4.webp`}
                   alt="Featured Collection"
                   className={classes.featuredImage}
                 />
@@ -407,6 +401,11 @@ const HomePage2 = () => {
           </Grid>
         </Container>
       </Box>
+
+      <Divider className={classes.divider} />
+
+      {/* Scroll Image Sequence */}
+      <ScrollSequence />
 
       <Divider className={classes.divider} />
 

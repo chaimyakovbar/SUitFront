@@ -56,7 +56,7 @@ const ImageFilterComponent = () => {
 
   const bottomPart =
     selectedKind === "kind2"
-      ? "bottom2"
+      ? "Bottom2"
       : selectedKind === "kind1"
         ? "bottom"
         : "bottomKind3";

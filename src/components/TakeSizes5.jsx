@@ -602,15 +602,17 @@ const TakeSizes5 = () => {
                       margin: "0 auto",
                     }}
                   >
-                    <Tooltip title="Click to watch" placement="top">
-                      <Button
-                        onClick={() =>
-                          handleOpenDialog("YouTube", selectedButton.video)
-                        }
-                      >
-                        <YouTubeIcon sx={{ color: "red" }} />
-                      </Button>
-                    </Tooltip>
+                    {selectedButton.video && (
+                      <Tooltip title="Click to watch" placement="top">
+                        <Button
+                          onClick={() =>
+                            handleOpenDialog("YouTube", selectedButton.video)
+                          }
+                        >
+                          <YouTubeIcon sx={{ color: "red" }} />
+                        </Button>
+                      </Tooltip>
+                    )}
                     <Tooltip
                       title="Click for detailed explanation"
                       placement="top"

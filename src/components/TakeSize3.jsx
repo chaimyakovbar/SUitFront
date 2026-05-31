@@ -1132,6 +1132,7 @@ const DollDisplay = () => {
                         margin: "0 auto",
                       }}
                     >
+                      {selectedButton.video && (
                       <div style={{ textAlign: "center" }}>
                         <Typography
                           variant={isMobile ? "body2" : "subtitle1"}
@@ -1171,6 +1172,7 @@ const DollDisplay = () => {
                           </Button>
                         </Tooltip>
                       </div>
+                      )}
                       <div style={{ textAlign: "center" }}>
                         <Typography
                           variant={isMobile ? "body2" : "subtitle1"}

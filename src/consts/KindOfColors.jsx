@@ -10,20 +10,26 @@ const S3_BASE_URL = "https://ch-suits.s3.us-east-1.amazonaws.com";
 // import photo6 from "../assets/homeMenu/color/burgundy.webp";
 // import photo7 from "../assets/homeMenu/color/bezz.webp";
 // import photo8 from "../assets/homeMenu/color/TR224-17 (NEVY).webp";
-import photo0 from "../assets/homeMenu/color/1.webp";
-import photo1 from "../assets/homeMenu/color/TR224-1.webp";
-import photo2 from "../assets/homeMenu/color/TR224-2.webp";
-import photo3 from "../assets/homeMenu/color/TR224-6.webp";
-import photo4 from "../assets/homeMenu/color/TR224-7.webp";
-import photo5 from "../assets/homeMenu/color/TR224-8.webp";
-import photo6 from "../assets/homeMenu/color/TR224-10.webp";
-import photo7 from "../assets/homeMenu/color/TR224-11.webp";
-import photo8 from "../assets/homeMenu/color/TR224-12.webp";
-import photo9 from "../assets/homeMenu/color/TR224-14.webp";
-import photo10 from "../assets/homeMenu/color/TR224-16.webp";
-import photo11 from "../assets/homeMenu/color/TR224-17.webp";
-import photo12 from "../assets/homeMenu/color/TR224-18.webp";
-import photo13 from "../assets/homeMenu/color/TR224-19.webp";
+import swatchBase from "../assets/homeMenu/color/1.webp";
+import swatch1 from "../assets/homeMenu/color/TR224-1.webp";
+import swatch2 from "../assets/homeMenu/color/TR224-2.webp";
+import swatch3 from "../assets/homeMenu/color/TR224-3.webp";
+import swatch4 from "../assets/homeMenu/color/TR224-4.webp";
+import swatch5 from "../assets/homeMenu/color/TR224-5.webp";
+import swatch6 from "../assets/homeMenu/color/TR224-6.webp";
+import swatch7 from "../assets/homeMenu/color/TR224-7.webp";
+import swatch8 from "../assets/homeMenu/color/TR224-8.webp";
+import swatch9 from "../assets/homeMenu/color/TR224-9.webp";
+import swatch10 from "../assets/homeMenu/color/TR224-10.webp";
+import swatch11 from "../assets/homeMenu/color/TR224-11.webp";
+import swatch12 from "../assets/homeMenu/color/TR224-12.webp";
+import swatch13 from "../assets/homeMenu/color/TR224-13.webp";
+import swatch14 from "../assets/homeMenu/color/TR224-14.webp";
+import swatch15 from "../assets/homeMenu/color/TR224-15.webp";
+import swatch16 from "../assets/homeMenu/color/TR224-16.webp";
+import swatch17 from "../assets/homeMenu/color/TR224-17.webp";
+import swatch18 from "../assets/homeMenu/color/TR224-18.webp";
+import swatch19 from "../assets/homeMenu/color/TR224-19.webp";
 
 // Color Inside Up
 export const gold = `${S3_BASE_URL}/assets_V3/adds/colorInsideUp/gold.jpg`;
@@ -748,7 +754,7 @@ export const buttonsSuit = [
     explain:
       "מדידת היקף המותניים של החליפה - מסביב לחלק הצר ביותר של המותניים בחליפה",
     img: size2,
-    video: "",
+    video: Waist,
   },
   {
     id: 3,
@@ -760,7 +766,7 @@ export const buttonsSuit = [
     explain:
       "מדידת היקף הירכיים של החליפה - מסביב לחלק הרחב ביותר של הירכיים בחליפה",
     img: size3,
-    video: "",
+    video: Seat,
   },
   {
     id: 4,
@@ -771,7 +777,7 @@ export const buttonsSuit = [
     label: "אורך ז'קט",
     explain: "מדידת אורך הז'קט - מהכתף עד לקצה הז'קט (לא כולל השרוולים)",
     img: size4,
-    video: "",
+    video: JacketLength,
   },
   {
     id: 5,
@@ -782,7 +788,7 @@ export const buttonsSuit = [
     label: "רוחב חזית",
     explain: "מדידת רוחב חזית הז'קט - הרוחב של החלק הקדמי של הז'קט",
     img: size5,
-    video: "",
+    video: FrontWidth,
   },
   {
     id: 6,
@@ -793,7 +799,7 @@ export const buttonsSuit = [
     label: "רוחב גב",
     explain: "מדידת רוחב גב הז'קט - הרוחב של החלק האחורי של הז'קט",
     img: size6,
-    video: "",
+    video: RearWidth,
   },
   {
     id: 7,
@@ -804,7 +810,7 @@ export const buttonsSuit = [
     label: "היקף בית שחי",
     explain: "מדידת היקף בית השחי של הז'קט - היקף הפתח של השרוול בז'קט",
     img: size7,
-    video: "",
+    video: null,
   },
   {
     id: 8,
@@ -815,7 +821,7 @@ export const buttonsSuit = [
     label: "היקף זרוע",
     explain: "מדידת היקף הזרוע בחליפה - בחלק הרחב ביותר של הזרוע בחליפה",
     img: size8,
-    video: "",
+    video: Biceps,
   },
   {
     id: 9,
@@ -826,7 +832,7 @@ export const buttonsSuit = [
     label: "רוחב כתף",
     explain: "מדידת רוחב הכתף בחליפה - מכתף לכתף על הז'קט",
     img: size9,
-    video: "",
+    video: Shoulder,
   },
   {
     id: 10,
@@ -837,7 +843,7 @@ export const buttonsSuit = [
     label: "אורך שרוול",
     explain: "מדידת אורך השרוול - מהכתף עד לקצה השרוול של הז'קט",
     img: size10,
-    video: "",
+    video: SleeveLengthFront,
   },
   {
     id: 11,
@@ -848,7 +854,7 @@ export const buttonsSuit = [
     label: "אורך מכנסיים",
     explain: "מדידת אורך המכנסיים - מהמותניים עד לקצה המכנסיים",
     img: size11,
-    video: "",
+    video: TrousersLengthFront,
   },
   {
     id: 12,
@@ -859,7 +865,7 @@ export const buttonsSuit = [
     label: "היקף חגורה",
     explain: "מדידת היקף החגורה של המכנסיים",
     img: size12,
-    video: "",
+    video: Waistband,
   },
   {
     id: 13,
@@ -870,7 +876,7 @@ export const buttonsSuit = [
     label: "אורך צעד",
     explain: "מדידת אורך הצעד - מהמותניים עד לרצפה דרך המפשעה",
     img: size13,
-    video: "",
+    video: StrideLength,
   },
   {
     id: 14,
@@ -881,7 +887,7 @@ export const buttonsSuit = [
     label: "היקף ירך",
     explain: "מדידת היקף הירך - בחלק הרחב ביותר",
     img: size14,
-    video: "",
+    video: Thigh,
   },
   {
     id: 15,
@@ -892,7 +898,7 @@ export const buttonsSuit = [
     label: "היקף ברך",
     explain: "מדידת היקף הברך",
     img: size15,
-    video: "",
+    video: null,
   },
   {
     id: 16,
@@ -903,7 +909,7 @@ export const buttonsSuit = [
     label: "היקף קרסול",
     explain: "מדידת היקף הקרסול",
     img: size16,
-    video: "",
+    video: Ankles,
   },
 ];
 
@@ -1027,114 +1033,29 @@ export const imageButton = [
   { name: "white", img: white },
 ];
 
+// Each fabric:
+//   colorName = manufacturer fabric CODE (also the S3 file key, e.g. assets_V3/.../TR224-19.webp)
+//   name      = human-readable color name (shown in UI, sent to the tailor)
+//   hexCode   = representative color extracted from the real fabric swatch
 export const suitsColors = [
-  {
-    color: photo0,
-    colorId: 0,
-    colorName: "greyLight",
-    name: "greyLight",
-    price: "200$",
-  },
-  {
-    color: photo1,
-    colorId: 1,
-    colorName: "TR224-1",
-    name: "greyLight",
-    price: "200$",
-  },
-  {
-    color: photo2,
-    colorId: 2,
-    colorName: "TR224-2",
-    name: "black",
-    price: "250$",
-  },
-  {
-    color: photo3,
-    colorId: 3,
-    colorName: "TR224-6",
-    name: "blueLight",
-    price: "200$",
-    hexCode: "#B4B4B4",
-  },
-  {
-    color: photo4,
-    colorId: 4,
-    colorName: "TR224-7",
-    name: "brown",
-    price: "200$",
-    hexCode: "#DC143C",
-  },
-  {
-    color: photo5,
-    colorId: 5,
-    colorName: "TR224-8",
-    name: "brownlight",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo6,
-    colorId: 6,
-    colorName: "TR224-10",
-    name: "burgundy",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo7,
-    colorId: 7,
-    colorName: "TR224-11",
-    name: "beze",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo8,
-    colorId: 8,
-    colorName: "TR224-12",
-    name: "navy",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo9,
-    colorId: 9,
-    colorName: "TR224-14",
-    name: "black",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo10,
-    colorId: 10,
-    colorName: "TR224-16",
-    name: "black",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo11,
-    colorId: 11,
-    colorName: "TR224-17",
-    name: "black",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo12,
-    colorId: 12,
-    colorName: "TR224-18",
-    name: "black",
-    price: "200$",
-    hexCode: "#50C878",
-  },
-  {
-    color: photo13,
-    colorId: 13,
-    colorName: "TR224-19",
-    name: "black",
-    price: "200$",
-    hexCode: "#50C878",
-  },
+  { color: swatchBase, colorId: 0,  colorName: "greyLight", name: "Classic Grey",   hexCode: "#C2BFBC", price: "200$" },
+  { color: swatch1,    colorId: 1,  colorName: "TR224-1",   name: "Cream",          hexCode: "#E1DAD4", price: "200$" },
+  { color: swatch2,    colorId: 2,  colorName: "TR224-2",   name: "Grey",           hexCode: "#7F7B80", price: "200$" },
+  { color: swatch3,    colorId: 3,  colorName: "TR224-3",   name: "Ivory",          hexCode: "#E0DBD6", price: "200$" },
+  { color: swatch4,    colorId: 4,  colorName: "TR224-4",   name: "Taupe",          hexCode: "#B19A8E", price: "200$" },
+  { color: swatch5,    colorId: 5,  colorName: "TR224-5",   name: "Chocolate",      hexCode: "#614E43", price: "200$" },
+  { color: swatch6,    colorId: 6,  colorName: "TR224-6",   name: "Charcoal Blue",  hexCode: "#464A59", price: "200$" },
+  { color: swatch7,    colorId: 7,  colorName: "TR224-7",   name: "Slate Blue",     hexCode: "#6D7189", price: "200$" },
+  { color: swatch8,    colorId: 8,  colorName: "TR224-8",   name: "Walnut",         hexCode: "#715A4D", price: "200$" },
+  { color: swatch9,    colorId: 9,  colorName: "TR224-9",   name: "Stone Grey",     hexCode: "#56504F", price: "200$" },
+  { color: swatch10,   colorId: 10, colorName: "TR224-10",  name: "Navy",           hexCode: "#303E5A", price: "200$" },
+  { color: swatch11,   colorId: 11, colorName: "TR224-11",  name: "Burgundy",       hexCode: "#4C202E", price: "200$" },
+  { color: swatch12,   colorId: 12, colorName: "TR224-12",  name: "Slate Mauve",    hexCode: "#595460", price: "200$" },
+  { color: swatch13,   colorId: 13, colorName: "TR224-13",  name: "Anthracite",     hexCode: "#4D4E54", price: "200$" },
+  { color: swatch14,   colorId: 14, colorName: "TR224-14",  name: "Charcoal Mauve", hexCode: "#58545F", price: "200$" },
+  { color: swatch15,   colorId: 15, colorName: "TR224-15",  name: "Espresso",       hexCode: "#3C3434", price: "200$" },
+  { color: swatch16,   colorId: 16, colorName: "TR224-16",  name: "Midnight Blue",  hexCode: "#2F3849", price: "200$" },
+  { color: swatch17,   colorId: 17, colorName: "TR224-17",  name: "Steel Blue",     hexCode: "#3C4659", price: "200$" },
+  { color: swatch18,   colorId: 18, colorName: "TR224-18",  name: "Denim Blue",     hexCode: "#596987", price: "200$" },
+  { color: swatch19,   colorId: 19, colorName: "TR224-19",  name: "Royal Blue",     hexCode: "#243767", price: "200$" },
 ];

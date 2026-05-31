@@ -1,4 +1,5 @@
 // Utility functions to manage suit state restoration from database data
+import { suitsColors } from "../consts/KindOfColors";
 
 /**
  * Restores all suit customization atoms from database suit data
@@ -206,6 +207,10 @@ export const createCompleteSuitObject = (atoms) => {
     const bottomPart = selectedKind === "kind3" || selectedKind === "kind4" ? "bottomKind3" : "bottom";
     const insideColor = selectedInsideType || currentColor;
 
+    // Resolve the human-readable fabric name + hex from the selected code.
+    // colorCode + colorDisplayName are what gets sent to the DB and the tailor.
+    const fabric = suitsColors.find((c) => c.colorName === currentColor) || null;
+
     return {
         kind: selectedKind || null,
         colar: currentColor,
@@ -214,6 +219,9 @@ export const createCompleteSuitObject = (atoms) => {
         packetUp: currentColor,
         bottomPart: bottomPart,
         color: currentColor || null,
+        colorCode: currentColor || null,
+        colorDisplayName: fabric?.name || null,
+        colorHex: fabric?.hexCode || null,
         lapelType: selectedLapelType || null,
         lapelKind: selectedCollar || null,
         packetType: selectedPacketType || null,

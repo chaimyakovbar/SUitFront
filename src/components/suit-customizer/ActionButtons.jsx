@@ -36,6 +36,8 @@ import {
   textInsideColorAtom,
   selectedKindTypeAtom,
   selectedTopCollarColorAtom,
+  selectedTopCollarTextAtom,
+  selectedTopCollarTextColorAtom,
 } from "../../Utils";
 
 import {
@@ -107,6 +109,9 @@ const ActionButtons = ({ isMobile }) => {
   const [, setTextInsideText] = useAtom(textInsideTextAtom);
   const [, setTextInsideFont] = useAtom(textInsideFontAtom);
   const [, setTextInsideColor] = useAtom(textInsideColorAtom);
+  const [, setSelectedTopCollarText] = useAtom(selectedTopCollarTextAtom);
+  const [, setSelectedTopCollarTextColor] = useAtom(selectedTopCollarTextColorAtom);
+  const [, setSelectedTopCollarColor] = useAtom(selectedTopCollarColorAtom);
 
   const isStepValid = () => {
     if (currentStep === 1) return !!currentKind;
@@ -206,6 +211,9 @@ const ActionButtons = ({ isMobile }) => {
           setTextInsideText,
           setTextInsideFont,
           setTextInsideColor,
+          setSelectedTopCollarText,
+          setSelectedTopCollarTextColor,
+          setSelectedTopCollarColor,
         });
         setCurrentStep(0);
         // Navigate only after successful save

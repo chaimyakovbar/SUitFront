@@ -137,12 +137,12 @@ export const resetSuitState = (setters) => {
 
     // Reset text inside customization
     if (typeof setters.setTextInsideText === 'function') {
-        setters.setTextInsideText('');
+        setters.setTextInsideText('chb');
     } else {
         console.error('setTextInsideText is not a function:', setters.setTextInsideText);
     }
     if (typeof setters.setTextInsideFont === 'function') {
-        setters.setTextInsideFont('Arial');
+        setters.setTextInsideFont('script');
     } else {
         console.error('setTextInsideFont is not a function:', setters.setTextInsideFont);
     }
@@ -150,6 +150,17 @@ export const resetSuitState = (setters) => {
         setters.setTextInsideColor('#ffffff');
     } else {
         console.error('setTextInsideColor is not a function:', setters.setTextInsideColor);
+    }
+
+    // Reset top collar customization
+    if (typeof setters.setSelectedTopCollarText === 'function') {
+        setters.setSelectedTopCollarText('chb');
+    }
+    if (typeof setters.setSelectedTopCollarTextColor === 'function') {
+        setters.setSelectedTopCollarTextColor('#ffffff');
+    }
+    if (typeof setters.setSelectedTopCollarColor === 'function') {
+        setters.setSelectedTopCollarColor('black');
     }
 };
 

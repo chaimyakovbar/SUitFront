@@ -37,6 +37,8 @@ import {
   textInsideColorAtom,
   selectedKindTypeAtom,
   selectedTopCollarColorAtom,
+  selectedTopCollarTextAtom,
+  selectedTopCollarTextColorAtom,
 } from "../Utils";
 import ExplainDialog from "./ExplainDialog";
 import { useSnackbar } from "notistack";
@@ -123,7 +125,10 @@ const StyledStepper = () => {
   const [textInsideFont, setTextInsideFont] = useAtom(textInsideFontAtom);
   const [textInsideColor, setTextInsideColor] = useAtom(textInsideColorAtom);
   const [selectedKindType, setSelectedKindType] = useAtom(selectedKindTypeAtom);
-  const topCollarColor = useAtomValue(selectedTopCollarColorAtom);
+  const [selectedTopCollarText, setSelectedTopCollarText] = useAtom(selectedTopCollarTextAtom);
+  const [selectedTopCollarTextColor, setSelectedTopCollarTextColor] = useAtom(selectedTopCollarTextColorAtom);
+  const [selectedTopCollarColor, setSelectedTopCollarColor] = useAtom(selectedTopCollarColorAtom);
+  const topCollarColor = selectedTopCollarColor;
 
   const insideColor = selectedInsideType || currColor;
   const holeButtonColor = selectedHolesButton;
@@ -223,6 +228,9 @@ const StyledStepper = () => {
         setTextInsideFont,
         setTextInsideColor,
         setSelectedKindType,
+        setSelectedTopCollarText,
+        setSelectedTopCollarTextColor,
+        setSelectedTopCollarColor,
       };
 
       resetSuitState(setters);
@@ -253,6 +261,9 @@ const StyledStepper = () => {
         setTextInsideFont,
         setTextInsideColor,
         setSelectedKindType,
+        setSelectedTopCollarText,
+        setSelectedTopCollarTextColor,
+        setSelectedTopCollarColor,
       };
 
       resetSuitState(setters);

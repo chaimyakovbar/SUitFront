@@ -34,6 +34,8 @@ import {
   textInsideColorAtom,
   selectedKindTypeAtom,
   selectedTopCollarColorAtom,
+  selectedTopCollarTextAtom,
+  selectedTopCollarTextColorAtom,
 } from "../../Utils";
 import {
   createCompleteSuitObject,
@@ -79,6 +81,9 @@ const SuitCustomizer = () => {
   const setTextInsideText = useSetAtom(textInsideTextAtom);
   const setTextInsideFont = useSetAtom(textInsideFontAtom);
   const setTextInsideColor = useSetAtom(textInsideColorAtom);
+  const setSelectedTopCollarText = useSetAtom(selectedTopCollarTextAtom);
+  const setSelectedTopCollarTextColor = useSetAtom(selectedTopCollarTextColorAtom);
+  const setSelectedTopCollarColor = useSetAtom(selectedTopCollarColorAtom);
 
   // Prevent scrolling on mobile
   // React.useEffect(() => {
@@ -176,6 +181,9 @@ const SuitCustomizer = () => {
         setTextInsideText,
         setTextInsideFont,
         setTextInsideColor,
+        setSelectedTopCollarText,
+        setSelectedTopCollarTextColor,
+        setSelectedTopCollarColor,
       });
       setCurrentStep(0);
 
@@ -368,10 +376,10 @@ const SuitCustomizer = () => {
                         "&:hover": isSubmitting
                           ? {}
                           : {
-                              background:
-                                "linear-gradient(135deg, rgba(192, 211, 202, 0.3) 0%, rgba(168, 195, 184, 0.3) 100%)",
-                              transform: "scale(1.05)",
-                            },
+                            background:
+                              "linear-gradient(135deg, rgba(192, 211, 202, 0.3) 0%, rgba(168, 195, 184, 0.3) 100%)",
+                            transform: "scale(1.05)",
+                          },
                       }}
                     >
                       {isSubmitting ? "⏳" : "✨"}
@@ -400,8 +408,8 @@ const SuitCustomizer = () => {
                     {currentStep === 0
                       ? "Choose Fabric"
                       : currentStep === 1
-                      ? "Design Style"
-                      : "Perfect Details"}
+                        ? "Design Style"
+                        : "Perfect Details"}
                   </Typography>
                 </Box>
               </Box>

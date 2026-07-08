@@ -5,6 +5,8 @@ import {
   selectedPantsButtonKindAtom,
   selectedPantsLoopsAtom,
   selectedPantsIronAtom,
+  selectedPantsFrontPocketAtom,
+  selectedPantsBackPocketAtom,
 } from "../Utils";
 import { useAtom } from "jotai";
 import {
@@ -151,6 +153,13 @@ const PantsControls = ({ isMobile: mobileProp }) => {
     selectedPantsIronAtom
   );
 
+  const [selectedPantsFrontPocket, setSelectedPantsFrontPocket] = useAtom(
+    selectedPantsFrontPocketAtom
+  );
+  const [selectedPantsBackPocket, setSelectedPantsBackPocket] = useAtom(
+    selectedPantsBackPocketAtom
+  );
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState("");
@@ -257,6 +266,16 @@ const PantsControls = ({ isMobile: mobileProp }) => {
   const hemOptions = [
     { value: "none", label: "No Hem" },
     { value: "Hem", label: "With Hem" },
+  ];
+
+  const frontPocketOptions = [
+    { value: "regular", label: t("regularPocket"), description: t("regularPocketDesc") },
+    { value: "jeans", label: t("jeansPocket"), description: t("jeansPocketDesc") },
+  ];
+
+  const backPocketOptions = [
+    { value: "none", label: t("noBackPocket"), description: t("noBackPocketDesc") },
+    { value: "backPocket", label: t("withBackPocket"), description: t("withBackPocketDesc") },
   ];
 
   const handleOpenDrawer = (title, options, currentValue, setValue) => {
@@ -645,6 +664,157 @@ const PantsControls = ({ isMobile: mobileProp }) => {
               }}
             >
               {t("chooseHem")}
+            </Typography>
+          </Button>
+        </Box>
+
+        {/* Front Pocket Section - Mobile */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                t("frontPocket"),
+                frontPocketOptions,
+                selectedPantsFrontPocket,
+                setSelectedPantsFrontPocket
+              )
+            }
+            sx={{
+              position: "relative",
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+              width: { xs: 100, md: 120 },
+              height: { xs: 100, md: 120 },
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 1,
+              overflow: "hidden",
+            }}
+          >
+            {/* SVG placeholder icon for front pocket */}
+            <Box
+              sx={{
+                width: "60%",
+                height: "60%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: 0.8,
+              }}
+            >
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
+                <rect x="8" y="20" width="48" height="36" rx="3" stroke="#C0D3CA" strokeWidth="3" fill="none"/>
+                <path d="M8 32 Q20 28 32 32 Q44 36 56 32" stroke="#C0D3CA" strokeWidth="2.5" fill="none"/>
+                <path d="M14 8 L14 20" stroke="#C0D3CA" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M50 8 L50 20" stroke="#C0D3CA" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
+            </Box>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                position: "absolute",
+                bottom: 4,
+                left: 0,
+                right: 0,
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                color: "#C0D3CA",
+                textAlign: "center",
+                background:
+                  "linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)",
+                py: 0.5,
+                px: 1,
+              }}
+            >
+              {t("frontPocket")}
+            </Typography>
+          </Button>
+        </Box>
+
+        {/* Back Pocket Section - Mobile */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleOpenDrawer(
+                t("backPocket"),
+                backPocketOptions,
+                selectedPantsBackPocket,
+                setSelectedPantsBackPocket
+              )
+            }
+            sx={{
+              position: "relative",
+              borderRadius: "12px",
+              px: 2,
+              py: 1,
+              color: "#C0D3CA",
+              borderColor: "#C0D3CA",
+              "&:hover": { backgroundColor: "rgba(192, 211, 202, 0.1)" },
+              width: { xs: 100, md: 120 },
+              height: { xs: 100, md: 120 },
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 1,
+              overflow: "hidden",
+            }}
+          >
+            {/* SVG placeholder icon for back pocket */}
+            <Box
+              sx={{
+                width: "60%",
+                height: "60%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: 0.8,
+              }}
+            >
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
+                <rect x="8" y="8" width="48" height="48" rx="3" stroke="#C0D3CA" strokeWidth="3" fill="none"/>
+                <rect x="18" y="18" width="28" height="20" rx="2" stroke="#C0D3CA" strokeWidth="2.5" fill="none"/>
+                <path d="M18 28 L46 28" stroke="#C0D3CA" strokeWidth="2" strokeDasharray="3 2"/>
+              </svg>
+            </Box>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                position: "absolute",
+                bottom: 4,
+                left: 0,
+                right: 0,
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                color: "#C0D3CA",
+                textAlign: "center",
+                background:
+                  "linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)",
+                py: 0.5,
+                px: 1,
+              }}
+            >
+              {t("backPocket")}
             </Typography>
           </Button>
         </Box>
@@ -1196,6 +1366,185 @@ const PantsControls = ({ isMobile: mobileProp }) => {
                   }}
                 >
                   {t("chooseHem")}
+                </Typography>
+              </Box>
+            </Box>
+          </motion.div>
+        </Grid>
+
+        {/* Front Pocket Selection */}
+        <Grid item xs={6} sm={4} md={6}>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Box
+              onClick={() =>
+                handleOpenDrawer(
+                  t("frontPocket"),
+                  frontPocketOptions,
+                  selectedPantsFrontPocket,
+                  setSelectedPantsFrontPocket
+                )
+              }
+              sx={{
+                cursor: "pointer",
+                borderRadius: "20px",
+                border: "2px solid rgba(192, 211, 202, 0.2)",
+                background:
+                  "linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                transition: "all 0.3s ease",
+                overflow: "hidden",
+                position: "relative",
+                width: "100px",
+                height: "100px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                p: 0,
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0, left: 0, right: 0, bottom: 0,
+                  background:
+                    "linear-gradient(135deg, rgba(192, 211, 202, 0.03) 0%, transparent 50%, rgba(192, 211, 202, 0.02) 100%)",
+                  pointerEvents: "none",
+                },
+                "&:hover": {
+                  border: "2px solid rgba(192, 211, 202, 0.4)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              >
+                {/* Front pocket SVG icon */}
+                <Box sx={{ width: "55%", height: "55%", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.85 }}>
+                  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
+                    <rect x="8" y="20" width="48" height="36" rx="3" stroke="#C0D3CA" strokeWidth="3" fill="none"/>
+                    <path d="M8 32 Q20 28 32 32 Q44 36 56 32" stroke="#C0D3CA" strokeWidth="2.5" fill="none"/>
+                    <path d="M14 8 L14 20" stroke="#C0D3CA" strokeWidth="3" strokeLinecap="round"/>
+                    <path d="M50 8 L50 20" stroke="#C0D3CA" strokeWidth="3" strokeLinecap="round"/>
+                  </svg>
+                </Box>
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    bottom: 4,
+                    left: 0,
+                    right: 0,
+                    fontSize: "0.7rem",
+                    fontWeight: 600,
+                    color: "#C0D3CA",
+                    textAlign: "center",
+                    letterSpacing: "0.5px",
+                    background:
+                      "linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)",
+                    py: 0.5,
+                    px: 1,
+                    zIndex: 2,
+                  }}
+                >
+                  {t("frontPocket")}
+                </Typography>
+              </Box>
+            </Box>
+          </motion.div>
+        </Grid>
+
+        {/* Back Pocket Selection */}
+        <Grid item xs={6} sm={4} md={6}>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Box
+              onClick={() =>
+                handleOpenDrawer(
+                  t("backPocket"),
+                  backPocketOptions,
+                  selectedPantsBackPocket,
+                  setSelectedPantsBackPocket
+                )
+              }
+              sx={{
+                cursor: "pointer",
+                borderRadius: "20px",
+                border: "2px solid rgba(192, 211, 202, 0.2)",
+                background:
+                  "linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                transition: "all 0.3s ease",
+                overflow: "hidden",
+                position: "relative",
+                width: "100px",
+                height: "100px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                p: 0,
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0, left: 0, right: 0, bottom: 0,
+                  background:
+                    "linear-gradient(135deg, rgba(192, 211, 202, 0.03) 0%, transparent 50%, rgba(192, 211, 202, 0.02) 100%)",
+                  pointerEvents: "none",
+                },
+                "&:hover": {
+                  border: "2px solid rgba(192, 211, 202, 0.4)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              >
+                {/* Back pocket SVG icon */}
+                <Box sx={{ width: "55%", height: "55%", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.85 }}>
+                  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
+                    <rect x="8" y="8" width="48" height="48" rx="3" stroke="#C0D3CA" strokeWidth="3" fill="none"/>
+                    <rect x="18" y="18" width="28" height="20" rx="2" stroke="#C0D3CA" strokeWidth="2.5" fill="none"/>
+                    <path d="M18 28 L46 28" stroke="#C0D3CA" strokeWidth="2" strokeDasharray="3 2"/>
+                  </svg>
+                </Box>
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    bottom: 4,
+                    left: 0,
+                    right: 0,
+                    fontSize: "0.7rem",
+                    fontWeight: 600,
+                    color: "#C0D3CA",
+                    textAlign: "center",
+                    letterSpacing: "0.5px",
+                    background:
+                      "linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)",
+                    py: 0.5,
+                    px: 1,
+                    zIndex: 2,
+                  }}
+                >
+                  {t("backPocket")}
                 </Typography>
               </Box>
             </Box>

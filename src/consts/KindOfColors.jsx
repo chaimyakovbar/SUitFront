@@ -31,6 +31,24 @@ import swatch17 from "../assets/homeMenu/color/TR224-17.webp";
 import swatch18 from "../assets/homeMenu/color/TR224-18.webp";
 import swatch19 from "../assets/homeMenu/color/TR224-19.webp";
 
+// Lord & Taylor "Fancy Suiting Premium Collection" — swatch book 2776 + 2777
+import lt2776_1 from "../assets/homeMenu/color/2776-1.webp";
+import lt2776_2 from "../assets/homeMenu/color/2776-2.webp";
+import lt2776_3 from "../assets/homeMenu/color/2776-3.webp";
+import lt2776_4 from "../assets/homeMenu/color/2776-4.webp";
+import lt2776_5 from "../assets/homeMenu/color/2776-5.webp";
+import lt2776_6 from "../assets/homeMenu/color/2776-6.webp";
+import lt2776_7 from "../assets/homeMenu/color/2776-7.webp";
+import lt2776_8 from "../assets/homeMenu/color/2776-8.webp";
+import lt2777_1 from "../assets/homeMenu/color/2777-1.webp";
+import lt2777_2 from "../assets/homeMenu/color/2777-2.webp";
+import lt2777_3 from "../assets/homeMenu/color/2777-3.webp";
+import lt2777_4 from "../assets/homeMenu/color/2777-4.webp";
+import lt2777_5 from "../assets/homeMenu/color/2777-5.webp";
+import lt2777_6 from "../assets/homeMenu/color/2777-6.webp";
+import lt2777_7 from "../assets/homeMenu/color/2777-7.webp";
+import lt2777_8 from "../assets/homeMenu/color/2777-8.webp";
+
 // Color Inside Up
 export const gold = `${S3_BASE_URL}/assets_V3/adds/colorInsideUp/gold.jpg`;
 export const grey = `${S3_BASE_URL}/assets_V3/adds/colorInsideUp/grey.jpg`;
@@ -1038,6 +1056,7 @@ export const imageButton = [
 //   name      = human-readable color name (shown in UI, sent to the tailor)
 //   hexCode   = representative color extracted from the real fabric swatch
 export const suitsColors = [
+  { color: lt2776_7,   colorId: 26, colorName: "2776-7",    name: "Carbon",         hexCode: "#423F42", price: "200$" },
   { color: swatchBase, colorId: 0,  colorName: "greyLight", name: "Classic Grey",   hexCode: "#C2BFBC", price: "200$" },
   { color: swatch1,    colorId: 1,  colorName: "TR224-1",   name: "Cream",          hexCode: "#E1DAD4", price: "200$" },
   { color: swatch2,    colorId: 2,  colorName: "TR224-2",   name: "Grey",           hexCode: "#7F7B80", price: "200$" },
@@ -1058,4 +1077,20 @@ export const suitsColors = [
   { color: swatch17,   colorId: 17, colorName: "TR224-17",  name: "Steel Blue",     hexCode: "#3C4659", price: "200$" },
   { color: swatch18,   colorId: 18, colorName: "TR224-18",  name: "Denim Blue",     hexCode: "#596987", price: "200$" },
   { color: swatch19,   colorId: 19, colorName: "TR224-19",  name: "Royal Blue",     hexCode: "#243767", price: "200$" },
+  // ---- Lord & Taylor "Fancy Suiting Premium Collection" (books 2776 + 2777) ----
+  { color: lt2776_1,   colorId: 20, colorName: "2776-1",    name: "Sky Blue",       hexCode: "#556794", price: "200$" },
+  { color: lt2776_2,   colorId: 21, colorName: "2776-2",    name: "Royal Cobalt",   hexCode: "#527BAE", price: "200$" },
+  { color: lt2776_3,   colorId: 22, colorName: "2776-3",    name: "Plum",           hexCode: "#574454", price: "200$" },
+  { color: lt2776_4,   colorId: 23, colorName: "2776-4",    name: "Slate",          hexCode: "#52565F", price: "200$" },
+  { color: lt2776_5,   colorId: 24, colorName: "2776-5",    name: "Stone Grey",     hexCode: "#575356", price: "200$" },
+  { color: lt2776_6,   colorId: 25, colorName: "2776-6",    name: "Midnight",       hexCode: "#444655", price: "200$" },
+  { color: lt2776_8,   colorId: 27, colorName: "2776-8",    name: "Steel Blue",     hexCode: "#555C73", price: "200$" },
+  { color: lt2777_1,   colorId: 28, colorName: "2777-1",    name: "Graphite",       hexCode: "#444243", price: "200$" },
+  { color: lt2777_2,   colorId: 29, colorName: "2777-2",    name: "Powder Blue",    hexCode: "#7191B2", price: "200$" },
+  { color: lt2777_3,   colorId: 30, colorName: "2777-3",    name: "Sky",            hexCode: "#7B9CBF", price: "200$" },
+  { color: lt2777_4,   colorId: 31, colorName: "2777-4",    name: "Periwinkle",     hexCode: "#5C6693", price: "200$" },
+  { color: lt2777_5,   colorId: 32, colorName: "2777-5",    name: "Silver Grey",    hexCode: "#7A7977", price: "200$" },
+  { color: lt2777_6,   colorId: 33, colorName: "2777-6",    name: "Taupe Grey",     hexCode: "#5F5B5B", price: "200$" },
+  { color: lt2777_7,   colorId: 34, colorName: "2777-7",    name: "Indigo Slate",   hexCode: "#505264", price: "200$" },
+  { color: lt2777_8,   colorId: 35, colorName: "2777-8",    name: "Heather",        hexCode: "#5F596F", price: "200$" },
 ];

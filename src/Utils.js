@@ -63,12 +63,24 @@ export const selectedPantsLoopsAtom = atom('none');
 export const selectedPantsIronAtom = atom('none');
 
 // TextInside functionality
-export const textInsideTextAtom = atom(''); // Free text for TextInside
-export const textInsideFontAtom = atom('Arial'); // Font family for TextInside
+export const textInsideTextAtom = atom('chb'); // Free text for TextInside
+export const textInsideFontAtom = atom('script'); // Font family for TextInside
 export const textInsideColorAtom = atom('#ffffff'); // Text color for TextInside
 export const showTextInsideAtom = atom(false); // Whether to show TextInside modal
 
 // Sleeve buttons selection
-export const selectedSleeveButtonsAtom = atom('none'); // none, tree, four, five
+export const selectedSleeveButtonsAtom = atom('four'); // none, tree, four, five
 
 export const selectedTopCollarColorAtom = atom('black');
+
+export const selectedBackSuitCutAtom = atom('oneCut'); // oneCut, twoCut
+
+export const selectedTopCollarTextAtom = atom('chb');           // free text on collar
+export const selectedTopCollarTextColorAtom = atom('#ffffff'); // text color on collar
+
+// Pants pockets atoms
+export const selectedPantsFrontPocketAtom = atom('regular'); // regular, jeans
+export const selectedPantsBackPocketAtom = atom('none');     // none, backPocket
+
+// Suit stitches atom
+export const selectedSuitStitchesAtom = atom('none'); // none, match, white, contrast

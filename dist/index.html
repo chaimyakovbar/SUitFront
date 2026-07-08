@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/LogoSite.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suits</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* Loading screen - shown immediately before React loads */
+      #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #111111 50%,
+          #0a0a0a 100%
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        overflow: hidden;
+      }
+
+      /* Background blur effect from the logo */
+      #loading-screen::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120%;
+        height: 120%;
+        /* Use a static image for the blurred background instead of a video */
+        background: url("/LogoSite4.webp") center/cover no-repeat;
+        filter: blur(50px) brightness(0.4) saturate(1.2);
+        opacity: 0.5;
+        z-index: -1;
+      }
+
+      #loading-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      #loading-logo {
+        /* width: 100%; */
+        height: 90%;
+        object-fit: cover;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-1781611829186--FHEUps0.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-1781611829186-DoC2WAmd.js">
+    <link rel="modulepreload" crossorigin href="/assets/mui-1781611829186-DMqPqIqD.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-1781611829186-CFqBZg8I.js">
+    <link rel="modulepreload" crossorigin href="/assets/three-1781611829186-B5NYzxEk.js">
+    <link rel="modulepreload" crossorigin href="/assets/animations-1781611829186-dqlFRRTg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-1781611829186-DLXjujA5.css">
+  </head>
+  <body style="background-color: black">
+    <!-- Loading screen - shown immediately, before React -->
+    <div id="loading-screen">
+      <video
+        id="loading-logo"
+        style="border-radius: 10px"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        poster="/LogoSite4.webp"
+      >
+        <source src="/gifLogo6.webm" type="video/webm" />
+        <source src="/gifLogo1.mp4" type="video/mp4" />
+      </video>
+    </div>
+
+    <div id="root"></div>
+
+    <script>
+      window.addEventListener("load", () => {
+        const loadingScreen = document.getElementById("loading-screen");
+        const video = document.getElementById("loading-logo");
+
+        const hideLoading = () => {
+          if (loadingScreen) {
+            loadingScreen.classList.add("hidden");
+          }
+        };
+
+        if (video) {
+          // כשנגמר הסרטון – להסתיר את מסך הטעינה
+          video.addEventListener("ended", hideLoading);
+          video.addEventListener("error", hideLoading);
+        } else {
+          hideLoading();
+        }
+
+        // גיבוי – גם אם משהו נתקע, אחרי 8 שניות נסגור את המסך
+        setTimeout(hideLoading, 2000);
+      });
+    </script>
+  </body>
+</html>

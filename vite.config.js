@@ -4,33 +4,30 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
-  const timestamp = Date.now();
-
   const config = {
     plugins: [react()],
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            // Split vendor libraries
-            vendor: ['react', 'react-dom'],
-            mui: ['@mui/material', '@mui/icons-material', '@mui/styles'],
-            three: ['@react-three/fiber', '@react-three/drei', 'three'],
-            animations: ['framer-motion'],
-            utils: ['jotai', 'axios', 'react-router-dom'],
+          // Group only the packages themselves (not their shared helpers),
+          // so heavy lazy-only libraries like three.js stay off the home page.
+          manualChunks(id) {
+            // Vite's own helpers must live in the entry-side vendor chunk,
+            // otherwise they can land in 'three' and drag it onto every page.
+            if (id.includes('vite/preload-helper') || id.includes('commonjsHelpers')) return 'vendor'
+            if (!id.includes('node_modules')) return
+            const pkg = (name) => id.includes(`/node_modules/${name}/`)
+            if (pkg('three') || pkg('@react-three/fiber') || pkg('@react-three/drei')) return 'three'
+            if (pkg('@mui/material') || pkg('@mui/icons-material') || pkg('@mui/styles') || pkg('@mui/system')) return 'mui'
+            if (pkg('react') || pkg('react-dom') || pkg('scheduler')) return 'vendor'
+            if (pkg('framer-motion')) return 'animations'
           },
-          // Add cache busting with timestamp and hash
-          entryFileNames: `assets/[name]-${timestamp}-[hash].js`,
-          chunkFileNames: `assets/[name]-${timestamp}-[hash].js`,
-          assetFileNames: `assets/[name]-${timestamp}-[hash].[ext]`
         },
       },
       // Enable source maps for debugging
       sourcemap: false,
       // Optimize chunk size
       chunkSizeWarningLimit: 1000,
-      // Add build timestamp to manifest
-      manifest: true,
     },
     optimizeDeps: {
       include: [
@@ -42,10 +39,6 @@ export default defineConfig(({ command }) => {
         'jotai',
         'axios',
       ],
-    },
-    // Enable compression
-    server: {
-      compress: true,
     },
   }
 

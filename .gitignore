@@ -1,8 +1,8 @@
 node_modules/
-package-lock.json
+dist/
+.vite/
 .env
+.env.*
+.DS_Store
 /Ex.jsx
 /Ex2.jsx
-.vite/
-node_modules/
-.DS_Store

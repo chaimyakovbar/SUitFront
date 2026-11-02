@@ -28,7 +28,6 @@ const TakeSizes4 = lazy(() => import("./components/TakeSizes4"));
 const TakeSizes5 = lazy(() => import("./components/TakeSizes5.jsx"));
 const Account = lazy(() => import("./pages/Account"));
 const Shopping = lazy(() => import("./pages/Shopping"));
-const CheckoutModern = lazy(() => import("./pages/CheckoutModern"));
 const IndexSizes = lazy(() => import("./sizes/IndexSizes"));
 const AIQuickSize = lazy(() => import("./pages/AIQuickSize"));
 const About = lazy(() => import("./pages/About"));

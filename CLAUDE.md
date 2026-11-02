@@ -107,9 +107,8 @@ const classes = useStyles();
 ---
 
 ## Known Issues / History
-- `CheckoutModern.jsx` and `CheckOut.jsx` — legacy, no active route, kept for review
-- `QuickFit.jsx`, `QuickFitMannequin.jsx`, `mannequinPoints.js` — kept for review
-- `Stepper.jsx` — kept for review
+- 2026-11-02 cleanup: removed unused `CheckoutModern`, `CheckOut`, `QuickFit`, `QuickFitMannequin`, `mannequinPoints`, `Stepper`, `StepTree`, `ActionButtons`, `suitOptions` (see `../ROADMAP.md`)
+- `Payed.jsx` — the only working payment is Stripe (`PaymentDialog`); the PayPal import is unused
 - `Payed.jsx` — required adding `Dialog, DialogTitle, DialogContent` to MUI imports (was crashing)
 - Shopping page was previously routing to `CheckoutModern` by mistake — fixed to `Shopping.jsx`
 

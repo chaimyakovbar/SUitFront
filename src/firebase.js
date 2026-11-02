@@ -1,6 +1,6 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, OAuthProvider } from "firebase/auth";
 // import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -23,4 +23,10 @@ provider.setCustomParameters({
     authType: 'signInWithPopup'
 });
 
-export { auth, provider };
+// Sign in with Apple — Apple shares the user's name only on the first sign-in;
+// Firebase stores it on the user's displayName at that point.
+const appleProvider = new OAuthProvider("apple.com");
+appleProvider.addScope("email");
+appleProvider.addScope("name");
+
+export { auth, provider, appleProvider };

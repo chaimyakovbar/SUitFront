@@ -20,6 +20,7 @@ import {
   Alert,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
+import AppleIcon from "@mui/icons-material/Apple";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { makeStyles } from "@mui/styles";
@@ -92,6 +93,27 @@ const useStyles = makeStyles({
     "&:disabled": {
       backgroundColor: "#f5f5f5 !important",
       color: "#999 !important",
+    },
+  },
+  appleButton: {
+    backgroundColor: "#000 !important",
+    color: "#fff !important",
+    border: "1px solid rgba(255, 255, 255, 0.35) !important",
+    padding: "14px 24px !important",
+    fontSize: "0.9rem !important",
+    borderRadius: "4px !important",
+    fontWeight: "500 !important",
+    textTransform: "none !important",
+    transition: "all 0.3s ease !important",
+    fontFamily: "'Montserrat', sans-serif !important",
+    width: "100% !important",
+    marginTop: "1rem !important",
+    "&:hover": {
+      backgroundColor: "#1a1a1a !important",
+      border: "1px solid rgba(255, 255, 255, 0.6) !important",
+    },
+    "&:disabled": {
+      color: "#777 !important",
     },
   },
   googleSignUpButton: {
@@ -262,8 +284,14 @@ const LoginWithGoogle = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const { googleSignIn, emailSignIn, emailSignUp, resetPassword, error } =
-    useAuth();
+  const {
+    googleSignIn,
+    appleSignIn,
+    emailSignIn,
+    emailSignUp,
+    resetPassword,
+    error,
+  } = useAuth();
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -272,6 +300,7 @@ const LoginWithGoogle = () => {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isAppleLoading, setIsAppleLoading] = useState(false);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState("");
@@ -311,6 +340,20 @@ const LoginWithGoogle = () => {
       setAuthError(error.message || "שגיאה בהתחברות עם Google");
     } finally {
       setIsGoogleLoading(false);
+    }
+  };
+
+  const handleAppleAuth = async () => {
+    try {
+      setIsAppleLoading(true);
+      setAuthError("");
+      await appleSignIn.mutateAsync();
+      navigate(getRedirectPath(), { replace: true });
+    } catch (error) {
+      console.error("Apple authentication error:", error);
+      setAuthError(error.message || "שגיאה בהתחברות עם Apple");
+    } finally {
+      setIsAppleLoading(false);
     }
   };
 
@@ -416,7 +459,7 @@ const LoginWithGoogle = () => {
                 )
               }
               onClick={() => handleGoogleAuth(false)}
-              disabled={isGoogleLoading || isEmailLoading}
+              disabled={isGoogleLoading || isAppleLoading || isEmailLoading}
             >
               {isGoogleLoading ? "Connecting..." : "Continue with Google"}
             </Button>
@@ -431,9 +474,24 @@ const LoginWithGoogle = () => {
                 )
               }
               onClick={() => handleGoogleAuth(true)}
-              disabled={isGoogleLoading || isEmailLoading}
+              disabled={isGoogleLoading || isAppleLoading || isEmailLoading}
             >
               {isGoogleLoading ? "Connecting..." : "Sign up with Google"}
+            </Button>
+
+            <Button
+              className={classes.appleButton}
+              startIcon={
+                isAppleLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <AppleIcon />
+                )
+              }
+              onClick={handleAppleAuth}
+              disabled={isGoogleLoading || isAppleLoading || isEmailLoading}
+            >
+              {isAppleLoading ? "Connecting..." : "Continue with Apple"}
             </Button>
           </Box>
 
@@ -540,7 +598,7 @@ const LoginWithGoogle = () => {
             <Button
               type="submit"
               className={classes.emailButton}
-              disabled={isEmailLoading || isGoogleLoading}
+              disabled={isEmailLoading || isGoogleLoading || isAppleLoading}
             >
               {isEmailLoading ? (
                 <CircularProgress size={20} color="inherit" />

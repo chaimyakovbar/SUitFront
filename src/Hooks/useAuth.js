@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, provider } from '../firebase.js';
+import { auth, provider, appleProvider } from '../firebase.js';
 import { useAtom } from 'jotai';
 import { authUserAtom } from '../Utils';
 import { userAPI } from '../config/api.js';
@@ -17,6 +17,31 @@ export const useAuth = () => {
         photoURL: firebaseUser.photoURL,
     });
 
+    // Shared by Google and Apple: set Firebase data first so login never blocks
+    // on the backend, then enrich with the DB user (non-blocking).
+    const syncOAuthUser = async (firebaseUser) => {
+        const firebaseUserData = buildFirebaseUser(firebaseUser);
+        setUser(firebaseUserData);
+
+        try {
+            const response = await userAPI.authWebhook({
+                email: firebaseUser.email,
+                name: firebaseUser.displayName,
+                firebaseUid: firebaseUser.uid,
+                photoURL: firebaseUser.photoURL
+            });
+
+            if (response?.success && response.user) {
+                setUser(response.user);
+                return response.user;
+            }
+        } catch (error) {
+            console.warn('Auth webhook failed (user still logged in with Firebase data):', error.message);
+        }
+
+        return firebaseUserData;
+    };
+
     // Mutation for Google sign in
     const googleSignIn = useMutation({
         mutationFn: async ({ isNewUser = false }) => {
@@ -28,33 +53,22 @@ export const useAuth = () => {
             const result = await signInWithPopup(auth, provider);
             return result.user;
         },
-        onSuccess: async (firebaseUser) => {
-            // Always set Firebase user data first so login never blocks on backend
-            const firebaseUserData = buildFirebaseUser(firebaseUser);
-            setUser(firebaseUserData);
-
-            // Try to enrich with DB data (non-blocking)
-            try {
-                const response = await userAPI.authWebhook({
-                    email: firebaseUser.email,
-                    name: firebaseUser.displayName,
-                    firebaseUid: firebaseUser.uid,
-                    photoURL: firebaseUser.photoURL
-                });
-
-                if (response?.success && response.user) {
-                    setUser(response.user);
-                    return response.user;
-                }
-            } catch (error) {
-                // Backend may be cold-starting on Render — Firebase data is already set
-                console.warn('Auth webhook failed (user still logged in with Firebase data):', error.message);
-            }
-
-            return firebaseUserData;
-        },
+        onSuccess: (firebaseUser) => syncOAuthUser(firebaseUser),
         onError: (error) => {
             console.error('Google sign in error:', error);
+            setUser(null);
+        },
+    });
+
+    // Mutation for Apple sign in
+    const appleSignIn = useMutation({
+        mutationFn: async () => {
+            const result = await signInWithPopup(auth, appleProvider);
+            return result.user;
+        },
+        onSuccess: (firebaseUser) => syncOAuthUser(firebaseUser),
+        onError: (error) => {
+            console.error('Apple sign in error:', error);
             setUser(null);
         },
     });
@@ -226,9 +240,10 @@ export const useAuth = () => {
 
     return {
         user,
-        isLoading: googleSignIn.isLoading || emailSignIn.isLoading || emailSignUp.isLoading || resetPassword.isLoading,
-        error: googleSignIn.error || emailSignIn.error || emailSignUp.error || resetPassword.error,
+        isLoading: googleSignIn.isPending || appleSignIn.isPending || emailSignIn.isPending || emailSignUp.isPending || resetPassword.isPending,
+        error: googleSignIn.error || appleSignIn.error || emailSignIn.error || emailSignUp.error || resetPassword.error,
         googleSignIn,
+        appleSignIn,
         emailSignIn,
         emailSignUp,
         resetPassword,
